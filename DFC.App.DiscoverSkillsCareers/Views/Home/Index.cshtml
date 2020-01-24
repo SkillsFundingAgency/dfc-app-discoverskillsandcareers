@@ -1,8 +1,45 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Discover your skills and careers";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<h3>Discover your skills and careers</h3>
+
+<p>
+    This assessment asks you to think about the type of work you want to do. It takes 5 to 10 minutes, or slightly longer if you’re using a screen reader or magnifier.
+</p>
+
+<p>
+    At the end, you’ll get a summary of job groups that might interest you based on your answers, for example creative careers or working in healthcare.
+</p>
+
+<p>
+    You can answer a few more questions to see particular jobs that may suit you, like an animator or a paramedic. From here, you can get more detailed information about each role.
+</p>
+
+<p>
+    You can save your results and come back to them at any time.
+</p>
+
+<hr/>
+
+<p>
+    <a href="/assessment/start/" role="button" draggable="false" class="govuk-button govuk-button--start">
+        Start assessment
+    </a>
+</p>
+
+<form method="post">
+    @Html.ValidationSummary()
+    <p>
+        Return to an assessment
+        <br />
+        Enter your reference
+        <input type="text" id="reference" name="reference" />
+        <br />
+        <button role="button" draggable="false" class="govuk-button govuk-button--start">
+            Continue
+        </button>
+    </p>
+</form>
+
