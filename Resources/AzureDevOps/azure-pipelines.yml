@@ -1,7 +1,8 @@
 variables:
-    SolutionBaseName: 'DFC.App.DiscoverSkillsCareers'
-    BuildPlatform: 'any cpu'
-    BuildConfiguration: 'release'
+  ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'     
+  SolutionBaseName: 'DFC.App.DiscoverSkillsCareers'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'release'
 
 resources:
   repositories:
@@ -16,6 +17,12 @@ stages:
 - stage: Build
   displayName: Build, Test and Analyze
   jobs:
+  #Build and test Azure resources
+  - template: AzureDevOpsTemplates/Build/dfc-arm-build.yml@dfc-devops
+    parameters:
+      ArmTemplateRoot: $(ArmTemplateRoot)
+
+  #Build and test application
   - job: BuildTestAndAnalyze
     pool:
       name: NCS - CI and CD
