@@ -18,7 +18,7 @@ stages:
   displayName: Build, Test and Analyze
   jobs:
   #Build and test Azure resources
-  - job: BuildTestAndAnalyze
+  - job: ARMResources
     pool:
       name: NCS - CI and CD
       demands:
