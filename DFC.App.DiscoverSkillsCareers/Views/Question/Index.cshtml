@@ -13,7 +13,7 @@
 
 <h1>@Model.QuestionText</h1>
 
-<form method="post">
+<form method="post" asp-controller="question" >
     <input type="hidden" id="QuestionSetName" name="QuestionSetName" value="@Model.QuestionSetName" />
     <input type="hidden" id="QuestionId" name="QuestionId" value="@Model.QuestionId" />
 
@@ -39,4 +39,4 @@
 <hr />
 <h3>Return to this later</h3>
 <br />
-<a asp-action="save" asp-controller="assessment">Save my progress</a>
+<a asp-controller="assessment" asp-action="save">Save my progress</a>

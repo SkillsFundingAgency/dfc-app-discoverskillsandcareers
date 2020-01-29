@@ -13,9 +13,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             questionSetDataProvider = new QuestionSetDataProvider();
         }
 
-        public IActionResult Start(AssessmentStartRequestViewModel viewModel)
+        public IActionResult New(AssessmentStartRequestViewModel viewModel)
         {
-            return RedirectToAction("index", "question", new { viewModel.QuestionSetName, viewModel .QuestionId});
+            return Redirect($"question/{viewModel.QuestionSetName}/{viewModel.QuestionId}");
+            //return RedirectToAction("index", "question", new { viewModel.QuestionSetName, viewModel.QuestionId });
         }
 
         public IActionResult Finish()
@@ -103,6 +104,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult ReferenceSent()
         {
             return View();
+        }
+
+        public override RedirectResult Redirect(string url)
+        {
+            url = "~/dysac/" + url;
+            return base.Redirect(url);
         }
     }
 }

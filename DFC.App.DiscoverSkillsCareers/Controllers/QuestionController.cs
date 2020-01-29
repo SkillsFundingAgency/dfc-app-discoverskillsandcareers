@@ -14,7 +14,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             questionSetDataProvider = new QuestionSetDataProvider();
         }
 
-        [Route("{QuestionSetName}/{QuestionId}")]
         [HttpGet]
         public IActionResult Index(QuestionGetRequestViewModel viewModel)
         {
@@ -22,7 +21,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(result);
         }
 
-        [Route("{QuestionSetName}/{QuestionId}")]
         [HttpPost]
         public IActionResult Index(QuestionPostRequestViewModel answerViewModel)
         {
