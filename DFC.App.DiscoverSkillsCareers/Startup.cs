@@ -50,8 +50,23 @@ namespace DFC.App.DiscoverSkillsCareers
 
                 endpoints.MapControllerRoute(
                     name: "assessment",
-                    pattern: RouteName.Prefix + "/assessment/{QuestionSetName}/{QuestionId}",
+                    pattern: RouteName.Prefix + "/assessment/{questionSetName}/{questionId}",
                     new { controller = "Assessment", action = "Index" });
+
+                endpoints.MapControllerRoute(
+                    name: "filterQuestionsComplete",
+                    pattern: RouteName.Prefix + "/filterquestions/{jobCategoryName}/complete",
+                    new { controller = "FilterQuestions", action = "Complete" });
+
+                endpoints.MapControllerRoute(
+                    name: "filterQuestions",
+                    pattern: RouteName.Prefix + "/filterquestions/{jobCategoryName}/{questionId}",
+                    new { controller = "FilterQuestions", action = "Index" });
+
+                endpoints.MapControllerRoute(
+                    name: "results",
+                    pattern: RouteName.Prefix + "/results/{jobCategoryName}",
+                    new { controller = "Results", action = "Filter" });
             });
         }
     }

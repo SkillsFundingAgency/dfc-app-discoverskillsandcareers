@@ -1,9 +1,9 @@
-﻿@model QuestionGetResponseViewModel
+﻿@model FilterQuestionGetResponseViewModel
 
 @if (Model.PreviousQuestionId != null)
 {
     <br />
-    <a asp-route="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
+    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
 }
 
 <br />

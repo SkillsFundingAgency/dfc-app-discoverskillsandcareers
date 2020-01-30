@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 

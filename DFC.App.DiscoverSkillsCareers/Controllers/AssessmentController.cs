@@ -1,15 +1,12 @@
-﻿using DFC.App.DiscoverSkillsCareers.Constants;
-using DFC.App.DiscoverSkillsCareers.Services;
+﻿using DFC.App.DiscoverSkillsCareers.Services;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class AssessmentController : Controller
+    public class AssessmentController : BaseController
     {
-        private QuestionSetDataProvider questionSetDataProvider;
-
+        private readonly QuestionSetDataProvider questionSetDataProvider;
         public AssessmentController()
         {
             questionSetDataProvider = new QuestionSetDataProvider();
@@ -34,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (string.IsNullOrWhiteSpace(result.NextQuestionId))
             {
-                return Redirect("assessment/complete");
+                return Redirect($"assessment/complete");
             }
 
             //Save answer
@@ -133,13 +130,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public override RedirectResult Redirect(string url)
-        {
-            url = $"~/{RouteName.Prefix}/" + url;
-            return base.Redirect(url);
-        }
-
-        private QuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
+        private  QuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
         {
             var result = new QuestionGetResponseViewModel();
 
