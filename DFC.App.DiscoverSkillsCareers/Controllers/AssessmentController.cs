@@ -1,6 +1,8 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services;
+﻿using DFC.App.DiscoverSkillsCareers.Constants;
+using DFC.App.DiscoverSkillsCareers.Services;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
@@ -13,20 +15,45 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             questionSetDataProvider = new QuestionSetDataProvider();
         }
 
-        public IActionResult New(AssessmentStartRequestViewModel viewModel)
+        [HttpGet]
+        public IActionResult Index(QuestionGetRequestViewModel viewModel)
         {
-            return Redirect($"question/{viewModel.QuestionSetName}/{viewModel.QuestionId}");
-            //return RedirectToAction("index", "question", new { viewModel.QuestionSetName, viewModel.QuestionId });
+            var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
+            return View(result);
         }
 
-        public IActionResult Finish()
+        [HttpPost]
+        public IActionResult Index(QuestionPostRequestViewModel answerViewModel)
+        {
+            var result = CreateResponseViewModel(answerViewModel.QuestionSetName, answerViewModel.QuestionId);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            if (string.IsNullOrWhiteSpace(result.NextQuestionId))
+            {
+                return Redirect("assessment/complete");
+            }
+
+            //Save answer
+            return Redirect($"assessment/{result.QuestionSetName}/{result.NextQuestionId}");
+        }
+
+        public IActionResult New(string questionSetName)
+        {
+            return Redirect($"assessment/{questionSetName}/01");
+        }
+
+        public IActionResult Complete()
         {
             return View();
         }
 
         public IActionResult Continue()
         {
-            return RedirectToAction("index", "question", new { QuestionSetName = "short", QuestionId = "02" });
+            return Redirect("assessment/short/02");
         }
 
         public IActionResult Return()
@@ -58,7 +85,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.SaveOption == 1)
+            if (viewModel.ReturnOption == 1)
                 return RedirectToAction("Email");
             else
                 return RedirectToAction("Reference");
@@ -98,7 +125,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToAction("ReferenceSent");
             }
 
-            return View();
+            return View(request);
         }
 
         public IActionResult ReferenceSent()
@@ -108,8 +135,46 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public override RedirectResult Redirect(string url)
         {
-            url = "~/dysac/" + url;
+            url = $"~/{RouteName.Prefix}/" + url;
             return base.Redirect(url);
+        }
+
+        private QuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
+        {
+            var result = new QuestionGetResponseViewModel();
+
+            var questionSet = questionSetDataProvider.GetQuestionSet(questionSetName);
+            if (questionSet != null)
+            {
+                result.QuestionSetName = questionSet.Name;
+
+                var question = questionSet.GetQuestion(questionId);
+
+                if (question != null)
+                {
+                    result.QuestionId = question.Id;
+                    result.QuestionText = question.Text;
+                    result.IsComplete = questionSet.IsCompleted();
+
+                    var prevQuestion = questionSet.GetPreviousQuestion(questionId);
+                    var nextQuestion = questionSet.GetNextQuestion(questionId);
+
+                    if (prevQuestion != null)
+                    {
+                        result.PreviousQuestionId = prevQuestion.Id;
+                    }
+                    if (nextQuestion != null)
+                    {
+                        result.NextQuestionId = nextQuestion.Id;
+                    }
+
+                    var totalCompleted = questionSet.GetCompleted();
+                    var totalquestions = questionSet.Questions.Count();
+                    result.PercentageComplete = (decimal)totalCompleted / totalquestions;
+                }
+            }
+
+            return result;
         }
     }
 }

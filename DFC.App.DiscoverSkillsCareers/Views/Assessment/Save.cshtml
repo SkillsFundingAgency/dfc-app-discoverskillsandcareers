@@ -1,0 +1,14 @@
+﻿<h1>How would you like to return to your assessment?</h1>
+
+@Html.ValidationSummary()
+
+<form method="post">
+    <p>
+        <input type="radio" name="returnoption" value="1" />Send me an email with a link
+    </p>
+
+    <p>
+        <input type="radio" name="returnoption" value="2" />Get a reference code
+    </p>
+    <button>Continue</button>
+</form>

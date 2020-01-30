@@ -4,8 +4,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class ResultsController : Controller
     {
-        [Route("{controller}")]
-        public IActionResult Show()
+        public IActionResult Index()
         {
             return View();
         }

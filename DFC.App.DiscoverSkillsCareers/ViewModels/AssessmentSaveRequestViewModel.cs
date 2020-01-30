@@ -5,6 +5,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     public class AssessmentSaveRequestViewModel
     {
         [Required]
-        public int SaveOption { get; set; }
+        [Display(Name = "Return option")]
+        public int? ReturnOption { get; set; }
     }
 }

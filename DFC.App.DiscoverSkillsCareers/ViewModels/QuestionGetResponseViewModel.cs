@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DFC.App.DiscoverSkillsCareers.ViewModels
+﻿namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     public class QuestionGetResponseViewModel
     {

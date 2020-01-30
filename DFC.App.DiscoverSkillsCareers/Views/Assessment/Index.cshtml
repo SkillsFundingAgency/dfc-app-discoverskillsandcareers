@@ -3,7 +3,7 @@
 @if (Model.PreviousQuestionId != null)
 {
     <br />
-    <a asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
+    <a asp-controller="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
 }
 
 <br />
@@ -13,7 +13,7 @@
 
 <h1>@Model.QuestionText</h1>
 
-<form method="post" asp-controller="question" >
+<form method="post">
     <input type="hidden" id="QuestionSetName" name="QuestionSetName" value="@Model.QuestionSetName" />
     <input type="hidden" id="QuestionId" name="QuestionId" value="@Model.QuestionId" />
 
