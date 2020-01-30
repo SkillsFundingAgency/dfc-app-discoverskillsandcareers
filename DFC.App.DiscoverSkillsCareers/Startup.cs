@@ -1,3 +1,4 @@
+using DFC.App.DiscoverSkillsCareers.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +46,12 @@ namespace DFC.App.DiscoverSkillsCareers
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "assessment",
+                    pattern: RouteName.Prefix + "/assessment/{QuestionSetName}/{QuestionId}",
+                    new { controller = "Assessment", action = "Index" });
             });
         }
     }

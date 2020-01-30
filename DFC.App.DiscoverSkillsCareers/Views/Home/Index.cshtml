@@ -24,12 +24,12 @@
 <hr/>
 
 <p>
-    <a href="/assessment/start/" role="button" draggable="false" class="govuk-button govuk-button--start">
+    <a asp-controller="assessment" asp-action="new" asp-route-questionSetName="short" asp-route-questionId="01" role="button" draggable="false" class="govuk-button govuk-button--start">
         Start assessment
     </a>
 </p>
 
-<form method="post">
+<form method="post" asp-controller="home">
     @Html.ValidationSummary()
     <p>
         Return to an assessment
