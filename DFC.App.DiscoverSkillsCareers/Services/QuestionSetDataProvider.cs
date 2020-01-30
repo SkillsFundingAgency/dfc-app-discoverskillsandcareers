@@ -6,7 +6,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services
 {
     public class QuestionSetDataProvider
     {
-        private List<QuestionSet> questionSets;
+        private readonly List<QuestionSet> questionSets;
 
         public QuestionSetDataProvider()
         {

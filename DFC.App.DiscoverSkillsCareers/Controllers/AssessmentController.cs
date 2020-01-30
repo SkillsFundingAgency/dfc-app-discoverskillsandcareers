@@ -38,6 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return Redirect($"assessment/{result.QuestionSetName}/{result.NextQuestionId}");
         }
 
+        [HttpPost]
         public IActionResult New(string questionSetName)
         {
             return Redirect($"assessment/{questionSetName}/01");
