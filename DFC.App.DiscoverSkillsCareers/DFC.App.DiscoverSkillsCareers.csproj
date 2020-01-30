@@ -5,4 +5,11 @@
     <ProjectGuid>37CBD763-5D8F-4DDC-90F9-8457F3D48293</ProjectGuid>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.2.0.14119">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

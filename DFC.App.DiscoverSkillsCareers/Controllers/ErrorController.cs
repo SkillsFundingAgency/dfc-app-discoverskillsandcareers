@@ -2,7 +2,7 @@
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class ErrorController : Controller
+    public class ErrorController : BaseController
     {
         public IActionResult Error404()
         {
