@@ -169,7 +169,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     }
 
                     var totalCompleted = questionSet.GetCompleted();
-                    var totalquestions = questionSet.Questions.Count();
+                    var totalquestions = questionSet.Questions.Count;
                     result.PercentageComplete = (decimal)totalCompleted / totalquestions;
                 }
             }
