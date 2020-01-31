@@ -16,14 +16,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public IActionResult Index(QuestionGetRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
             return View(result);
         }
 
         [HttpPost]
-        public IActionResult Index(QuestionPostRequestViewModel answerViewModel)
+        public IActionResult Index(QuestionPostRequestViewModel viewModel)
         {
-            var result = CreateResponseViewModel(answerViewModel.QuestionSetName, answerViewModel.QuestionId);
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
+            var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
 
             if (!ModelState.IsValid)
             {
@@ -62,6 +72,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public IActionResult Return(AssessmentReturnRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -78,6 +93,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public IActionResult Save(AssessmentSaveRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);

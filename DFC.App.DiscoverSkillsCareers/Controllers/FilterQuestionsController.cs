@@ -16,6 +16,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public IActionResult Index(FilterQuestionGetRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             var result = CreateResponseViewModel(viewModel.JobCategoryName, viewModel.QuestionId);
             return View(result);
         }
@@ -23,6 +28,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public IActionResult Index(FilterQuestionPostRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             var result = CreateResponseViewModel(viewModel.JobCategoryName, viewModel.QuestionId);
 
             if (!ModelState.IsValid)
