@@ -3,9 +3,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
-    public class Program
+    public sealed class Program
     {
-        protected Program()
+        private Program()
         {
         }
 
