@@ -5,13 +5,14 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 {
     public class QuestionSet
     {
-        public string Name { get; set; }
-        public List<Question> Questions { get; set; }
-
         public QuestionSet()
         {
-            Questions = new List<Question>();
+            this.Questions = new List<Question>();
         }
+
+        public string Name { get; set; }
+
+        public List<Question> Questions { get; private set; }
 
         public int GetQuestionNumber(string id)
         {
@@ -42,6 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             {
                 result = Questions.ElementAtOrDefault(currentQuestionIndex - 1);
             }
+
             return result;
         }
 
@@ -53,8 +55,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             {
                 result = Questions.ElementAtOrDefault(currentQuestionIndex + 1);
             }
+
             return result;
         }
-
     }
 }

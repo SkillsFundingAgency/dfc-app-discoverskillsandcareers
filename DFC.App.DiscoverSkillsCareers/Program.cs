@@ -7,7 +7,6 @@ namespace DFC.App.DiscoverSkillsCareers
     {
         protected Program()
         {
-
         }
 
         public static void Main(string[] args)

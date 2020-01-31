@@ -35,7 +35,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return Redirect($"filterquestions/{result.JobCategoryName}/complete");
             }
 
-            //Save answer
             return Redirect($"filterquestions/{result.JobCategoryName}/{result.NextQuestionId}");
         }
 
@@ -46,8 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private FilterQuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
         {
-            var result = new FilterQuestionGetResponseViewModel();
-            result.JobCategoryName = questionSetName;
+            var result = new FilterQuestionGetResponseViewModel() { JobCategoryName = questionSetName };
 
             var questionSet = questionSetDataProvider.GetQuestionSet(questionSetName);
             if (questionSet != null)
@@ -69,6 +67,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     {
                         result.PreviousQuestionId = prevQuestion.Id;
                     }
+
                     if (nextQuestion != null)
                     {
                         result.NextQuestionId = nextQuestion.Id;

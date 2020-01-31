@@ -8,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             return View();
         }
-    
+
         public IActionResult Error500()
         {
             return View();
