@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.DiscoverSkillsCareers", "DFC.App.DiscoverSkillsCareers\DFC.App.DiscoverSkillsCareers.csproj", "{37CBD763-5D8F-4DDC-90F9-8457F3D48293}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFC.App.DiscoverSkillsCareers", "DFC.App.DiscoverSkillsCareers\DFC.App.DiscoverSkillsCareers.csproj", "{37CBD763-5D8F-4DDC-90F9-8457F3D48293}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.DiscoverSkillsCareers.UnitTests", "DFC.App.DiscoverSkillsCareers.UnitTests\DFC.App.DiscoverSkillsCareers.UnitTests.csproj", "{FB5DB006-5EC5-4A8B-AE87-07BAFD92DAC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFC.App.DiscoverSkillsCareers.UnitTests", "DFC.App.DiscoverSkillsCareers.UnitTests\DFC.App.DiscoverSkillsCareers.UnitTests.csproj", "{FB5DB006-5EC5-4A8B-AE87-07BAFD92DAC4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{E99D6836-0A70-4BCF-AA51-9F3C8AC03BDA}"
 	ProjectSection(SolutionItems) = preProject
