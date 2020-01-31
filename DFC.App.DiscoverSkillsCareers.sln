@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFC.App.DiscoverSkillsCareers", "DFC.App.DiscoverSkillsCareers\DFC.App.DiscoverSkillsCareers.csproj", "{37CBD763-5D8F-4DDC-90F9-8457F3D48293}"
 EndProject
@@ -15,9 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{37CBD763-5D8F-4DDC-90F9-8457F3D48293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +41,11 @@ Global
 		{FB5DB006-5EC5-4A8B-AE87-07BAFD92DAC4}.Release|x64.Build.0 = Release|Any CPU
 		{FB5DB006-5EC5-4A8B-AE87-07BAFD92DAC4}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB5DB006-5EC5-4A8B-AE87-07BAFD92DAC4}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75237135-AEDC-4443-8B8C-148F32FDA804}
 	EndGlobalSection
 EndGlobal
