@@ -9,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public IActionResult Filter(string jobCategoryName)
+        public IActionResult Filter()
         {
             return View();
         }

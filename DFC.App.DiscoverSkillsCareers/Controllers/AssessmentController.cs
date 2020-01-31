@@ -7,22 +7,33 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class AssessmentController : BaseController
     {
         private readonly QuestionSetDataProvider questionSetDataProvider;
+
         public AssessmentController()
         {
-            questionSetDataProvider = new QuestionSetDataProvider();
+            this.questionSetDataProvider = new QuestionSetDataProvider();
         }
 
         [HttpGet]
         public IActionResult Index(QuestionGetRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
             return View(result);
         }
 
         [HttpPost]
-        public IActionResult Index(QuestionPostRequestViewModel answerViewModel)
+        public IActionResult Index(QuestionPostRequestViewModel viewModel)
         {
-            var result = CreateResponseViewModel(answerViewModel.QuestionSetName, answerViewModel.QuestionId);
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
+            var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
 
             if (!ModelState.IsValid)
             {
@@ -34,7 +45,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return Redirect($"assessment/complete");
             }
 
-            //Save answer
             return Redirect($"assessment/{result.QuestionSetName}/{result.NextQuestionId}");
         }
 
@@ -62,6 +72,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public IActionResult Return(AssessmentReturnRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -78,15 +93,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public IActionResult Save(AssessmentSaveRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
 
             if (viewModel.ReturnOption == 1)
+            {
                 return RedirectToAction("Email");
+            }
             else
+            {
                 return RedirectToAction("Reference");
+            }
         }
 
         public IActionResult Email()
@@ -131,7 +155,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        private  QuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
+        private QuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
         {
             var result = new QuestionGetResponseViewModel();
 
@@ -155,6 +179,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     {
                         result.PreviousQuestionId = prevQuestion.Id;
                     }
+
                     if (nextQuestion != null)
                     {
                         result.NextQuestionId = nextQuestion.Id;
