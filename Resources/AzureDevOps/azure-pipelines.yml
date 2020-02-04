@@ -29,7 +29,7 @@ stages:
         ArmTemplateRoot: $(ArmTemplateRoot)
 
     - task: CopyFiles@2
-      displayName: 'Copy Arm Templates to Staging'
+      displayName: 'Copy page registration documents to Staging'
       inputs:
         TargetFolder: $(build.artifactstagingdirectory)/PageRegistrations
         SourceFolder: '$(Build.SourcesDirectory)\PageRegistration'
