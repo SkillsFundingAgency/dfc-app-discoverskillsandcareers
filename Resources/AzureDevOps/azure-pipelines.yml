@@ -28,6 +28,20 @@ stages:
       parameters:
         ArmTemplateRoot: $(ArmTemplateRoot)
 
+    - task: CopyFiles@2
+      displayName: 'Copy Arm Templates to Staging'
+      inputs:
+        TargetFolder: $(build.artifactstagingdirectory)/PageRegistrations
+        SourceFolder: '$(Build.SourcesDirectory)\PageRegistration'
+        Contents: *.json
+
+      - task: PublishPipelineArtifact@0
+        displayName: Publish Pipeline Artifact
+        condition: ${{ parameters.PublishPipelineArtifact }}
+        inputs:
+          targetPath: $(build.artifactstagingdirectory)/PageRegistrations
+          artifactName: ${{ parameters.SolutionBaseName }}.PageRegistrations
+
   #Build and test application
   - job: BuildTestAndAnalyze
     pool:
