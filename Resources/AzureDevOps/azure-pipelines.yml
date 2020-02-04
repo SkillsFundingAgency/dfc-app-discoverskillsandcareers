@@ -32,7 +32,7 @@ stages:
       displayName: 'Copy page registration documents to Staging'
       inputs:
         TargetFolder: $(build.artifactstagingdirectory)/PageRegistrations
-        SourceFolder: '$(Build.SourcesDirectory)\PageRegistration'
+        SourceFolder: '$(Build.SourcesDirectory)/PageRegistration'
         Contents: |
           *.json
 
