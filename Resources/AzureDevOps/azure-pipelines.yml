@@ -40,7 +40,7 @@ stages:
       displayName: Publish Pipeline Artifact
       inputs:
         targetPath: $(build.artifactstagingdirectory)/PageRegistrations
-        artifactName: ${{ parameters.SolutionBaseName }}.PageRegistrations
+        artifactName: ${{ variables.SolutionBaseName }}.PageRegistrations
 
   #Build and test application
   - job: BuildTestAndAnalyze
