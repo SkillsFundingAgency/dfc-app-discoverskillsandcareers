@@ -1,6 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Extensions;
+using FakeItEasy;
 using Microsoft.AspNetCore.Http;
-using Moq;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Extensions
@@ -10,10 +10,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Extensions
         [Fact]
         public void IsRequestFromCompositeReturnsTrueWhenContainsCompositeRequestHeader()
         {
-            var httpContextAccessor = new Mock<IHttpContextAccessor>();
-            var httpContext = httpContextAccessor.Object.HttpContext = new DefaultHttpContext();
+            var request = CreateHttpContext().Request;
 
-            var request = httpContext.Request;
             request.Headers.Add("X-Dfc-Composite-Request", "somevalue");
 
             Assert.True(request.IsRequestFromComposite());
@@ -22,12 +20,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Extensions
         [Fact]
         public void IsRequestFromCompositeReturnsFalseWhenContainsNoCompositeRequestHeader()
         {
-            var httpContextAccessor = new Mock<IHttpContextAccessor>();
-            var httpContext = httpContextAccessor.Object.HttpContext = new DefaultHttpContext();
-
-            var request = httpContext.Request;
+            var request = CreateHttpContext().Request;
 
             Assert.False(request.IsRequestFromComposite());
+        }
+
+        private HttpContext CreateHttpContext()
+        {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var httpContext = httpContextAccessor.HttpContext = new DefaultHttpContext();
+            return httpContext;
         }
     }
 }
