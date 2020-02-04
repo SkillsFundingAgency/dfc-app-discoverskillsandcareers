@@ -33,8 +33,8 @@ stages:
       inputs:
         TargetFolder: $(build.artifactstagingdirectory)/PageRegistrations
         SourceFolder: '$(Build.SourcesDirectory)\PageRegistration'
-        Contents: *.json
-
+        Contents: |
+          *.json
       - task: PublishPipelineArtifact@0
         displayName: Publish Pipeline Artifact
         condition: ${{ parameters.PublishPipelineArtifact }}
