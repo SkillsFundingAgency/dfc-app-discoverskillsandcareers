@@ -1,5 +1,5 @@
 variables:
-  ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'     
+  ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'
   SolutionBaseName: 'DFC.App.DiscoverSkillsCareers'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
@@ -27,6 +27,20 @@ stages:
     - template: AzureDevOpsTemplates/Build/StepTemplates/dfc-arm-build.yml@dfc-devops
       parameters:
         ArmTemplateRoot: $(ArmTemplateRoot)
+
+    - task: CopyFiles@2
+      displayName: 'Copy page registration documents to Staging'
+      inputs:
+        TargetFolder: $(build.artifactstagingdirectory)/PageRegistrations
+        SourceFolder: '$(Build.SourcesDirectory)/PageRegistration'
+        Contents: |
+          *.json
+
+    - task: PublishPipelineArtifact@0
+      displayName: Publish Pipeline Artifact
+      inputs:
+        targetPath: $(build.artifactstagingdirectory)/PageRegistrations
+        artifactName: ${{ variables.SolutionBaseName }}.PageRegistrations
 
   #Build and test application
   - job: BuildTestAndAnalyze
