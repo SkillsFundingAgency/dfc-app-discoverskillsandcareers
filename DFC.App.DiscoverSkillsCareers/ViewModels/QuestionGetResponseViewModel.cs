@@ -12,8 +12,10 @@
 
         public string QuestionText { get; set; }
 
-        public string PreviousQuestionId { get; set; }
+        public int PreviousQuestionId { get; set; }
 
         public string NextQuestionId { get; set; }
+        
+        public int? NextQuestionNumber { get; set; }
     }
 }
