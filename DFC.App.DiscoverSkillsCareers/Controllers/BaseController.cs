@@ -1,4 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Constants;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers

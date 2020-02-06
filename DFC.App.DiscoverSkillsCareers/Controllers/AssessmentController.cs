@@ -1,16 +1,20 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class AssessmentController : BaseController
     {
         private readonly QuestionSetDataProvider questionSetDataProvider;
+        private readonly IAssessmentApiService assessmentApiService;
 
-        public AssessmentController()
+        public AssessmentController(IAssessmentApiService assessmentApiService)
         {
             this.questionSetDataProvider = new QuestionSetDataProvider();
+            this.assessmentApiService = assessmentApiService;
         }
 
         [HttpGet]
@@ -49,8 +53,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public IActionResult New(string questionSetName)
+        public async Task<IActionResult> New(string questionSetName)
         {
+            var result = await assessmentApiService.NewSession("short").ConfigureAwait(false);
+
+            if (result != null)
+            {
+                return Redirect($"assessment/{questionSetName}/01");
+            }
+
             return Redirect($"assessment/{questionSetName}/01");
         }
 
