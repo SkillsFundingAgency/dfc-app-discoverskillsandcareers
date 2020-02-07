@@ -44,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View();
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber, requestViewModel.Answer);
+            var answerResponse = await apiService.AnswerQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse.IsSuccess && answerResponse.IsComplete)
             {

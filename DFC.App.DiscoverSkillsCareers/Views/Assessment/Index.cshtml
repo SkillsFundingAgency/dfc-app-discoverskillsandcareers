@@ -7,7 +7,7 @@
 }
 
 <br />
-@Model.PercentageComplete.ToString("P0")
+@(Model.PercentageComplete)%
 
 @Html.ValidationSummary()
 
@@ -15,19 +15,19 @@
 
 <form method="post">
     <p>
-        <input type="radio" value="1" name="answer" />Strongly agree
+        <input type="radio" value="4" name="answer" />Strongly agree
     </p>
     <p>
-        <input type="radio" value="2" name="answer" />Agree
+        <input type="radio" value="3" name="answer" />Agree
     </p>
     <p>
-        <input type="radio" value="3" name="answer" />It depends
+        <input type="radio" value="2" name="answer" />It depends
     </p>
     <p>
-        <input type="radio" value="4" name="answer" />Disagree
+        <input type="radio" value="1" name="answer" />Disagree
     </p>
     <p>
-        <input type="radio" value="5" name="answer" />Strongly disagree
+        <input type="radio" value="0" name="answer" />Strongly disagree
     </p>
 
     <button>Next</button>
