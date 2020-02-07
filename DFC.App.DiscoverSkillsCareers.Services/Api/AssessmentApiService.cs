@@ -41,9 +41,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<GetQuestionResponse> GetQuestion(string sessionId, string assessment, int questionNumber)
         {
             var url = $"{httpClient.BaseAddress}/assessment/{sessionId}/{assessment}/q/{questionNumber}";
-            var result = await httpClient.GetAsync(url).ConfigureAwait(false);
-            result.EnsureSuccessStatusCode();
-            var contentResponse = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var httpResponseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
+            httpResponseMessage.EnsureSuccessStatusCode();
+            var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             var response = serialiser.Deserialise<GetQuestionResponse>(contentResponse);
             getQuestionResponseDataProcessor.Processor(response);
             return response;
@@ -52,9 +52,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<PostAnswerResponse> AnswerQuestion(string sessionId, PostAnswerRequest postAnswerRequest)
         {
             var url = $"{httpClient.BaseAddress}/assessment/{sessionId}";
-            var result = await httpClient.PostAsync(url, CreateJsonContent(postAnswerRequest)).ConfigureAwait(false);
-            result.EnsureSuccessStatusCode();
-            var contentResponse = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var httpResponseMessage = await httpClient.PostAsync(url, CreateJsonContent(postAnswerRequest)).ConfigureAwait(false);
+            httpResponseMessage.EnsureSuccessStatusCode();
+            var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             var response = serialiser.Deserialise<PostAnswerResponse>(contentResponse);
             return response;
         }
@@ -68,6 +68,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var response = serialiser.Deserialise<ReloadResponse>(contentResponse);
             reloadResponseProcessor.Processor(response);
             return response;
+        }
+
+        public async Task<SendEmailResponse> SendEmail(string sessionId, string domain, string emailAddress, string templateId)
+        {
+            var url = $"{httpClient.BaseAddress}/assessment/notify/email";
+            var data = new
+            {
+                domain,
+                emailAddress,
+                templateId,
+                sessionId,
+            };
+            var httpResponseMessage = await httpClient.PostAsync(url, CreateJsonContent(data)).ConfigureAwait(false);
+            httpResponseMessage.EnsureSuccessStatusCode();
+            var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return serialiser.Deserialise<SendEmailResponse>(contentResponse);
         }
 
         private StringContent CreateJsonContent(object value)

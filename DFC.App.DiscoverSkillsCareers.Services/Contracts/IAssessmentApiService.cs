@@ -12,5 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<PostAnswerResponse> AnswerQuestion(string sessionId, PostAnswerRequest postAnswerRequest);
 
         Task<ReloadResponse> Reload(string sessionId);
+
+        Task<SendEmailResponse> SendEmail(string sessionId, string domain, string emailAddress, string templateId);
     }
 }

@@ -155,10 +155,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public IActionResult Email(AssessmentEmailPostRequest request)
+        public async Task<IActionResult> Email(AssessmentEmailPostRequest request)
         {
             if (ModelState.IsValid)
             {
+                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1");
+
                 return RedirectToAction("EmailSent");
             }
 

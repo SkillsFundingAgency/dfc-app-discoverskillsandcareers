@@ -60,6 +60,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return reloadResponse;
         }
 
+        public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress, string templateId)
+        {
+            Validate();
+
+            var sendEmailResponse = await assessmentApiService.SendEmail(GetSessionId(), domain, emailAddress, templateId).ConfigureAwait(false);
+
+            return sendEmailResponse;
+        }
+
         private void Validate()
         {
             ValidateSession();
