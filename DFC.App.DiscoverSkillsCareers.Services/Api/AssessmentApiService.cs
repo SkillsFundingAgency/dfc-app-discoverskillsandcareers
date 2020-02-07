@@ -11,11 +11,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
     {
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
+        private readonly IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor;
 
-        public AssessmentApiService(HttpClient httpClient, ISerialiser serialiser)
+        public AssessmentApiService(HttpClient httpClient, ISerialiser serialiser, IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor)
         {
             this.httpClient = httpClient;
             this.serialiser = serialiser;
+            this.getQuestionResponseDataProcessor = getQuestionResponseDataProcessor;
         }
 
         public async Task<NewSessionResponse> NewSession(string assessmentType)
@@ -36,7 +38,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var result = await httpClient.GetAsync(url).ConfigureAwait(false);
             result.EnsureSuccessStatusCode();
             var contentResponse = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return serialiser.Deserialise<GetQuestionResponse>(contentResponse);
+            var response = serialiser.Deserialise<GetQuestionResponse>(contentResponse);
+            getQuestionResponseDataProcessor.Processor(response);
+            return response;
         }
 
         public async Task<PostAnswerResponse> AnswerQuestion(string sessionId, PostAnswerRequest postAnswerRequest)

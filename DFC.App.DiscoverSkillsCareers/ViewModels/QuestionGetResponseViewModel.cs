@@ -1,4 +1,6 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.ViewModels
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+
+namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     public class QuestionGetResponseViewModel
     {
@@ -12,10 +14,17 @@
 
         public string QuestionText { get; set; }
 
-        public int PreviousQuestionId { get; set; }
+        public int? PreviousQuestionNumber { get; set; }
 
         public string NextQuestionId { get; set; }
-        
+
         public int? NextQuestionNumber { get; set; }
+
+        public Answer? Answer { get; set; }
+
+        public bool IsChecked(Answer answer)
+        {
+            return Answer == answer;
+        }
     }
 }

@@ -37,11 +37,12 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string JobCategorySafeUrl { get; set; }
 
-
         public int CurrentQuestionNumber { get; set; }
 
         public string QuestionSetName { get; set; }
 
-        public int PreviousQuestionNumber { get; set; }
+        public string QuestionSetVersion { get; set; }
+
+        public int? PreviousQuestionNumber { get; set; }
     }
 }

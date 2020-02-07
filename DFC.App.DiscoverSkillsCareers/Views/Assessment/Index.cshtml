@@ -1,9 +1,9 @@
 ﻿@model QuestionGetResponseViewModel
 
-@if (Model.PreviousQuestionId > 0)
+@if (Model.PreviousQuestionNumber.HasValue)
 {
     <br />
-    <a asp-route="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
+    <a asp-route="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
 }
 
 <br />
@@ -15,19 +15,19 @@
 
 <form method="post">
     <p>
-        <input type="radio" value="4" name="answer" />Strongly agree
+        <input type="radio" value="4" name="answer" checked="@Model.IsChecked(Answer.StronglyAgree)" />Strongly agree
     </p>
     <p>
-        <input type="radio" value="3" name="answer" />Agree
+        <input type="radio" value="3" name="answer" checked="@Model.IsChecked(Answer.Agree)" />Agree
     </p>
     <p>
-        <input type="radio" value="2" name="answer" />It depends
+        <input type="radio" value="2" name="answer" checked="@Model.IsChecked(Answer.Neutral)" />It depends
     </p>
     <p>
-        <input type="radio" value="1" name="answer" />Disagree
+        <input type="radio" value="1" name="answer" checked="@Model.IsChecked(Answer.Disagree)" />Disagree
     </p>
     <p>
-        <input type="radio" value="0" name="answer" />Strongly disagree
+        <input type="radio" value="0" name="answer" checked="@Model.IsChecked(Answer.StronglyDisagree)" />Strongly disagree
     </p>
 
     <button>Next</button>

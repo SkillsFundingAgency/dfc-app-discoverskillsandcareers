@@ -199,10 +199,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             result.IsComplete = question.IsComplete;
             result.NextQuestionNumber = question.NextQuestionNumber;
             result.PercentageComplete = question.PercentComplete;
-            result.PreviousQuestionId = question.PreviousQuestionNumber;
+            result.PreviousQuestionNumber = question.PreviousQuestionNumber;
             result.QuestionId = question.QuestionId;
             result.QuestionSetName = question.QuestionSetName;
             result.QuestionText = question.QuestionText;
+            result.Answer = question.RecordedAnswer;
 
             return result;
         }

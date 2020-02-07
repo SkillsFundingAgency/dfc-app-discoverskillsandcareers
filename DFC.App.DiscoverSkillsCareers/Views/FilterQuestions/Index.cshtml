@@ -1,9 +1,9 @@
 ﻿@model FilterQuestionGetResponseViewModel
 
-@if (Model.PreviousQuestionId != null)
+@if (Model.PreviousQuestionNumber != null)
 {
     <br />
-    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
+    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
 }
 
 <br />
@@ -15,7 +15,7 @@
 
 <form method="post">
     <input type="hidden" id="QuestionSetName" name="QuestionSetName" value="@Model.QuestionSetName" />
-    <input type="hidden" id="QuestionId" name="QuestionId" value="@Model.QuestionId" />
+    <input type="hidden" id="QuestionId" name="QuestionId" value="@Model.PreviousQuestionNumber" />
 
     <p>
         <input type="radio" value="1" name="answer" />Strongly agree

@@ -1,6 +1,8 @@
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Sessions;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
             services.AddScoped<ISessionService, HttpContextSessonService>();
             services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
 
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {

@@ -34,8 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             Validate();
 
             var getQuestionResponse = await assessmentApiService.GetQuestion(GetSessionId(), assessment, questionNumber).ConfigureAwait(false);
-            PopulateData(getQuestionResponse);
-
+            
             return getQuestionResponse;
         }
 
@@ -45,30 +44,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var questionSetResponse = await GetQuestion(assessment, questionId).ConfigureAwait(false);
 
-            var questionIdFull = $"{questionSetResponse.QuestionSetName}-{questionId}";
+            var questionIdFull = $"{questionSetResponse.QuestionSetVersion}-{questionId}";
             var post = new PostAnswerRequest() { QuestionId = questionIdFull, SelectedOption = answer };
             var answerQuestionResponse = await assessmentApiService.AnswerQuestion(GetSessionId(), post).ConfigureAwait(false);
 
             return answerQuestionResponse;
         }
 
-        private void PopulateData(GetQuestionResponse getQuestionResponse)
-        {
-            if (getQuestionResponse != null)
-            {
-                var lastDashIndex = getQuestionResponse.QuestionId.LastIndexOf("-");
-                if (lastDashIndex != -1)
-                {
-                    getQuestionResponse.CurrentQuestionNumber = int.Parse(getQuestionResponse.QuestionId.Substring(lastDashIndex + 1));
-                    getQuestionResponse.QuestionSetName = getQuestionResponse.QuestionId.Substring(0, lastDashIndex);
-                    getQuestionResponse.PreviousQuestionNumber = getQuestionResponse.CurrentQuestionNumber;
-                    if (getQuestionResponse.PreviousQuestionNumber < 0)
-                    {
-                        getQuestionResponse.PreviousQuestionNumber = 0;
-                    }
-                }
-            }
-        }
 
         private void Validate()
         {
