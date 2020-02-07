@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (answerResponse.IsComplete)
                 {
-                    return Redirect("assessment/finish");
+                    return Redirect("assessment/complete");
                 }
                 else
                 {
