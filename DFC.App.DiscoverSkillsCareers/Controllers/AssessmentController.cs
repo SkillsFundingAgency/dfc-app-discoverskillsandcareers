@@ -39,24 +39,42 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(QuestionPostRequestViewModel requestViewModel)
         {
+            if (requestViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            var question = await apiService.GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
+            if (question == null)
+            {
+                return BadRequest();
+            }
+
+            var result = CreateResponseViewModel(question);
+
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(result);
             }
 
             var answerResponse = await apiService.AnswerQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
 
-            if (answerResponse.IsSuccess && answerResponse.IsComplete)
-            {
-                return Redirect("assessment/finish");
-            }
-
             if (answerResponse.IsSuccess)
             {
-                return Redirect($"assessment/{requestViewModel.QuestionSetName}/{answerResponse.NextQuestionNumber}");
+                if (answerResponse.IsComplete)
+                {
+                    return Redirect("assessment/finish");
+                }
+                else
+                {
+                    return Redirect($"assessment/{requestViewModel.QuestionSetName}/{answerResponse.NextQuestionNumber}");
+                }
             }
-
-            return View();
+            else
+            {
+                ModelState.AddModelError("Answer", "Failed to record answer");
+                return View(result);
+            }
         }
 
         [HttpPost]
