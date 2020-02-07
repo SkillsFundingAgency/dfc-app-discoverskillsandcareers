@@ -170,20 +170,26 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public IActionResult Reference()
+        public async Task<IActionResult> Reference()
         {
-            return View();
+            var nextQuestionResponse = await apiService.Reload().ConfigureAwait(false);
+
+            var responseViewModel = new AssessmentReferenceGetResponse();
+            responseViewModel.ReferenceCode = nextQuestionResponse.ReferenceCode;
+            responseViewModel.AssessmentStarted = nextQuestionResponse.StartedDt.ToString("d MMMM yyyy");
+
+            return View(responseViewModel);
         }
 
         [HttpPost]
-        public IActionResult Reference(AssessmentReferencePostRequest request)
+        public async Task<IActionResult> Reference(AssessmentReferencePostRequest request)
         {
             if (ModelState.IsValid)
             {
                 return RedirectToAction("ReferenceSent");
             }
 
-            return View(request);
+            return View();
         }
 
         public IActionResult ReferenceSent()
@@ -191,22 +197,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        private async Task<GetQuestionResponse> GetQuestion(string assessment, int questionNumber)
-        {
-            var result = await apiService.GetQuestion(assessment, questionNumber);
-            return result;
-        }
-
         private QuestionGetResponseViewModel CreateResponseViewModel()
         {
             var result = new QuestionGetResponseViewModel();
-            return result;
-        }
-
-        private QuestionGetResponseViewModel CreateResponseViewModel(string assessment, int questionNumber)
-        {
-            var result = new QuestionGetResponseViewModel();
-
             return result;
         }
 

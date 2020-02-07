@@ -12,12 +12,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
         private readonly IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor;
+        private readonly IDataProcessor<ReloadResponse> reloadResponseProcessor;
 
-        public AssessmentApiService(HttpClient httpClient, ISerialiser serialiser, IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor)
+        public AssessmentApiService(
+            HttpClient httpClient,
+            ISerialiser serialiser,
+            IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor,
+            IDataProcessor<ReloadResponse> reloadResponseProcessor)
         {
             this.httpClient = httpClient;
             this.serialiser = serialiser;
             this.getQuestionResponseDataProcessor = getQuestionResponseDataProcessor;
+            this.reloadResponseProcessor = reloadResponseProcessor;
         }
 
         public async Task<NewSessionResponse> NewSession(string assessmentType)
@@ -49,7 +55,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var result = await httpClient.PostAsync(url, CreateJsonContent(postAnswerRequest)).ConfigureAwait(false);
             result.EnsureSuccessStatusCode();
             var contentResponse = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return serialiser.Deserialise<PostAnswerResponse>(contentResponse);
+            var response = serialiser.Deserialise<PostAnswerResponse>(contentResponse);
+            return response;
+        }
+
+        public async Task<ReloadResponse> Reload(string sessionId)
+        {
+            var url = $"{httpClient.BaseAddress}/assessment/{sessionId}/reload";
+            var httpResponseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
+            httpResponseMessage.EnsureSuccessStatusCode();
+            var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var response = serialiser.Deserialise<ReloadResponse>(contentResponse);
+            reloadResponseProcessor.Processor(response);
+            return response;
         }
 
         private StringContent CreateJsonContent(object value)

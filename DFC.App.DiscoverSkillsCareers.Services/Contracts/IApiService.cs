@@ -10,5 +10,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<GetQuestionResponse> GetQuestion(string assessment, int questionNumber);
 
         Task<PostAnswerResponse> AnswerQuestion(string assessment, int questionId, string answer);
+
+        Task<ReloadResponse> Reload();
     }
 }

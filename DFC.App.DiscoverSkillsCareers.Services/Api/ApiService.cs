@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             Validate();
 
             var getQuestionResponse = await assessmentApiService.GetQuestion(GetSessionId(), assessment, questionNumber).ConfigureAwait(false);
-            
+
             return getQuestionResponse;
         }
 
@@ -51,6 +51,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return answerQuestionResponse;
         }
 
+        public async Task<ReloadResponse> Reload()
+        {
+            Validate();
+
+            var reloadResponse = await assessmentApiService.Reload(GetSessionId()).ConfigureAwait(false);
+
+            return reloadResponse;
+        }
 
         private void Validate()
         {
