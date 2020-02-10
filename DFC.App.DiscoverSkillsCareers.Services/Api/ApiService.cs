@@ -97,8 +97,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string GetSessionId()
         {
-            return "session6-2kgz9367wkm6mx";
-            //return sessionService.GetValue<string>(SessionId);
+            // return "session6-2kgz9367wkm6mx";
+            return sessionService.GetValue<string>(SessionId);
         }
 
         private bool HasSessionId()

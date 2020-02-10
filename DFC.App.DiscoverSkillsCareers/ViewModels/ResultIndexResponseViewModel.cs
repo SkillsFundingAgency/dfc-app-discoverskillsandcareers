@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {

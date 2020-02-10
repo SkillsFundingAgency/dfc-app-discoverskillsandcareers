@@ -1,4 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +8,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class AssessmentController : BaseController
     {
+        private readonly IMapper mapper;
         private readonly IApiService apiService;
 
-        public AssessmentController(ISessionService sessionService, IApiService apiService)
+        public AssessmentController(IMapper mapper, ISessionService sessionService, IApiService apiService)
             : base(sessionService)
         {
+            this.mapper = mapper;
             this.apiService = apiService;
         }
 
@@ -49,12 +51,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return Redirect("results");
             }
 
-            if (getAssessmentResponse.QuestionNumber != requestViewModel.QuestionNumber)
+            if (requestViewModel.QuestionNumber > getAssessmentResponse.QuestionNumber)
             {
                 return Redirect($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
             }
 
-            var responseViewModel = CreateResponseViewModel(question);
+            var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(question);
             return View(responseViewModel);
         }
 
@@ -72,7 +74,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(question);
+            var result = mapper.Map<QuestionGetResponseViewModel>(question);
 
             if (!ModelState.IsValid)
             {
@@ -181,7 +183,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (ModelState.IsValid)
             {
-                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1");
+                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1").ConfigureAwait(false);
 
                 return RedirectToAction("EmailSent");
             }
@@ -206,7 +208,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Reference(AssessmentReferencePostRequest request)
+        public IActionResult Reference(AssessmentReferencePostRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -224,22 +226,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private QuestionGetResponseViewModel CreateResponseViewModel()
         {
             var result = new QuestionGetResponseViewModel();
-            return result;
-        }
-
-        private QuestionGetResponseViewModel CreateResponseViewModel(GetQuestionResponse question)
-        {
-            var result = new QuestionGetResponseViewModel();
-
-            result.IsComplete = question.IsComplete;
-            result.NextQuestionNumber = question.NextQuestionNumber;
-            result.PercentageComplete = question.PercentComplete;
-            result.PreviousQuestionNumber = question.PreviousQuestionNumber;
-            result.QuestionId = question.QuestionId;
-            result.QuestionSetName = question.QuestionSetName;
-            result.QuestionText = question.QuestionText;
-            result.Answer = question.RecordedAnswer;
-
             return result;
         }
     }
