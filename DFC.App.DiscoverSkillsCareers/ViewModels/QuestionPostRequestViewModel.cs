@@ -6,9 +6,9 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     {
         public string QuestionSetName { get; set; }
 
-        public string QuestionId { get; set; }
+        public int QuestionNumber { get; set; }
 
         [Required(ErrorMessage = "Choose an answer to the statement")]
-        public int? Answer { get; set; }
+        public string Answer { get; set; }
     }
 }
