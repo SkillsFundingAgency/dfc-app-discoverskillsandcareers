@@ -44,6 +44,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
+            if (getAssessmentResponse.IsComplete)
+            {
+                return Redirect("results");
+            }
+
             if (getAssessmentResponse.QuestionNumber != requestViewModel.QuestionNumber)
             {
                 return Redirect($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");

@@ -19,7 +19,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public int? NextQuestionNumber { get; set; }
 
-        public bool IsComplete { get; set; }
+        public bool IsComplete
+        {
+            get { return MaxQuestionsCount == RecordedAnswersCount; }
+        }
 
         public string ReloadCode { get; set; }
 
