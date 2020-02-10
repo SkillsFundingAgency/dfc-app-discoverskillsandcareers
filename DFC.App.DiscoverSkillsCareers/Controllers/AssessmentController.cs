@@ -1,4 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;

@@ -1,0 +1,9 @@
+﻿@model IEnumerable<JobCategoryResultViewModel>
+
+@foreach (var item in Model)
+{
+    <h3><a href="https://nationalcareers.service.gov.uk/job-categories/@item.JobFamilyNameUrl">@item.JobFamilyName</a></h3>
+    <p>Answer some more questions to find job roles you might be suited to in @item.JobFamilyName</p>
+    <a asp-route="filterquestions" asp-route-jobCategoryName="@item.JobFamilyUrl" asp-route-questionid="01">Answer @item.TotalQuestions more questions</a>
+    <hr/>
+}

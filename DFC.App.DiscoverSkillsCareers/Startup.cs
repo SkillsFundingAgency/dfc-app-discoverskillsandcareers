@@ -1,5 +1,6 @@
+using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
@@ -30,6 +31,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
             services.AddScoped<ISessionService, HttpContextSessonService>();
             services.AddScoped<IApiService, ApiService>();
@@ -39,6 +42,11 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {
                 httpClient.BaseAddress = new Uri(Configuration["AssessmentApi"]);
+            });
+
+            services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(Configuration["ResultsApi"]);
             });
         }
 

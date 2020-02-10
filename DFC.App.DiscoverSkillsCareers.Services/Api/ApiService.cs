@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
 using System.Threading.Tasks;
@@ -10,11 +11,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private const string SessionId = "SessionId";
 
         private readonly IAssessmentApiService assessmentApiService;
+        private readonly IResultsApiService resultsApiService;
         private readonly ISessionService sessionService;
 
-        public ApiService(IAssessmentApiService assessmentApiService, ISessionService sessionService)
+        public ApiService(
+            IAssessmentApiService assessmentApiService,
+            IResultsApiService resultsApiService,
+            ISessionService sessionService)
         {
             this.assessmentApiService = assessmentApiService;
+            this.resultsApiService = resultsApiService;
             this.sessionService = sessionService;
         }
 
@@ -69,6 +75,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return sendEmailResponse;
         }
 
+        public async Task<GetResultsResponse> GetResults()
+        {
+            Validate();
+
+            return await resultsApiService.GetResults(GetSessionId()).ConfigureAwait(false);
+        }
+
         private void Validate()
         {
             ValidateSession();
@@ -84,7 +97,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string GetSessionId()
         {
-            return sessionService.GetValue<string>(SessionId);
+            return "session6-2kgz9367wkm6mx";
+            //return sessionService.GetValue<string>(SessionId);
         }
 
         private bool HasSessionId()

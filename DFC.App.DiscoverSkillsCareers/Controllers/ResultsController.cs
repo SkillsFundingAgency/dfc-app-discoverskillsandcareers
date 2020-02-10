@@ -1,20 +1,29 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class ResultsController : BaseController
     {
+        private readonly IMapper mapper;
+        private readonly IApiService apiService;
 
-        public ResultsController(ISessionService sessionService)
+        public ResultsController(IMapper mapper, ISessionService sessionService, IApiService apiService)
             : base(sessionService)
         {
-
+            this.mapper = mapper;
+            this.apiService = apiService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var resultsResponse = await apiService.GetResults().ConfigureAwait(false);
+
+            var response = mapper.Map<ResultIndexResponseViewModel>(resultsResponse);
+            return View(response);
         }
 
         public IActionResult Filter()

@@ -1,4 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Repositories

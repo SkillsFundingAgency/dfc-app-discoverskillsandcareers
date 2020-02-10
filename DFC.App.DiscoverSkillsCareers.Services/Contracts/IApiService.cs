@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
@@ -14,5 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<GetAssessmentResponse> GetAssessment();
 
         Task<SendEmailResponse> SendEmail(string domain, string emailAddress, string templateId);
+
+        Task<GetResultsResponse> GetResults();
     }
 }

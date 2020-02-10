@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace DFC.App.DiscoverSkillsCareers.Models
+namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 {
     public class QuestionSet
     {
