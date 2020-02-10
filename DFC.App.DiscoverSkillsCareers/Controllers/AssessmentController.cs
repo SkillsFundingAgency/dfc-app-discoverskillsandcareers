@@ -39,6 +39,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
 
+            if (requestViewModel.QuestionNumber > getAssessmentResponse.MaxQuestionsCount)
+            {
+                return BadRequest();
+            }
+
             if (getAssessmentResponse.QuestionNumber != requestViewModel.QuestionNumber)
             {
                 return Redirect($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
