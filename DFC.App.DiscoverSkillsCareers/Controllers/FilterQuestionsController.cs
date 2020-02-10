@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,12 +6,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class FilterQuestionsController : BaseController
     {
-        private readonly QuestionSetDataProvider questionSetDataProvider;
-
         public FilterQuestionsController(ISessionService sessionService)
             : base(sessionService)
         {
-            questionSetDataProvider = new QuestionSetDataProvider();
         }
 
         [HttpGet]
