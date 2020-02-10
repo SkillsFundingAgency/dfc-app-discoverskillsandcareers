@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionService, HttpContextSessonService>();
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
-            services.AddScoped<IDataProcessor<ReloadResponse>, ReloadResponseDataProcessor>();
+            services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
 
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {

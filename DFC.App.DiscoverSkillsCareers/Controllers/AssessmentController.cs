@@ -32,6 +32,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var question = await apiService.GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
 
+            if (question == null)
+            {
+                return BadRequest();
+            }
+
+            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+
+            if (getAssessmentResponse.QuestionNumber != requestViewModel.QuestionNumber)
+            {
+                return Redirect($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
+            }
+
             var responseViewModel = CreateResponseViewModel(question);
             return View(responseViewModel);
         }
@@ -174,11 +186,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Reference()
         {
-            var nextQuestionResponse = await apiService.Reload().ConfigureAwait(false);
+            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
 
             var responseViewModel = new AssessmentReferenceGetResponse();
-            responseViewModel.ReferenceCode = nextQuestionResponse.ReferenceCode;
-            responseViewModel.AssessmentStarted = nextQuestionResponse.StartedDt.ToString("d MMMM yyyy");
+            responseViewModel.ReferenceCode = getAssessmentResponse.ReferenceCode;
+            responseViewModel.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
 
             return View(responseViewModel);
         }

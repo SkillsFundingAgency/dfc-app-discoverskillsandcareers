@@ -51,13 +51,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return answerQuestionResponse;
         }
 
-        public async Task<ReloadResponse> Reload()
+        public async Task<GetAssessmentResponse> GetAssessment()
         {
             Validate();
 
-            var reloadResponse = await assessmentApiService.Reload(GetSessionId()).ConfigureAwait(false);
+            var response = await assessmentApiService.GetAssessment(GetSessionId()).ConfigureAwait(false);
 
-            return reloadResponse;
+            return response;
         }
 
         public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress, string templateId)

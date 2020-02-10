@@ -4,9 +4,9 @@ using System.Text;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 {
-    public class ReloadResponseDataProcessor : IDataProcessor<ReloadResponse>
+    public class GetAssessmentResponseDataProcessor : IDataProcessor<GetAssessmentResponse>
     {
-        public void Processor(ReloadResponse value)
+        public void Processor(GetAssessmentResponse value)
         {
             if (value == null)
             {

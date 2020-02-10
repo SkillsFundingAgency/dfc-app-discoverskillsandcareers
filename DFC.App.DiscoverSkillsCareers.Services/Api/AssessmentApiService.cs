@@ -12,13 +12,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
         private readonly IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor;
-        private readonly IDataProcessor<ReloadResponse> reloadResponseProcessor;
+        private readonly IDataProcessor<GetAssessmentResponse> reloadResponseProcessor;
 
         public AssessmentApiService(
             HttpClient httpClient,
             ISerialiser serialiser,
             IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor,
-            IDataProcessor<ReloadResponse> reloadResponseProcessor)
+            IDataProcessor<GetAssessmentResponse> reloadResponseProcessor)
         {
             this.httpClient = httpClient;
             this.serialiser = serialiser;
@@ -59,13 +59,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return response;
         }
 
-        public async Task<ReloadResponse> Reload(string sessionId)
+        public async Task<GetAssessmentResponse> GetAssessment(string sessionId)
         {
             var url = $"{httpClient.BaseAddress}/assessment/{sessionId}/reload";
             var httpResponseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
             httpResponseMessage.EnsureSuccessStatusCode();
             var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var response = serialiser.Deserialise<ReloadResponse>(contentResponse);
+            var response = serialiser.Deserialise<GetAssessmentResponse>(contentResponse);
             reloadResponseProcessor.Processor(response);
             return response;
         }

@@ -3,7 +3,7 @@ using System;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
-    public class ReloadResponse
+    public class GetAssessmentResponse
     {
         public string QuestionText { get; set; }
 

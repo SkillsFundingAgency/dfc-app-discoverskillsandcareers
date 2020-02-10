@@ -18,16 +18,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Tests.AssessmentApiServiceTests
         [InlineData("ezw68mmyw943m3", "EZW6 8MMY W943 M3")]
         public void CanFormatCode(string reloadCode, string expectedReferenceCode)
         {
-            var data = CreateReloadResponse(reloadCode);
-            var dataProcessor = new ReloadResponseDataProcessor();
+            var data = CreateGetAssessmentResponse(reloadCode);
+            var dataProcessor = new GetAssessmentResponseDataProcessor();
             dataProcessor.Processor(data);
 
             Assert.Equal(expectedReferenceCode, data.ReferenceCode);
         }
 
-        private ReloadResponse CreateReloadResponse(string reloadCode)
+        private GetAssessmentResponse CreateGetAssessmentResponse(string reloadCode)
         {
-            var result = new ReloadResponse();
+            var result = new GetAssessmentResponse();
             result.ReloadCode = reloadCode;
             return result;
         }
