@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(viewModel.JobCategoryName, "");
+            var result = CreateResponseViewModel(viewModel.JobCategoryName, string.Empty);
 
             if (!ModelState.IsValid)
             {

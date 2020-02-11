@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public IEnumerable<string> SuggestedJobProfiles { get; set; } = new List<string>();
 
-        public string[] WhatYouToldUs { get; set; }
+        public IEnumerable<string> WhatYouToldUs { get; set; }
 
         public string JobFamilyNameUrlSafe { get; set; }
     }

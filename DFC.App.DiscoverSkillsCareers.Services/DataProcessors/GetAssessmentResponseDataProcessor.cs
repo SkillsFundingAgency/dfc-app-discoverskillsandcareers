@@ -23,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
             {
                 reloadCode = reloadCode.Trim().ToUpper();
                 int i = 0;
-                foreach (var c in reloadCode.ToCharArray())
+                foreach (var c in reloadCode)
                 {
                     i++;
                     if (i % 4 == 1 && i > 1)

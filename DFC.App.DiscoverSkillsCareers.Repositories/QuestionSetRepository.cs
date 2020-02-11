@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Repositories
 
             try
             {
-                var result = await documentClient.ReadDocumentAsync<QuestionSet>(uri, feedOptions);
+                var result = await documentClient.ReadDocumentAsync<QuestionSet>(uri, feedOptions).ConfigureAwait(false);
                 qs = result.Document;
             }
             catch (DocumentClientException ex)
@@ -46,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Repositories
                                    .AsEnumerable()
                                    .FirstOrDefault();
 
-                    await CreateUpdateLatestQuestionSet(latestQs);
+                    await CreateUpdateLatestQuestionSet(latestQs).ConfigureAwait(false);
 
                     qs = latestQs;
                 }
@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Repositories
                 questionSet.QuestionSetVersion = $"latest-{questionSet.AssessmentType}";
 
                 var uri = UriFactory.CreateDocumentCollectionUri(cosmosSettings.DatabaseName, collectionName);
-                await documentClient.UpsertDocumentAsync(uri, questionSet);
+                await documentClient.UpsertDocumentAsync(uri, questionSet).ConfigureAwait(false);
             }
         }
     }

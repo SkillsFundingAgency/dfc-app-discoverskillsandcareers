@@ -9,7 +9,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public HomeController(ISessionService sessionService)
             : base(sessionService)
         {
-
         }
 
         public IActionResult Index()
