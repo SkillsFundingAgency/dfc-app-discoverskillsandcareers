@@ -198,24 +198,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Reference()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-
-            var responseViewModel = new AssessmentReferenceGetResponse();
-            responseViewModel.ReferenceCode = getAssessmentResponse.ReferenceCode;
-            responseViewModel.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
-
+            var responseViewModel = await GetAssessment().ConfigureAwait(false);
             return View(responseViewModel);
         }
 
         [HttpPost]
-        public IActionResult Reference(AssessmentReferencePostRequest request)
+        public async Task<IActionResult> Reference(AssessmentReferencePostRequest request)
         {
             if (ModelState.IsValid)
             {
                 return Redirect("assessment/referencesent");
             }
 
-            return View();
+            var responseViewModel = await GetAssessment().ConfigureAwait(false);
+            return View(responseViewModel);
         }
 
         public IActionResult ReferenceSent()
@@ -226,6 +222,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private QuestionGetResponseViewModel CreateResponseViewModel()
         {
             var result = new QuestionGetResponseViewModel();
+            return result;
+        }
+
+        private async Task<AssessmentReferenceGetResponse> GetAssessment()
+        {
+            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+
+            var result = new AssessmentReferenceGetResponse();
+            result.ReferenceCode = getAssessmentResponse.ReferenceCode;
+            result.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
+
             return result;
         }
     }
