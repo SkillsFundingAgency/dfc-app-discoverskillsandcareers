@@ -2,7 +2,6 @@
 {
     public class JobProfileResultViewModel
     {
-
         public string JobCategory { get; set; }
 
         public string SocCode { get; set; }

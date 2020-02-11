@@ -1,4 +1,6 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.Models.Result
+﻿using System.Collections.Generic;
+
+namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
     public class JobCategoryResult
     {
@@ -16,7 +18,7 @@
 
         public decimal NormalizedTotal { get; set; }
 
-        public TraitValue[] TraitValues { get; set; }
+        public IEnumerable<TraitValue> TraitValues { get; set; }
 
         public FilterAssessmentResult FilterAssessment { get; set; }
 

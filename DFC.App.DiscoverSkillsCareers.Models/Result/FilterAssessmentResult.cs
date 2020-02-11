@@ -6,6 +6,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
     public class FilterAssessmentResult
     {
+        public FilterAssessmentResult()
+        {
+            SuggestedJobProfiles = new List<string>();
+        }
+
         public string JobFamilyName { get; set; }
 
         public DateTime CreatedDt { get; set; }
@@ -16,11 +21,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public int MaxQuestions { get; set; }
 
-        public Answer[] RecordedAnswers { get; set; }
+        public IEnumerable<Answer> RecordedAnswers { get; set; }
 
-        public List<string> SuggestedJobProfiles { get; set; } = new List<string>();
+        public IEnumerable<string> SuggestedJobProfiles { get; set; }
 
-        public string[] WhatYouToldUs { get; set; }
+        public IEnumerable<string> WhatYouToldUs { get; set; }
 
         public string JobFamilyNameUrlSafe => JobFamilyName?.ToLower()?.Replace(" ", "-");
     }

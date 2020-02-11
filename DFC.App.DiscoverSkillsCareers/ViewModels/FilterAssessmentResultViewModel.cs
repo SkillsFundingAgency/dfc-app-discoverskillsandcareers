@@ -16,9 +16,9 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int MaxQuestions { get; set; }
 
-        public Answer[] RecordedAnswers { get; set; }
+        public IEnumerable<Answer> RecordedAnswers { get; set; }
 
-        public List<string> SuggestedJobProfiles { get; set; } = new List<string>();
+        public IEnumerable<string> SuggestedJobProfiles { get; set; } = new List<string>();
 
         public string[] WhatYouToldUs { get; set; }
 
