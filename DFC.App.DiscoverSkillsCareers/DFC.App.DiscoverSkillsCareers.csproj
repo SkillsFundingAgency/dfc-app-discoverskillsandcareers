@@ -37,9 +37,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Core\DFC.App.DiscoverSkillsCareers.Core.csproj" />
-    <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Services\DFC.App.DiscoverSkillsCareers.Services.csproj" />
-  </ItemGroup>
-
 </Project>

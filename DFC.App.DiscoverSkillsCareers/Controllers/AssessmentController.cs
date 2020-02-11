@@ -1,115 +1,57 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Services;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class AssessmentController : BaseController
     {
-        private readonly IApiService apiService;
+        private readonly QuestionSetDataProvider questionSetDataProvider;
 
-        public AssessmentController(ISessionService sessionService, IApiService apiService)
-            : base(sessionService)
+        public AssessmentController()
         {
-            this.apiService = apiService;
+            this.questionSetDataProvider = new QuestionSetDataProvider();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(QuestionGetRequestViewModel requestViewModel)
+        public IActionResult Index(QuestionGetRequestViewModel viewModel)
         {
-            if (requestViewModel == null)
+            if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            if (!HasSessionId())
-            {
-                var result = CreateResponseViewModel();
-                return View(result);
-            }
-
-            var question = await apiService.GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
-
-            if (question == null)
-            {
-                return BadRequest();
-            }
-
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-
-            if (requestViewModel.QuestionNumber > getAssessmentResponse.MaxQuestionsCount)
-            {
-                return BadRequest();
-            }
-
-            if (getAssessmentResponse.IsComplete)
-            {
-                return Redirect("results");
-            }
-
-            if (getAssessmentResponse.QuestionNumber != requestViewModel.QuestionNumber)
-            {
-                return Redirect($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
-            }
-
-            var responseViewModel = CreateResponseViewModel(question);
-            return View(responseViewModel);
+            var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
+            return View(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(QuestionPostRequestViewModel requestViewModel)
+        public IActionResult Index(QuestionPostRequestViewModel viewModel)
         {
-            if (requestViewModel == null)
+            if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            var question = await apiService.GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
-            if (question == null)
-            {
-                return BadRequest();
-            }
-
-            var result = CreateResponseViewModel(question);
+            var result = CreateResponseViewModel(viewModel.QuestionSetName, viewModel.QuestionId);
 
             if (!ModelState.IsValid)
             {
                 return View(result);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(result.NextQuestionId))
+            {
+                return Redirect($"assessment/complete");
+            }
 
-            if (answerResponse.IsSuccess)
-            {
-                if (answerResponse.IsComplete)
-                {
-                    return Redirect("assessment/complete");
-                }
-                else
-                {
-                    return Redirect($"assessment/{requestViewModel.QuestionSetName}/{answerResponse.NextQuestionNumber}");
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("Answer", "Failed to record answer");
-                return View(result);
-            }
+            return Redirect($"assessment/{result.QuestionSetName}/{result.NextQuestionId}");
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(string questionSetName)
+        public IActionResult New(string questionSetName)
         {
-            var result = await apiService.NewSession(questionSetName).ConfigureAwait(false);
-
-            if (result)
-            {
-                return Redirect($"assessment/{questionSetName}/1");
-            }
-
-            return Redirect($"assessment/{questionSetName}/1");
+            return Redirect($"assessment/{questionSetName}/01");
         }
 
         public IActionResult Complete()
@@ -177,12 +119,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Email(AssessmentEmailPostRequest request)
+        public IActionResult Email(AssessmentEmailPostRequest request)
         {
             if (ModelState.IsValid)
             {
-                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1");
-
                 return RedirectToAction("EmailSent");
             }
 
@@ -194,26 +134,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Reference()
+        public IActionResult Reference()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-
-            var responseViewModel = new AssessmentReferenceGetResponse();
-            responseViewModel.ReferenceCode = getAssessmentResponse.ReferenceCode;
-            responseViewModel.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
-
-            return View(responseViewModel);
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Reference(AssessmentReferencePostRequest request)
+        public IActionResult Reference(AssessmentReferencePostRequest request)
         {
             if (ModelState.IsValid)
             {
                 return RedirectToAction("ReferenceSent");
             }
 
-            return View();
+            return View(request);
         }
 
         public IActionResult ReferenceSent()
@@ -221,24 +155,41 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        private QuestionGetResponseViewModel CreateResponseViewModel()
-        {
-            var result = new QuestionGetResponseViewModel();
-            return result;
-        }
-
-        private QuestionGetResponseViewModel CreateResponseViewModel(GetQuestionResponse question)
+        private QuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
         {
             var result = new QuestionGetResponseViewModel();
 
-            result.IsComplete = question.IsComplete;
-            result.NextQuestionNumber = question.NextQuestionNumber;
-            result.PercentageComplete = question.PercentComplete;
-            result.PreviousQuestionNumber = question.PreviousQuestionNumber;
-            result.QuestionId = question.QuestionId;
-            result.QuestionSetName = question.QuestionSetName;
-            result.QuestionText = question.QuestionText;
-            result.Answer = question.RecordedAnswer;
+            var questionSet = questionSetDataProvider.GetQuestionSet(questionSetName);
+            if (questionSet != null)
+            {
+                result.QuestionSetName = questionSet.Name;
+
+                var question = questionSet.GetQuestion(questionId);
+
+                if (question != null)
+                {
+                    result.QuestionId = question.Id;
+                    result.QuestionText = question.Text;
+                    result.IsComplete = questionSet.IsCompleted();
+
+                    var prevQuestion = questionSet.GetPreviousQuestion(questionId);
+                    var nextQuestion = questionSet.GetNextQuestion(questionId);
+
+                    if (prevQuestion != null)
+                    {
+                        result.PreviousQuestionId = prevQuestion.Id;
+                    }
+
+                    if (nextQuestion != null)
+                    {
+                        result.NextQuestionId = nextQuestion.Id;
+                    }
+
+                    var totalCompleted = questionSet.GetCompleted();
+                    var totalquestions = questionSet.Questions.Count;
+                    result.PercentageComplete = (decimal)totalCompleted / totalquestions;
+                }
+            }
 
             return result;
         }

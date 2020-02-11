@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,8 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly QuestionSetDataProvider questionSetDataProvider;
 
-        public FilterQuestionsController(ISessionService sessionService)
-            : base(sessionService)
+        public FilterQuestionsController()
         {
             questionSetDataProvider = new QuestionSetDataProvider();
         }
@@ -35,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(viewModel.JobCategoryName, "");
+            var result = CreateResponseViewModel(viewModel.JobCategoryName, viewModel.QuestionId);
 
             if (!ModelState.IsValid)
             {
@@ -58,6 +56,38 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private FilterQuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
         {
             var result = new FilterQuestionGetResponseViewModel() { JobCategoryName = questionSetName };
+
+            var questionSet = questionSetDataProvider.GetQuestionSet(questionSetName);
+            if (questionSet != null)
+            {
+                result.QuestionSetName = questionSet.Name;
+
+                var question = questionSet.GetQuestion(questionId);
+
+                if (question != null)
+                {
+                    result.QuestionId = question.Id;
+                    result.QuestionText = question.Text;
+                    result.IsComplete = questionSet.IsCompleted();
+
+                    var prevQuestion = questionSet.GetPreviousQuestion(questionId);
+                    var nextQuestion = questionSet.GetNextQuestion(questionId);
+
+                    if (prevQuestion != null)
+                    {
+                        result.PreviousQuestionId = prevQuestion.Id;
+                    }
+
+                    if (nextQuestion != null)
+                    {
+                        result.NextQuestionId = nextQuestion.Id;
+                    }
+
+                    var totalCompleted = questionSet.GetCompleted();
+                    var totalquestions = questionSet.Questions.Count;
+                    result.PercentageComplete = (decimal)totalCompleted / totalquestions;
+                }
+            }
 
             return result;
         }

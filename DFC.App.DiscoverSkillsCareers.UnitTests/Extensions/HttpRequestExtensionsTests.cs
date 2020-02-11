@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Core.Extensions;
+﻿using DFC.App.DiscoverSkillsCareers.Extensions;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Xunit;
@@ -13,7 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Extensions
         {
             var request = CreateHttpContext().Request;
 
-            request.Headers.Add(HeaderName.CompositeRequest, "somevalue");
+            request.Headers.Add("X-Dfc-Composite-Request", "somevalue");
 
             Assert.True(request.IsRequestFromComposite());
         }
