@@ -207,6 +207,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (ModelState.IsValid)
             {
+                TempData.Add("Telephone", request.Telephone);
                 return Redirect("assessment/referencesent");
             }
 
