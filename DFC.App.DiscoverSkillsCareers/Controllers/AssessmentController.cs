@@ -142,7 +142,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            return RedirectToAction("index", "question", new { QuestionSetName = "short", QuestionId = "02" });
+            return Redirect($"assessment/short/02");
         }
 
         public IActionResult Save()
@@ -165,11 +165,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (viewModel.ReturnOption == 1)
             {
-                return RedirectToAction("Email");
+                return Redirect("assessment/email");
             }
             else
             {
-                return RedirectToAction("Reference");
+                return Redirect("assessment/reference");
             }
         }
 
@@ -185,7 +185,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1").ConfigureAwait(false);
 
-                return RedirectToAction("EmailSent");
+                return Redirect("assessment/emailsent");
             }
 
             return View(request);
@@ -212,7 +212,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("ReferenceSent");
+                return Redirect("assessment/referencesent");
             }
 
             return View();
