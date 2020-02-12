@@ -82,6 +82,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return await resultsApiService.GetResults(GetSessionId()).ConfigureAwait(false);
         }
 
+        public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)
+        {
+            Validate();
+
+            return await assessmentApiService.FilterAssessment(GetSessionId(), jobCategory).ConfigureAwait(false);
+        }
+
         private void Validate()
         {
             ValidateSession();

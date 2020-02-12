@@ -3,9 +3,9 @@
 <h1>Your results</h1>
 
 <h3>What you told us</h3>
-Your answers show that:
+Your answers show that: @Model.Results.AssessmentType
 
-<partial name="_Traits" model="@Model.Traits" />
+<partial name="_Traits" model="@Model.Results.Traits" />
 
 The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.
 
@@ -21,4 +21,4 @@ Choose to have your results sent by email, or use a reference code to see them.
 <a asp-controller="assessment" asp-action="save">Continue</a>
 
 <hr />
-<partial name="_JobCategories" model="@Model.JobCategories" />
+<partial name="_JobCategories" />

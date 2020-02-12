@@ -1,26 +1,39 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class FilterQuestionsController : BaseController
     {
-        public FilterQuestionsController(ISessionService sessionService)
+        private readonly IMapper mapper;
+        private readonly IApiService apiService;
+
+        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IApiService apiService)
             : base(sessionService)
         {
+            this.mapper = mapper;
+            this.apiService = apiService;
         }
 
         [HttpGet]
-        public IActionResult Index(FilterQuestionGetRequestViewModel viewModel)
+        public async Task<IActionResult> Index(FilterQuestionIndexRequestViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(viewModel.JobCategoryName, viewModel.QuestionId);
-            return View(result);
+            var filterAssessmentResponse = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
+            var filtereredQuestion = await apiService.GetQuestion(viewModel.QuestionSetName, viewModel.QuestionNumber);
+
+            var response = new FilterQuestionIndexResponseViewModel();
+            response.Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion);
+            response.JobCategoryName = viewModel.JobCategoryName;
+
+            return View(response);
         }
 
         [HttpPost]

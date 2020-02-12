@@ -81,12 +81,12 @@ namespace DFC.App.DiscoverSkillsCareers
 
                 endpoints.MapControllerRoute(
                     name: "filterQuestionsComplete",
-                    pattern: RouteName.Prefix + "/filterquestions/{jobCategoryName}/complete",
+                    pattern: RouteName.Prefix + "/{questionSetName}/filterquestions/{jobCategoryName}/complete",
                     new { controller = "FilterQuestions", action = "Complete" });
 
                 endpoints.MapControllerRoute(
                     name: "filterQuestions",
-                    pattern: RouteName.Prefix + "/filterquestions/{jobCategoryName}/{questionId}",
+                    pattern: RouteName.Prefix + "/{questionSetName}/filterquestions/{jobCategoryName}/{questionNumber}",
                     new { controller = "FilterQuestions", action = "Index" });
 
                 endpoints.MapControllerRoute(

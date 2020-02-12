@@ -14,5 +14,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<GetAssessmentResponse> GetAssessment(string sessionId);
 
         Task<SendEmailResponse> SendEmail(string sessionId, string domain, string emailAddress, string templateId);
+
+        Task<FilterAssessmentResponse> FilterAssessment(string sessionId, string jobCategory);
     }
 }

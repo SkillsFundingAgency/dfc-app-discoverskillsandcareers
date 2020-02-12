@@ -11,7 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         {
             CreateMap<FilterAssessmentResult, FilterAssessmentResultViewModel>();
 
-            CreateMap<GetResultsResponse, ResultIndexResponseViewModel>();
+            CreateMap<GetResultsResponse, ResultsIndexResponseViewModel>();
 
             CreateMap<JobCategoryResult, JobCategoryResultViewModel>();
 
@@ -22,6 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<GetQuestionResponse, QuestionGetResponseViewModel>()
                 .ForMember(d => d.PercentageComplete, s => s.MapFrom(a => a.PercentComplete))
                 .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer));
+
+            CreateMap<GetQuestionResponse, FilterQuestionIndexResponseViewModel>();
         }
     }
 }

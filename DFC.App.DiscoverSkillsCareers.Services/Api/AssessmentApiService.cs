@@ -86,6 +86,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return serialiser.Deserialise<SendEmailResponse>(contentResponse);
         }
 
+        public async Task<FilterAssessmentResponse> FilterAssessment(string sessionId, string jobCategory)
+        {
+            var url = $"{httpClient.BaseAddress}/assessment/filtered/{sessionId}/{jobCategory}";
+            using (var postData = new StringContent(string.Empty))
+            {
+                var result = await httpClient.PostAsync(url, postData).ConfigureAwait(false);
+                result.EnsureSuccessStatusCode();
+                var contentResponse = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return serialiser.Deserialise<FilterAssessmentResponse>(contentResponse);
+            }
+        }
+
         private StringContent CreateJsonContent(object value)
         {
             var result = new StringContent(serialiser.Serialise(value), Encoding.UTF8, MediaTypeNames.Application.Json);

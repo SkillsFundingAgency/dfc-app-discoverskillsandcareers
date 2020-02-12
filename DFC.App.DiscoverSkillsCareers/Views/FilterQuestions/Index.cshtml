@@ -1,38 +1,24 @@
-﻿@model FilterQuestionGetResponseViewModel
+﻿@model FilterQuestionIndexResponseViewModel
 
-@if (Model.PreviousQuestionNumber != null)
+@if (Model.Question.PreviousQuestionNumber != null)
 {
     <br />
-    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
+    <a asp-route="filterQuestions" asp-route-questionSetName="@Model.Question.QuestionSetName" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@Model.Question.PreviousQuestionNumber">Back to previous statement</a>
 }
-
-<br />
-@Model.PercentageComplete.ToString("P0")
 
 @Html.ValidationSummary()
 
-<h1>@Model.QuestionText</h1>
+<h1>@Model.Question.QuestionText</h1>
 
 <form method="post">
-    <input type="hidden" id="QuestionSetName" name="QuestionSetName" value="@Model.QuestionSetName" />
-    <input type="hidden" id="QuestionId" name="QuestionId" value="@Model.PreviousQuestionNumber" />
-
+    
     <p>
-        <input type="radio" value="1" name="answer" />Strongly agree
+        <input type="radio" value="5" name="answer" />Yes
     </p>
     <p>
-        <input type="radio" value="2" name="answer" />Agree
+        <input type="radio" value="6" name="answer" />No
     </p>
-    <p>
-        <input type="radio" value="3" name="answer" />It depends
-    </p>
-    <p>
-        <input type="radio" value="4" name="answer" />Disagree
-    </p>
-    <p>
-        <input type="radio" value="5" name="answer" />Strongly disagree
-    </p>
-
+ 
     <button>Next</button>
 </form>
 
