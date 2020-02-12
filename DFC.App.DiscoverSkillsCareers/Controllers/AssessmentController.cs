@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -119,9 +120,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public IActionResult Continue()
+        public async Task<IActionResult> Continue()
         {
-            return Redirect("assessment/short/02");
+            var assessment = await GetAssessment().ConfigureAwait(false);
+            return NavigateTo(assessment);
         }
 
         public IActionResult Return()
@@ -198,7 +200,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Reference()
         {
-            var responseViewModel = await GetAssessment().ConfigureAwait(false);
+            var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
             return View(responseViewModel);
         }
 
@@ -212,7 +214,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return Redirect("assessment/referencesent");
             }
 
-            var responseViewModel = await GetAssessment().ConfigureAwait(false);
+            var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
             return View(responseViewModel);
         }
 
@@ -227,15 +229,74 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return result;
         }
 
-        private async Task<AssessmentReferenceGetResponse> GetAssessment()
+        private async Task<AssessmentReferenceGetResponse> GetAssessmentViewModel()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
 
             var result = new AssessmentReferenceGetResponse();
             result.ReferenceCode = getAssessmentResponse.ReferenceCode;
             result.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
 
             return result;
+        }
+
+        private async Task<GetQuestionResponse> GetQuestion(string questionSetName, int navigateToQuestionNumber)
+        {
+            var question = await apiService.GetQuestion(questionSetName, navigateToQuestionNumber).ConfigureAwait(false);
+            return question;
+        }
+
+        private async Task<GetAssessmentResponse> GetAssessment()
+        {
+            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            return getAssessmentResponse;
+        }
+
+        private async Task<IActionResult> NavigateTo(GetQuestionResponse question, int navigateToQuestionNumber)
+        {
+            if (question == null)
+            {
+                return BadRequest();
+            }
+
+            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+
+            if (getAssessmentResponse == null)
+            {
+                return BadRequest();
+            }
+
+            if (getAssessmentResponse.IsComplete)
+            {
+                return Redirect("results");
+            }
+
+            if (navigateToQuestionNumber > getAssessmentResponse.MaxQuestionsCount)
+            {
+                return BadRequest();
+            }
+
+            if (navigateToQuestionNumber > getAssessmentResponse.QuestionNumber)
+            {
+                return Redirect($"assessment/{question.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
+            }
+
+            return Redirect($"assessment/{question.QuestionSetName}/{navigateToQuestionNumber}");
+        }
+
+        private IActionResult NavigateTo(GetAssessmentResponse assessment)
+        {
+            if (assessment == null)
+            {
+                return BadRequest();
+            }
+
+            if (assessment.IsComplete)
+            {
+                return Redirect("results");
+            }
+
+            return Redirect($"assessment/{assessment.QuestionId}/{assessment.NextQuestionNumber}");
         }
     }
 }
