@@ -41,5 +41,14 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
         public bool IsFilterAssessment { get; set; }
 
         public string JobCategorySafeUrl { get; set; }
+
+
+        public int CurrentQuestionNumber { get; set; }
+
+        public string QuestionSetName { get; set; }
+
+        public string QuestionSetVersion { get; set; }
+
+        public int? PreviousQuestionNumber { get; set; }
     }
 }

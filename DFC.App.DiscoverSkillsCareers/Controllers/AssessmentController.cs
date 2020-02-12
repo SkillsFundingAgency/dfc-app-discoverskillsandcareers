@@ -120,15 +120,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Continue()
+        public async Task<IActionResult> Return()
         {
             var assessment = await GetAssessment().ConfigureAwait(false);
             return NavigateTo(assessment);
-        }
-
-        public IActionResult Return()
-        {
-            return View();
         }
 
         [HttpPost]
@@ -296,7 +291,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return Redirect("results");
             }
 
-            return Redirect($"assessment/{assessment.QuestionId}/{assessment.NextQuestionNumber}");
+            return Redirect($"assessment/{assessment.QuestionSetName}/{assessment.NextQuestionNumber}");
         }
     }
 }
