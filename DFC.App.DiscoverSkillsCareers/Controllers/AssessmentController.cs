@@ -33,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(result);
             }
 
-            var question = await apiService.GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
+            var question = await GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
 
             if (question == null)
             {
@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var question = await apiService.GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
+            var question = await GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (question == null)
             {
                 return BadRequest();
@@ -124,22 +124,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var assessment = await GetAssessment().ConfigureAwait(false);
             return NavigateTo(assessment);
-        }
-
-        [HttpPost]
-        public IActionResult Return(AssessmentReturnRequestViewModel viewModel)
-        {
-            if (viewModel == null)
-            {
-                return BadRequest();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            return Redirect($"assessment/short/02");
         }
 
         public IActionResult Save()
