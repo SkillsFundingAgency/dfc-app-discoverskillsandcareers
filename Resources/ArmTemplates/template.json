@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ApimRoot": {
+            "type": "string",
+            "metadata": {
+                "description": "The APIM proxy address including the protocol and trailing slash. eg https://dev.api.nationalcareersservice.org.uk/"
+            }
+        },
         "resourcePrefix": {
             "type": "string"
         },
@@ -38,6 +44,9 @@
         "sharedAppServicePlanResourceGroup": {
             "type": "string",
             "defaultValue": ""
+        },
+        "JobProfileOverView": {
+            "type": "string"
         }
     },
     "variables": {
@@ -143,7 +152,27 @@
                             },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
-                                "value": "Information"
+                                "value": "Warning"
+                            },
+                            {
+                                "name": "AllowedHosts",
+                                "value": "*"
+                            },
+                            {
+                                "name": "QuestionApi",
+                                "value": "[concat(parameters('ApimRoot'), 'content/api')]"
+                            },
+                            {
+                                "name": "ResultsApi",
+                                "value": "[concat(parameters('ApimRoot'), 'results/api')]"
+                            },
+                            {
+                                "name": "AssessmentApi",
+                                "value": "[concat(parameters('ApimRoot'), 'assessments/api')]"
+                            },
+                            {
+                                "name": "JobProfileOverView",
+                                "value": "[parameters('JobProfileOverView')]"
                             }
                         ]
                     }

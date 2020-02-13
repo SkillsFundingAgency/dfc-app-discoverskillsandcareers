@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ApimRoot": {
+            "value": "https://api.example.org.uk/"
+        },
         "resourcePrefix": {
             "value": "dfc-foo-app-dysac"
         },
@@ -16,6 +19,9 @@
         },
         "sharedAppServicePlanResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "JobProfileOverView": {
+            "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
         }
     }
 }
