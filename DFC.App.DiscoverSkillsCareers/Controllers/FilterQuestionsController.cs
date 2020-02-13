@@ -26,37 +26,42 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var filterAssessmentResponse = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
-            var filtereredQuestion = await apiService.GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber);
-
-            var response = new FilterQuestionIndexResponseViewModel();
-            response.Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion);
-            response.JobCategoryName = viewModel.JobCategoryName;
-
+            var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
             return View(response);
         }
 
         [HttpPost]
-        public IActionResult Index(FilterQuestionPostRequestViewModel viewModel)
+        public async Task<IActionResult> Index(FilterQuestionPostRequestViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(viewModel.JobCategoryName, string.Empty);
-
             if (!ModelState.IsValid)
             {
-                return View(result);
+                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
+                return View(response);
             }
 
-            if (string.IsNullOrWhiteSpace(result.NextQuestionId))
+            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber, viewModel.Answer).ConfigureAwait(false);
+
+            if (answerResponse == null)
             {
-                return Redirect($"filterquestions/{result.JobCategoryName}/complete");
+                return BadRequest();
             }
 
-            return Redirect($"filterquestions/{result.JobCategoryName}/{result.NextQuestionId}");
+            if (!answerResponse.IsSuccess == null)
+            {
+                return BadRequest();
+            }
+
+            if (answerResponse.IsComplete)
+            {
+                return Redirect("results");
+            }
+
+            return Redirect($"{viewModel.QuestionSetName}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
         }
 
         public IActionResult Complete(FilterQuestionsCompleteResponseViewModel viewModel)
@@ -64,11 +69,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(viewModel);
         }
 
-        private FilterQuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
+        private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var result = new FilterQuestionGetResponseViewModel() { JobCategoryName = questionSetName };
-
-            return result;
+            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var response = new FilterQuestionIndexResponseViewModel();
+            response.Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion);
+            response.JobCategoryName = assessment;
+            return response;
         }
     }
 }

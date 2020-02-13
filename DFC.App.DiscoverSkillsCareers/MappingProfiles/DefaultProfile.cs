@@ -20,7 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<TraitValue, TraitValueViewModel>();
 
             CreateMap<GetQuestionResponse, QuestionGetResponseViewModel>()
-                .ForMember(d => d.PercentageComplete, s => s.MapFrom(a => a.PercentComplete))
                 .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer));
 
             CreateMap<GetQuestionResponse, FilterQuestionIndexResponseViewModel>();
