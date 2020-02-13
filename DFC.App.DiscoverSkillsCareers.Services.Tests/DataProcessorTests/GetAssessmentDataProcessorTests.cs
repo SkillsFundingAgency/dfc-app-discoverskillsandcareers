@@ -1,11 +1,22 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
+using FakeItEasy;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Tests.AssessmentApiServiceTests
 {
     public class GetAssessmentDataProcessorTests
     {
+        private readonly GetAssessmentResponseDataProcessor dataProcessor;
+        private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
+
+        public GetAssessmentDataProcessorTests()
+        {
+            sessionIdToCodeConverter = A.Fake<ISessionIdToCodeConverter>();
+            dataProcessor = new GetAssessmentResponseDataProcessor(sessionIdToCodeConverter);
+        }
+
         [Theory]
         [InlineData(1, null, 2)]
         [InlineData(2, 1, 3)]
@@ -13,7 +24,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Tests.AssessmentApiServiceTests
         public void CanSetPreviousAndNextPageCounts(int currentQuestionNumber, int? expectedPreviousQuestionNumber, int? expectedNextQuestionNumber)
         {
             var response = CreateAssessmentResponse(currentQuestionNumber);
-            var dataProcessor = new GetAssessmentResponseDataProcessor();
             dataProcessor.Processor(response);
 
             Assert.Equal(expectedPreviousQuestionNumber, response.PreviousQuestionNumber);
@@ -24,7 +34,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Tests.AssessmentApiServiceTests
         public void CanGetDetails()
         {
             var data = CreateAssessmentResponse(1);
-            var dataProcessor = new GetAssessmentResponseDataProcessor();
             dataProcessor.Processor(data);
 
             Assert.Equal("short", data.QuestionSetName);

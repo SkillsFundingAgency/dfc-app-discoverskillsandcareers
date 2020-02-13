@@ -5,6 +5,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
+using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
 using DFC.App.DiscoverSkillsCareers.Services.Sessions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
+            services.AddScoped<ISessionIdToCodeConverter, DefaultSessionIdToCodeConverter>();
 
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {

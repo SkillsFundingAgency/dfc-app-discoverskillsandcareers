@@ -2,12 +2,18 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
 using System.Linq;
-using System.Text;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 {
     public class GetAssessmentResponseDataProcessor : IDataProcessor<GetAssessmentResponse>
     {
+        private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
+
+        public GetAssessmentResponseDataProcessor(ISessionIdToCodeConverter sessionIdToCodeConverter)
+        {
+            this.sessionIdToCodeConverter = sessionIdToCodeConverter;
+        }
+
         public void Processor(GetAssessmentResponse value)
         {
             if (value == null)
@@ -15,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
                 return;
             }
 
-            value.ReferenceCode = GetReferenceCode(value.ReloadCode);
+            value.ReferenceCode = sessionIdToCodeConverter.GetCode(value.ReloadCode);
 
             if (!string.IsNullOrWhiteSpace(value.QuestionId))
             {
@@ -41,28 +47,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
                     }
                 }
             }
-        }
-
-        private string GetReferenceCode(string reloadCode)
-        {
-            var result = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(reloadCode))
-            {
-                reloadCode = reloadCode.Trim().ToUpper();
-                int i = 0;
-                foreach (var c in reloadCode)
-                {
-                    i++;
-                    if (i % 4 == 1 && i > 1)
-                    {
-                        result.Append(" ");
-                    }
-
-                    result.Append(c);
-                }
-            }
-
-            return result.ToString();
         }
     }
 }
