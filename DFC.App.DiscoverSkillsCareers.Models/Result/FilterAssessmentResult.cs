@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
