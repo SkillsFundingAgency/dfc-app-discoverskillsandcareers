@@ -40,11 +40,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
+                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(viewModel.QuestionSetName, viewModel.QuestionNumber, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(viewModel.QuestionSetName, viewModel.QuestionNumberReal, viewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse == null)
             {

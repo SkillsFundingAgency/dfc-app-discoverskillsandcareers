@@ -16,7 +16,8 @@
 <h1>@Model.Question.QuestionText</h1>
 
 <form method="post">
-    <input type="hidden" name="QuestionNumber" value="@Model.Question.CurrentQuestionNumber" />
+    <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
+    <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
     <p>
         <input type="radio" value="5" name="answer" />Yes
     </p>
