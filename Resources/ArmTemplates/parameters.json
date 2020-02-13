@@ -29,7 +29,7 @@
         "sharedAppServicePlanResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
-        "JobProfileOverView": {
+        "JobProfileOverViewUrl": {
             "value": "__JobProfileOverView__"
         }
     }

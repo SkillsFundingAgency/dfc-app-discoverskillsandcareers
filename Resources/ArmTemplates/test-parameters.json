@@ -20,7 +20,7 @@
         "sharedAppServicePlanResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
-        "JobProfileOverView": {
+        "JobProfileOverViewUrl": {
             "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
         }
     }
