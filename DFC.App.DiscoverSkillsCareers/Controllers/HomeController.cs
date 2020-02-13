@@ -24,7 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            return RedirectToAction("continue", "assessment");
+            return RedirectToAction("return", "assessment");
         }
     }
 }

@@ -20,7 +20,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetResultsResponse> GetResults(string sessionId)
         {
-            var url = $"{httpClient.BaseAddress}/result/{sessionId}/short";
+            return await GetResults(sessionId, "short").ConfigureAwait(false);
+        }
+
+        public async Task<GetResultsResponse> GetResults(string sessionId, string jobCategory)
+        {
+            var url = $"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}";
             var jsonContent = await httpClient.GetStringAsync(url).ConfigureAwait(false);
             return serialiser.Deserialise<GetResultsResponse>(jsonContent);
         }

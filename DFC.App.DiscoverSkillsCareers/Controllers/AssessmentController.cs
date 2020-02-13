@@ -219,9 +219,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return result;
         }
 
-        private async Task<GetQuestionResponse> GetQuestion(string questionSetName, int navigateToQuestionNumber)
+        private async Task<GetQuestionResponse> GetQuestion(string questionSetName, int questionNumber)
         {
-            var question = await apiService.GetQuestion(questionSetName, navigateToQuestionNumber).ConfigureAwait(false);
+            var question = await apiService.GetQuestion(questionSetName, questionNumber).ConfigureAwait(false);
             return question;
         }
 

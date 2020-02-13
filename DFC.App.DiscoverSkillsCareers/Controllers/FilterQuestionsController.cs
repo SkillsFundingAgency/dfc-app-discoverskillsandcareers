@@ -27,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var filterAssessmentResponse = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
-            var filtereredQuestion = await apiService.GetQuestion(viewModel.QuestionSetName, viewModel.QuestionNumber);
+            var filtereredQuestion = await apiService.GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber);
 
             var response = new FilterQuestionIndexResponseViewModel();
             response.Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion);

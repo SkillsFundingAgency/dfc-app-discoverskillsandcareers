@@ -6,5 +6,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     public interface IResultsApiService
     {
         Task<GetResultsResponse> GetResults(string sessionId);
+
+        Task<GetResultsResponse> GetResults(string sessionId, string jobCategory);
     }
 }
