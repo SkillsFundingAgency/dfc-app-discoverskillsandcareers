@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public int MaxQuestions { get; set; }
 
-        public IEnumerable<Answer> RecordedAnswers { get; set; }
+        public IEnumerable<AnswerDetail> RecordedAnswers { get; set; }
 
         public IEnumerable<string> SuggestedJobProfiles { get; set; }
 
