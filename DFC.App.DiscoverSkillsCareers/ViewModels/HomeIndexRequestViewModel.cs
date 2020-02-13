@@ -4,8 +4,8 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     public class HomeIndexRequestViewModel
     {
-        [Display(Name = "Reference")]
+        [Display(Name = "Reference Code")]
         [Required]
-        public string Reference { get; set; }
+        public string ReferenceCode { get; set; }
     }
 }

@@ -1,14 +1,18 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(ISessionService sessionService)
+        private readonly IApiService apiService;
+
+        public HomeController(ISessionService sessionService, IApiService apiService)
             : base(sessionService)
         {
+            this.apiService = apiService;
         }
 
         public IActionResult Index()
@@ -17,12 +21,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(HomeIndexRequestViewModel viewModel)
+        public async Task<IActionResult> Index(HomeIndexRequestViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
+
+            await apiService.Reload(viewModel.ReferenceCode).ConfigureAwait(false);
 
             return RedirectToAction("return", "assessment");
         }

@@ -13,15 +13,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
         private readonly ISessionService sessionService;
+        private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
 
         public ApiService(
             IAssessmentApiService assessmentApiService,
             IResultsApiService resultsApiService,
-            ISessionService sessionService)
+            ISessionService sessionService,
+            ISessionIdToCodeConverter sessionIdToCodeConverter)
         {
             this.assessmentApiService = assessmentApiService;
             this.resultsApiService = resultsApiService;
             this.sessionService = sessionService;
+            this.sessionIdToCodeConverter = sessionIdToCodeConverter;
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -87,6 +90,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             Validate();
 
             return await assessmentApiService.FilterAssessment(GetSessionId(), jobCategory).ConfigureAwait(false);
+        }
+
+        public async Task<string> Reload(string referenceCode)
+        {
+            var sessionId = sessionIdToCodeConverter.GetSessionId(referenceCode);
+
+            var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
+
+            sessionService.SetValue(SessionId, assessment.SessionId);
+
+            return assessment.SessionId;
         }
 
         private void Validate()
