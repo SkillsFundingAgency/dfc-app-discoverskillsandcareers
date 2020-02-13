@@ -19,12 +19,11 @@
     <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
     <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
     <p>
-        <input type="radio" value="5" name="answer" />Yes
+        <input type="radio" value="5" name="answer" checked="@Model.Question.IsChecked(Answer.Yes)" />Yes
     </p>
     <p>
-        <input type="radio" value="6" name="answer" />No
+        <input type="radio" value="6" name="answer" checked="@Model.Question.IsChecked(Answer.No)" />No
     </p>
-
     <button>Next</button>
 </form>
 
