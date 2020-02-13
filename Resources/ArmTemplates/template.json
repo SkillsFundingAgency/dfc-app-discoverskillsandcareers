@@ -172,7 +172,7 @@
                             },
                             {
                                 "name": "JobProfileOverView",
-                                "value": "[parameters('JobProfileOverView')]"
+                                "value": "[parameters('JobProfileOverViewUrl')]"
                             }
                         ]
                     }
