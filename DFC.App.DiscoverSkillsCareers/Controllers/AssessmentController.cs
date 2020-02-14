@@ -29,8 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!HasSessionId())
             {
-                var result = CreateResponseViewModel();
-                return View(result);
+                return Redirect("/");
             }
 
             var question = await GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
@@ -212,12 +211,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        private QuestionGetResponseViewModel CreateResponseViewModel()
-        {
-            var result = new QuestionGetResponseViewModel();
-            return result;
-        }
-
         private async Task<AssessmentReferenceGetResponse> GetAssessmentViewModel()
         {
             var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
@@ -239,38 +232,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             return getAssessmentResponse;
-        }
-
-        private async Task<IActionResult> NavigateTo(GetQuestionResponse question, int navigateToQuestionNumber)
-        {
-            if (question == null)
-            {
-                return BadRequest();
-            }
-
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-
-            if (getAssessmentResponse == null)
-            {
-                return BadRequest();
-            }
-
-            if (getAssessmentResponse.IsComplete)
-            {
-                return Redirect("results");
-            }
-
-            if (navigateToQuestionNumber > getAssessmentResponse.MaxQuestionsCount)
-            {
-                return BadRequest();
-            }
-
-            if (navigateToQuestionNumber > getAssessmentResponse.QuestionNumber)
-            {
-                return Redirect($"assessment/{question.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
-            }
-
-            return Redirect($"assessment/{question.QuestionSetName}/{navigateToQuestionNumber}");
         }
 
         private IActionResult NavigateTo(GetAssessmentResponse assessment)

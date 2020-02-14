@@ -52,11 +52,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<PostAnswerResponse> AnswerQuestion(string sessionId, PostAnswerRequest postAnswerRequest)
         {
             var url = $"{httpClient.BaseAddress}/assessment/{sessionId}";
-            var httpResponseMessage = await httpClient.PostAsync(url, CreateJsonContent(postAnswerRequest)).ConfigureAwait(false);
-            httpResponseMessage.EnsureSuccessStatusCode();
-            var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var response = serialiser.Deserialise<PostAnswerResponse>(contentResponse);
-            return response;
+            using (var sc = new StringContent(serialiser.Serialise(postAnswerRequest), Encoding.UTF8, MediaTypeNames.Application.Json))
+            {
+                var httpResponseMessage = await httpClient.PostAsync(url, sc).ConfigureAwait(false);
+                httpResponseMessage.EnsureSuccessStatusCode();
+                var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var response = serialiser.Deserialise<PostAnswerResponse>(contentResponse);
+                return response;
+            }
         }
 
         public async Task<GetAssessmentResponse> GetAssessment(string sessionId)
@@ -73,6 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<SendEmailResponse> SendEmail(string sessionId, string domain, string emailAddress, string templateId)
         {
             var url = $"{httpClient.BaseAddress}/assessment/notify/email";
+
             var data = new
             {
                 domain,
@@ -80,10 +84,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 templateId,
                 sessionId,
             };
-            var httpResponseMessage = await httpClient.PostAsync(url, CreateJsonContent(data)).ConfigureAwait(false);
-            httpResponseMessage.EnsureSuccessStatusCode();
-            var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return serialiser.Deserialise<SendEmailResponse>(contentResponse);
+
+            using (var sc = new StringContent(serialiser.Serialise(data), Encoding.UTF8, MediaTypeNames.Application.Json))
+            {
+                var httpResponseMessage = await httpClient.PostAsync(url, sc).ConfigureAwait(false);
+                httpResponseMessage.EnsureSuccessStatusCode();
+                var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return serialiser.Deserialise<SendEmailResponse>(contentResponse);
+            }
         }
 
         public async Task<FilterAssessmentResponse> FilterAssessment(string sessionId, string jobCategory)
@@ -96,12 +104,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 var contentResponse = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return serialiser.Deserialise<FilterAssessmentResponse>(contentResponse);
             }
-        }
-
-        private StringContent CreateJsonContent(object value)
-        {
-            var result = new StringContent(serialiser.Serialise(value), Encoding.UTF8, MediaTypeNames.Application.Json);
-            return result;
         }
     }
 }

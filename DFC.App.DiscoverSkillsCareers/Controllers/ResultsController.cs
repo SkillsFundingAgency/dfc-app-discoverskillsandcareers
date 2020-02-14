@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -31,12 +30,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult Filter()
         {
             return View();
-        }
-
-        private async Task<GetAssessmentResponse> GetAssessment()
-        {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-            return getAssessmentResponse;
         }
     }
 }
