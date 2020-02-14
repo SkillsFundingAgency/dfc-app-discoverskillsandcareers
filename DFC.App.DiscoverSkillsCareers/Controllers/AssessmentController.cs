@@ -48,12 +48,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (getAssessmentResponse.IsComplete)
             {
-                return Redirect("results");
+                return RedirectTo("results");
             }
 
             if (requestViewModel.QuestionNumber > getAssessmentResponse.QuestionNumber)
             {
-                return Redirect($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
+                return RedirectTo($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(question);
@@ -87,11 +87,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (answerResponse.IsComplete)
                 {
-                    return Redirect("assessment/complete");
+                    return RedirectTo("assessment/complete");
                 }
                 else
                 {
-                    return Redirect($"assessment/{requestViewModel.QuestionSetName}/{answerResponse.NextQuestionNumber}");
+                    return RedirectTo($"assessment/{requestViewModel.QuestionSetName}/{answerResponse.NextQuestionNumber}");
                 }
             }
             else
@@ -108,10 +108,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (result)
             {
-                return Redirect($"assessment/{questionSetName}/1");
+                return RedirectTo($"assessment/{questionSetName}/1");
             }
 
-            return Redirect($"assessment/{questionSetName}/1");
+            return RedirectTo($"assessment/{questionSetName}/1");
         }
 
         public IActionResult Complete()
@@ -145,11 +145,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (viewModel.ReturnOption == 1)
             {
-                return Redirect("assessment/email");
+                return RedirectTo("assessment/email");
             }
             else
             {
-                return Redirect("assessment/reference");
+                return RedirectTo("assessment/reference");
             }
         }
 
@@ -170,7 +170,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1").ConfigureAwait(false);
 
-                return Redirect("assessment/emailsent");
+                return RedirectTo("assessment/emailsent");
             }
 
             return View(request);
@@ -199,7 +199,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 TempData.Remove("Telephone");
                 TempData.Add("Telephone", request.Telephone);
-                return Redirect("assessment/referencesent");
+                return RedirectTo("assessment/referencesent");
             }
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
@@ -243,10 +243,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (assessment.IsComplete)
             {
-                return Redirect("results");
+                return RedirectTo("results");
             }
 
-            return Redirect($"assessment/{assessment.QuestionSetName}/{assessment.NextQuestionNumber}");
+            return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.NextQuestionNumber}");
         }
     }
 }

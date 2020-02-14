@@ -13,10 +13,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.sessionService = sessionService;
         }
 
-        public override RedirectResult Redirect(string url)
+        protected IActionResult RedirectTo(string relativeAddress)
         {
-            url = $"~/{RouteName.Prefix}/" + url;
-            return base.Redirect(url);
+            relativeAddress = $"~/{RouteName.Prefix}/" + relativeAddress;
+            return Redirect(relativeAddress);
         }
 
         protected string GetSessionId()

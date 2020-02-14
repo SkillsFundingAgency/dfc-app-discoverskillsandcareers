@@ -58,10 +58,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (answerResponse.IsComplete)
             {
-                return Redirect("results");
+                return RedirectTo("results");
             }
 
-            return Redirect($"{viewModel.QuestionSetName}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
+            return RedirectTo($"{viewModel.QuestionSetName}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
         }
 
         public IActionResult Complete(FilterQuestionsCompleteResponseViewModel viewModel)
