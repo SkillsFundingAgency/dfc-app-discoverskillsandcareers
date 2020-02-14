@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (!answerResponse.IsSuccess == null)
+            if (!answerResponse.IsSuccess)
             {
                 return BadRequest();
             }

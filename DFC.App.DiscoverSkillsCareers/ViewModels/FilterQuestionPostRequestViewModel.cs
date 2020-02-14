@@ -2,7 +2,7 @@
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
-    public class FilterQuestionPostRequestViewModel 
+    public class FilterQuestionPostRequestViewModel
     {
         public string QuestionSetName { get; set; }
 

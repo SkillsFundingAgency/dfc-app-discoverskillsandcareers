@@ -5,7 +5,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     public class AnswerDetailsViewModel
     {
-
         public string QuestionId { get; set; }
 
         public int QuestionNumber { get; set; }

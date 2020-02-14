@@ -23,6 +23,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(HomeIndexRequestViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);

@@ -33,7 +33,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-
         private async Task<GetAssessmentResponse> GetAssessment()
         {
             var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);

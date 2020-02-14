@@ -7,7 +7,13 @@ namespace DFC.App.DiscoverSkillsCareers.Core.Extensions
     {
         public static bool IsRequestFromComposite(this HttpRequest httpRequest)
         {
-            return httpRequest.Headers.ContainsKey(HeaderName.CompositeRequest);
+            var result = false;
+            if (httpRequest != null && httpRequest.Headers != null)
+            {
+                result = httpRequest.Headers.ContainsKey(HeaderName.CompositeRequest);
+            }
+
+            return result;
         }
     }
 }

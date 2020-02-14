@@ -162,6 +162,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Email(AssessmentEmailPostRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
                 await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1").ConfigureAwait(false);
@@ -186,6 +191,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Reference(AssessmentReferencePostRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
                 TempData.Remove("Telephone");

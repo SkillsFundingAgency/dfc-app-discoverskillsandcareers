@@ -21,15 +21,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Sessions
 
             if (session != null && session.IsAvailable)
             {
-                if (session.TryGetValue(key, out var sessionValue))
+                byte[] sessionValue = null;
+                if (session.TryGetValue(key, out sessionValue) && sessionValue != null)
                 {
-                    if (sessionValue != null)
+                    var jsonData = sessionValue.AsString();
+                    if (!string.IsNullOrWhiteSpace(jsonData))
                     {
-                        var jsonData = sessionValue.AsString();
-                        if (!string.IsNullOrWhiteSpace(jsonData))
-                        {
-                            result = serialiser.Deserialise<T>(jsonData);
-                        }
+                        result = serialiser.Deserialise<T>(jsonData);
                     }
                 }
             }

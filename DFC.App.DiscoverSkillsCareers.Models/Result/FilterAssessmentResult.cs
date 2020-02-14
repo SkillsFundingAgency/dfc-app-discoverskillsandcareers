@@ -26,6 +26,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public IEnumerable<string> WhatYouToldUs { get; set; }
 
-        public string JobFamilyNameUrlSafe => JobFamilyName?.ToLower()?.Replace(" ", "-");
+        public string JobFamilyNameUrlSafe => JobFamilyName?.ToLower()?.Replace(" ", "-", StringComparison.InvariantCultureIgnoreCase);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface IDataProcessor<T>
+    public interface IDataProcessor<in T>
     {
         void Processor(T value);
     }
