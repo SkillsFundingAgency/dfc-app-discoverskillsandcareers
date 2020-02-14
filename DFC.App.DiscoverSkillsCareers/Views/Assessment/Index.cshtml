@@ -2,38 +2,109 @@
 
 @if (Model.PreviousQuestionNumber.HasValue)
 {
-    <br />
-    <a asp-route="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
+    <a class="govuk-back-link" asp-route="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
 }
-
-<br />
-@(Model.PercentComplete)%
+else
+{
+    <a href="" class="govuk-back-link">Back to start</a>
+}
 
 @Html.ValidationSummary()
 
-<h1>@Model.QuestionText</h1>
-
 <form method="post">
-    <p>
-        <input type="radio" value="4" name="answer" checked="@Model.IsChecked(Answer.StronglyAgree)" />Strongly agree
-    </p>
-    <p>
-        <input type="radio" value="3" name="answer" checked="@Model.IsChecked(Answer.Agree)" />Agree
-    </p>
-    <p>
-        <input type="radio" value="2" name="answer" checked="@Model.IsChecked(Answer.Neutral)" />It depends
-    </p>
-    <p>
-        <input type="radio" value="1" name="answer" checked="@Model.IsChecked(Answer.Disagree)" />Disagree
-    </p>
-    <p>
-        <input type="radio" value="0" name="answer" checked="@Model.IsChecked(Answer.StronglyDisagree)" />Strongly disagree
-    </p>
+    <div class="govuk-grid-row app-question-progress">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
 
-    <button>Next</button>
+            <div class="ncs-progress">
+                <span class="ncs-progress__count govuk-body"><b class="govuk-!-font-size-36">@(Model.PercentComplete)%</b> <b class="visually-hidden">Complete</b></span>
+                <div class="ncs-progress__bar"><span style="width: @(Model.PercentComplete)%"></span></div>
+            </div>
+
+        </div>
+        <div class="govuk-grid-column-one-third-from-desktop">
+
+            <div class="app-sidebar app-save-panel app-save-panel--alt">
+                <h3 class="govuk-heading-m">Return to this later</h3>
+                <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-form-group">
+        <div class="govuk-fieldset app-question app-question--short" id="question" role="group" aria-labelledby="question-heading">
+
+            <div class="govuk-fieldset__legend govuk-fieldset__legend--l app-question__question">
+                <h1 class="govuk-fieldset__heading" id="question-heading">
+                    @Model.QuestionText
+                </h1>
+            </div>
+            <div class="app-question__answer govuk-radios govuk-radios--inline">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input"
+                           id="selected_answer-1"
+                           type="radio"
+                           value="4"
+                           name="answer"
+                           checked="@Model.IsChecked(Answer.StronglyAgree)"
+                           gov-analytics-data="SelectedAnswer | StronglyAgree">
+                    <label class="govuk-label govuk-radios__label" for="selected_answer-1">
+                        Strongly agree
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input"
+                           id="selected_answer-2"
+                           type="radio"
+                           value="3"
+                           name="answer"
+                           checked="@Model.IsChecked(Answer.Agree)"
+                           gov-analytics-data="SelectedAnswer | Agree">
+                    <label class="govuk-label govuk-radios__label" for="selected_answer-2">
+                        Agree
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input"
+                           id="selected_answer-3"
+                           type="radio"
+                           value="2"
+                           name="answer"
+                           checked="@Model.IsChecked(Answer.Neutral)"
+                           gov-analytics-data="SelectedAnswer | Neutral">
+                    <label class="govuk-label govuk-radios__label" for="selected_answer-3">
+                        It depends
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input"
+                           id="selected_answer-4"
+                           type="radio"
+                           value="1"
+                           name="answer"
+                           checked="@Model.IsChecked(Answer.Disagree)"
+                           gov-analytics-data="SelectedAnswer | Disagree">
+                    <label class="govuk-label govuk-radios__label" for="selected_answer-4">
+                        Disagree
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input"
+                           id="selected_answer-5"
+                           type="radio"
+                           value="0"
+                           name="answer"
+                           checked="@Model.IsChecked(Answer.StronglyDisagree)"
+                           gov-analytics-data="SelectedAnswer | StronglyDisagree">
+                    <label class="govuk-label govuk-radios__label" for="selected_answer-5">
+                        Strongly disagree
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <div class="app-controls">
+                <button type="submit" class="govuk-button app-button btn-next-question">
+                    Next
+                </button>
+            </div>
 </form>
-
-<hr />
-<h3>Return to this later</h3>
-<br />
-<a asp-controller="assessment" asp-action="save">Save my progress</a>
