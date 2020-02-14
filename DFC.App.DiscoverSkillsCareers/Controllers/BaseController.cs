@@ -19,6 +19,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return Redirect(relativeAddress);
         }
 
+        protected IActionResult RedirectToRoot()
+        {
+            return RedirectTo(string.Empty);
+        }
+
         protected string GetSessionId()
         {
             return sessionService.GetValue<string>(SessionKey.SessionId);

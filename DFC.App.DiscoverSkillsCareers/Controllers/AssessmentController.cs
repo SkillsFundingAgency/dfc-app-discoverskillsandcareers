@@ -29,34 +29,32 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!HasSessionId())
             {
-                return Redirect("/");
+                return RedirectToRoot();
             }
 
-            var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
+            var questionResponse = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
 
-            if (question == null)
+            if (questionResponse == null)
             {
                 return BadRequest();
             }
 
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-
-            if (requestViewModel.QuestionNumber > getAssessmentResponse.MaxQuestionsCount)
+            if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
                 return BadRequest();
             }
 
-            if (getAssessmentResponse.IsComplete)
+            if (questionResponse.IsComplete)
             {
                 return RedirectTo("results");
             }
 
-            if (requestViewModel.QuestionNumber > getAssessmentResponse.QuestionNumber)
+            if (requestViewModel.QuestionNumber > questionResponse.QuestionNumber)
             {
-                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{getAssessmentResponse.QuestionNumber}");
+                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{questionResponse.QuestionNumber}");
             }
 
-            var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(question);
+            var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
             return View(responseViewModel);
         }
 
@@ -66,6 +64,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             if (requestViewModel == null)
             {
                 return BadRequest();
+            }
+
+            if (!HasSessionId())
+            {
+                return RedirectToRoot();
             }
 
             var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);

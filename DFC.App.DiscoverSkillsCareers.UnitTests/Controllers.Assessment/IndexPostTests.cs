@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
+using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
@@ -9,14 +10,14 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 {
-    public class IndexTests
+    public class IndexPostTests
     {
         private readonly AssessmentController assessmentController;
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly IApiService apiService;
 
-        public IndexTests()
+        public IndexPostTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
@@ -28,7 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task NullViewModelReturnsBadRequest()
         {
-            QuestionGetRequestViewModel viewModel = null;
+            QuestionPostRequestViewModel viewModel = null;
             var actionResponse = await assessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<BadRequestResult>(actionResponse);
         }
@@ -36,10 +37,27 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfNoSessionExistsRedirectedToRoot()
         {
-            var viewModel = new QuestionGetRequestViewModel() { QuestionId = "1", QuestionNumber = 1, AssessmentType = "name1" };
+            var viewModel = A.Fake<QuestionPostRequestViewModel>();
+
+            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(null);
 
             var actionResponse = await assessmentController.Index(viewModel).ConfigureAwait(false);
-            Assert.IsType<BadRequestResult>(actionResponse);
+            Assert.IsType<RedirectResult>(actionResponse);
+
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task IfNoAnswerIsProvidedReturnsView()
+        {
+            var sessionId = "session1";
+            var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1" };
+
+            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+
+            var actionResponse = await assessmentController.Index(viewModel).ConfigureAwait(false);
+            Assert.IsType<ViewResult>(actionResponse);
         }
     }
 }

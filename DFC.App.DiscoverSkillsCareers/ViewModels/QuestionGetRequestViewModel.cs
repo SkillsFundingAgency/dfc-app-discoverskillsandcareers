@@ -4,8 +4,6 @@
     {
         public string AssessmentType { get; set; }
 
-        public string QuestionId { get; set; }
-
         public int QuestionNumber { get; set; }
     }
 }
