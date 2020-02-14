@@ -5,11 +5,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Tests.SessionIdToCodeConverters
 {
     public class DefaultISessionIdToCodeConverterTests
     {
-        private readonly DefaultSessionIdToCodeConverter defaultSessionIdToCodeConverter;
+        private readonly SessionIdToCodeConverter defaultSessionIdToCodeConverter;
 
         public DefaultISessionIdToCodeConverterTests()
         {
-            defaultSessionIdToCodeConverter = new DefaultSessionIdToCodeConverter();
+            defaultSessionIdToCodeConverter = new SessionIdToCodeConverter();
         }
 
         [Theory]

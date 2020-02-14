@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
@@ -8,8 +9,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
     public class ApiService : IApiService
     {
-        private const string SessionId = "SessionId";
-
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
         private readonly ISessionService sessionService;
@@ -32,28 +31,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
             if (newSessionResponse != null)
             {
-                sessionService.SetValue(SessionId, newSessionResponse.SessionId);
+                sessionService.SetValue(SessionKey.SessionId, newSessionResponse.SessionId);
             }
 
             return newSessionResponse != null;
         }
 
-        public async Task<GetQuestionResponse> GetQuestion(string assessment, int questionNumber)
+        public async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
             Validate();
 
-            var getQuestionResponse = await assessmentApiService.GetQuestion(GetSessionId(), assessment, questionNumber).ConfigureAwait(false);
+            var getQuestionResponse = await assessmentApiService.GetQuestion(GetSessionId(), assessmentType, questionNumber).ConfigureAwait(false);
 
             return getQuestionResponse;
         }
 
-        public async Task<PostAnswerResponse> AnswerQuestion(string assessment, int questionId, string answer)
+        public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int questionNumber, string answer)
         {
             Validate();
 
-            var questionSetResponse = await GetQuestion(assessment, questionId).ConfigureAwait(false);
+            var questionSetResponse = await GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
 
-            var questionIdFull = $"{questionSetResponse.QuestionSetVersion}-{questionId}";
+            var questionIdFull = $"{questionSetResponse.QuestionSetVersion}-{questionNumber}";
             var post = new PostAnswerRequest() { QuestionId = questionIdFull, SelectedOption = answer };
             var answerQuestionResponse = await assessmentApiService.AnswerQuestion(GetSessionId(), post).ConfigureAwait(false);
 
@@ -98,7 +97,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
 
-            sessionService.SetValue(SessionId, assessment.SessionId);
+            sessionService.SetValue(SessionKey.SessionId, assessment.SessionId);
 
             return assessment.SessionId;
         }
@@ -118,7 +117,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string GetSessionId()
         {
-            return sessionService.GetValue<string>(SessionId);
+            return sessionService.GetValue<string>(SessionKey.SessionId);
         }
 
         private bool HasSessionId()

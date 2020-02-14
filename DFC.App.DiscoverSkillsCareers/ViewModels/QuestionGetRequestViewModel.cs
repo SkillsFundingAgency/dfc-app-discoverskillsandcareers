@@ -2,7 +2,7 @@
 {
     public class QuestionGetRequestViewModel
     {
-        public string QuestionSetName { get; set; }
+        public string AssessmentType { get; set; }
 
         public string QuestionId { get; set; }
 

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters
 {
-    public class DefaultSessionIdToCodeConverter : ISessionIdToCodeConverter
+    public class SessionIdToCodeConverter : ISessionIdToCodeConverter
     {
         public string GetCode(string value)
         {

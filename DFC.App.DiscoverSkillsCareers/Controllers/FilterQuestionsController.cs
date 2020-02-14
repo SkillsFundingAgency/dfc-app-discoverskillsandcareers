@@ -44,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(viewModel.QuestionSetName, viewModel.QuestionNumberReal, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(viewModel.AssessmentType, viewModel.QuestionNumberReal, viewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse == null)
             {
@@ -61,7 +61,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("results");
             }
 
-            return RedirectTo($"{viewModel.QuestionSetName}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
+            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
         }
 
         public IActionResult Complete(FilterQuestionsCompleteResponseViewModel viewModel)

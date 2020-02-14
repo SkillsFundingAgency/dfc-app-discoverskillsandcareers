@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return Redirect("/");
             }
 
-            var question = await GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
+            var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
 
             if (question == null)
             {
@@ -53,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (requestViewModel.QuestionNumber > getAssessmentResponse.QuestionNumber)
             {
-                return RedirectTo($"assessment/{requestViewModel.QuestionSetName}/{getAssessmentResponse.QuestionNumber}");
+                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{getAssessmentResponse.QuestionNumber}");
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(question);
@@ -68,7 +68,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var question = await GetQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber).ConfigureAwait(false);
+            var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (question == null)
             {
                 return BadRequest();
@@ -81,7 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(result);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.QuestionSetName, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse.IsSuccess)
             {
@@ -91,7 +91,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
                 else
                 {
-                    return RedirectTo($"assessment/{requestViewModel.QuestionSetName}/{answerResponse.NextQuestionNumber}");
+                    return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{answerResponse.NextQuestionNumber}");
                 }
             }
             else
@@ -222,9 +222,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return result;
         }
 
-        private async Task<GetQuestionResponse> GetQuestion(string questionSetName, int questionNumber)
+        private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var question = await apiService.GetQuestion(questionSetName, questionNumber).ConfigureAwait(false);
+            var question = await apiService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
             return question;
         }
 

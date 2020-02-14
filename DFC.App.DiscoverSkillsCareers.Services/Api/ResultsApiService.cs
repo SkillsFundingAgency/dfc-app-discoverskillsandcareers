@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetResultsResponse> GetResults(string sessionId)
         {
-            return await GetResults(sessionId, "short").ConfigureAwait(false);
+            return await GetResults(sessionId, AssessmentType.ShortAssessment).ConfigureAwait(false);
         }
 
         public async Task<GetResultsResponse> GetResults(string sessionId, string jobCategory)

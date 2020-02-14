@@ -4,7 +4,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     public class QuestionPostRequestViewModel
     {
-        public string QuestionSetName { get; set; }
+        public string AssessmentType { get; set; }
 
         public int QuestionNumber { get; set; }
 

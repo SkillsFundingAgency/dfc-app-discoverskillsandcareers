@@ -7,7 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     {
         Task<NewSessionResponse> NewSession(string assessmentType);
 
-        Task<GetQuestionResponse> GetQuestion(string sessionId, string assessment, int questionNumber);
+        Task<GetQuestionResponse> GetQuestion(string sessionId, string assessmentType, int questionNumber);
 
         Task<PostAnswerResponse> AnswerQuestion(string sessionId, PostAnswerRequest postAnswerRequest);
 

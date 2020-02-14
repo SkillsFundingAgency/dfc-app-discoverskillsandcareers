@@ -38,9 +38,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
         }
 
-        public async Task<GetQuestionResponse> GetQuestion(string sessionId, string assessment, int questionNumber)
+        public async Task<GetQuestionResponse> GetQuestion(string sessionId, string assessmentType, int questionNumber)
         {
-            var url = $"{httpClient.BaseAddress}/assessment/{sessionId}/{assessment}/q/{questionNumber}";
+            var url = $"{httpClient.BaseAddress}/assessment/{sessionId}/{assessmentType}/q/{questionNumber}";
             var httpResponseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
             httpResponseMessage.EnsureSuccessStatusCode();
             var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);

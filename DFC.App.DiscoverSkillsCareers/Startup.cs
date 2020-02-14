@@ -51,17 +51,17 @@ namespace DFC.App.DiscoverSkillsCareers
 
                 endpoints.MapControllerRoute(
                     name: "assessment",
-                    pattern: RouteName.Prefix + "/assessment/{questionSetName}/{questionNumber}",
+                    pattern: RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}",
                     new { controller = "Assessment", action = "Index" });
 
                 endpoints.MapControllerRoute(
                     name: "filterQuestionsComplete",
-                    pattern: RouteName.Prefix + "/{questionSetName}/filterquestions/{jobCategoryName}/complete",
+                    pattern: RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete",
                     new { controller = "FilterQuestions", action = "Complete" });
 
                 endpoints.MapControllerRoute(
                     name: "filterQuestions",
-                    pattern: RouteName.Prefix + "/{questionSetName}/filterquestions/{jobCategoryName}/{questionNumber}",
+                    pattern: RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}",
                     new { controller = "FilterQuestions", action = "Index" });
 
                 endpoints.MapControllerRoute(
@@ -85,7 +85,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
-            services.AddScoped<ISessionIdToCodeConverter, DefaultSessionIdToCodeConverter>();
+            services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
 
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {

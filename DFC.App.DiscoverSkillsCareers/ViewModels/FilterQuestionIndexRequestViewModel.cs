@@ -2,7 +2,7 @@
 {
     public class FilterQuestionIndexRequestViewModel
     {
-        public string QuestionSetName { get; set; }
+        public string AssessmentType { get; set; }
 
         public string JobCategoryName { get; set; }
 

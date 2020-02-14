@@ -2,7 +2,7 @@
 
 @if (Model.PreviousQuestionNumber.HasValue)
 {
-    <a class="govuk-back-link" asp-route="assessment" asp-route-questionsetname="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
+    <a class="govuk-back-link" asp-route="assessment" asp-route-assessmentType="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
 }
 else
 {

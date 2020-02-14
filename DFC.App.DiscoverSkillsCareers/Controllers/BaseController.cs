@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         protected string GetSessionId()
         {
-            return sessionService.GetValue<string>("SessionId");
+            return sessionService.GetValue<string>(SessionKey.SessionId);
         }
 
         protected bool HasSessionId()
