@@ -25,33 +25,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
         private IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSession();
-            services.AddApplicationInsightsTelemetry();
-            services.AddHttpContextAccessor();
-            services.AddControllersWithViews();
-
-            services.AddAutoMapper(typeof(Startup));
-
-            services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
-            services.AddScoped<ISessionService, HttpContextSessonService>();
-            services.AddScoped<IApiService, ApiService>();
-            services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
-            services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
-            services.AddScoped<ISessionIdToCodeConverter, DefaultSessionIdToCodeConverter>();
-
-            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
-            {
-                httpClient.BaseAddress = new Uri(Configuration["AssessmentApi"]);
-            });
-
-            services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
-            {
-                httpClient.BaseAddress = new Uri(Configuration["ResultsApi"]);
-            });
-        }
-
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -95,6 +68,33 @@ namespace DFC.App.DiscoverSkillsCareers
                     name: "results",
                     pattern: RouteName.Prefix + "/results/{jobCategoryName}",
                     new { controller = "Results", action = "Filter" });
+            });
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSession();
+            services.AddApplicationInsightsTelemetry();
+            services.AddHttpContextAccessor();
+            services.AddControllersWithViews();
+
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
+            services.AddScoped<ISessionService, HttpContextSessonService>();
+            services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
+            services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
+            services.AddScoped<ISessionIdToCodeConverter, DefaultSessionIdToCodeConverter>();
+
+            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(Configuration["AssessmentApi"]);
+            });
+
+            services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(Configuration["ResultsApi"]);
             });
         }
     }
