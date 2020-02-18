@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
@@ -146,13 +147,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.ReturnOption == 1)
+            if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Email)
             {
                 return RedirectTo("assessment/email");
             }
-            else
+            else if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Reference)
             {
                 return RedirectTo("assessment/reference");
+            }
+            else
+            {
+                return View();
             }
         }
 

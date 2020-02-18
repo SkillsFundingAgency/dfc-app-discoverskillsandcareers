@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.Controllers;
+﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
@@ -10,27 +9,13 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 {
-    public class IndexPostTests
+    public class IndexPostTests : AssessmentTestBase
     {
-        private readonly AssessmentController assessmentController;
-        private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
-        private readonly IApiService apiService;
-
-        public IndexPostTests()
-        {
-            mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
-            apiService = A.Fake<IApiService>();
-
-            assessmentController = new AssessmentController(mapper, sessionService, apiService);
-        }
-
         [Fact]
         public async Task NullViewModelReturnsBadRequest()
         {
             QuestionPostRequestViewModel viewModel = null;
-            var actionResponse = await assessmentController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<BadRequestResult>(actionResponse);
         }
 
@@ -39,13 +24,27 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         {
             var viewModel = A.Fake<QuestionPostRequestViewModel>();
 
-            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(null);
+            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(null);
 
-            var actionResponse = await assessmentController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
 
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task IfQuestionDoesNotExistReturnsBadRequest()
+        {
+            var sessionId = "session1";
+            var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1" };
+            GetQuestionResponse question = null;
+
+            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(question);
+
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
+            Assert.IsType<BadRequestResult>(actionResponse);
         }
 
         [Fact]
@@ -54,10 +53,48 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var sessionId = "session1";
             var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1" };
 
-            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
 
-            var actionResponse = await assessmentController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public async Task IfAnswerIsValidMovesToNextQuestion()
+        {
+            var sessionId = "session1";
+            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1", Answer = "answer1" };
+            var currentQuestion = new GetQuestionResponse() { MaxQuestionsCount = 10, CurrentQuestionNumber = 3, NextQuestionNumber = 4 };
+            var answerResponse = new PostAnswerResponse() { IsSuccess = true, NextQuestionNumber = 4 };
+
+            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => ApiService.GetQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber)).Returns(currentQuestion);
+            A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
+
+            var actionResponse = await AssessmentController.Index(answerRequest).ConfigureAwait(false);
+            Assert.IsType<RedirectResult>(actionResponse);
+
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/assessment/name1/4", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task WhenAllAnswersAreProvidedAssessmentIsCompleted()
+        {
+            var sessionId = "session1";
+            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1", Answer = "answer1" };
+            var currentQuestion = new GetQuestionResponse();
+            var answerResponse = new PostAnswerResponse() { IsSuccess = true, IsComplete = true };
+
+            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => ApiService.GetQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber)).Returns(currentQuestion);
+            A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
+
+            var actionResponse = await AssessmentController.Index(answerRequest).ConfigureAwait(false);
+            Assert.IsType<RedirectResult>(actionResponse);
+
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/assessment/complete", redirectResult.Url);
         }
     }
 }
