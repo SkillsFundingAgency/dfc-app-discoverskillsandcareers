@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task IfNoAnswerIsProvidedReturnsView()
         {
             var sessionId = "session1";
-            var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1" };
+            var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "short" };
 
             A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
 
@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task IfAnswerIsValidMovesToNextQuestion()
         {
             var sessionId = "session1";
-            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1", Answer = "answer1" };
+            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "short", Answer = "answer1" };
             var currentQuestion = new GetQuestionResponse() { MaxQuestionsCount = 10, CurrentQuestionNumber = 3, NextQuestionNumber = 4 };
             var answerResponse = new PostAnswerResponse() { IsSuccess = true, NextQuestionNumber = 4 };
 
@@ -75,7 +75,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             Assert.IsType<RedirectResult>(actionResponse);
 
             var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/assessment/name1/4", redirectResult.Url);
+            Assert.Equal($"~/{RouteName.Prefix}/assessment/short/4", redirectResult.Url);
         }
 
         [Fact]

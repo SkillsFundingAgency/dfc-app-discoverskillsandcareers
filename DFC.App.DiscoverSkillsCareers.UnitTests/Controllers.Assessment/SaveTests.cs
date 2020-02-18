@@ -20,14 +20,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Theory]
         [InlineData(AssessmentReturnType.Email, "assessment/email")]
         [InlineData(AssessmentReturnType.Reference, "assessment/reference")]
-        public void WhenReturnOptionsIsEmailRedirectsToCorrectReturnType(AssessmentReturnType assessmentReturnType, string expectedRedirectUrl)
+        public void WhenReturnOptionsIsEmailRedirectsToCorrectReturnType(AssessmentReturnType assessmentReturnType, string expectedRedirectAddress)
         {
             var viewModel = new AssessmentSaveRequestViewModel() { AssessmentReturnTypeId = assessmentReturnType };
             var actionResponse = AssessmentController.Save(viewModel);
             Assert.IsType<RedirectResult>(actionResponse);
 
             var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/{expectedRedirectUrl}", redirectResult.Url);
+            Assert.Equal($"~/{RouteName.Prefix}/{expectedRedirectAddress}", redirectResult.Url);
         }
     }
 }

@@ -108,11 +108,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(string questionSetName)
+        public async Task<IActionResult> New(string assessmentType)
         {
-            await apiService.NewSession(questionSetName).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(assessmentType))
+            {
+                return BadRequest();
+            }
 
-            return RedirectTo($"assessment/{GetAssessmentTypeName(questionSetName)}/1");
+            await apiService.NewSession(assessmentType).ConfigureAwait(false);
+
+            return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
         }
 
         public IActionResult Complete()
@@ -221,6 +226,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        private static string GetAssessmentTypeName(string value)
+        {
+            var result = string.Empty;
+            if (Enum.TryParse<AssessmentItemType>(value, true, out var assessmentItemType))
+            {
+                result = assessmentItemType.ToString().ToLower();
+            }
+
+            return result;
+        }
+
         private async Task<AssessmentReferenceGetResponse> GetAssessmentViewModel()
         {
             var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
@@ -257,17 +273,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.NextQuestionNumber}");
-        }
-
-        private string GetAssessmentTypeName(string value)
-        {
-            var result = value.ToString();
-            if (Enum.TryParse<AssessmentItemType>(value, true, out var assessmentItemType))
-            {
-                result = assessmentItemType.ToString().ToLower();
-            }
-
-            return result;
         }
     }
 }

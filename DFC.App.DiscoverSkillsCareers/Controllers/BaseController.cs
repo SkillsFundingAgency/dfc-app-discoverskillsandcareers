@@ -1,7 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
@@ -16,14 +15,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         protected IActionResult RedirectTo(string relativeAddress)
         {
-            var uri = new Uri(relativeAddress, UriKind.Relative);
-            if (!uri.IsAbsoluteUri)
-            {
-                relativeAddress = $"~/{RouteName.Prefix}/" + relativeAddress;
-                return Redirect(relativeAddress);
-            }
-
-            return BadRequest();
+            relativeAddress = $"~/{RouteName.Prefix}/" + relativeAddress;
+            return Redirect(relativeAddress);
         }
 
         protected IActionResult RedirectToRoot()
