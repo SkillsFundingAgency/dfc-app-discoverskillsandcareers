@@ -2,7 +2,6 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
