@@ -109,7 +109,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> New(string questionSetName)
         {
-            var result = await apiService.NewSession(questionSetName).ConfigureAwait(false);
+            await apiService.NewSession(questionSetName).ConfigureAwait(false);
 
             return RedirectTo($"assessment/{questionSetName}/1");
         }
