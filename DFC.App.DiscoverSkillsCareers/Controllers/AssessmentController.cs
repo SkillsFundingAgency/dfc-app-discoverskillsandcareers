@@ -111,7 +111,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             await apiService.NewSession(questionSetName).ConfigureAwait(false);
 
-            return RedirectTo($"assessment/{questionSetName}/1");
+            return RedirectTo($"assessment/{questionSetName.ToString()}/1");
         }
 
         public IActionResult Complete()
