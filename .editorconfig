@@ -26,3 +26,6 @@ dotnet_diagnostic.CA1056.severity = none
 
 # CA2234: Pass system uri objects instead of strings
 dotnet_diagnostic.CA2234.severity = none
+
+# CA1720: Identifier contains type name
+dotnet_diagnostic.CA1720.severity = none

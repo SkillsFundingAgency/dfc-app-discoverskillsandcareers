@@ -95,7 +95,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
                 else
                 {
-                    return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{answerResponse.NextQuestionNumber}");
+                    var assessmentTypeName = requestViewModel.AssessmentType.ToString();
+                    return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
                 }
             }
             else
