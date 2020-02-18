@@ -111,11 +111,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var result = await apiService.NewSession(questionSetName).ConfigureAwait(false);
 
-            if (result)
-            {
-                return RedirectTo($"assessment/{questionSetName}/1");
-            }
-
             return RedirectTo($"assessment/{questionSetName}/1");
         }
 
@@ -206,8 +201,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (ModelState.IsValid)
             {
-                TempData.Remove("Telephone");
-                TempData.Add("Telephone", request.Telephone);
+                if (TempData != null)
+                {
+                    var key = "Telephone";
+                    TempData.Remove(key);
+                    TempData.Add(key, request.Telephone);
+                }
+
                 return RedirectTo("assessment/referencesent");
             }
 

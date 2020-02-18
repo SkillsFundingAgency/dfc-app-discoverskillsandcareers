@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 {
-    public class IndexGetTests:AssessmentTestBase
+    public class IndexGetTests : AssessmentTestBase
     {
         [Fact]
         public async Task NullViewModelReturnsBadRequest()
@@ -31,6 +31,20 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task IfQuestionDoesNotExistsReturnsBadRequest()
+        {
+            var sessionId = "session1";
+            var viewModel = new QuestionGetRequestViewModel() { AssessmentType = "at1", QuestionNumber = 1 };
+            GetQuestionResponse expectedQuestion = null;
+
+            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
+
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
+            Assert.IsType<BadRequestResult>(actionResponse);
         }
 
         [Fact]
