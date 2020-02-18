@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -95,7 +96,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
                 else
                 {
-                    var assessmentTypeName = requestViewModel.AssessmentType.ToString();
+                    var assessmentTypeName = GetAssessmentTypeName(requestViewModel.AssessmentType);
                     return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
                 }
             }
@@ -111,7 +112,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             await apiService.NewSession(questionSetName).ConfigureAwait(false);
 
-            return RedirectTo($"assessment/{questionSetName.ToString()}/1");
+            return RedirectTo($"assessment/{GetAssessmentTypeName(questionSetName)}/1");
         }
 
         public IActionResult Complete()
@@ -256,6 +257,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.NextQuestionNumber}");
+        }
+
+        private string GetAssessmentTypeName(string value)
+        {
+            var result = value.ToString();
+            if (Enum.TryParse<AssessmentItemType>(value, true, out var assessmentItemType))
+            {
+                result = assessmentItemType.ToString().ToLower();
+            }
+
+            return result;
         }
     }
 }

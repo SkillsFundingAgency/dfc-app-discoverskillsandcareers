@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetResultsResponse> GetResults(string sessionId)
         {
-            return await GetResults(sessionId, AssessmentType.ShortAssessment).ConfigureAwait(false);
+            return await GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
         }
 
         public async Task<GetResultsResponse> GetResults(string sessionId, string jobCategory)
