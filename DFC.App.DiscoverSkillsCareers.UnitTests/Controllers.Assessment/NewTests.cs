@@ -1,6 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

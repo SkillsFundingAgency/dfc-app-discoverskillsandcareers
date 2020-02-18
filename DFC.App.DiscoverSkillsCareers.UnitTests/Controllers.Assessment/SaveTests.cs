@@ -3,8 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment

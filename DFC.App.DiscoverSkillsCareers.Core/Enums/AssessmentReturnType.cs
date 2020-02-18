@@ -3,6 +3,6 @@
     public enum AssessmentReturnType
     {
         Email = 1,
-        Reference = 2
+        Reference = 2,
     }
 }
