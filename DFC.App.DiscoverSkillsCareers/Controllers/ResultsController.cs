@@ -20,6 +20,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (!HasSessionId())
+            {
+                return RedirectToRoot();
+            }
+
+            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            if (!assessmentResponse.IsComplete)
+            {
+                return RedirectTo("assessment/return");
+            }
+
             var resultsResponse = await apiService.GetResults().ConfigureAwait(false);
 
             var response = new ResultIndexResponseViewModel();

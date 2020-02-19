@@ -272,7 +272,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("results");
             }
 
-            return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.NextQuestionNumber}");
+            return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.CurrentQuestionNumber}");
         }
     }
 }
