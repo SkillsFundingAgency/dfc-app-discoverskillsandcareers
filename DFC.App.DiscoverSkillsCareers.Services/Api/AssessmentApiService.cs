@@ -12,18 +12,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
         private readonly IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor;
-        private readonly IDataProcessor<GetAssessmentResponse> reloadResponseProcessor;
+        private readonly IDataProcessor<GetAssessmentResponse> getAssessmentResponseDataProcessor;
 
         public AssessmentApiService(
             HttpClient httpClient,
             ISerialiser serialiser,
             IDataProcessor<GetQuestionResponse> getQuestionResponseDataProcessor,
-            IDataProcessor<GetAssessmentResponse> reloadResponseProcessor)
+            IDataProcessor<GetAssessmentResponse> getAssessmentResponseDataProcessor)
         {
             this.httpClient = httpClient;
             this.serialiser = serialiser;
             this.getQuestionResponseDataProcessor = getQuestionResponseDataProcessor;
-            this.reloadResponseProcessor = reloadResponseProcessor;
+            this.getAssessmentResponseDataProcessor = getAssessmentResponseDataProcessor;
         }
 
         public async Task<NewSessionResponse> NewSession(string assessmentType)
@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             httpResponseMessage.EnsureSuccessStatusCode();
             var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             var response = serialiser.Deserialise<GetAssessmentResponse>(contentResponse);
-            reloadResponseProcessor.Processor(response);
+            getAssessmentResponseDataProcessor.Processor(response);
             return response;
         }
 
