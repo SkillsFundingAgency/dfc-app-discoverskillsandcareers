@@ -26,6 +26,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
+            if (!HasSessionId())
+            {
+                return RedirectToRoot();
+            }
+
+            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            if (!assessment.IsComplete)
+            {
+                return RedirectTo("assessment/return");
+            }
+
             var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
             return View(response);
         }
@@ -36,6 +47,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             if (viewModel == null)
             {
                 return BadRequest();
+            }
+
+            if (!HasSessionId())
+            {
+                return RedirectToRoot();
             }
 
             if (!ModelState.IsValid)
