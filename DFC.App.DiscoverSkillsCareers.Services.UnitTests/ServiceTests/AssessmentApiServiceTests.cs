@@ -88,6 +88,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
+        public async Task SendEmailReturnsValidDataForSuccess()
+        {
+            var sessionId = "session1";
+            var domain = "https://localhost/site1";
+            var email = "sender@email.com";
+            var templateId = "t1";
+            httpMessageHandler.When($"{httpClient.BaseAddress}/assessment/notify/email")
+                .Respond("application/json", "{'IsSuccess':'true'}");
+
+            var sendEmailResponse = await assessmentApiService.SendEmail(sessionId, domain, email, templateId);
+
+            Assert.True(sendEmailResponse.IsSuccess);
+        }
+
+
+        [Fact]
         public async Task FilterAssessmentReturnsValidDataForSuccess()
         {
             var sessionId = "session1";
