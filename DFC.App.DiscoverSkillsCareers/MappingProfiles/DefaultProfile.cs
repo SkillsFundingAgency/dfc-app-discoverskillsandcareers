@@ -11,14 +11,20 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
     {
         public DefaultProfile()
         {
-            CreateMap<AnswerDetail, AnswerDetailsViewModel>();
+            CreateMap<AnswerDetail, AnswerDetailsViewModel>()
+                .ForMember(d => d.AnsweredOn, x => x.MapFrom(s => s.AnsweredDt))
+                .ForMember(d => d.Answer, x => x.MapFrom(s => s.SelectedOption))
+                ;
 
             CreateMap<FilterAssessmentResult, FilterAssessmentResultViewModel>();
 
             CreateMap<GetResultsResponse, ResultsIndexResponseViewModel>();
 
             CreateMap<GetQuestionResponse, QuestionGetResponseViewModel>()
-                .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer));
+                .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer))
+                .ForMember(d => d.Started, s => s.MapFrom(a => a.StartedDt))
+                .ForMember(d => d.PercentageComplete, s => s.MapFrom(a => a.PercentComplete))
+                ;
 
             CreateMap<GetQuestionResponse, FilterQuestionIndexResponseViewModel>();
 

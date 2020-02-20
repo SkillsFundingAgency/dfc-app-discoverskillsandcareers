@@ -15,9 +15,9 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string TraitCode { get; set; }
 
-        public Answer SelectedOption { get; set; }
+        public Answer Answer { get; set; }
 
-        public DateTime AnsweredDt { get; set; }
+        public DateTime AnsweredOn { get; set; }
 
         public bool IsNegative { get; set; }
 

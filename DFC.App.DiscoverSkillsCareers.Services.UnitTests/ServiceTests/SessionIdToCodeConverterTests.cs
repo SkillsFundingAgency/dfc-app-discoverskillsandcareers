@@ -1,13 +1,13 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
 using Xunit;
 
-namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.SessionIdToCodeConvertersTests
+namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
-    public class DefaultISessionIdToCodeConverterTests
+    public class SessionIdToCodeConverterTests
     {
         private readonly SessionIdToCodeConverter defaultSessionIdToCodeConverter;
 
-        public DefaultISessionIdToCodeConverterTests()
+        public SessionIdToCodeConverterTests()
         {
             defaultSessionIdToCodeConverter = new SessionIdToCodeConverter();
         }

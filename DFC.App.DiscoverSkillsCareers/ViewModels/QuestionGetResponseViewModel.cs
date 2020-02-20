@@ -17,7 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string SessionId { get; set; }
 
-        public int PercentComplete { get; set; }
+        public int PercentageComplete { get; set; }
 
         public int? NextQuestionNumber { get; set; }
 
@@ -25,7 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string ReloadCode { get; set; }
 
-        public DateTime StartedDt { get; set; }
+        public DateTime Started { get; set; }
 
         public int RecordedAnswersCount { get; set; }
 
