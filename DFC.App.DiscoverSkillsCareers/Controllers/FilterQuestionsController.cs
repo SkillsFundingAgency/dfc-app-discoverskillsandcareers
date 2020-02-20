@@ -69,7 +69,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!answerResponse.IsSuccess)
             {
-                return BadRequest();
+                ModelState.AddModelError("Answer", "Unable to register answer");
+                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
+                return View(response);
             }
 
             if (answerResponse.IsComplete)
