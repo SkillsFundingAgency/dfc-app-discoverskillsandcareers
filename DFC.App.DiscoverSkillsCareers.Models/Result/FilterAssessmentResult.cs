@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
+    [ExcludeFromCodeCoverage]
     public class FilterAssessmentResult
     {
         public FilterAssessmentResult()
@@ -25,7 +27,5 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public IEnumerable<string> SuggestedJobProfiles { get; set; }
 
         public IEnumerable<string> WhatYouToldUs { get; set; }
-
-        public string JobFamilyNameUrlSafe => JobFamilyName?.ToLower()?.Replace(" ", "-", StringComparison.InvariantCultureIgnoreCase);
     }
 }

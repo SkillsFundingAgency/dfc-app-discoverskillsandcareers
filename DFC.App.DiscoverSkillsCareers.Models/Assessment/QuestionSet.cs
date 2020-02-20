@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 {
+    [ExcludeFromCodeCoverage]
     public class QuestionSet
     {
         public string PartitionKey { get; set; }

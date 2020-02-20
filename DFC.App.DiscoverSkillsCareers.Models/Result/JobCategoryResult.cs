@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
+    [ExcludeFromCodeCoverage]
     public class JobCategoryResult
     {
         public string JobFamilyCode { get; set; }

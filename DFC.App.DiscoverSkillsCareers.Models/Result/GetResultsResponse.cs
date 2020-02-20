@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
+    [ExcludeFromCodeCoverage]
     public class GetResultsResponse
     {
         public string SessionId { get; set; }

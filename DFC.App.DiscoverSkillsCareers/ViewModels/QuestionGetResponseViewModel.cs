@@ -1,8 +1,10 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class QuestionGetResponseViewModel
     {
         public string QuestionText { get; set; }

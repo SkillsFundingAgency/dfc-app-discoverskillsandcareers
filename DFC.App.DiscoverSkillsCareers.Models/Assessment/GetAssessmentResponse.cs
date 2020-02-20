@@ -1,8 +1,10 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 {
+    [ExcludeFromCodeCoverage]
     public class GetAssessmentResponse
     {
         public string QuestionText { get; set; }

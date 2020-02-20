@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class FilterAssessmentResultViewModel
     {
         public string JobFamilyName { get; set; }
@@ -20,7 +22,5 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public IEnumerable<string> SuggestedJobProfiles { get; set; } = new List<string>();
 
         public IEnumerable<string> WhatYouToldUs { get; set; }
-
-        public string JobFamilyNameUrlSafe { get; set; }
     }
 }
