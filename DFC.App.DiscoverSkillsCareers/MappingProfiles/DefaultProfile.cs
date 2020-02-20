@@ -24,13 +24,16 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer))
                 .ForMember(d => d.Started, s => s.MapFrom(a => a.StartedDt))
                 .ForMember(d => d.PercentageComplete, s => s.MapFrom(a => a.PercentComplete))
+                .ForMember(d => d.AvailableQuestionsCount, s => s.MapFrom(a => a.MaxQuestionsCount))
                 ;
 
             CreateMap<GetQuestionResponse, FilterQuestionIndexResponseViewModel>();
 
             CreateMap<JobCategoryResult, JobCategoryResultViewModel>();
 
-            CreateMap<JobProfileResult, JobProfileResultViewModel>();
+            CreateMap<JobProfileResult, JobProfileResultViewModel>()
+                .ForMember(d => d.JobCategoryName, s => s.MapFrom(a => a.JobCategory))
+                ;
 
             CreateMap<TraitValue, TraitValueViewModel>();
         }

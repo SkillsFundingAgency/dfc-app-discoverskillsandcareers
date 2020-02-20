@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 {
     [ExcludeFromCodeCoverage]
-    public class GetQuestionResponse
+    public class GetQuestionResponse : IQuestion
     {
         public string QuestionText { get; set; }
 

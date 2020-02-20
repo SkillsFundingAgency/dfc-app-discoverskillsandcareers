@@ -31,13 +31,11 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public Answer? Answer { get; set; }
 
-        public int MaxQuestionsCount { get; set; }
+        public int AvailableQuestionsCount { get; set; }
 
         public string CurrentFilterAssessmentCode { get; set; }
 
         public bool IsFilterAssessment { get; set; }
-
-        public string JobCategorySafeUrl { get; set; }
 
         public int CurrentQuestionNumber { get; set; }
 
