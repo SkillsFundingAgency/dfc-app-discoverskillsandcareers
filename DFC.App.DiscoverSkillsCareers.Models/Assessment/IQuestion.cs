@@ -13,7 +13,7 @@
         int? PreviousQuestionNumber { get; set; }
 
         int? NextQuestionNumber { get; set; }
-        
+
         int MaxQuestionsCount { get; set; }
     }
 }

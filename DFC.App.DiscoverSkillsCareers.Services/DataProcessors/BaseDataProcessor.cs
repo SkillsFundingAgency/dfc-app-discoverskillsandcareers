@@ -6,9 +6,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 {
     public class BaseDataProcessor
     {
-        protected void Process(IQuestion value)
+        protected BaseDataProcessor()
         {
-            if (!string.IsNullOrWhiteSpace(value.QuestionId))
+        }
+
+        protected static void Process(IQuestion value)
+        {
+            if (value != null && !string.IsNullOrWhiteSpace(value.QuestionId))
             {
                 value.QuestionSetName = value.QuestionId.Split("-", StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
