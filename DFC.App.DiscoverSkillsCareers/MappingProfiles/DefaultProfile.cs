@@ -2,9 +2,11 @@
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
+    [ExcludeFromCodeCoverage]
     public class DefaultProfile : Profile
     {
         public DefaultProfile()
