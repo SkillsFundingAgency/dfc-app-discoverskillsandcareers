@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
@@ -7,6 +8,11 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     {
         public string ReferenceCode { get; set; }
 
+        [Required]
         public string AssessmentStarted { get; set; }
+
+        [Required]
+        [DataType(DataType.PhoneNumber)]
+        public string Telephone { get; set; }
     }
 }

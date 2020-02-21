@@ -11,18 +11,6 @@
     <a asp-route="filterQuestions" asp-route-questionSetName="@Model.Question.QuestionSetName" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous statement</a>
 }
 
-@Html.ValidationSummary()
-
 <h1>@Model.Question.QuestionText</h1>
 
-<form method="post">
-    <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
-    <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
-    <p>
-        <input type="radio" value="5" name="answer" checked="@Model.Question.IsChecked(Answer.Yes)" />Yes
-    </p>
-    <p>
-        <input type="radio" value="6" name="answer" checked="@Model.Question.IsChecked(Answer.No)" />No
-    </p>
-    <button>Next</button>
-</form>
+<partial name="_IndexQuestion" model="Model.Question" />

@@ -17,7 +17,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var responseVm = new HomeIndexResponseViewModel();
+
+            return View(responseVm);
         }
 
         [HttpPost]
@@ -30,7 +32,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                var repsonseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+                return View(repsonseViewModel);
             }
 
             await apiService.Reload(viewModel.ReferenceCode).ConfigureAwait(false);

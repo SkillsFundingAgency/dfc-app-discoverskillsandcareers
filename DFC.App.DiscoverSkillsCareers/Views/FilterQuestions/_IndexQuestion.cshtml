@@ -1,0 +1,16 @@
+﻿@model QuestionGetResponseViewModel
+
+<form method="post">
+    <p>
+        <span asp-validation-for="Answer" class="text-danger"></span>
+    </p>
+    <input type="hidden" name="QuestionNumberReal" value="@Model.CurrentQuestionNumber" />
+    <input type="hidden" name="QuestionNumberCounter" value="@Model.QuestionNumber" />
+    <p>
+        <input type="radio" asp-for="Answer" value="5" checked="@Model.IsChecked(Answer.Yes)" />Yes
+    </p>
+    <p>
+        <input type="radio" asp-for="Answer" value="6" checked="@Model.IsChecked(Answer.No)" />No
+    </p>
+    <button>Next</button>
+</form>

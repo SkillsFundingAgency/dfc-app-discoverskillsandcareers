@@ -1,11 +1,14 @@
-﻿<h1>Email address</h1>
+﻿@model AssessmentEmailPostResponse
+<h1>Email address</h1>
 
 @Html.ValidationSummary()
 
 We will only use this to send you a link to return to your assessment
 
 <form method="post">
-    <input type="email" name="email" placeholder="Email" />
-    <br/>
+    <input asp-for="Email" />
+    <p>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </p>
     <button>Send</button>
 </form>

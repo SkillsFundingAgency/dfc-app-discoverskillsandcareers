@@ -133,7 +133,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public IActionResult Save()
         {
-            return View();
+            var responseVm = new AssessmentSaveResponseViewModel();
+            return View(responseVm);
         }
 
         [HttpPost]
@@ -146,7 +147,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                var responseVm = new AssessmentSaveResponseViewModel() { AssessmentReturnTypeId = viewModel.AssessmentReturnTypeId };
+                return View(responseVm);
             }
 
             if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Email)
@@ -165,7 +167,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public IActionResult Email()
         {
-            return View();
+            var viewReponse = new AssessmentEmailPostResponse();
+            return View(viewReponse);
         }
 
         [HttpPost]
@@ -183,7 +186,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/emailsent");
             }
 
-            return View(request);
+            var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+            return View(viewReponse);
         }
 
         public IActionResult EmailSent()
