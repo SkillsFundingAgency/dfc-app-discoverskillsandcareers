@@ -11,6 +11,20 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
     public class ReferenceTests : AssessmentTestBase
     {
         [Fact]
+        public async Task ReferenceReturnsViewForSuccess()
+        {
+            var actionResponse = await AssessmentController.Reference().ConfigureAwait(false);
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public void ReferenceSentReturnsViewForSuccess()
+        {
+            var actionResponse = AssessmentController.ReferenceSent();
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
         public async Task NullViewModelReturnsBadRequest()
         {
             AssessmentReferencePostRequest viewModel = null;
