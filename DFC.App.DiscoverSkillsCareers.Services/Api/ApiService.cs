@@ -1,8 +1,11 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+﻿using Dfc.Session;
+using Dfc.Session.Models;
+using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
@@ -11,19 +14,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
     {
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService persistanceService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
+        private readonly ISessionClient sessionClient;
 
         public ApiService(
             IAssessmentApiService assessmentApiService,
             IResultsApiService resultsApiService,
-            ISessionService sessionService,
-            ISessionIdToCodeConverter sessionIdToCodeConverter)
+            IPersistanceService sessionService,
+            ISessionIdToCodeConverter sessionIdToCodeConverter,
+            ISessionClient sessionClient)
         {
             this.assessmentApiService = assessmentApiService;
             this.resultsApiService = resultsApiService;
-            this.sessionService = sessionService;
+            this.persistanceService = sessionService;
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
+            this.sessionClient = sessionClient;
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -31,7 +37,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
             if (newSessionResponse != null)
             {
-                sessionService.SetValue(SessionKey.SessionId, newSessionResponse.SessionId);
+                var dfcUserSession = CreateDfcUserSession(newSessionResponse.SessionId);
+
+                sessionClient.CreateCookie(dfcUserSession, false);
             }
 
             return newSessionResponse != null;
@@ -97,7 +105,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
 
-            sessionService.SetValue(SessionKey.SessionId, assessment.SessionId);
+            persistanceService.SetValue(SessionKey.SessionId, assessment.SessionId);
 
             return assessment.SessionId;
         }
@@ -117,12 +125,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string GetSessionId()
         {
-            return sessionService.GetValue<string>(SessionKey.SessionId);
+            return persistanceService.GetValue(SessionKey.SessionId);
         }
 
         private bool HasSessionId()
         {
             return !string.IsNullOrWhiteSpace(GetSessionId());
+        }
+
+        private DfcUserSession CreateDfcUserSession(string dysacSessionId)
+        {
+            var dysacSessionIdSegments = dysacSessionId.Split("-", StringSplitOptions.RemoveEmptyEntries);
+
+            var dfcUserSession = new DfcUserSession();
+            dfcUserSession.PartitionKey = dysacSessionIdSegments.FirstOrDefault();
+            dfcUserSession.SessionId = dysacSessionIdSegments.LastOrDefault();
+
+            return dfcUserSession;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IApiService apiService;
 
-        public AssessmentController(IMapper mapper, ISessionService sessionService, IApiService apiService)
+        public AssessmentController(IMapper mapper, IPersistanceService sessionService, IApiService apiService)
             : base(sessionService)
         {
             this.mapper = mapper;

@@ -5,7 +5,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class CompositeController : BaseController
     {
-        public CompositeController(ISessionService sessionService)
+        public CompositeController(IPersistanceService sessionService)
             : base(sessionService)
         {
         }

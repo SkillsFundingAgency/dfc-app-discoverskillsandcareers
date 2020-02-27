@@ -5,7 +5,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class ErrorController : BaseController
     {
-        public ErrorController(ISessionService sessionService)
+        public ErrorController(IPersistanceService sessionService)
             : base(sessionService)
         {
         }

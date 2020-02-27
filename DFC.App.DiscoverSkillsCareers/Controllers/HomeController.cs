@@ -9,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IApiService apiService;
 
-        public HomeController(ISessionService sessionService, IApiService apiService)
+        public HomeController(IPersistanceService sessionService, IApiService apiService)
             : base(sessionService)
         {
             this.apiService = apiService;
