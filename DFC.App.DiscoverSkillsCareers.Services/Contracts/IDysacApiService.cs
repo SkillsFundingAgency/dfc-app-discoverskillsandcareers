@@ -7,11 +7,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
     public interface IDysacApiService
     {
-        Task NewSession(AssessmentItemType assessmentType);
+        Task NewSession(AssessmentType assessmentType);
 
-        Task<GetQuestionResponse> GetQuestion(AssessmentItemType assessmentType, int questionNumber);
+        Task<GetQuestionResponse> GetQuestion(AssessmentType assessmentType, int questionNumber);
 
-        Task<PostAnswerResponse> AnswerQuestion(AssessmentItemType assessmentType, int questionNumber, string answer);
+        Task<PostAnswerResponse> AnswerQuestion(AssessmentType assessmentType, int questionNumber, string answer);
 
         Task<GetAssessmentResponse> GetAssessment();
 

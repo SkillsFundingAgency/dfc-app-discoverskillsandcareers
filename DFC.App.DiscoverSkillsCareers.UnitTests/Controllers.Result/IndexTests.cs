@@ -14,13 +14,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService sessionService;
         private readonly IDysacApiService apiService;
 
         public IndexTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
+            sessionService = A.Fake<IPersistanceService>();
             apiService = A.Fake<IDysacApiService>();
 
             controller = new ResultsController(mapper, sessionService, apiService);

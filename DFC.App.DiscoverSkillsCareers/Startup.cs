@@ -83,7 +83,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<ISerialiser, CamelCaseSerialiser>();
-            services.AddScoped<ISessionService, HttpContextSessonService>();
+            services.AddScoped<IPersistanceService, HttpContextSessonService>();
             services.AddScoped<IDysacApiService, AssessmentService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();

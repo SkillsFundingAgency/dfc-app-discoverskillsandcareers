@@ -14,14 +14,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IDysacApiService apiService;
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService sessionService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
 
         public ApiServiceTests()
         {
             assessmentApiService = A.Fake<IAssessmentApiService>();
             resultsApiService = A.Fake<IResultsApiService>();
-            sessionService = A.Fake<ISessionService>();
+            sessionService = A.Fake<IPersistanceService>();
             sessionIdToCodeConverter = A.Fake<ISessionIdToCodeConverter>();
 
             apiService = new AssessmentService(assessmentApiService, resultsApiService, sessionService, sessionIdToCodeConverter);

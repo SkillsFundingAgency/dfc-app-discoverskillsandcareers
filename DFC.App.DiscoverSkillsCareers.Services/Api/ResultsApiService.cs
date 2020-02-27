@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Models.Result;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System.Net.Http;
 using System.Threading.Tasks;

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Sessions
 {
-    public class HttpContextSessonService : ISessionService
+    public class HttpContextSessonService : IPersistanceService
     {
         private readonly ISession session;
         private readonly ISerialiser serialiser;

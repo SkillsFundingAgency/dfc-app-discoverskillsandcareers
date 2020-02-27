@@ -2,6 +2,6 @@
 {
     public static class SessionKey
     {
-        public const string SessionId = "SessionId";
+        public const string SessionId = ".dfc-session";
     }
 }

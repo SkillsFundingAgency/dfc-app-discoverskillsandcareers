@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -14,13 +13,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService sessionService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
 
         public AssessmentService(
             IAssessmentApiService assessmentApiService,
             IResultsApiService resultsApiService,
-            ISessionService sessionService,
+            IPersistanceService sessionService,
             ISessionIdToCodeConverter sessionIdToCodeConverter)
         {
             this.assessmentApiService = assessmentApiService;
@@ -31,7 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string SessionId => sessionService.GetValue<string>(SessionKey.SessionId);
 
-        public async Task NewSession(AssessmentItemType assessmentType)
+        public async Task NewSession(AssessmentType assessmentType)
         {
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
             sessionService.SetValue(SessionKey.SessionId, newSessionResponse.SessionId);

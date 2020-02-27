@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace DFC.App.DiscoverSkillsCareers.Core
 {

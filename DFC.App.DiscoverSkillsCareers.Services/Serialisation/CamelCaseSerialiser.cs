@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DFC.App.DiscoverSkillsCareers.Services.Serialisation
+namespace DFC.App.DiscoverSkillsCareers.Services
 {
     public class CamelCaseSerialiser : ISerialiser
     {

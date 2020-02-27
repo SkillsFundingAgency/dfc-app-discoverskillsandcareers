@@ -1,7 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System.Text;
 
-namespace DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters
+namespace DFC.App.DiscoverSkillsCareers.Services
 {
     public class SessionIdToCodeConverter : ISessionIdToCodeConverter
     {

@@ -1,14 +1,13 @@
 ﻿using Dfc.Session.Models;
-using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using System.Threading.Tasks;
 
-namespace DFC.App.DiscoverSkillsCareers.Services
+namespace DFC.App.DiscoverSkillsCareers.Services.Assessment
 {
-    public interface IAssesmentService<T>
+    public interface IAssessmentService<T>
         where T : IAssessmentType, new()
     {
-        Task<T> CreateAssesment(DfcUserSession dfcUserSession);
+        Task<DfcUserSession> CreateAssessment();
 
         Task<GetQuestionResponse> GetQuestion(int questionNumber);
 

@@ -6,9 +6,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService sessionService;
 
-        public BaseController(ISessionService sessionService)
+        public BaseController(IPersistanceService sessionService)
         {
             this.sessionService = sessionService;
         }

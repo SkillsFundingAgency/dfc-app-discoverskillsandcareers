@@ -9,13 +9,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
     {
         private readonly ShortAssessmentController assessmentController;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService sessionService;
         private readonly IDysacApiService apiService;
 
         public AssessmentTestBase()
         {
             mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
+            sessionService = A.Fake<IPersistanceService>();
             apiService = A.Fake<IDysacApiService>();
 
             assessmentController = new ShortAssessmentController(mapper, sessionService, apiService);
@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             get { return mapper; }
         }
 
-        protected ISessionService SessionService
+        protected IPersistanceService SessionService
         {
             get { return sessionService; }
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {

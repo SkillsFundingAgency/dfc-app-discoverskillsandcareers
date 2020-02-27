@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core;
-using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System.Net.Http;
@@ -28,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             this.getAssessmentResponseDataProcessor = getAssessmentResponseDataProcessor;
         }
 
-        public async Task<NewSessionResponse> NewSession(AssessmentItemType assessmentType)
+        public async Task<NewSessionResponse> NewSession(string assessmentType)
         {
             var url = $"{httpClient.BaseAddress}/assessment?assessmentType={assessmentType}";
             using (var postData = new StringContent(string.Empty))

@@ -14,9 +14,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class ShortAssessmentController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IAssesmentService<ShortAssessment> shortAssesmentService;
+        private readonly IAssessmentService<ShortAssessment> shortAssesmentService;
 
-        public ShortAssessmentController(IMapper mapper, ISessionService sessionService, IAssesmentService<ShortAssessment> shortAssesmentService)
+        public ShortAssessmentController(IMapper mapper, IPersistanceService sessionService, IAssessmentService<ShortAssessment> shortAssesmentService)
             : base(sessionService)
         {
             this.mapper = mapper;
@@ -106,11 +106,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(AssessmentItemType assessmentType)
+        public async Task<IActionResult> New(AssessmentType assessmentType)
         {
             switch (assessmentType)
             {
-                case AssessmentItemType.Short:
+                case AssessmentType.Short:
                     break;
                 default:
                     break;
@@ -230,7 +230,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private static string GetAssessmentTypeName(string value)
         {
             var result = string.Empty;
-            if (Enum.TryParse<AssessmentItemType>(value, true, out var assessmentItemType))
+            if (Enum.TryParse<AssessmentType>(value, true, out var assessmentItemType))
             {
                 result = assessmentItemType.ToString().ToLower();
             }

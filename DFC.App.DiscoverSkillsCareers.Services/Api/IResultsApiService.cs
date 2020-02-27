@@ -1,7 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
 using System.Threading.Tasks;
 
-namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
+namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
     public interface IResultsApiService
     {
