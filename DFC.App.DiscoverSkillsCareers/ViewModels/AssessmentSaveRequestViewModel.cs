@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+﻿using DFC.App.DiscoverSkillsCareers.Core;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 

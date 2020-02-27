@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (!HasSessionId())
+            if (!HasSessionIdAsync())
             {
                 return RedirectToRoot();
             }
@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (!HasSessionId())
+            if (!HasSessionIdAsync())
             {
                 return RedirectToRoot();
             }

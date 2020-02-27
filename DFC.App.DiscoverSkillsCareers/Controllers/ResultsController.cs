@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (!HasSessionId())
+            if (!HasSessionIdAsync())
             {
                 return RedirectToRoot();
             }

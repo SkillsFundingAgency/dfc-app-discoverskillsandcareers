@@ -14,5 +14,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
         public bool IsFilterAssessment { get; set; }
 
         public int NextQuestionNumber { get; set; }
+
+        public GetQuestionResponse Question { get; set; }
     }
 }

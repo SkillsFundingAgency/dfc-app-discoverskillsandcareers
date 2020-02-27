@@ -1,14 +1,17 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+﻿using Dfc.Session;
+using DFC.App.DiscoverSkillsCareers.Core;
+using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly IPersistanceService sessionService;
+        private readonly ISessionClient sessionService;
 
-        public BaseController(IPersistanceService sessionService)
+        public BaseController(ISessionClient sessionService)
         {
             this.sessionService = sessionService;
         }
@@ -24,14 +27,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return RedirectTo(string.Empty);
         }
 
-        protected string GetSessionId()
+        protected async Task<string> GetSessionIdAsync()
         {
-            return sessionService.GetValue<string>(SessionKey.SessionId);
+            return await sessionService.TryFindSessionCode().ConfigureAwait(false);
         }
 
-        protected bool HasSessionId()
+        protected async Task<bool> HasSessionIdAsync()
         {
-            return !string.IsNullOrWhiteSpace(GetSessionId());
+            return !string.IsNullOrWhiteSpace(await GetSessionIdAsync().ConfigureAwait(false));
         }
     }
 }

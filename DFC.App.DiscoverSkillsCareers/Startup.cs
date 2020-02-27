@@ -1,4 +1,5 @@
 using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
@@ -53,8 +54,8 @@ namespace DFC.App.DiscoverSkillsCareers
 
                 endpoints.MapControllerRoute(
                     name: "assessment",
-                    pattern: RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}",
-                    new { controller = "Assessment", action = "Index" });
+                    pattern: RouteName.Prefix + $"/assessment/{AssessmentTypeName.ShortAssessment}/{{questionNumber}}",
+                    new { controller = "ShortAssessment", action = "Index" });
 
                 endpoints.MapControllerRoute(
                     name: "filterQuestionsComplete",

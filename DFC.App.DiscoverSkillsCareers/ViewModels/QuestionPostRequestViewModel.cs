@@ -7,7 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class QuestionPostRequestViewModel
     {
-        public AssessmentType AssessmentType { get; set; }
+        public Assessments AssessmentType { get; set; }
 
         public int QuestionNumber { get; set; }
 

@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using Dfc.Session;
+using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Core;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Services;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Assessment;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,10 +14,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class ShortAssessmentController : BaseController
     {
+        private const string FailedAnswerErrorMessageKey = "Answer";
+        private const string FailedAnswerErrorMessage = "Failed to record answer";
+
         private readonly IMapper mapper;
         private readonly IAssessmentService<ShortAssessment> shortAssesmentService;
 
-        public ShortAssessmentController(IMapper mapper, IPersistanceService sessionService, IAssessmentService<ShortAssessment> shortAssesmentService)
+        public ShortAssessmentController(IMapper mapper, ISessionClient sessionService, IAssessmentService<ShortAssessment> shortAssesmentService)
             : base(sessionService)
         {
             this.mapper = mapper;
@@ -26,34 +30,31 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(QuestionGetRequestViewModel requestViewModel)
         {
-            if (requestViewModel == null)
+            if (requestViewModel is null)
             {
                 return BadRequest();
             }
 
-            if (!HasSessionId())
+            if (!await HasSessionIdAsync().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
 
-            var questionResponse = await shortAssesmentService.GetQuestion(requestViewModel.QuestionNumber).ConfigureAwait(false);
-            if (questionResponse == null)
-            {
-                return BadRequest();
-            }
-
-            if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
+            var questionResponse = await shortAssesmentService.GetQuestionAsync(requestViewModel.QuestionNumber).ConfigureAwait(false);
+            if (questionResponse is null || requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
                 return BadRequest();
             }
 
             if (questionResponse.IsComplete)
             {
+                //TODO: Convert this if possible to Redirect to action if not move this literal to const
                 return RedirectTo("results");
             }
 
             if (requestViewModel.QuestionNumber > questionResponse.QuestionNumber)
             {
+                //TODO: Convert this if possible to Redirect to action if not move this literal to const
                 return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{questionResponse.QuestionNumber}");
             }
 
@@ -69,77 +70,64 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (!HasSessionId())
+            if (!await HasSessionIdAsync().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
 
-            var question = await shortAssesmentService.GetQuestion(requestViewModel.QuestionNumber).ConfigureAwait(false);
-            if (question is null)
-            {
-                return BadRequest();
-            }
-
-            var result = mapper.Map<QuestionGetResponseViewModel>(question);
             if (!ModelState.IsValid)
             {
-                return View(result);
+                var question = await shortAssesmentService.GetQuestionAsync(requestViewModel.QuestionNumber).ConfigureAwait(false);
+                if (question is null)
+                {
+                    return BadRequest();
+                }
+
+                var questionView = mapper.Map<QuestionGetResponseViewModel>(question);
+                return View(questionView);
             }
 
-            var answerResponse = await shortAssesmentService.AnswerQuestion(requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await shortAssesmentService.AnswerQuestionAsync(requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
             if (answerResponse.IsSuccess)
             {
                 if (answerResponse.IsComplete)
                 {
                     return RedirectTo("assessment/complete");
+                    //TODO: Can we not use this? RedirectToAction(nameof(Complete));
                 }
                 else
                 {
+                    //TODO: Convert this if possible to Redirect to action if not move this literal to const
                     return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{answerResponse.NextQuestionNumber}");
                 }
             }
             else
             {
-                ModelState.AddModelError("Answer", "Failed to record answer");
-                return View(result);
+                ModelState.AddModelError(FailedAnswerErrorMessageKey, FailedAnswerErrorMessage);
+                return View(answerResponse.Question);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(AssessmentType assessmentType)
+        public async Task<IActionResult> New(DfcUserSession userSession)
         {
-            switch (assessmentType)
-            {
-                case AssessmentType.Short:
-                    break;
-                default:
-                    break;
-            }
-            await shortAssesmentService.CreateAssesment(null).ConfigureAwait(false);
+            await shortAssesmentService.CreateAssessmentAsync(userSession).ConfigureAwait(false);
 
-            return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
+            //TODO: Convert this if possible to Redirect to action if not move this literal to const
+            return RedirectTo($"assessment/{AssessmentTypeName.ShortAssessment}/1");
         }
 
-        public IActionResult Complete()
-        {
-            return View();
-        }
+        public IActionResult Complete() => View();
 
-        public async Task<IActionResult> Return()
-        {
-            var assessment = await GetAssessment().ConfigureAwait(false);
-            return NavigateTo(assessment);
-        }
+        public async Task<IActionResult> Return() => NavigateTo(await shortAssesmentService.GetAssessmentAsync().ConfigureAwait(false));
 
-        public IActionResult Save()
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult Save() => View();
 
         [HttpPost]
         public IActionResult Save(AssessmentSaveRequestViewModel viewModel)
         {
-            if (viewModel == null)
+            if (viewModel is null)
             {
                 return BadRequest();
             }
@@ -149,24 +137,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Email)
+            switch (viewModel.AssessmentReturnTypeId)
             {
-                return RedirectTo("assessment/email");
-            }
-            else if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Reference)
-            {
-                return RedirectTo("assessment/reference");
-            }
-            else
-            {
-                return View();
+                case AssessmentReturnType.Email:
+                    //TODO: Convert this if possible to Redirect to action if not move this literal to const
+                    return RedirectTo("assessment/email");
+
+                case AssessmentReturnType.Reference:
+                    //TODO: Convert this if possible to Redirect to action if not move this literal to const
+                    return RedirectTo("assessment/reference");
+
+                default:
+                    return View(viewModel);
             }
         }
 
-        public IActionResult Email()
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult Email() => View();
 
         [HttpPost]
         public async Task<IActionResult> Email(AssessmentEmailPostRequest request)
@@ -230,7 +217,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private static string GetAssessmentTypeName(string value)
         {
             var result = string.Empty;
-            if (Enum.TryParse<AssessmentType>(value, true, out var assessmentItemType))
+            if (Enum.TryParse<Assessments>(value, true, out var assessmentItemType))
             {
                 result = assessmentItemType.ToString().ToLower();
             }
@@ -240,7 +227,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<AssessmentReferenceGetResponse> GetAssessmentViewModel()
         {
-            var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
+            var getAssessmentResponse = await shortAssesmentService.GetAssessment().ConfigureAwait(false); ;
 
             var result = new AssessmentReferenceGetResponse();
             result.ReferenceCode = getAssessmentResponse.ReferenceCode;
@@ -251,7 +238,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<GetAssessmentResponse> GetAssessment()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var getAssessmentResponse = await shortAssesmentService.GetAssessment().ConfigureAwait(false);
             return getAssessmentResponse;
         }
 
@@ -270,4 +257,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.CurrentQuestionNumber}");
         }
     }
+
+#endregion Move to new controller
+}
 }

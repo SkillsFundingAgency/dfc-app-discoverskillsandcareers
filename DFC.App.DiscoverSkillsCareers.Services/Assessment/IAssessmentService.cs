@@ -7,10 +7,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Assessment
     public interface IAssessmentService<T>
         where T : IAssessmentType, new()
     {
-        Task<DfcUserSession> CreateAssessment();
+        Task CreateAssessmentAsync(DfcUserSession dfcUserSession = null);
 
-        Task<GetQuestionResponse> GetQuestion(int questionNumber);
+        Task<GetQuestionResponse> GetQuestionAsync(int questionNumber);
 
-        Task<PostAnswerResponse> AnswerQuestion(int questionNumber, string answer);
+        Task<PostAnswerResponse> AnswerQuestionAsync(int questionNumber, string answer);
+
+        Task<GetAssessmentResponse> GetAssessmentAsync();
     }
 }
