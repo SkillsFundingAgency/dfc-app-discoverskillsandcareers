@@ -29,20 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters
 
         public string GetSessionId(string code)
         {
-            var result = new StringBuilder();
-
-            if (!string.IsNullOrWhiteSpace(code))
-            {
-                foreach (var c in code)
-                {
-                    if (c != ' ')
-                    {
-                        result.Append(c.ToString().ToLower());
-                    }
-                }
-            }
-
-            return result.ToString();
+            return code?.Replace(" ", string.Empty).ToLower();
         }
     }
 }

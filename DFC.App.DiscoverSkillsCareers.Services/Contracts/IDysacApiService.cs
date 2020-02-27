@@ -1,16 +1,17 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Core;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface IApiService
+    public interface IDysacApiService
     {
-        Task<bool> NewSession(string assessmentType);
+        Task NewSession(AssessmentItemType assessmentType);
 
-        Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber);
+        Task<GetQuestionResponse> GetQuestion(AssessmentItemType assessmentType, int questionNumber);
 
-        Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int questionNumber, string answer);
+        Task<PostAnswerResponse> AnswerQuestion(AssessmentItemType assessmentType, int questionNumber, string answer);
 
         Task<GetAssessmentResponse> GetAssessment();
 

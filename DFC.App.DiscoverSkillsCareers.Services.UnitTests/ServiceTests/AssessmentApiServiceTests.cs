@@ -22,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
         public AssessmentApiServiceTests()
         {
-            serialiser = new NewtonsoftSerialiser();
+            serialiser = new CamelCaseSerialiser();
             getQuestionResponseDataProcessor = A.Fake<IDataProcessor<GetQuestionResponse>>();
             getAssessmentResponseDataProcessor = A.Fake<IDataProcessor<GetAssessmentResponse>>();
 

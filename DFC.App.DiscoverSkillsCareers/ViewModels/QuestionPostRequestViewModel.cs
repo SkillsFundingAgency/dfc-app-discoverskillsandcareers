@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DFC.App.DiscoverSkillsCareers.Core;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -6,7 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class QuestionPostRequestViewModel
     {
-        public string AssessmentType { get; set; }
+        public AssessmentItemType AssessmentType { get; set; }
 
         public int QuestionNumber { get; set; }
 

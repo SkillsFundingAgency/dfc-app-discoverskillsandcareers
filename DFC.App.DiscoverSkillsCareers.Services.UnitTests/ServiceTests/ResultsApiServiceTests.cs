@@ -18,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
         public ResultsApiServiceTests()
         {
-            serialiser = new NewtonsoftSerialiser();
+            serialiser = new CamelCaseSerialiser();
 
             httpMessageHandler = new MockHttpMessageHandler();
             httpClient = httpMessageHandler.ToHttpClient();

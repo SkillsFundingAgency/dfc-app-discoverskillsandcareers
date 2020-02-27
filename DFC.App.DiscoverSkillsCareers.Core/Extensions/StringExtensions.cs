@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace DFC.App.DiscoverSkillsCareers.Core.Extensions
+namespace DFC.App.DiscoverSkillsCareers.Core
 {
     public static class StringExtensions
     {

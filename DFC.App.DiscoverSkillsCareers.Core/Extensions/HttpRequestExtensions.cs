@@ -1,7 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using Microsoft.AspNetCore.Http;
 
-namespace DFC.App.DiscoverSkillsCareers.Core.Extensions
+namespace DFC.App.DiscoverSkillsCareers.Core
 {
     public static class HttpRequestExtensions
     {

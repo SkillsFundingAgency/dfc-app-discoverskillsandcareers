@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Core;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Services;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class AssessmentController : BaseController
+    public class ShortAssessmentController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IApiService apiService;
+        private readonly IAssesmentService<ShortAssessment> shortAssesmentService;
 
-        public AssessmentController(IMapper mapper, ISessionService sessionService, IApiService apiService)
+        public ShortAssessmentController(IMapper mapper, ISessionService sessionService, IAssesmentService<ShortAssessment> shortAssesmentService)
             : base(sessionService)
         {
             this.mapper = mapper;
-            this.apiService = apiService;
+            this.shortAssesmentService = shortAssesmentService;
         }
 
         [HttpGet]
@@ -34,8 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var questionResponse = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
-
+            var questionResponse = await shortAssesmentService.GetQuestion(requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (questionResponse == null)
             {
                 return BadRequest();
@@ -73,21 +74,19 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
-            if (question == null)
+            var question = await shortAssesmentService.GetQuestion(requestViewModel.QuestionNumber).ConfigureAwait(false);
+            if (question is null)
             {
                 return BadRequest();
             }
 
             var result = mapper.Map<QuestionGetResponseViewModel>(question);
-
             if (!ModelState.IsValid)
             {
                 return View(result);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
-
+            var answerResponse = await shortAssesmentService.AnswerQuestion(requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
             if (answerResponse.IsSuccess)
             {
                 if (answerResponse.IsComplete)
@@ -96,8 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
                 else
                 {
-                    var assessmentTypeName = GetAssessmentTypeName(requestViewModel.AssessmentType);
-                    return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
+                    return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{answerResponse.NextQuestionNumber}");
                 }
             }
             else
@@ -108,14 +106,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(string assessmentType)
+        public async Task<IActionResult> New(AssessmentItemType assessmentType)
         {
-            if (string.IsNullOrEmpty(assessmentType))
+            switch (assessmentType)
             {
-                return BadRequest();
+                case AssessmentItemType.Short:
+                    break;
+                default:
+                    break;
             }
-
-            await apiService.NewSession(assessmentType).ConfigureAwait(false);
+            await shortAssesmentService.CreateAssesment(null).ConfigureAwait(false);
 
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
         }
@@ -226,6 +226,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        //TODO: May not need this?
         private static string GetAssessmentTypeName(string value)
         {
             var result = string.Empty;
@@ -246,12 +247,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             result.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
 
             return result;
-        }
-
-        private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
-        {
-            var question = await apiService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
-            return question;
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()

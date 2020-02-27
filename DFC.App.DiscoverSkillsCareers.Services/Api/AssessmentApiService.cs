@@ -1,4 +1,6 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Core;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System.Net.Http;
 using System.Net.Mime;
@@ -26,7 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             this.getAssessmentResponseDataProcessor = getAssessmentResponseDataProcessor;
         }
 
-        public async Task<NewSessionResponse> NewSession(string assessmentType)
+        public async Task<NewSessionResponse> NewSession(AssessmentItemType assessmentType)
         {
             var url = $"{httpClient.BaseAddress}/assessment?assessmentType={assessmentType}";
             using (var postData = new StringContent(string.Empty))
@@ -66,10 +68,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var url = $"{httpClient.BaseAddress}/assessment/{sessionId}/reload";
             var httpResponseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
+
             httpResponseMessage.EnsureSuccessStatusCode();
+
             var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             var response = serialiser.Deserialise<GetAssessmentResponse>(contentResponse);
             getAssessmentResponseDataProcessor.Processor(response);
+
             return response;
         }
 

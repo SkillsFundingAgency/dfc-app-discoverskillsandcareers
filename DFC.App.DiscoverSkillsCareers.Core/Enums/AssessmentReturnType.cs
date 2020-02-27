@@ -1,4 +1,4 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.Core.Enums
+﻿namespace DFC.App.DiscoverSkillsCareers.Core
 {
     public enum AssessmentReturnType
     {

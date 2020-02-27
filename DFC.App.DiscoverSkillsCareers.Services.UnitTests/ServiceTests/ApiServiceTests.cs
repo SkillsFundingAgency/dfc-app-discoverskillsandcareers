@@ -11,7 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
     public class ApiServiceTests
     {
-        private readonly IApiService apiService;
+        private readonly IDysacApiService apiService;
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
         private readonly ISessionService sessionService;
@@ -24,20 +24,32 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             sessionService = A.Fake<ISessionService>();
             sessionIdToCodeConverter = A.Fake<ISessionIdToCodeConverter>();
 
-            apiService = new ApiService(assessmentApiService, resultsApiService, sessionService, sessionIdToCodeConverter);
+            apiService = new AssessmentService(assessmentApiService, resultsApiService, sessionService, sessionIdToCodeConverter);
         }
 
         [Fact]
-        public async Task NewSessionReturnTrueWhenNewSessionIsCreated()
+        public async Task NewSessionCreatedSuccessfully()
         {
             var assessmentType = "at1";
             var newAssessmentResponse = new NewSessionResponse() { SessionId = "s1" };
 
             A.CallTo(() => assessmentApiService.NewSession(assessmentType)).Returns(newAssessmentResponse);
 
-            var response = await apiService.NewSession(assessmentType);
+            await apiService.NewSession(assessmentType);
 
-            Assert.True(response);
+            A.CallTo(() => assessmentApiService.NewSession(assessmentType)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => sessionService.SetValue(SessionKey.SessionId, newAssessmentResponse.SessionId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task NewSessionFailedToCreate()
+        {
+            A.CallTo(() => assessmentApiService.NewSession(A<string>._)).Returns(default(NewSessionResponse));
+
+            await apiService.NewSession("ignore");
+
+            A.CallTo(() => assessmentApiService.NewSession(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => sessionService.SetValue(SessionKey.SessionId, A<string>._)).MustNotHaveHappened();
         }
 
 

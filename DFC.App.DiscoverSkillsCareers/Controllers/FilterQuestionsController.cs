@@ -9,9 +9,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class FilterQuestionsController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IApiService apiService;
+        private readonly IDysacApiService apiService;
 
-        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IApiService apiService)
+        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IDysacApiService apiService)
             : base(sessionService)
         {
             this.mapper = mapper;
