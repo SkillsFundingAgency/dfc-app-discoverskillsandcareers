@@ -1,6 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Core.Extensions;
-using FakeItEasy;
+﻿using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 

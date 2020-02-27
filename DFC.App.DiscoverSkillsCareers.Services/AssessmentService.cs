@@ -30,7 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string SessionId => sessionService.GetValue<string>(SessionKey.SessionId);
 
-        public async Task NewSession(Assessments assessmentType)
+        public async Task NewSession(Core.Assessment assessmentType)
         {
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
             sessionService.SetValue(SessionKey.SessionId, newSessionResponse.SessionId);

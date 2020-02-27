@@ -1,6 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using RichardSzalay.MockHttp;
 using System;
 using System.Net.Http;
@@ -38,6 +37,5 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var resultsResponse = await resultsApiService.GetResults(sessionId);
             Assert.Equal(sessionId, resultsResponse.SessionId);
         }
-
     }
 }

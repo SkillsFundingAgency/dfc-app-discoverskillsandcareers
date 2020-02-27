@@ -1,7 +1,5 @@
 ﻿using Dfc.Session;
 using DFC.App.DiscoverSkillsCareers.Core;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -14,6 +12,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public BaseController(ISessionClient sessionService)
         {
             this.sessionService = sessionService;
+        }
+
+        [Route("head/{**data}")]
+        public IActionResult Head()
+        {
+            return View();
         }
 
         protected IActionResult RedirectTo(string relativeAddress)

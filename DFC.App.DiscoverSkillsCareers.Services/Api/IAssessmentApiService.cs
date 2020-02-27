@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api

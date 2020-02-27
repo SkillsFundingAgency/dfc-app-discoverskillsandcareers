@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
-using Xunit;
+﻿using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -24,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [InlineData("ezw68mmyw943m3", "EZW6 8MMY W943 M3")]
         public void CanGetCode(string source, string expectedCode)
         {
-            var actualCode=defaultSessionIdToCodeConverter.GetCode(source);
+            var actualCode = defaultSessionIdToCodeConverter.GetCode(source);
             Assert.Equal(expectedCode, actualCode);
         }
 

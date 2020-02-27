@@ -217,7 +217,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private static string GetAssessmentTypeName(string value)
         {
             var result = string.Empty;
-            if (Enum.TryParse<Assessments>(value, true, out var assessmentItemType))
+            if (Enum.TryParse<Assessment>(value, true, out var assessmentItemType))
             {
                 result = assessmentItemType.ToString().ToLower();
             }
@@ -236,12 +236,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return result;
         }
 
-        private async Task<GetAssessmentResponse> GetAssessment()
-        {
-            var getAssessmentResponse = await shortAssesmentService.GetAssessment().ConfigureAwait(false);
-            return getAssessmentResponse;
-        }
-
         private IActionResult NavigateTo(GetAssessmentResponse assessment)
         {
             if (assessment == null)
@@ -257,7 +251,4 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.CurrentQuestionNumber}");
         }
     }
-
-#endregion Move to new controller
-}
 }

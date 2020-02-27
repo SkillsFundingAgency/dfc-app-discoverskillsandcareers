@@ -1,6 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using FakeItEasy;
+﻿using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Xunit;

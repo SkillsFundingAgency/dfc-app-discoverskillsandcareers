@@ -1,7 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services

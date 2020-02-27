@@ -1,7 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Core.Enums;
-using DFC.App.DiscoverSkillsCareers.ViewModels;
+﻿using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 

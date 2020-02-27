@@ -1,13 +1,9 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
-using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
-using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
-using DFC.App.DiscoverSkillsCareers.Services.Sessions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

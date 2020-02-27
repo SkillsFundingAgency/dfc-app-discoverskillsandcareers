@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Dfc.Session;
+using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Services.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,92 +11,89 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class FilterQuestionsController : BaseController
     {
+        private const string ErrorKey = "Answer";
+        private const string ErrorMessage = "Unable to register answer";
         private readonly IMapper mapper;
-        private readonly IDysacApiService apiService;
+        private readonly IResultsService<ShortAssessment> resultsService;
 
-        public FilterQuestionsController(IMapper mapper, IPersistanceService sessionService, IDysacApiService apiService)
+        public FilterQuestionsController(IMapper mapper, ISessionClient sessionService, IResultsService<ShortAssessment> resultsService)
             : base(sessionService)
         {
             this.mapper = mapper;
-            this.apiService = apiService;
+            this.resultsService = resultsService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(FilterQuestionIndexRequestViewModel viewModel)
+        public async Task<IActionResult> Index(FilterQuestionIndexRequestViewModel filterRequest)
         {
-            if (viewModel == null)
+            if (filterRequest is null)
             {
                 return BadRequest();
             }
 
-            if (!HasSessionIdAsync())
+            if (!await HasSessionIdAsync().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
 
-            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
-            if (!assessment.IsComplete)
+            if (!await resultsService.IsAssessmentComplete().ConfigureAwait(false))
             {
-                return RedirectTo("assessment/return");
+                return RedirectToAction(nameof(ShortAssessmentController.Return), nameof(ShortAssessmentController));
             }
 
-            var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
-            return View(response);
+            var filtereredQuestion = await resultsService.GetFilterQuestion(filterRequest.JobCategoryName, filterRequest.QuestionNumber).ConfigureAwait(false);
+            var viewModel = new FilterQuestionIndexResponseViewModel
+            {
+                Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),
+                JobCategoryName = filterRequest.JobCategoryName,
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(FilterQuestionPostRequestViewModel viewModel)
+        public async Task<IActionResult> Index(FilterQuestionPostRequestViewModel filterQuestionResponse)
         {
-            if (viewModel == null)
+            if (filterQuestionResponse is null)
             {
                 return BadRequest();
             }
 
-            if (!HasSessionIdAsync())
+            if (!await HasSessionIdAsync().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
 
             if (!ModelState.IsValid)
             {
-                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
-                return View(response);
+                var filtereredQuestion = await resultsService.GetFilterQuestion(filterQuestionResponse.JobCategoryName, filterQuestionResponse.QuestionNumberCounter).ConfigureAwait(false);
+                return View(filtereredQuestion);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(viewModel.AssessmentType, viewModel.QuestionNumberReal, viewModel.Answer).ConfigureAwait(false);
-
-            if (answerResponse == null)
+            var answerResponse = await resultsService.AnswerFilterQuestion(filterQuestionResponse.QuestionNumberReal, filterQuestionResponse.Answer).ConfigureAwait(false);
+            if (answerResponse is null)
             {
+                //Dont think bad request might be the correct answer?
                 return BadRequest();
             }
 
             if (!answerResponse.IsSuccess)
             {
-                ModelState.AddModelError("Answer", "Unable to register answer");
-                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
-                return View(response);
+                ModelState.AddModelError(ErrorKey, ErrorMessage);
+                return View(answerResponse.Question);
             }
 
             if (answerResponse.IsComplete)
             {
-                return RedirectTo("results");
+                return RedirectToAction(nameof(ResultsController.Index));
             }
 
-            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
+            return RedirectTo($"{filterQuestionResponse.AssessmentType}/filterquestions/{filterQuestionResponse.JobCategoryName}/{answerResponse.NextQuestionNumber}");
         }
 
         public IActionResult Complete(FilterQuestionsCompleteResponseViewModel viewModel)
         {
             return View(viewModel);
-        }
-
-        private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
-        {
-            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
-            var response = new FilterQuestionIndexResponseViewModel();
-            response.Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion);
-            response.JobCategoryName = assessment;
-            return response;
         }
     }
 }

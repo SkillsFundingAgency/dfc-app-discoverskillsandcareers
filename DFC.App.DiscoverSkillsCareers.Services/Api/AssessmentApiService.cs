@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System.Net.Http;
 using System.Net.Mime;

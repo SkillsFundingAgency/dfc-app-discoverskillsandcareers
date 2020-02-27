@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;

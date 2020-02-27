@@ -1,7 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using FakeItEasy;
 using RichardSzalay.MockHttp;
 using System;
@@ -101,7 +100,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             Assert.True(sendEmailResponse.IsSuccess);
         }
-
 
         [Fact]
         public async Task FilterAssessmentReturnsValidDataForSuccess()

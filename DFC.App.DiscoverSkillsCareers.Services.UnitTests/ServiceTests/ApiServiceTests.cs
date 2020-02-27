@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -51,7 +50,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => assessmentApiService.NewSession(A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => sessionService.SetValue(SessionKey.SessionId, A<string>._)).MustNotHaveHappened();
         }
-
 
         [Fact]
         public async Task GetQuestionReturnsValidResponse()

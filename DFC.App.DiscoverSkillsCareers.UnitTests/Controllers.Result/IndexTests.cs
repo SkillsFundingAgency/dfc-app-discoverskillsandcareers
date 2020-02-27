@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using FakeItEasy;
