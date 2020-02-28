@@ -1,23 +1,81 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class CompositeController : BaseController
     {
+        private const string ViewName = "Index";
+
         public CompositeController(ISessionService sessionService)
             : base(sessionService)
         {
         }
 
-        /// <summary>
-        /// Head endpoint action method that is called by composite.
-        /// </summary>
-        /// <remarks>Composite needs this and send that path to this endpoint which is why we need a catch all here.</remarks>
-        [Route("head/{**data}")]
-        public IActionResult Head()
+        [Route("head")]
+        public IActionResult Index()
         {
-            return View();
+            var vm = CreateViewModel(PageTitle.Home);
+            return View(ViewName, vm);
+        }
+
+        [Route("head/assessment/{assessmentType}/{questionNumber}")]
+        [Route("head/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}")]
+        public IActionResult Question(int questionNumber)
+        {
+            return CreateViewModelAndReturnView($"Q{questionNumber}");
+        }
+
+        [Route("head/assessment/save")]
+        public IActionResult AssessmentSave()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentSave);
+        }
+
+        [Route("head/assessment/reference")]
+        public IActionResult AssessmentReference()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentReference);
+        }
+
+        [Route("head/assessment/email")]
+        public IActionResult AssessmentEmail()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentEmail);
+        }
+
+        [Route("head/assessment/emailsent")]
+        public IActionResult AssessmentEmailSent()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
+        }
+
+        [Route("head/assessment/results")]
+        [Route("head/results/{jobCategoryName}")]
+        public IActionResult Results()
+        {
+            return CreateViewModelAndReturnView(PageTitle.Results);
+        }
+
+        [Route("head/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
+        public IActionResult AssessmentComplete()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
+        }
+
+        private HeadResponseViewModel CreateViewModel(string title)
+        {
+            var result = new HeadResponseViewModel();
+            result.Title = $"{title} | {PageTitle.Dysac} | {PageTitle.Ncs}";
+            return result;
+        }
+
+        private IActionResult CreateViewModelAndReturnView(string title)
+        {
+            var vm = CreateViewModel(title);
+            return View(ViewName, vm);
         }
     }
 }
