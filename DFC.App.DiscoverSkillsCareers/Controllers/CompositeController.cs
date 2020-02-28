@@ -65,7 +65,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
         }
 
-        private HeadResponseViewModel CreateViewModel(string title)
+        private static HeadResponseViewModel CreateViewModel(string title)
         {
             var result = new HeadResponseViewModel();
             result.Title = $"{title} | {PageTitle.Dysac} | {PageTitle.Ncs}";
