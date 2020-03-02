@@ -11,16 +11,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters
             if (!string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim().ToUpper();
-                int i = 0;
-                foreach (var c in value)
+                for (var i = 0; i < value.Length; i++)
                 {
-                    i++;
-                    if (i % 4 == 1 && i > 1)
+                    if (i % 4 == 0 && i > 1)
                     {
                         result.Append(" ");
                     }
 
-                    result.Append(c);
+                    result.Append(value[i]);
                 }
             }
 
@@ -33,11 +31,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters
 
             if (!string.IsNullOrWhiteSpace(code))
             {
+                code = code.ToLower();
                 foreach (var c in code)
                 {
                     if (c != ' ')
                     {
-                        result.Append(c.ToString().ToLower());
+                        result.Append(c.ToString());
                     }
                 }
             }

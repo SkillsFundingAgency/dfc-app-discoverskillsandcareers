@@ -6,6 +6,14 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class ResultsIndexResponseViewModel
     {
+        public ResultsIndexResponseViewModel()
+        {
+            JobCategories = new List<JobCategoryResultViewModel>();
+            Traits = new List<string>();
+            JobProfiles = new List<JobProfileResultViewModel>();
+            WhatYouToldUs = new List<string>();
+        }
+
         public IEnumerable<JobCategoryResultViewModel> JobCategories { get; set; }
 
         public IEnumerable<string> Traits { get; set; }

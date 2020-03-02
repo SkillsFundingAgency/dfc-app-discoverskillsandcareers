@@ -9,7 +9,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
     {
         public FilterAssessmentResult()
         {
+            RecordedAnswers = new List<AnswerDetail>();
             SuggestedJobProfiles = new List<string>();
+            WhatYouToldUs = new List<string>();
         }
 
         public string JobFamilyName { get; set; }
