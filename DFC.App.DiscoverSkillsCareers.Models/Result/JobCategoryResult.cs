@@ -6,6 +6,12 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
     [ExcludeFromCodeCoverage]
     public class JobCategoryResult
     {
+        public JobCategoryResult()
+        {
+            TraitValues = new List<TraitValue>();
+            FilterAssessment = new FilterAssessmentResult();
+        }
+
         public string JobFamilyCode { get; set; }
 
         public string JobFamilyName { get; set; }

@@ -6,6 +6,12 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class JobCategoryResultViewModel
     {
+        public JobCategoryResultViewModel()
+        {
+            TraitValues = new List<TraitValueViewModel>();
+            FilterAssessment = new FilterAssessmentResultViewModel();
+        }
+
         public string JobFamilyCode { get; set; }
 
         public string JobFamilyName { get; set; }

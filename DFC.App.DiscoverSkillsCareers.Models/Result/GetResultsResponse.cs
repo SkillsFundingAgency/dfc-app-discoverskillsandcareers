@@ -6,6 +6,13 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
     [ExcludeFromCodeCoverage]
     public class GetResultsResponse
     {
+        public GetResultsResponse()
+        {
+            JobCategories = new List<JobCategoryResult>();
+            JobProfiles = new List<JobProfileResult>();
+            WhatYouToldUs = new List<string>();
+        }
+
         public string SessionId { get; set; }
 
         public IEnumerable<JobCategoryResult> JobCategories { get; set; }
