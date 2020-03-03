@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 
@@ -90,24 +91,23 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
 
+            var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
+
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {
-                var httpClientOptions = Configuration.GetSection("AssessmentApiClientOptions").Get<HttpClientSettings>();
-                ConfigureHttpClient(httpClient, httpClientOptions);
+                ConfigureHttpClient(httpClient, dysacClientOptions.AssessmentApiBaseAddress, dysacClientOptions.OcpApimSubscriptionKey);
             });
 
             services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
             {
-                var httpClientOptions = Configuration.GetSection("ResultsApiClientOptions").Get<HttpClientSettings>();
-                ConfigureHttpClient(httpClient, httpClientOptions);
+                ConfigureHttpClient(httpClient, dysacClientOptions.ResultsApiBaseAddress, dysacClientOptions.OcpApimSubscriptionKey);
             });
         }
 
-        private void ConfigureHttpClient(HttpClient httpClient, HttpClientSettings httpClientSettings)
+        private static void ConfigureHttpClient(HttpClient httpClient, Uri baseAddress, string ocpApimSubscriptionKey)
         {
-            httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, httpClientSettings.OcpApimSubscriptionKey);
-            httpClient.BaseAddress = httpClientSettings.BaseAddress;
-            httpClient.Timeout = httpClientSettings.Timeout;
+            httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, ocpApimSubscriptionKey);
+            httpClient.BaseAddress = baseAddress;
         }
     }
 }

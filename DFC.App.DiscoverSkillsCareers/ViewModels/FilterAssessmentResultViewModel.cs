@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public IEnumerable<AnswerDetailsViewModel> RecordedAnswers { get; set; }
 
-        public IEnumerable<string> SuggestedJobProfiles { get; set; } 
+        public IEnumerable<string> SuggestedJobProfiles { get; set; }
 
         public IEnumerable<string> WhatYouToldUs { get; set; }
     }

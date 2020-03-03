@@ -4,12 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.Models.Common
 {
     [ExcludeFromCodeCoverage]
-    public class HttpClientSettings
+    public class JobProfileOverViewClientOptions
     {
-        public TimeSpan Timeout { get; set; }
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
 
         public Uri BaseAddress { get; set; }
-
-        public string OcpApimSubscriptionKey { get; set; }
     }
 }
