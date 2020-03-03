@@ -1,6 +1,7 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
@@ -12,8 +13,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -91,15 +92,22 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {
-                httpClient.BaseAddress = new Uri(Configuration["AssessmentApi"]);
-                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Configuration["APIAuthorisationCode"]);
+                var httpClientOptions = Configuration.GetSection("AssessmentApiClientOptions").Get<HttpClientSettings>();
+                ConfigureHttpClient(httpClient, httpClientOptions);
             });
 
             services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
             {
-                httpClient.BaseAddress = new Uri(Configuration["ResultsApi"]);
-                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Configuration["APIAuthorisationCode"]);
+                var httpClientOptions = Configuration.GetSection("ResultsApiClientOptions").Get<HttpClientSettings>();
+                ConfigureHttpClient(httpClient, httpClientOptions);
             });
+        }
+
+        private void ConfigureHttpClient(HttpClient httpClient, HttpClientSettings httpClientSettings)
+        {
+            httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, httpClientSettings.OcpApimSubscriptionKey);
+            httpClient.BaseAddress = httpClientSettings.BaseAddress;
+            httpClient.Timeout = httpClientSettings.Timeout;
         }
     }
 }
