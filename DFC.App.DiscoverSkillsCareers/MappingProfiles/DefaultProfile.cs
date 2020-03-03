@@ -32,8 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<JobCategoryResult, JobCategoryResultViewModel>();
 
             CreateMap<JobProfileResult, JobProfileResultViewModel>()
-                .ForMember(d => d.JobCategoryName, s => s.MapFrom(a => a.JobCategory))
-                ;
+                .ForMember(d => d.JobCategoryName, s => s.MapFrom(a => a.JobCategory));
 
             CreateMap<TraitValue, TraitValueViewModel>();
         }
