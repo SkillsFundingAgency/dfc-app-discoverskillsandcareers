@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,13 +11,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
     {
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
+        private readonly IJpOverviewAPIService jPOverviewAPIService;
 
         public ResultsApiService(
             HttpClient httpClient,
-            ISerialiser serialiser)
+            ISerialiser serialiser,
+            IJpOverviewAPIService jPOverviewAPIService)
         {
             this.httpClient = httpClient;
             this.serialiser = serialiser;
+            this.jPOverviewAPIService = jPOverviewAPIService;
         }
 
         public async Task<GetResultsResponse> GetResults(string sessionId)
@@ -28,7 +32,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var url = $"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}";
             var jsonContent = await httpClient.GetStringAsync(url).ConfigureAwait(false);
-            return serialiser.Deserialise<GetResultsResponse>(jsonContent);
+
+            var resultsResponse = serialiser.Deserialise<GetResultsResponse>(jsonContent);
+            var selectedJobprofiles = resultsResponse.JobProfiles.Select(p => p.UrlName);
+            resultsResponse.JobProfilesOverviews = jPOverviewAPIService.GetOverviewsForProfiles(selectedJobprofiles);
+            return resultsResponse;
         }
     }
 }
