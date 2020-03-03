@@ -91,12 +91,14 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
             {
-                httpClient.BaseAddress = new Uri(Configuration["AssessmentApi"]);
+                httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, Configuration[ConfigurationSettingName.OcpApimSubscriptionKey]);
+                httpClient.BaseAddress = new Uri(Configuration[ConfigurationSettingName.AssessmentApi]);
             });
 
             services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
             {
-                httpClient.BaseAddress = new Uri(Configuration["ResultsApi"]);
+                httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, Configuration[ConfigurationSettingName.OcpApimSubscriptionKey]);
+                httpClient.BaseAddress = new Uri(Configuration[ConfigurationSettingName.ResultsApi]);
             });
         }
     }
