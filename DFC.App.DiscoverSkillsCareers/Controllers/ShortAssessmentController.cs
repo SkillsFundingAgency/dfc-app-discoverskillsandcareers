@@ -28,20 +28,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(QuestionGetRequestViewModel requestViewModel)
+        public async Task<IActionResult> Index(int questionNumber)
         {
-            if (requestViewModel is null)
-            {
-                return BadRequest();
-            }
-
             if (!await HasSessionIdAsync().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
 
-            var questionResponse = await shortAssesmentService.GetQuestionAsync(requestViewModel.QuestionNumber).ConfigureAwait(false);
-            if (questionResponse is null || requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
+            var questionResponse = await shortAssesmentService.GetQuestionAsync(questionNumber).ConfigureAwait(false);
+            if (questionResponse is null || questionNumber > questionResponse.MaxQuestionsCount)
             {
                 return BadRequest();
             }
@@ -52,10 +47,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("results");
             }
 
-            if (requestViewModel.QuestionNumber > questionResponse.QuestionNumber)
+            if (questionNumber > questionResponse.QuestionNumber)
             {
                 //TODO: Convert this if possible to Redirect to action if not move this literal to const
-                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{questionResponse.QuestionNumber}");
+                return RedirectToAction(nameof(Index), new { questionNumber = questionResponse.QuestionNumber });
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);

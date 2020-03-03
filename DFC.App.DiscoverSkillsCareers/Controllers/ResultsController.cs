@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dfc.Session;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IDysacApiService apiService;
 
-        public ResultsController(IMapper mapper, IPersistanceService sessionService, IDysacApiService apiService)
+        public ResultsController(IMapper mapper, ISessionClient sessionService, IResultsService<ShortAssessment> apiService)
             : base(sessionService)
         {
             this.mapper = mapper;
@@ -20,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (!HasSessionIdAsync())
+            if (!await HasSessionIdAsync().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }

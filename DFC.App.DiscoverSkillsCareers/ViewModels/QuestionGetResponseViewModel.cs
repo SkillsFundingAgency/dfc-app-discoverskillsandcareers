@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DFC.App.DiscoverSkillsCareers.Core;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels

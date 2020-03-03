@@ -6,8 +6,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class QuestionPostRequestViewModel
     {
-        public Assessments AssessmentType { get; set; }
-
         public int QuestionNumber { get; set; }
 
         [Required(ErrorMessage = "Choose an answer to the statement")]
