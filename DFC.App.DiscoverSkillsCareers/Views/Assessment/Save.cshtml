@@ -4,11 +4,13 @@
 
 <form method="post">
     <p>
-        <input type="radio" name="returnoption" value="1" />Send me an email with a link
+        <input type="radio" name="AssessmentReturnTypeId" value="1" />Send me an email with a link
     </p>
 
     <p>
-        <input type="radio" name="returnoption" value="2" />Get a reference code
+        <input type="radio" name="AssessmentReturnTypeId" value="2" />Get a reference code
     </p>
     <button>Continue</button>
+
+    <a asp-action="return">Return to assessment</a>
 </form>

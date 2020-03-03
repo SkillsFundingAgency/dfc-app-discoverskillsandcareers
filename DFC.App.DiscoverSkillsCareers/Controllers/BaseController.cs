@@ -1,14 +1,37 @@
-﻿using DFC.App.DiscoverSkillsCareers.Constants;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
-        public override RedirectResult Redirect(string url)
+        private readonly ISessionService sessionService;
+
+        public BaseController(ISessionService sessionService)
         {
-            url = $"~/{RouteName.Prefix}/" + url;
-            return base.Redirect(url);
+            this.sessionService = sessionService;
+        }
+
+        protected IActionResult RedirectTo(string relativeAddress)
+        {
+            relativeAddress = $"~/{RouteName.Prefix}/" + relativeAddress;
+            return Redirect(relativeAddress);
+        }
+
+        protected IActionResult RedirectToRoot()
+        {
+            return RedirectTo(string.Empty);
+        }
+
+        protected string GetSessionId()
+        {
+            return sessionService.GetValue<string>(SessionKey.SessionId);
+        }
+
+        protected bool HasSessionId()
+        {
+            return !string.IsNullOrWhiteSpace(GetSessionId());
         }
     }
 }

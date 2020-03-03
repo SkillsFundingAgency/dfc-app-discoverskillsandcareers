@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class HomeIndexRequestViewModel
     {
-        [Display(Name = "Reference")]
+        [Display(Name = "Reference Code")]
         [Required]
-        public string Reference { get; set; }
+        public string ReferenceCode { get; set; }
     }
 }

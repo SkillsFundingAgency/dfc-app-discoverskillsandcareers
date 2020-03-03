@@ -1,4 +1,4 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.Constants
+﻿namespace DFC.App.DiscoverSkillsCareers.Core.Constants
 {
     public static class RouteName
     {

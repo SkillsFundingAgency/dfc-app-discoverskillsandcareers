@@ -1,51 +1,85 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class FilterQuestionsController : BaseController
     {
-        private readonly QuestionSetDataProvider questionSetDataProvider;
+        private readonly IMapper mapper;
+        private readonly IApiService apiService;
 
-        public FilterQuestionsController()
+        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IApiService apiService)
+            : base(sessionService)
         {
-            questionSetDataProvider = new QuestionSetDataProvider();
+            this.mapper = mapper;
+            this.apiService = apiService;
         }
 
         [HttpGet]
-        public IActionResult Index(FilterQuestionGetRequestViewModel viewModel)
+        public async Task<IActionResult> Index(FilterQuestionIndexRequestViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(viewModel.JobCategoryName, viewModel.QuestionId);
-            return View(result);
+            if (!HasSessionId())
+            {
+                return RedirectToRoot();
+            }
+
+            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            if (!assessment.IsComplete)
+            {
+                return RedirectTo("assessment/return");
+            }
+
+            var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
+            return View(response);
         }
 
         [HttpPost]
-        public IActionResult Index(FilterQuestionPostRequestViewModel viewModel)
+        public async Task<IActionResult> Index(FilterQuestionPostRequestViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            var result = CreateResponseViewModel(viewModel.JobCategoryName, viewModel.QuestionId);
+            if (!HasSessionId())
+            {
+                return RedirectToRoot();
+            }
 
             if (!ModelState.IsValid)
             {
-                return View(result);
+                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
+                return View(response);
             }
 
-            if (string.IsNullOrWhiteSpace(result.NextQuestionId))
+            var answerResponse = await apiService.AnswerQuestion(viewModel.AssessmentType, viewModel.QuestionNumberReal, viewModel.Answer).ConfigureAwait(false);
+
+            if (answerResponse == null)
             {
-                return Redirect($"filterquestions/{result.JobCategoryName}/complete");
+                return BadRequest();
             }
 
-            return Redirect($"filterquestions/{result.JobCategoryName}/{result.NextQuestionId}");
+            if (!answerResponse.IsSuccess)
+            {
+                ModelState.AddModelError("Answer", "Unable to register answer");
+                var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
+                return View(response);
+            }
+
+            if (answerResponse.IsComplete)
+            {
+                return RedirectTo("results");
+            }
+
+            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
         }
 
         public IActionResult Complete(FilterQuestionsCompleteResponseViewModel viewModel)
@@ -53,43 +87,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(viewModel);
         }
 
-        private FilterQuestionGetResponseViewModel CreateResponseViewModel(string questionSetName, string questionId)
+        private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var result = new FilterQuestionGetResponseViewModel() { JobCategoryName = questionSetName };
-
-            var questionSet = questionSetDataProvider.GetQuestionSet(questionSetName);
-            if (questionSet != null)
-            {
-                result.QuestionSetName = questionSet.Name;
-
-                var question = questionSet.GetQuestion(questionId);
-
-                if (question != null)
-                {
-                    result.QuestionId = question.Id;
-                    result.QuestionText = question.Text;
-                    result.IsComplete = questionSet.IsCompleted();
-
-                    var prevQuestion = questionSet.GetPreviousQuestion(questionId);
-                    var nextQuestion = questionSet.GetNextQuestion(questionId);
-
-                    if (prevQuestion != null)
-                    {
-                        result.PreviousQuestionId = prevQuestion.Id;
-                    }
-
-                    if (nextQuestion != null)
-                    {
-                        result.NextQuestionId = nextQuestion.Id;
-                    }
-
-                    var totalCompleted = questionSet.GetCompleted();
-                    var totalquestions = questionSet.Questions.Count;
-                    result.PercentageComplete = (decimal)totalCompleted / totalquestions;
-                }
-            }
-
-            return result;
+            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var response = new FilterQuestionIndexResponseViewModel();
+            response.Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion);
+            response.JobCategoryName = assessment;
+            return response;
         }
     }
 }

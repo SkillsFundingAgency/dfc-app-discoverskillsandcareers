@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class AssessmentSaveRequestViewModel
     {
-        [Required]
         [Display(Name = "Return option")]
-        public int? ReturnOption { get; set; }
+        [Required]
+        public AssessmentReturnType? AssessmentReturnTypeId { get; set; }
     }
 }

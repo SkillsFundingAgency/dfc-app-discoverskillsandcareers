@@ -1,42 +1,28 @@
-﻿@model FilterQuestionGetResponseViewModel
+﻿@model FilterQuestionIndexResponseViewModel
 
-@if (Model.PreviousQuestionId != null)
+@if (Model.Question.QuestionNumber == 1)
 {
     <br />
-    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionid="@Model.PreviousQuestionId">Back to previous statement</a>
+    <a asp-controller="results">Back to results</a>
 }
-
-<br />
-@Model.PercentageComplete.ToString("P0")
+@if (Model.Question.QuestionNumber > 1)
+{
+    <br />
+    <a asp-route="filterQuestions" asp-route-questionSetName="@Model.Question.QuestionSetName" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous statement</a>
+}
 
 @Html.ValidationSummary()
 
-<h1>@Model.QuestionText</h1>
+<h1>@Model.Question.QuestionText</h1>
 
 <form method="post">
-    <input type="hidden" id="QuestionSetName" name="QuestionSetName" value="@Model.QuestionSetName" />
-    <input type="hidden" id="QuestionId" name="QuestionId" value="@Model.QuestionId" />
-
+    <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
+    <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
     <p>
-        <input type="radio" value="1" name="answer" />Strongly agree
+        <input type="radio" value="5" name="answer" checked="@Model.Question.IsChecked(Answer.Yes)" />Yes
     </p>
     <p>
-        <input type="radio" value="2" name="answer" />Agree
+        <input type="radio" value="6" name="answer" checked="@Model.Question.IsChecked(Answer.No)" />No
     </p>
-    <p>
-        <input type="radio" value="3" name="answer" />It depends
-    </p>
-    <p>
-        <input type="radio" value="4" name="answer" />Disagree
-    </p>
-    <p>
-        <input type="radio" value="5" name="answer" />Strongly disagree
-    </p>
-
     <button>Next</button>
 </form>
-
-<hr />
-<h3>Return to this later</h3>
-<br />
-<a asp-controller="assessment" asp-action="save">Save my progress</a>

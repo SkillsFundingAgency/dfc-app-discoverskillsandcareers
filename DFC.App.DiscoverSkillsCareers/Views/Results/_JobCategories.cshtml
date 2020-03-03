@@ -1,0 +1,9 @@
+﻿@model ResultIndexResponseViewModel
+
+@foreach (var item in Model.Results.JobCategories)
+{
+    <h3><a href="https://nationalcareers.service.gov.uk/job-categories/@item.JobFamilyNameUrl">@item.JobFamilyName</a></h3>
+    <p>Answer some more questions to find job roles you might be suited to in @item.JobFamilyName</p>
+    <a asp-route="filterquestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyUrl" asp-route-questionNumber="1">Answer @item.TotalQuestions more questions</a>
+    <hr />
+}
