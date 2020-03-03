@@ -101,6 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers
                 var httpClientOptions = Configuration.GetSection("ResultsApiClientOptions").Get<HttpClientSettings>();
                 ConfigureHttpClient(httpClient, httpClientOptions);
             });
+
         }
 
         private void ConfigureHttpClient(HttpClient httpClient, HttpClientSettings httpClientSettings)
