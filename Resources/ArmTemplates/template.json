@@ -11,7 +11,7 @@
         "ApimDysacKey": {
             "type": "securestring",
             "metadata": {
-                "description": "The APIM proxy address including the protocol and trailing slash. eg https://dev.api.nationalcareersservice.org.uk/"
+                "description": "Ocp subscription key for DYSAC"
             }
         },
         "resourcePrefix": {
