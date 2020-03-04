@@ -56,6 +56,12 @@
         },
         "CdnUrl": {
             "type": "string"
+        },
+        "NotifyEmailTemplateId": {
+            "type": "string"
+        },
+        "NotifySmsTemplateId": {
+            "type": "string"
         }
     },
     "variables": {
@@ -188,8 +194,16 @@
                                 "value": "[concat(parameters('ApimRoot'), 'assessments/api')]"
                             },
                             {
-                                "name": "DysacClientOptions__AssessmentApi",
+                                "name": "JobProfileOverViewClientOptions__BaseAddress",
                                 "value": "[parameters('JobProfileOverViewUrl')]"
+                            },
+                            {
+                                "name": "Notify__EmailTemplateId",
+                                "value": "[parameters('NotifyEmailTemplateId')]"
+                            },
+                            {
+                                "name": "Notify__SmsTemplateId",
+                                "value": "[parameters('NotifySmsTemplateId')]"
                             },
                             {
                                 "name": "SessionConfig__ApplicationName",
