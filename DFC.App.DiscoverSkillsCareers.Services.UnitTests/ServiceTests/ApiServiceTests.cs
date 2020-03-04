@@ -70,7 +70,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => assessmentApiService.GetQuestion(sessionId, assessmentType, questionResponse.QuestionNumber)).Returns(questionResponse);
             A.CallTo(() => assessmentApiService.AnswerQuestion(sessionId, answerRequest)).Returns(answerResponse);
 
-            var response = await apiService.AnswerQuestion(assessmentType, questionResponse.QuestionNumber, answerRequest.SelectedOption);
+            var response = await apiService.AnswerQuestion(assessmentType, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
 
             Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
         }
