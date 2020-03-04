@@ -5,6 +5,9 @@
         "ApimRoot": {
             "value": "__ApimRoot__"
         },
+        "ApimDysacKey": {
+            "value": "__ApimDiscoverMySkillsAndCareersKey__"
+        },
         "resourcePrefix": {
             "value": "__resourcePrefix__"
         },
@@ -31,6 +34,9 @@
         },
         "JobProfileOverViewUrl": {
             "value": "__JobProfileOverView__"
+        },
+        "CdnUrl": {
+            "value": "__CdnUrl__"
         }
     }
 }
