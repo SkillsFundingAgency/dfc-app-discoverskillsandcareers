@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
             A.CallTo(() => ApiService.GetQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber)).Returns(currentQuestion);
-            A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
+            A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
 
             var actionResponse = await AssessmentController.Index(answerRequest).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
@@ -88,7 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
             A.CallTo(() => ApiService.GetQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber)).Returns(currentQuestion);
-            A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
+            A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
 
             var actionResponse = await AssessmentController.Index(answerRequest).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
