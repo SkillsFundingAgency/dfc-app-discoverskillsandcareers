@@ -8,6 +8,12 @@
                 "description": "The APIM proxy address including the protocol and trailing slash. eg https://dev.api.nationalcareersservice.org.uk/"
             }
         },
+        "ApimDysacKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Ocp subscription key for DYSAC"
+            }
+        },
         "resourcePrefix": {
             "type": "string"
         },
@@ -46,6 +52,9 @@
             "defaultValue": ""
         },
         "JobProfileOverViewUrl": {
+            "type": "string"
+        },
+        "CdnUrl": {
             "type": "string"
         }
     },
@@ -151,7 +160,7 @@
                                 "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
                             },
                             {
-                                "name": "Logging__ApplicationInsights__LogLevel__Default",
+                                "name": "Logging__LogLevel__Default",
                                 "value": "Warning"
                             },
                             {
@@ -159,20 +168,36 @@
                                 "value": "*"
                             },
                             {
-                                "name": "QuestionApi",
+                                "name": "AssetsCdn",
+                                "value": "[parameters('CdnUrl')]"
+                            },
+                            {
+                                "name": "DysacClientOptions__OcpApimSubscriptionKey",
+                                "value": "[parameters('ApimDysacKey')]"
+                            },
+                            {
+                                "name": "DysacClientOptions__QuestionApi",
                                 "value": "[concat(parameters('ApimRoot'), 'content/api')]"
                             },
                             {
-                                "name": "ResultsApi",
+                                "name": "DysacClientOptions__ResultsApi",
                                 "value": "[concat(parameters('ApimRoot'), 'results/api')]"
                             },
                             {
-                                "name": "AssessmentApi",
+                                "name": "DysacClientOptions__AssessmentApi",
                                 "value": "[concat(parameters('ApimRoot'), 'assessments/api')]"
                             },
                             {
-                                "name": "JobProfileOverView",
+                                "name": "DysacClientOptions__AssessmentApi",
                                 "value": "[parameters('JobProfileOverViewUrl')]"
+                            },
+                            {
+                                "name": "SessionConfig__ApplicationName",
+                                "value": "session"
+                            },
+                            {
+                                "name": "SessionConfig__Salt",
+                                "value": "ncs"
                             }
                         ]
                     }
