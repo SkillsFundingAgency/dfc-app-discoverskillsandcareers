@@ -191,7 +191,6 @@
                                 "name": "DysacClientOptions__AssessmentApi",
                                 "value": "[parameters('JobProfileOverViewUrl')]"
                             },
-
                             {
                                 "name": "SessionConfig__ApplicationName",
                                 "value": "session"
