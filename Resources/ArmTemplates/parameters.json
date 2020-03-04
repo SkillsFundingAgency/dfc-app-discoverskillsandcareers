@@ -37,6 +37,12 @@
         },
         "CdnUrl": {
             "value": "__CdnUrl__"
+        },
+        "NotifyEmailTemplateId": {
+            "value": "__NotifyEmailTemplateId__"
+        },
+        "NotifySmsTemplateId": {
+            "value": "__NotifySmsTemplateId__"
         }
     }
 }
