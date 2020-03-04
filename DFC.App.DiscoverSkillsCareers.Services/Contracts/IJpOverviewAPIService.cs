@@ -2,7 +2,7 @@
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface IJpOverviewAPIService
+    public interface IJpOverviewApiService
     {
         IEnumerable<string> GetOverviewsForProfiles(IEnumerable<string> jobProfileNames);
     }

@@ -5,7 +5,7 @@ using System.Net.Http;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
-    public class JpOverviewApiService : IJpOverviewAPIService
+    public class JpOverviewApiService : IJpOverviewApiService
     {
         private readonly HttpClient httpClient;
 

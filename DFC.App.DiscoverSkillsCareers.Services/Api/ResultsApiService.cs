@@ -11,12 +11,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
     {
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
-        private readonly IJpOverviewAPIService jPOverviewAPIService;
+        private readonly IJpOverviewApiService jPOverviewAPIService;
 
         public ResultsApiService(
             HttpClient httpClient,
             ISerialiser serialiser,
-            IJpOverviewAPIService jPOverviewAPIService)
+            IJpOverviewApiService jPOverviewAPIService)
         {
             this.httpClient = httpClient;
             this.serialiser = serialiser;
