@@ -182,15 +182,15 @@
                                 "value": "[parameters('ApimDysacKey')]"
                             },
                             {
-                                "name": "DysacClientOptions__QuestionApi",
+                                "name": "DysacClientOptions__QuestionApiBaseAddress",
                                 "value": "[concat(parameters('ApimRoot'), 'content/api')]"
                             },
                             {
-                                "name": "DysacClientOptions__ResultsApi",
+                                "name": "DysacClientOptions__ResultsApiBaseAddress",
                                 "value": "[concat(parameters('ApimRoot'), 'results/api')]"
                             },
                             {
-                                "name": "DysacClientOptions__AssessmentApi",
+                                "name": "DysacClientOptions__AssessmentApiBaseAddress",
                                 "value": "[concat(parameters('ApimRoot'), 'assessments/api')]"
                             },
                             {
