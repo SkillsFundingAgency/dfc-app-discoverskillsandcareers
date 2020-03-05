@@ -1,8 +1,11 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+﻿using Dfc.Session;
+using Dfc.Session.Models;
+using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
@@ -11,19 +14,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
     {
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
-        private readonly ISessionService sessionService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
+        private readonly ISessionClient sessionClient;
+        private readonly IPersistanceService persistanceService;
 
         public ApiService(
             IAssessmentApiService assessmentApiService,
             IResultsApiService resultsApiService,
-            ISessionService sessionService,
-            ISessionIdToCodeConverter sessionIdToCodeConverter)
+            ISessionIdToCodeConverter sessionIdToCodeConverter,
+            ISessionClient sessionClient,
+            IPersistanceService persistanceService)
         {
             this.assessmentApiService = assessmentApiService;
             this.resultsApiService = resultsApiService;
-            this.sessionService = sessionService;
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
+            this.sessionClient = sessionClient;
+            this.persistanceService = persistanceService;
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -31,7 +37,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
             if (newSessionResponse != null)
             {
-                sessionService.SetValue(SessionKey.SessionId, newSessionResponse.SessionId);
+                var sessionIdAndPartitionKey = GetSessionAndPartitionKey(newSessionResponse.SessionId);
+                var dfcUserSession = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKey.Item1, SessionId = sessionIdAndPartitionKey.Item2 };
+                sessionClient.CreateCookie(dfcUserSession, false);
             }
 
             return newSessionResponse != null;
@@ -39,8 +47,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            Validate();
-
             var getQuestionResponse = await assessmentApiService.GetQuestion(GetSessionId(), assessmentType, questionNumber).ConfigureAwait(false);
 
             return getQuestionResponse;
@@ -48,8 +54,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, string answer)
         {
-            Validate();
-
             var questionSetResponse = await GetQuestion(assessmentType, questionNumberCounter).ConfigureAwait(false);
 
             var questionIdFull = $"{questionSetResponse.QuestionSetVersion}-{realQuestionNumber}";
@@ -61,8 +65,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetAssessmentResponse> GetAssessment()
         {
-            Validate();
-
             var response = await assessmentApiService.GetAssessment(GetSessionId()).ConfigureAwait(false);
 
             return response;
@@ -70,8 +72,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress, string templateId)
         {
-            Validate();
-
             var sendEmailResponse = await assessmentApiService.SendEmail(GetSessionId(), domain, emailAddress, templateId).ConfigureAwait(false);
 
             return sendEmailResponse;
@@ -79,15 +79,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetResultsResponse> GetResults()
         {
-            Validate();
-
             return await resultsApiService.GetResults(GetSessionId()).ConfigureAwait(false);
         }
 
         public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)
         {
-            Validate();
-
             return await assessmentApiService.FilterAssessment(GetSessionId(), jobCategory).ConfigureAwait(false);
         }
 
@@ -97,32 +93,32 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
 
-            sessionService.SetValue(SessionKey.SessionId, assessment.SessionId);
+            persistanceService.SetValue(SessionKey.SessionId, assessment.SessionId);
 
             return assessment.SessionId;
         }
 
-        private void Validate()
-        {
-            ValidateSession();
-        }
-
-        private void ValidateSession()
-        {
-            if (!HasSessionId())
-            {
-                throw new ArgumentException("Session has not been set");
-            }
-        }
-
         private string GetSessionId()
         {
-            return sessionService.GetValue<string>(SessionKey.SessionId);
+            var result=persistanceService.GetValue(SessionKey.SessionId);
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                throw new InvalidOperationException("SessionId is null or empty");
+            }
+
+            return result;
         }
 
-        private bool HasSessionId()
+        private Tuple<string, string> GetSessionAndPartitionKey(string value)
         {
-            return !string.IsNullOrWhiteSpace(GetSessionId());
+            var result = new Tuple<string, string>(string.Empty, string.Empty);
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var segments = value.Split("-", StringSplitOptions.RemoveEmptyEntries);
+                result = new Tuple<string, string>(segments.FirstOrDefault(), segments.LastOrDefault());
+            }
+
+            return result;
         }
     }
 }

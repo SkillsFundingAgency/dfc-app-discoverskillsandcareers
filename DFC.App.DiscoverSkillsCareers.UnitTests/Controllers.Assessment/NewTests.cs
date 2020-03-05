@@ -14,7 +14,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         {
             var assessmentType = "short";
 
-            A.CallTo(() => SessionService.GetValue<string>(SessionKey.SessionId)).Returns(null);
+            A.CallTo(() => PersistanceService.GetValue(SessionKey.SessionId)).Returns(null);
 
             var actionResponse = await AssessmentController.New(assessmentType).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);

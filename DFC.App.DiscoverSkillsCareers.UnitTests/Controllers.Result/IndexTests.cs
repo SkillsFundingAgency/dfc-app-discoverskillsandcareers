@@ -14,22 +14,22 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService persistanceService;
         private readonly IApiService apiService;
 
         public IndexTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
+            persistanceService = A.Fake<IPersistanceService>();
             apiService = A.Fake<IApiService>();
 
-            controller = new ResultsController(mapper, sessionService, apiService);
+            controller = new ResultsController(mapper, persistanceService, apiService);
         }
 
         [Fact]
         public async Task WhenNoSessionIdRedirectsToRoot()
         {
-            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(null);
+            A.CallTo(() => persistanceService.GetValue(SessionKey.SessionId)).Returns(null);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
 
@@ -43,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 1 };
-            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => persistanceService.GetValue(SessionKey.SessionId)).Returns(sessionId);
             A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
@@ -58,7 +58,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
-            A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => persistanceService.GetValue(SessionKey.SessionId)).Returns(sessionId);
             A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
