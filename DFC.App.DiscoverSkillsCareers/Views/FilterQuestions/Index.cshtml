@@ -8,7 +8,7 @@
 @if (Model.Question.QuestionNumber > 1)
 {
     <br />
-    <a asp-route="filterQuestions" asp-route-questionSetName="@Model.Question.QuestionSetName" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous statement</a>
+    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous statement</a>
 }
 
 @Html.ValidationSummary()

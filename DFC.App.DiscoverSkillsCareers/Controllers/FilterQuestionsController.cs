@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessment = await apiService.GetAssessment().ConfigureAwait(false);
-            if (!assessment.IsComplete)
+            if (!assessment.IsComplete && !assessment.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
             }
@@ -60,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(viewModel.AssessmentType, viewModel.QuestionNumberReal, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse == null)
             {

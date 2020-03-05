@@ -49,12 +49,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         }
 
         [Fact]
-        public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRediectsToFilterResults()
+        public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRedirectsToFilterResults()
         {
             var sessionId = "session1";
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
+            var questionNumberCounter = 1;
             var answer = "answer";
             var answerResponse = new PostAnswerResponse() { IsComplete = true, IsSuccess = true };
             var viewModel = new FilterQuestionPostRequestViewModel()
@@ -63,9 +64,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 JobCategoryName = jobCategoryName,
                 Answer = answer,
                 QuestionNumberReal = questionNumberReal,
+                QuestionNumberCounter = questionNumberCounter,
             };
             A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
-            A.CallTo(() => apiService.AnswerQuestion(assessmentType, questionNumberReal, answer)).Returns(answerResponse);
+            A.CallTo(() => apiService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -91,7 +93,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 QuestionNumberReal = questionNumberReal,
             };
             A.CallTo(() => sessionService.GetValue<string>(SessionKey.SessionId)).Returns(sessionId);
-            A.CallTo(() => apiService.AnswerQuestion(assessmentType, questionNumberReal, answer)).Returns(answerResponse);
+            A.CallTo(() => apiService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
