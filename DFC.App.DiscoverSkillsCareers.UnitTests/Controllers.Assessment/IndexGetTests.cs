@@ -62,6 +62,23 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         }
 
         [Fact]
+        public async Task IfAssessmentIsCompleteRedirectsToResults()
+        {
+            var sessionId = "session1";
+            var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 2, AssessmentType = "name1" };
+            var expectedQuestion = new GetQuestionResponse() { MaxQuestionsCount = 2, IsComplete = true };
+
+            A.CallTo(() => PersistanceService.GetValue(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
+
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
+            Assert.IsType<RedirectResult>(actionResponse);
+
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/results", redirectResult.Url);
+        }
+
+        [Fact]
         public async Task QuestionsMustBeAnsweredInOrder()
         {
             var sessionId = "session1";

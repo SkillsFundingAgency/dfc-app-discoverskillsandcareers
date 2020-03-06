@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -178,7 +179,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (ModelState.IsValid)
             {
-                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email, "1").ConfigureAwait(false);
+                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email).ConfigureAwait(false);
 
                 return RedirectTo("assessment/emailsent");
             }
@@ -243,7 +244,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var result = new AssessmentReferenceGetResponse();
             result.ReferenceCode = getAssessmentResponse.ReferenceCode;
-            result.AssessmentStarted = getAssessmentResponse.StartedDt.ToString("d MMMM yyyy");
+            result.AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard);
 
             return result;
         }

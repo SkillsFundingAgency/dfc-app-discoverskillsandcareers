@@ -2,8 +2,10 @@
 using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +14,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
     public class ApiService : IApiService
     {
+        private readonly ILogger<ApiService> logger;
+        private readonly NotifyOptions notifyOptions;
         private readonly IAssessmentApiService assessmentApiService;
         private readonly IResultsApiService resultsApiService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
@@ -19,12 +23,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly IPersistanceService persistanceService;
 
         public ApiService(
+            ILogger<ApiService> logger,
+            NotifyOptions notifyOptions,
             IAssessmentApiService assessmentApiService,
             IResultsApiService resultsApiService,
             ISessionIdToCodeConverter sessionIdToCodeConverter,
             ISessionClient sessionClient,
             IPersistanceService persistanceService)
         {
+            this.logger = logger;
+            this.notifyOptions = notifyOptions;
             this.assessmentApiService = assessmentApiService;
             this.resultsApiService = resultsApiService;
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
@@ -70,9 +78,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return response;
         }
 
-        public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress, string templateId)
+        public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress)
         {
-            var sendEmailResponse = await assessmentApiService.SendEmail(GetSessionId(), domain, emailAddress, templateId).ConfigureAwait(false);
+            var sendEmailResponse = await assessmentApiService.SendEmail(GetSessionId(), domain, emailAddress, notifyOptions.EmailTemplateId).ConfigureAwait(false);
+
+            if (sendEmailResponse != null && !sendEmailResponse.IsSuccess)
+            {
+                logger.LogError($"SendEmail failed with {sendEmailResponse.Message}");
+            }
 
             return sendEmailResponse;
         }
@@ -100,7 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         private string GetSessionId()
         {
-            var result=persistanceService.GetValue(SessionKey.SessionId);
+            var result = persistanceService.GetValue(SessionKey.SessionId);
             if (string.IsNullOrWhiteSpace(result))
             {
                 throw new InvalidOperationException("SessionId is null or empty");
