@@ -14,7 +14,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<GetAssessmentResponse> GetAssessment();
 
-        Task<SendEmailResponse> SendEmail(string domain, string emailAddress, string templateId);
+        Task<SendEmailResponse> SendEmail(string domain, string emailAddress);
 
         Task<GetResultsResponse> GetResults();
 

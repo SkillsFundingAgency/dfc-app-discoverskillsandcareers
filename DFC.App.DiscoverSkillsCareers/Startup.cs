@@ -81,6 +81,9 @@ namespace DFC.App.DiscoverSkillsCareers
             var sessionConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
             services.AddSessionServices(sessionConfig);
 
+            var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
+            services.AddSingleton(notifyOptions);
+
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
