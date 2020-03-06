@@ -1,13 +1,15 @@
 using AutoMapper;
+using Dfc.Session;
+using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
+using DFC.App.DiscoverSkillsCareers.Services.Persistance;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
-using DFC.App.DiscoverSkillsCareers.Services.Sessions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -46,7 +48,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSession();
             app.UseRouting();
             app.UseAuthorization();
 
@@ -80,7 +81,12 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSession();
+            var sessionConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
+            services.AddSessionServices(sessionConfig);
+
+            var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
+            services.AddSingleton(notifyOptions);
+
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
@@ -88,7 +94,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
-            services.AddScoped<ISessionService, HttpContextSessonService>();
+            services.AddScoped<IPersistanceService, CookiePersistanceService>();
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();

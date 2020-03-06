@@ -11,8 +11,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IApiService apiService;
 
-        public ResultsController(IMapper mapper, ISessionService sessionService, IApiService apiService)
-            : base(sessionService)
+        public ResultsController(IMapper mapper, IPersistanceService persistanceService, IApiService apiService)
+            : base(persistanceService)
         {
             this.mapper = mapper;
             this.apiService = apiService;

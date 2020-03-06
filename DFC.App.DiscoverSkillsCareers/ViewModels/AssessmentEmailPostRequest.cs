@@ -7,6 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     public class AssessmentEmailPostRequest
     {
         [Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
     }
 }

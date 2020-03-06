@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 {
-    public class ReferenceTests : AssessmentTestBase
+    public class ReferencePostTests : AssessmentTestBase
     {
         [Fact]
         public async Task NullViewModelReturnsBadRequest()

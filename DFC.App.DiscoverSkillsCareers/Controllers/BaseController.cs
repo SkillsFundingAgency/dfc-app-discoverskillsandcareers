@@ -6,11 +6,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly ISessionService sessionService;
+        private readonly IPersistanceService persistanceService;
 
-        public BaseController(ISessionService sessionService)
+        public BaseController(IPersistanceService persistanceService)
         {
-            this.sessionService = sessionService;
+            this.persistanceService = persistanceService;
         }
 
         protected IActionResult RedirectTo(string relativeAddress)
@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         protected string GetSessionId()
         {
-            return sessionService.GetValue<string>(SessionKey.SessionId);
+            return persistanceService.GetValue(SessionKey.SessionId);
         }
 
         protected bool HasSessionId()
