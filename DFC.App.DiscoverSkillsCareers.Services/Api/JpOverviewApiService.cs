@@ -16,20 +16,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<IEnumerable<JobProfileOverView>> GetOverviewsForProfilesAsync(IEnumerable<string> jobProfileNames)
+        public Task<IEnumerable<JobProfileOverView>> GetOverviewsForProfilesAsync(IEnumerable<string> jobProfileNames)
         {
             if (jobProfileNames == null)
             {
                 throw new ArgumentNullException(nameof(jobProfileNames));
             }
 
+            return GetOverviewsAsync(jobProfileNames);
+        }
+
+        private async Task<IEnumerable<JobProfileOverView>> GetOverviewsAsync(IEnumerable<string> jobProfileNames)
+        {
             var jobProfileOverViews = new List<JobProfileOverView>();
 
-            foreach (string name in jobProfileNames)
+            foreach (string cName in jobProfileNames)
             {
-                var resposne = await httpClient.GetAsync($"segment/getbyname/{name}").ConfigureAwait(false);
-                resposne.EnsureSuccessStatusCode();
-                jobProfileOverViews.Add(new JobProfileOverView() { Cname = name, OverViewHTML = await resposne.Content.ReadAsStringAsync().ConfigureAwait(false)});
+                var response = await httpClient.GetAsync($"segment/getbyname/{cName}").ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+                jobProfileOverViews.Add(new JobProfileOverView() { Cname = cName, OverViewHTML = await response.Content.ReadAsStringAsync().ConfigureAwait(false) });
             }
 
             return jobProfileOverViews;
