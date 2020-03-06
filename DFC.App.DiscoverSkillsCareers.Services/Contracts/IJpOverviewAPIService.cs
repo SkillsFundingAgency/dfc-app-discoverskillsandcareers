@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
     public interface IJpOverviewApiService
     {
-        IEnumerable<string> GetOverviewsForProfiles(IEnumerable<string> jobProfileNames);
+       Task<IEnumerable<JobProfileOverView>> GetOverviewsForProfilesAsync(IEnumerable<string> jobProfileNames);
     }
 }

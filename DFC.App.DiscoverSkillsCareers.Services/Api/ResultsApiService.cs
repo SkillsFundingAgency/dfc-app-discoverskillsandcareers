@@ -25,17 +25,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetResultsResponse> GetResults(string sessionId)
         {
-            return await GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            var resultsResponse = await GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            var selectedJobprofiles = resultsResponse.JobProfiles.Select(p => p.UrlName);
+            resultsResponse.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
+            return resultsResponse;
         }
 
         public async Task<GetResultsResponse> GetResults(string sessionId, string jobCategory)
         {
             var url = $"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}";
             var jsonContent = await httpClient.GetStringAsync(url).ConfigureAwait(false);
-
             var resultsResponse = serialiser.Deserialise<GetResultsResponse>(jsonContent);
-            var selectedJobprofiles = resultsResponse.JobProfiles.Select(p => p.UrlName);
-            resultsResponse.JobProfilesOverviews = jPOverviewAPIService.GetOverviewsForProfiles(selectedJobprofiles);
             return resultsResponse;
         }
     }

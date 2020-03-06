@@ -27,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public IEnumerable<JobProfileResult> JobProfiles { get; set; }
 
-        public IEnumerable<string> JobProfilesOverviews { get; set; }
+        public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
 
         public IEnumerable<string> WhatYouToldUs { get; set; }
     }
