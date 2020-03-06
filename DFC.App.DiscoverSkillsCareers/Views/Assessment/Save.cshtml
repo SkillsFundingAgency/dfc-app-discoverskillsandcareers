@@ -1,4 +1,6 @@
-﻿<h1>How would you like to return to your assessment?</h1>
+﻿<a asp-controller="assessment" asp-action="return">Back</a>
+
+<h1>How would you like to return to your assessment?</h1>
 
 @Html.ValidationSummary()
 
@@ -12,5 +14,7 @@
     </p>
     <button>Continue</button>
 
-    <a asp-action="return">Return to assessment</a>
+    <p>
+        <a asp-action="return">Return to assessment</a>
+    </p>
 </form>

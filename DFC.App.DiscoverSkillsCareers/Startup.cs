@@ -73,6 +73,11 @@ namespace DFC.App.DiscoverSkillsCareers
                     name: "results",
                     pattern: RouteName.Prefix + "/results/{jobCategoryName}",
                     new { controller = "Results", action = "Filter" });
+
+                endpoints.MapControllerRoute(
+                    name: "root",
+                    pattern: RouteName.Prefix,
+                    new { controller = "Home", action = "Index" });
             });
         }
 
