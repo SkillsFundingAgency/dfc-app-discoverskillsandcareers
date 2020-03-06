@@ -3,7 +3,5 @@
     public class NotifyOptions
     {
         public string EmailTemplateId { get; set; }
-
-        public string SmsTemplateId { get; set; }
     }
 }
