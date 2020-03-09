@@ -20,8 +20,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task IfNoSessionExistsThenRedirectsToFirstQuestion()
         {
             var assessmentType = "short";
+            string sessionId = null;
 
-            A.CallTo(() => PersistanceService.GetValue(SessionKey.SessionId)).Returns(null);
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.New(assessmentType).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
