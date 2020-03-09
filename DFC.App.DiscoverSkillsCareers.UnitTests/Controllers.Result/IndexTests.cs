@@ -3,6 +3,7 @@ using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -14,22 +15,23 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
-        private readonly IPersistanceService persistanceService;
+        private readonly ISessionClient sessionClient;
         private readonly IApiService apiService;
 
         public IndexTests()
         {
             mapper = A.Fake<IMapper>();
-            persistanceService = A.Fake<IPersistanceService>();
+            sessionClient = A.Fake<ISessionClient>();
             apiService = A.Fake<IApiService>();
 
-            controller = new ResultsController(mapper, persistanceService, apiService);
+            controller = new ResultsController(mapper, sessionClient, apiService);
         }
 
         [Fact]
         public async Task WhenNoSessionIdRedirectsToRoot()
         {
-            A.CallTo(() => persistanceService.GetValue(SessionKey.SessionId)).Returns(null);
+            string sessionId = null;
+            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
 
@@ -43,7 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 1 };
-            A.CallTo(() => persistanceService.GetValue(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
             A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
@@ -58,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
-            A.CallTo(() => persistanceService.GetValue(SessionKey.SessionId)).Returns(sessionId);
+            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
             A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);

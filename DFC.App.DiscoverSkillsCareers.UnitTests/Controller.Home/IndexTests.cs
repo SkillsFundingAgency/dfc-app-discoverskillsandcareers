@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -12,15 +13,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
     public class IndexTests
     {
         private readonly HomeController controller;
-        private readonly IPersistanceService persistanceService;
+        private readonly ISessionClient sessionClient;
         private readonly IApiService apiService;
 
         public IndexTests()
         {
-            persistanceService = A.Fake<IPersistanceService>();
+            sessionClient = A.Fake<ISessionClient>();
             apiService = A.Fake<IApiService>();
 
-            controller = new HomeController(persistanceService, apiService);
+            controller = new HomeController(sessionClient, apiService);
         }
 
         [Fact]

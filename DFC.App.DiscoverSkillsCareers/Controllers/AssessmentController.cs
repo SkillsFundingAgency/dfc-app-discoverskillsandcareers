@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using Dfc.Session;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -15,8 +16,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IApiService apiService;
 
-        public AssessmentController(IMapper mapper, IPersistanceService persistanceService, IApiService apiService)
-            : base(persistanceService)
+        public AssessmentController(IMapper mapper, IApiService apiService, ISessionClient sessionClient)
+            : base(sessionClient)
         {
             this.mapper = mapper;
             this.apiService = apiService;
@@ -30,7 +31,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (!HasSessionId())
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
             {
                 return RedirectToRoot();
             }
@@ -69,7 +71,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (!HasSessionId())
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
             {
                 return RedirectToRoot();
             }
