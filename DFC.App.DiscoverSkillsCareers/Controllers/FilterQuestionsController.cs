@@ -85,8 +85,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
         }
 
-        public IActionResult Complete(FilterQuestionsCompleteResponseViewModel viewModel)
+        public async Task<IActionResult> Complete(FilterQuestionsCompleteResponseViewModel viewModel)
         {
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
+            {
+                return RedirectToRoot();
+            }
+
             return View(viewModel);
         }
 

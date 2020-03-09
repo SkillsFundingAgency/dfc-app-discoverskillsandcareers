@@ -13,8 +13,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentReturnsBadRequestIfAssessmentResponseIsNull()
         {
+            var sessionId = "sessionId1";
             GetAssessmentResponse assessmentResponse = null;
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -24,6 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndIsCompletedThenRedirectedToResultsPage()
         {
+            var sessionId = "sessionId1";
             var assessmentResponse = new GetAssessmentResponse()
             {
                 IsFilterAssessment = true,
@@ -32,6 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 JobCategorySafeUrl = "sports",
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -43,6 +47,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndNotCompletedThenRedirectedToCurrentQuestion()
         {
+            var sessionId = "sessionId1";
             var assessmentResponse = new GetAssessmentResponse()
             {
                 IsFilterAssessment = true,
@@ -52,6 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -63,12 +69,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsNotFilterAssessmentAndIsCompletedThenRedirectedToResultsPage()
         {
+            var sessionId = "sessionId1";
             var assessmentResponse = new GetAssessmentResponse()
             {
                 MaxQuestionsCount = 2,
                 RecordedAnswersCount = 2,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -80,6 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsNotFilterAssessmentAndIsNotCompletedThenRedirectedToCurrentQuestionNumber()
         {
+            var sessionId = "sessionId1";
             var assessmentResponse = new GetAssessmentResponse()
             {
                 MaxQuestionsCount = 4,
@@ -88,12 +97,26 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/short/3", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task WhenSessionIdDoesNotExistRedirectsToRoot()
+        {
+            string sessionId = null;
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+
+            var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
+
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
         }
     }
 }
