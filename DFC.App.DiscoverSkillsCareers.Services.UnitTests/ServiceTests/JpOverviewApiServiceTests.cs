@@ -28,10 +28,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [Fact]
         public async Task GetOverviewsForProfilesAsync()
         {
-            var expectedJobProfileOverViews = new List<JobProfileOverView>()
+            var expectedJobProfileOverViews = new List<JobProfileOverView>();
+            int numberOfProfiles = 51;
+
+            for (int ii = 0; ii < numberOfProfiles; ii++ )
             {
-                new JobProfileOverView() {Cname = "profile1", OverViewHTML="<h1>Profile1</h1>"},
-                new JobProfileOverView() {Cname = "profile1", OverViewHTML="<h1>Profile1</h1>"}
+                expectedJobProfileOverViews.Add(new JobProfileOverView() { Cname = "profile{ii}", OverViewHTML = "<h1>Profile{ii}</h1>" });
             };
 
             foreach (var profile in expectedJobProfileOverViews)

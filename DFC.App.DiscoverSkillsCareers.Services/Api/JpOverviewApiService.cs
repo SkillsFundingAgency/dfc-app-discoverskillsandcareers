@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -23,21 +24,30 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 throw new ArgumentNullException(nameof(jobProfileNames));
             }
 
-            return GetOverviewsAsync(jobProfileNames);
+            return GetOverviewsBatchedAsync(jobProfileNames);
         }
 
-        private async Task<IEnumerable<JobProfileOverView>> GetOverviewsAsync(IEnumerable<string> jobProfileNames)
+        private async Task<IEnumerable<JobProfileOverView>> GetOverviewsBatchedAsync(IEnumerable<string> jobProfileNames)
         {
-            var jobProfileOverViews = new List<JobProfileOverView>();
+            var overViews = new List<JobProfileOverView>();
+            var batchSize = 25;
+            int numberOfBatches = (int)Math.Ceiling((double)jobProfileNames.Count() / batchSize);
 
-            foreach (string cName in jobProfileNames)
+            for (int i = 0; i < numberOfBatches; i++)
             {
-                var response = await httpClient.GetAsync($"segment/getbyname/{cName}").ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                jobProfileOverViews.Add(new JobProfileOverView() { Cname = cName, OverViewHTML = await response.Content.ReadAsStringAsync().ConfigureAwait(false) });
+                var profileBatch = jobProfileNames.Skip(i * batchSize).Take(batchSize);
+                var tasks = profileBatch.Select(c => GetOverviewAsync(c));
+                overViews.AddRange(await Task.WhenAll(tasks).ConfigureAwait(false));
             }
 
-            return jobProfileOverViews;
+            return overViews;
+        }
+
+        private async Task<JobProfileOverView> GetOverviewAsync(string cName)
+        {
+            var response = await httpClient.GetAsync($"segment/getbyname/{cName}").ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            return new JobProfileOverView() { Cname = cName, OverViewHTML = await response.Content.ReadAsStringAsync().ConfigureAwait(false) };
         }
     }
 }
