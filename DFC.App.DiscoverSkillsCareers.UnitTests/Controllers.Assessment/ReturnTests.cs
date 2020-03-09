@@ -95,5 +95,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/short/3", redirectResult.Url);
         }
+
+        [Fact]
+        public async Task WhenSessionIdDoesNotExistRedirectsToRoot()
+        {
+            string sessionId = null;
+            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+
+            var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
+
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
+        }
     }
 }

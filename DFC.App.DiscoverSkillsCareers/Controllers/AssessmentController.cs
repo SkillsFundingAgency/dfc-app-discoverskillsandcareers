@@ -131,12 +131,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Return()
         {
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
+            {
+                return RedirectToRoot();
+            }
+
             var assessment = await GetAssessment().ConfigureAwait(false);
             return NavigateTo(assessment);
         }
 
-        public IActionResult Save()
+        public async Task<IActionResult> Save()
         {
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
+            {
+                return RedirectToRoot();
+            }
+
             return View();
         }
 
@@ -167,8 +179,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
         }
 
-        public IActionResult Email()
+        public async Task<IActionResult> Email()
         {
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
+            {
+                return RedirectToRoot();
+            }
+
             return View();
         }
 
@@ -197,6 +215,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Reference()
         {
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
+            {
+                return RedirectToRoot();
+            }
+
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
             return View(responseViewModel);
         }
