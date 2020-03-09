@@ -1,5 +1,4 @@
-﻿
-namespace DFC.App.DiscoverSkillsCareers.Models.Result
+﻿namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
     public class JobProfileOverView
     {
