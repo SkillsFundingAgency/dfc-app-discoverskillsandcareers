@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using Polly.Extensions.Http;
+using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -101,22 +104,42 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
 
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
+            var policyRegistry = services.AddPolicyRegistry();
+            AddPolicies(policyRegistry);
 
-            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(httpClient =>
-            {
-                ConfigureHttpClient(httpClient, dysacClientOptions.AssessmentApiBaseAddress, dysacClientOptions.OcpApimSubscriptionKey);
-            });
+            services.AddHttpClient<IResultsApiService, ResultsApiService>(
+                httpClient =>
+                {
+                    httpClient.BaseAddress = dysacClientOptions.ResultsApiBaseAddress;
+                    httpClient.Timeout = dysacClientOptions.Timeout;
+                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
+                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
+                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
 
-            services.AddHttpClient<IResultsApiService, ResultsApiService>(httpClient =>
+            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(
+                httpClient =>
+                {
+                    httpClient.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
+                    httpClient.Timeout = dysacClientOptions.Timeout;
+                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
+                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
+                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
+
+            var jobProfileOverViewClientOptions = Configuration.GetSection("JobProfileOverViewClientOptions").Get<JobProfileOverViewClientOptions>();
+
+            services.AddHttpClient<IJpOverviewApiService, JpOverviewApiService>(httpClient =>
             {
-                ConfigureHttpClient(httpClient, dysacClientOptions.ResultsApiBaseAddress, dysacClientOptions.OcpApimSubscriptionKey);
-            });
+                httpClient.Timeout = jobProfileOverViewClientOptions.Timeout;
+                httpClient.BaseAddress = jobProfileOverViewClientOptions.BaseAddress;
+            }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
+            .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
-        private static void ConfigureHttpClient(HttpClient httpClient, Uri baseAddress, string ocpApimSubscriptionKey)
+        private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
         {
-            httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, ocpApimSubscriptionKey);
-            httpClient.BaseAddress = baseAddress;
+            var policyOptions = new PolicyOptions() { HttpRetry = new RetryPolicyOptions(),  HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
+            policyRegistry.Add(nameof(PolicyOptions.HttpRetry), HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(policyOptions.HttpRetry.Count, retryAttempt => TimeSpan.FromSeconds(Math.Pow(policyOptions.HttpRetry.BackoffPower, retryAttempt))));
+            policyRegistry.Add(nameof(PolicyOptions.HttpCircuitBreaker), HttpPolicyExtensions.HandleTransientHttpError().CircuitBreakerAsync(policyOptions.HttpCircuitBreaker.ExceptionsAllowedBeforeBreaking, policyOptions.HttpCircuitBreaker.DurationOfBreak));
         }
     }
 }
