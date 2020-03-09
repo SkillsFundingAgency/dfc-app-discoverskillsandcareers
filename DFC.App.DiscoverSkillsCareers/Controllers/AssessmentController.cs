@@ -187,7 +187,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            return View();
+            return View("Email");
         }
 
         [HttpPost]
