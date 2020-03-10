@@ -43,6 +43,12 @@
         },
         "NotifySmsTemplateId": {
             "value": "__NotifySmsTemplateId__"
+        },
+        "Environment": {
+            "value": "__ReleaseEnvironmentName__"
+        },
+        "enableAlerts": {
+            "value": __EnableAzureMonitorAlerting__
         }
     }
 }
