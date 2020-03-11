@@ -27,7 +27,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var resultsResponse = await GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
             var selectedJobprofiles = resultsResponse.JobProfiles.Select(p => p.UrlName);
-            resultsResponse.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
+
+            if (selectedJobprofiles.Any())
+            {
+                resultsResponse.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
+            }
+
             return resultsResponse;
         }
 

@@ -10,6 +10,8 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
             Results = new ResultsIndexResponseViewModel();
         }
 
+        public string AssessmentReference { get; set; }
+
         public ResultsIndexResponseViewModel Results { get; set; }
     }
 }
