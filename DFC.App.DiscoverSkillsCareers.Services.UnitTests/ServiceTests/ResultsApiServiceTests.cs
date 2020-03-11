@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using FakeItEasy;
 using RichardSzalay.MockHttp;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -40,6 +41,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             var resultsResponse = await resultsApiService.GetResults(sessionId);
             Assert.Equal(sessionId, resultsResponse.SessionId);
+        }
+
+        [Theory]
+        [InlineData("\"JobProfiles\":[{\"urlName\":\"order-picker\"}]", 1)]
+        [InlineData("", 0 )]
+        public async Task GetResultsOnlyCallJPOverviewIfThereAreJobProfiles(string jobProfileJson, int expectedNumberOfcalls)
+        {
+            var sessionId = "session1";
+            var jobCategory = "short";
+       
+            httpMessageHandler.When($"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}")
+                .Respond("application/json", $"{{'sessionId':'session1',{jobProfileJson}}}");
+
+            var resultsResponse = await resultsApiService.GetResults(sessionId);
+
+            A.CallTo(() => fakeJpOverviewApiService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).MustHaveHappened(expectedNumberOfcalls, Times.Exactly);          
         }
 
     }

@@ -21,8 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
-            if (!hasSessionId)
+            if (!await HasSessionId().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
@@ -35,14 +34,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await apiService.GetResults().ConfigureAwait(false);
 
-            var response = new ResultIndexResponseViewModel();
-            response.Results = mapper.Map<ResultsIndexResponseViewModel>(resultsResponse);
-            return View(response);
-        }
-
-        public IActionResult Filter()
-        {
-            return View();
+            var resultIndexResponseViewModel = new ResultIndexResponseViewModel
+            {
+                Results = mapper.Map<ResultsIndexResponseViewModel>(resultsResponse),
+                AssessmentReference = assessmentResponse.ReferenceCode,
+            };
+            return View(resultIndexResponseViewModel);
         }
     }
 }

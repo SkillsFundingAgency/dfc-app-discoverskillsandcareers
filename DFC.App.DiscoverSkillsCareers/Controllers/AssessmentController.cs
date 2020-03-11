@@ -269,9 +269,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
 
-            var result = new AssessmentReferenceGetResponse();
-            result.ReferenceCode = getAssessmentResponse.ReferenceCode;
-            result.AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard);
+            var result = new AssessmentReferenceGetResponse
+            {
+                ReferenceCode = getAssessmentResponse.ReferenceCode,
+                AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard),
+            };
 
             return result;
         }

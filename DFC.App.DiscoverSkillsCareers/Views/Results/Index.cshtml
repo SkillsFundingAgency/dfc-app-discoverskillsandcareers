@@ -7,18 +7,45 @@ Your answers show that:
 
 <partial name="_Traits" model="@Model.Results.Traits" />
 
-The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.
+@if (@Model.Results.JobCategories.Any())
+{
+    <p>The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.</p>
+}
+else
+{
+    <p>Because of your answers, we could not recommend any job categories. You might want to <a href="/q/short/01">go through the assessment again</a> to check that your responses were correct.</p>
+}
 
-<br />
-<br />
-<h3>Print your results</h3>
-<a href="#">Print</a>
+<div>
+    <partial name="_Print" />
+</div>
 
-<br />
-<br />
-<h3>Send my results</h3>
-Choose to have your results sent by email, or use a reference code to see them.
-<a asp-controller="assessment" asp-action="save">Continue</a>
+<div>
+    <partial name="_SpeakToAnAdviser" />
+</div>
 
-<hr />
-<partial name="_JobCategories" />
+@if (Model.Results.JobCategories.Any())
+{
+    <br />
+    <br />
+    <h3>Send my results</h3>
+    <p>Choose to have your results sent by email, or use a reference code to see them.</p>
+    <a asp-controller="assessment" asp-action="save">Continue</a>
+    <hr />
+    <div class="app-printcode">
+        <h2 class="govuk-heading-m">Return to your results</h2>
+        <p>Your reference number is <strong>@Model.AssessmentReference</strong></p>
+    </div>
+
+    <h2>@Model.Results.JobFamilyCount job categories that might suit you</h2>
+
+    <partial name="_JobCategories" />
+
+    <div>
+        <a href="#top">
+            <svg class="app-back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+                <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+            </svg>Back to top
+        </a>
+    </div>
+}
