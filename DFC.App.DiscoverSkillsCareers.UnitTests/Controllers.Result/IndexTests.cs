@@ -3,7 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -15,23 +14,24 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISessionService sessionService;
+        private readonly IAssessmentService assessmentService;
+        private readonly IResultsService resultsService;
 
         public IndexTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            sessionService = A.Fake<ISessionService>();
+            assessmentService = A.Fake<IAssessmentService>();
+            resultsService = A.Fake<IResultsService>();
 
-            controller = new ResultsController(mapper, sessionClient, apiService);
+            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService);
         }
 
         [Fact]
         public async Task WhenNoSessionIdRedirectsToRoot()
         {
-            string sessionId = null;
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.HasValidSession()).Returns(false);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
 
@@ -43,10 +43,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         [Fact]
         public async Task WhenAssessmentIsNotCompleteRedirectsToAssessment()
         {
-            var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 1 };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
-            A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
 
@@ -58,10 +57,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         [Fact]
         public async Task WhenAssessmentIsCompleteShowsResults()
         {
-            var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
-            A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
+
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
 

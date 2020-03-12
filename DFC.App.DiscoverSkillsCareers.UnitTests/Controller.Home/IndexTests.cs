@@ -2,7 +2,6 @@
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -13,15 +12,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
     public class IndexTests
     {
         private readonly HomeController controller;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISessionService sessionService;
+        private readonly IAssessmentService assessmentService;
 
         public IndexTests()
         {
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            sessionService = A.Fake<ISessionService>();
+            assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new HomeController(sessionClient, apiService);
+            controller = new HomeController(sessionService, assessmentService);
         }
 
         [Fact]

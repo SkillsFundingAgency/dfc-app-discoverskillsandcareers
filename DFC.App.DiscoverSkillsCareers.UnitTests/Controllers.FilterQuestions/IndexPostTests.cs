@@ -4,7 +4,6 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,16 +15,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
     {
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISessionService sessionService;
+        private readonly IAssessmentService assessmentService;
 
         public IndexPostTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            sessionService = A.Fake<ISessionService>();
+            assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, sessionClient, apiService);
+            controller = new FilterQuestionsController(mapper, sessionService, assessmentService);
         }
 
         [Fact]
@@ -39,9 +38,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenNoSessionIdRedirectsToRoot()
         {
-            string sessionId = null;
             var viewModel = new FilterQuestionPostRequestViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.HasValidSession()).Returns(false);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -53,7 +51,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRedirectsToFilterResults()
         {
-            var sessionId = "session1";
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
@@ -68,8 +65,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 QuestionNumberReal = questionNumberReal,
                 QuestionNumberCounter = questionNumberCounter,
             };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
-            A.CallTo(() => apiService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
+
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+
+            A.CallTo(() => assessmentService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -81,7 +80,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenAnswerIsProvidedButAnswerIsNotRegisteredReturnsView()
         {
-            var sessionId = "session1";
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
@@ -94,8 +92,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 Answer = answer,
                 QuestionNumberReal = questionNumberReal,
             };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
-            A.CallTo(() => apiService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
+
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => assessmentService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 

@@ -12,26 +12,24 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
-    public class ApiServiceTests
+    public class AssessmentServiceTests
     {
-        private readonly ILogger<ApiService> logger;
+        private readonly ILogger<AssessmentService> logger;
         private readonly NotifyOptions notifyOptions;
-        private readonly IApiService apiService;
+        private readonly IAssessmentService assessmentService;
         private readonly IAssessmentApiService assessmentApiService;
-        private readonly IResultsApiService resultsApiService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
-        private readonly ISessionClient sessionClient;
+        private readonly ISessionService sessionService;
 
-        public ApiServiceTests()
+        public AssessmentServiceTests()
         {
-            logger = A.Fake<ILogger<ApiService>>();
+            logger = A.Fake<ILogger<AssessmentService>>();
             notifyOptions = A.Fake<NotifyOptions>();
             assessmentApiService = A.Fake<IAssessmentApiService>();
-            resultsApiService = A.Fake<IResultsApiService>();
             sessionIdToCodeConverter = A.Fake<ISessionIdToCodeConverter>();
-            sessionClient = A.Fake<ISessionClient>();
+            sessionService = A.Fake<ISessionService>();
 
-            apiService = new ApiService(logger, notifyOptions, assessmentApiService, resultsApiService, sessionIdToCodeConverter, sessionClient);
+            assessmentService = new AssessmentService(logger, notifyOptions, assessmentApiService, sessionIdToCodeConverter, sessionService);
         }
 
         [Fact]
@@ -41,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var newAssessmentResponse = new NewSessionResponse() { SessionId = "s1" };
             A.CallTo(() => assessmentApiService.NewSession(assessmentType)).Returns(newAssessmentResponse);
 
-            var response = await apiService.NewSession(assessmentType);
+            var response = await assessmentService.NewSession(assessmentType);
 
             Assert.True(response);
         }
@@ -53,9 +51,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var newAssessmentResponse = new NewSessionResponse() { SessionId = "p1-s1" };
             A.CallTo(() => assessmentApiService.NewSession(assessmentType)).Returns(newAssessmentResponse);
 
-            await apiService.NewSession(assessmentType);
+            await assessmentService.NewSession(assessmentType);
 
-            A.CallTo(() => sessionClient.CreateCookie(A<DfcUserSession>.That.Matches(x => x.PartitionKey == "p1" && x.SessionId == "s1"), false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => sessionService.CreateCookie("p1-s1")).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -66,10 +64,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var questionNumber = 1;
             var expectedQuestion = new GetQuestionResponse() { NextQuestionNumber = 2 };
 
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
             A.CallTo(() => assessmentApiService.GetQuestion(sessionId, assessmentType, questionNumber)).Returns(expectedQuestion);
 
-            var response = await apiService.GetQuestion(assessmentType, questionNumber);
+            var response = await assessmentService.GetQuestion(assessmentType, questionNumber);
             Assert.Equal(expectedQuestion.NextQuestionNumber, response.NextQuestionNumber);
         }
 
@@ -82,11 +80,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var answerRequest = new PostAnswerRequest() { QuestionId = $"{assessmentType}-v1-1", SelectedOption = "2" };
             var answerResponse = A.Fake<PostAnswerResponse>();
 
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
             A.CallTo(() => assessmentApiService.GetQuestion(sessionId, assessmentType, questionResponse.QuestionNumber)).Returns(questionResponse);
             A.CallTo(() => assessmentApiService.AnswerQuestion(sessionId, answerRequest)).Returns(answerResponse);
 
-            var response = await apiService.AnswerQuestion(assessmentType, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
+            var response = await assessmentService.AnswerQuestion(assessmentType, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
             Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
         }
 
@@ -95,10 +93,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var sessionId = "session1";
             var assessmentResponse = new GetAssessmentResponse { SessionId = sessionId };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
             A.CallTo(() => assessmentApiService.GetAssessment(sessionId)).Returns(assessmentResponse);
 
-            var response = await apiService.GetAssessment();
+            var response = await assessmentService.GetAssessment();
 
             A.CallTo(() => assessmentApiService.GetAssessment(sessionId)).MustHaveHappenedOnceExactly();
             Assert.Equal(sessionId, response.SessionId);
@@ -112,24 +110,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var emailAddress = "email@rmail.com";
             var sendEmailResponse = new SendEmailResponse() { IsSuccess = true };
 
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
             A.CallTo(() => assessmentApiService.SendEmail(sessionId, domain, emailAddress, notifyOptions.EmailTemplateId)).Returns(sendEmailResponse);
 
-            var response = await apiService.SendEmail(domain, emailAddress);
+            var response = await assessmentService.SendEmail(domain, emailAddress);
             A.CallTo(() => assessmentApiService.SendEmail(sessionId, domain, emailAddress, notifyOptions.EmailTemplateId)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task GetResultsCallsGetResultsForCurrentSession()
-        {
-            var sessionId = "session1";
-            var resultsResponse = new GetResultsResponse();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
-            A.CallTo(() => resultsApiService.GetResults(sessionId)).Returns(resultsResponse);
-
-            await apiService.GetResults();
-
-            A.CallTo(() => resultsApiService.GetResults(sessionId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -138,10 +123,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var sessionId = "session1";
             var jobCategory = "sports";
             var filterResponse = new FilterAssessmentResponse() { SessionId = sessionId };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
             A.CallTo(() => assessmentApiService.FilterAssessment(sessionId, jobCategory)).Returns(filterResponse);
 
-            var response = await apiService.FilterAssessment(jobCategory);
+            var response = await assessmentService.FilterAssessment(jobCategory);
 
             A.CallTo(() => assessmentApiService.FilterAssessment(sessionId, jobCategory)).MustHaveHappenedOnceExactly();
             Assert.Equal(sessionId, response.SessionId);
@@ -156,7 +141,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => sessionIdToCodeConverter.GetSessionId(referenceCode)).Returns(sessionIdForReferenceCode);
             A.CallTo(() => assessmentApiService.GetAssessment(sessionIdForReferenceCode)).Returns(asssessmentResponse);
 
-            var response = await apiService.Reload(referenceCode);
+            var response = await assessmentService.Reload(referenceCode);
 
             Assert.Equal(sessionIdForReferenceCode, response);
         }
@@ -170,9 +155,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => sessionIdToCodeConverter.GetSessionId(referenceCode)).Returns(sessionIdForReferenceCode);
             A.CallTo(() => assessmentApiService.GetAssessment(sessionIdForReferenceCode)).Returns(asssessmentResponse);
 
-            await apiService.Reload(referenceCode);
+            await assessmentService.Reload(referenceCode);
 
-            A.CallTo(() => sessionClient.CreateCookie(A<DfcUserSession>.That.Matches(x => x.PartitionKey == "p1" && x.SessionId == "s1"), false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => sessionService.CreateCookie(sessionIdForReferenceCode)).MustHaveHappenedOnceExactly();
         }
     }
 }

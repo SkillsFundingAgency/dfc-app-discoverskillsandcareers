@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface IResultsApiService
+    public interface IResultsService
     {
-        Task<GetResultsResponse> GetResults(string sessionId, string jobCategory);
+        Task<GetResultsResponse> GetResults();
+
+        Task<GetResultsResponse> GetResultsByCategory(string jobCategory);
     }
 }

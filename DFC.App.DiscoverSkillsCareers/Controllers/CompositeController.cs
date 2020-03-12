@@ -1,12 +1,12 @@
-﻿using Dfc.Session;
+﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class CompositeController : BaseController
     {
-        public CompositeController(ISessionClient sessionClient)
-            : base(sessionClient)
+        public CompositeController(ISessionService sessionService)
+            : base(sessionService)
         {
         }
 

@@ -6,7 +6,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
-using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
+using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using Dfc.Session;
 using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
@@ -72,9 +72,9 @@ namespace DFC.App.DiscoverSkillsCareers
                     new { controller = "FilterQuestions", action = "Index" });
 
                 endpoints.MapControllerRoute(
-                    name: "results",
+                    name: "jobProfileOverviews",
                     pattern: RouteName.Prefix + "/results/{jobCategoryName}",
-                    new { controller = "Results", action = "Filter" });
+                    new { controller = "Results", action = "JobProfileOverviews" });
 
                 endpoints.MapControllerRoute(
                     name: "root",
@@ -85,8 +85,8 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var sessionConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
-            services.AddSessionServices(sessionConfig);
+            var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
+            services.AddSessionServices(sessionServiceConfig);
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
@@ -98,9 +98,11 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
-            services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<IAssessmentService, AssessmentService>();
+            services.AddScoped<IResultsService, ResultsService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
+            services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
 
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();

@@ -1,12 +1,12 @@
-﻿using Dfc.Session;
+﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class ErrorController : BaseController
     {
-        public ErrorController(ISessionClient sessionClient)
-            : base(sessionClient)
+        public ErrorController(ISessionService sessionService)
+            : base(sessionService)
         {
         }
 

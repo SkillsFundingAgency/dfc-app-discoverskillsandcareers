@@ -17,18 +17,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly MockHttpMessageHandler httpMessageHandler;
         private readonly HttpClient httpClient;
         private readonly ISerialiser serialiser;
-        private readonly IJpOverviewApiService fakeJpOverviewApiService;
 
         public ResultsApiServiceTests()
         {
             serialiser = new NewtonsoftSerialiser();
-            fakeJpOverviewApiService = A.Fake<IJpOverviewApiService>();
 
             httpMessageHandler = new MockHttpMessageHandler();
             httpClient = httpMessageHandler.ToHttpClient();
             httpClient.BaseAddress = new Uri("https://localhost/resultsapi");
 
-            resultsApiService = new ResultsApiService(httpClient, serialiser, fakeJpOverviewApiService);
+            resultsApiService = new ResultsApiService(httpClient, serialiser);
         }
 
         [Fact]
@@ -39,25 +37,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             httpMessageHandler.When($"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}")
                 .Respond("application/json", "{'sessionId':'session1'}");
 
-            var resultsResponse = await resultsApiService.GetResults(sessionId);
+            var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory);
             Assert.Equal(sessionId, resultsResponse.SessionId);
         }
-
-        [Theory]
-        [InlineData("\"JobProfiles\":[{\"urlName\":\"order-picker\"}]", 1)]
-        [InlineData("", 0 )]
-        public async Task GetResultsOnlyCallJPOverviewIfThereAreJobProfiles(string jobProfileJson, int expectedNumberOfcalls)
-        {
-            var sessionId = "session1";
-            var jobCategory = "short";
-       
-            httpMessageHandler.When($"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}")
-                .Respond("application/json", $"{{'sessionId':'session1',{jobProfileJson}}}");
-
-            var resultsResponse = await resultsApiService.GetResults(sessionId);
-
-            A.CallTo(() => fakeJpOverviewApiService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).MustHaveHappened(expectedNumberOfcalls, Times.Exactly);          
-        }
-
     }
 }

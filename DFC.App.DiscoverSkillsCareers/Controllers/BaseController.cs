@@ -1,5 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using Dfc.Session;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,11 +7,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly ISessionClient sessionClient;
+        private readonly ISessionService sessionService;
 
-        public BaseController(ISessionClient sessionClient)
+        public BaseController(ISessionService sessionService)
         {
-            this.sessionClient = sessionClient;
+            this.sessionService = sessionService;
         }
 
         protected IActionResult RedirectTo(string relativeAddress)
@@ -25,17 +25,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return RedirectTo(string.Empty);
         }
 
-        protected async Task<string> GetSessionId()
-        {
-            var sessionId = await sessionClient.TryFindSessionCode().ConfigureAwait(false);
-            return sessionId;
-        }
-
         protected async Task<bool> HasSessionId()
         {
-            var sessionId = await GetSessionId().ConfigureAwait(false);
-
-            return !string.IsNullOrWhiteSpace(sessionId);
+            return await sessionService.HasValidSession().ConfigureAwait(false);
         }
     }
 }

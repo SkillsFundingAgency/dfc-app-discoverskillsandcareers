@@ -1,4 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.SessionIdToCodeConverters;
+﻿using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
