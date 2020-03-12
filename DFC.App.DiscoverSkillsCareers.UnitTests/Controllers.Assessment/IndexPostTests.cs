@@ -22,7 +22,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfNoSessionExistsRedirectedToRoot()
         {
-            string sessionId = null;
             var viewModel = A.Fake<QuestionPostRequestViewModel>();
 
             A.CallTo(() => Session.HasValidSession()).Returns(false);
