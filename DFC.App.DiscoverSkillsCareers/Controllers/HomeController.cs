@@ -7,12 +7,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class HomeController : BaseController
     {
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
 
-        public HomeController(ISession session, IAssessmentService apiService)
+        public HomeController(ISession session, IAssessmentService assessmentService)
             : base(session)
         {
-            this.apiService = apiService;
+            this.assessmentService = assessmentService;
         }
 
         public IActionResult Index()
@@ -33,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            await apiService.Reload(viewModel.ReferenceCode).ConfigureAwait(false);
+            await assessmentService.Reload(viewModel.ReferenceCode).ConfigureAwait(false);
 
             return RedirectTo("assessment/return");
         }

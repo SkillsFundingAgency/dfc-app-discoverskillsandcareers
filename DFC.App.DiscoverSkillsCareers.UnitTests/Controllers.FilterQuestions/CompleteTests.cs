@@ -15,15 +15,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
         private readonly ISession session;
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
 
         public CompleteTests()
         {
             mapper = A.Fake<IMapper>();
             session = A.Fake<ISession>();
-            apiService = A.Fake<IAssessmentService>();
+            assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, session, apiService);
+            controller = new FilterQuestionsController(mapper, session, assessmentService);
         }
 
         [Fact]

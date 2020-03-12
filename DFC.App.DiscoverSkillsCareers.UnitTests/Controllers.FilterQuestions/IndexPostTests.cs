@@ -17,15 +17,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
         private readonly ISession session;
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
 
         public IndexPostTests()
         {
             mapper = A.Fake<IMapper>();
             session = A.Fake<ISession>();
-            apiService = A.Fake<IAssessmentService>();
+            assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, session, apiService);
+            controller = new FilterQuestionsController(mapper, session, assessmentService);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
 
             A.CallTo(() => session.GetSessionId()).Returns(sessionId);
 
-            A.CallTo(() => apiService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
+            A.CallTo(() => assessmentService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -98,7 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
             };
 
             A.CallTo(() => session.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => apiService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
+            A.CallTo(() => assessmentService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 

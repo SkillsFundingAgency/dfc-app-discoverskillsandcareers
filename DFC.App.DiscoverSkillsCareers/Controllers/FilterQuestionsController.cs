@@ -10,13 +10,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class FilterQuestionsController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
 
-        public FilterQuestionsController(IMapper mapper, ISession session, IAssessmentService apiService)
+        public FilterQuestionsController(IMapper mapper, ISession session, IAssessmentService assessmentService)
             : base(session)
         {
             this.mapper = mapper;
-            this.apiService = apiService;
+            this.assessmentService = assessmentService;
         }
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessment = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (!assessment.IsComplete && !assessment.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await assessmentService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse == null)
             {
@@ -98,7 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var filtereredQuestion = await assessmentService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
             var response = new FilterQuestionIndexResponseViewModel
             {
                 Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),
