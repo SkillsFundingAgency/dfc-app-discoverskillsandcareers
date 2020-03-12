@@ -40,23 +40,5 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory);
             Assert.Equal(sessionId, resultsResponse.SessionId);
         }
-
-        /*
-        [Theory]
-        [InlineData("\"JobProfiles\":[{\"urlName\":\"order-picker\"}]", 1)]
-        [InlineData("", 0 )]
-        public async Task GetResultsOnlyCallJPOverviewIfThereAreJobProfiles(string jobProfileJson, int expectedNumberOfcalls)
-        {
-            var sessionId = "session1";
-            var jobCategory = "short";
-       
-            httpMessageHandler.When($"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}")
-                .Respond("application/json", $"{{'sessionId':'session1',{jobProfileJson}}}");
-
-            var resultsResponse = await resultsApiService.GetResultsByCategory(sessionId, jobCategory);
-
-            A.CallTo(() => fakeJpOverviewApiService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).MustHaveHappened(expectedNumberOfcalls, Times.Exactly);          
-        }
-        */
     }
 }

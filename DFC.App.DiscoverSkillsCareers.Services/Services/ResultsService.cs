@@ -32,8 +32,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
         }
 
-        public async Task<GetResultsResponse> GetResultsByCategory(string sessionId, string jobCategory)
+        public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
         {
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory).ConfigureAwait(false);
             var selectedJobprofiles = resultsResponse.JobProfiles.Select(p => p.UrlName);
 
@@ -45,11 +46,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             return resultsResponse;
-        }
-
-        public Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
