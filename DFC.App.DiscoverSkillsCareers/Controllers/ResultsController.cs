@@ -10,12 +10,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class ResultsController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IApiService apiService;
+        private readonly IResultsService resultsService;
+        private readonly IAssessmentService apiService;
 
-        public ResultsController(IMapper mapper, ISessionClient sessionClient, IApiService apiService)
-            : base(sessionClient)
+        public ResultsController(IMapper mapper, ISession session, IResultsService resultsService, IAssessmentService apiService)
+            : base(session)
         {
             this.mapper = mapper;
+            this.resultsService = resultsService;
             this.apiService = apiService;
         }
 
@@ -32,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
-            var resultsResponse = await apiService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
             {
@@ -40,6 +42,30 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 AssessmentReference = assessmentResponse.ReferenceCode,
             };
             return View(resultIndexResponseViewModel);
+        }
+
+        public async Task<IActionResult> JobProfileOverviews(string selectedCategory)
+        {
+            if (!await HasSessionId().ConfigureAwait(false))
+            {
+                return RedirectToRoot();
+            }
+
+            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
+            {
+                return RedirectTo("assessment/return");
+            }
+
+            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+
+            var resultIndexResponseViewModel = new ResultIndexResponseViewModel
+            {
+                Results = mapper.Map<ResultsIndexResponseViewModel>(resultsResponse),
+                AssessmentReference = assessmentResponse.ReferenceCode,
+            };
+
+            return View("ResultsByCategory", resultIndexResponseViewModel);
         }
     }
 }

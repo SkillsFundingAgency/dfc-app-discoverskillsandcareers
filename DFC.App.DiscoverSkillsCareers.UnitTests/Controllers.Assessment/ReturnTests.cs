@@ -16,7 +16,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var sessionId = "sessionId1";
             GetAssessmentResponse assessmentResponse = null;
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 JobCategorySafeUrl = "sports",
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -57,7 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 RecordedAnswersCount = 2,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -97,7 +97,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 
@@ -110,7 +110,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task WhenSessionIdDoesNotExistRedirectsToRoot()
         {
             string sessionId = null;
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
 

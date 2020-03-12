@@ -1,0 +1,25 @@
+﻿@model ResultsIndexResponseViewModel
+
+<h1>Your results</h1>
+
+<h3>What you told us</h3>
+Your answers show that:
+
+<partial name="_Traits" model="@Model.Traits" />
+
+@if (@Model.JobCategories.Any())
+{
+    <p>The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.</p>
+}
+else
+{
+    <p>Because of your answers, we could not recommend any job categories. You might want to <a href="/q/short/01">go through the assessment again</a> to check that your responses were correct.</p>
+}
+
+<div>
+    <partial name="_Print" />
+</div>
+
+<div>
+    <partial name="_SpeakToAnAdviser" />
+</div>

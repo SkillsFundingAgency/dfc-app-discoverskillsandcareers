@@ -25,7 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             string sessionId = null;
             var viewModel = A.Fake<QuestionPostRequestViewModel>();
 
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
@@ -41,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1" };
             GetQuestionResponse question = null;
 
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
             A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(question);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
@@ -54,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var sessionId = "session1";
             var viewModel = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "short" };
 
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<ViewResult>(actionResponse);
@@ -68,7 +68,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var currentQuestion = new GetQuestionResponse() { MaxQuestionsCount = 10, CurrentQuestionNumber = 3, NextQuestionNumber = 4 };
             var answerResponse = new PostAnswerResponse() { IsSuccess = true, NextQuestionNumber = 4 };
 
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
             A.CallTo(() => ApiService.GetQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber)).Returns(currentQuestion);
             A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
 
@@ -86,7 +86,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var currentQuestion = new GetQuestionResponse();
             var answerResponse = new PostAnswerResponse() { IsSuccess = true, IsComplete = true };
 
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
             A.CallTo(() => ApiService.GetQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber)).Returns(currentQuestion);
             A.CallTo(() => ApiService.AnswerQuestion(answerRequest.AssessmentType, answerRequest.QuestionNumber, answerRequest.QuestionNumber, answerRequest.Answer)).Returns(answerResponse);
 

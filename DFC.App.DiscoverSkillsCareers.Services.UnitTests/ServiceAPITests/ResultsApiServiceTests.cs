@@ -54,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             httpMessageHandler.When($"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}")
                 .Respond("application/json", $"{{'sessionId':'session1',{jobProfileJson}}}");
 
-            var resultsResponse = await resultsApiService.GetResults(sessionId);
+            var resultsResponse = await resultsApiService.GetResultsByCategory(sessionId, jobCategory);
 
             A.CallTo(() => fakeJpOverviewApiService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).MustHaveHappened(expectedNumberOfcalls, Times.Exactly);          
         }

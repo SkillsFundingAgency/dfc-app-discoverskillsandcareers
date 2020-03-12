@@ -4,7 +4,6 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -14,10 +13,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class AssessmentController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IApiService apiService;
+        private readonly IAssessmentService apiService;
 
-        public AssessmentController(IMapper mapper, IApiService apiService, ISessionClient sessionClient)
-            : base(sessionClient)
+        public AssessmentController(IMapper mapper, IAssessmentService apiService, ISession session)
+            : base(session)
         {
             this.mapper = mapper;
             this.apiService = apiService;

@@ -40,7 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task WhenSessionIdDoesNotExistRedirectsToRoot()
         {
             string sessionId = null;
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.Email().ConfigureAwait(false);
 

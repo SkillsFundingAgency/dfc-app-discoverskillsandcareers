@@ -1,10 +1,9 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Result;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface IApiService
+    public interface IAssessmentService
     {
         Task<bool> NewSession(string assessmentType);
 
@@ -15,8 +14,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<GetAssessmentResponse> GetAssessment();
 
         Task<SendEmailResponse> SendEmail(string domain, string emailAddress);
-
-        Task<GetResultsResponse> GetResults();
 
         Task<FilterAssessmentResponse> FilterAssessment(string jobCategory);
 

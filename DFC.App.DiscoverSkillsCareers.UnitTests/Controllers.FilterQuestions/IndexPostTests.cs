@@ -16,16 +16,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
     {
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISession session;
+        private readonly IAssessmentService apiService;
 
         public IndexPostTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            session = A.Fake<ISession>();
+            apiService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, sessionClient, apiService);
+            controller = new FilterQuestionsController(mapper, session, apiService);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         {
             string sessionId = null;
             var viewModel = new FilterQuestionPostRequestViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -68,7 +68,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 QuestionNumberReal = questionNumberReal,
                 QuestionNumberCounter = questionNumberCounter,
             };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
+
             A.CallTo(() => apiService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
@@ -94,7 +96,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 Answer = answer,
                 QuestionNumberReal = questionNumberReal,
             };
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
             A.CallTo(() => apiService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);

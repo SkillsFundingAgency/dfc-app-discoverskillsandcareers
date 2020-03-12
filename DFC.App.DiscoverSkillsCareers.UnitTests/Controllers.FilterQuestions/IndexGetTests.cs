@@ -4,7 +4,6 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,16 +15,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
     {
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISession session;
+        private readonly IAssessmentService assessmentService;
 
         public IndexGetTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            session = A.Fake<ISession>();
+            assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, sessionClient, apiService);
+            controller = new FilterQuestionsController(mapper, session, assessmentService);
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         {
             string sessionId = null;
             var viewModel = new FilterQuestionIndexRequestViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -56,8 +55,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
             var sessionId = "sessionId1";
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 3, RecordedAnswersCount = 2 };
             var viewModel = new FilterQuestionIndexRequestViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
-            A.CallTo(() => apiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -71,7 +70,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         {
             var sessionId = "sessionId1";
             var viewModel = new FilterQuestionIndexRequestViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 

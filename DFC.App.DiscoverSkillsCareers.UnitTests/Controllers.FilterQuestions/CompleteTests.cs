@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dfc.Session;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -15,16 +14,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
     {
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISession session;
+        private readonly IAssessmentService apiService;
 
         public CompleteTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            session = A.Fake<ISession>();
+            apiService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, sessionClient, apiService);
+            controller = new FilterQuestionsController(mapper, session, apiService);
         }
 
         [Fact]
@@ -32,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         {
             string sessionId = null;
             var viewModel = new FilterQuestionsCompleteResponseViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await controller.Complete(viewModel).ConfigureAwait(false);
 
@@ -46,7 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         {
             var sessionId = "sessionId1";
             var viewModel = new FilterQuestionsCompleteResponseViewModel();
-            A.CallTo(() => sessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await controller.Complete(viewModel).ConfigureAwait(false);
 

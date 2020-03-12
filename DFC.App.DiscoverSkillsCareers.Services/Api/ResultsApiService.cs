@@ -26,6 +26,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<GetResultsResponse> GetResults(string sessionId)
         {
             var resultsResponse = await GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            return resultsResponse;
+        }
+
+        public async Task<GetResultsResponse> GetResultsByCategory(string sessionId, string jobCategory)
+        {
+            var resultsResponse = await GetResults(sessionId, jobCategory).ConfigureAwait(false);
             var selectedJobprofiles = resultsResponse.JobProfiles.Select(p => p.UrlName);
 
             if (selectedJobprofiles.Any())
@@ -36,7 +42,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return resultsResponse;
         }
 
-        public async Task<GetResultsResponse> GetResults(string sessionId, string jobCategory)
+
+        private async Task<GetResultsResponse> GetResults(string sessionId, string jobCategory)
         {
             var url = $"{httpClient.BaseAddress}/result/{sessionId}/{jobCategory}";
             var jsonContent = await httpClient.GetStringAsync(url).ConfigureAwait(false);

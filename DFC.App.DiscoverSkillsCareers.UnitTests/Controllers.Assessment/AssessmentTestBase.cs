@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using Dfc.Session;
 using FakeItEasy;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
@@ -10,16 +9,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
     {
         private readonly AssessmentController assessmentController;
         private readonly IMapper mapper;
-        private readonly ISessionClient sessionClient;
-        private readonly IApiService apiService;
+        private readonly ISession session;
+        private readonly IAssessmentService assessmentService;
 
         public AssessmentTestBase()
         {
             mapper = A.Fake<IMapper>();
-            sessionClient = A.Fake<ISessionClient>();
-            apiService = A.Fake<IApiService>();
+            session = A.Fake<ISession>();
+            assessmentService = A.Fake<IAssessmentService>();
 
-            assessmentController = new AssessmentController(mapper, apiService, sessionClient);
+            assessmentController = new AssessmentController(mapper, assessmentService, session);
         }
 
         protected AssessmentController AssessmentController
@@ -32,14 +31,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             get { return mapper; }
         }
 
-        protected ISessionClient SessionClient
+        protected ISession Session
         {
-            get { return sessionClient; }
+            get { return session; }
         }
 
-        protected IApiService ApiService
+        protected IAssessmentService ApiService
         {
-            get { return apiService; }
+            get { return assessmentService; }
         }
     }
 }

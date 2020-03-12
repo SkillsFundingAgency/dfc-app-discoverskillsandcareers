@@ -22,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var assessmentType = "short";
             string sessionId = null;
 
-            A.CallTo(() => SessionClient.TryFindSessionCode()).Returns(sessionId);
+            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
 
             var actionResponse = await AssessmentController.New(assessmentType).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);

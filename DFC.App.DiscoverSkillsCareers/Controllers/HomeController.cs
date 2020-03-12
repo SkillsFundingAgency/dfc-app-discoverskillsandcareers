@@ -1,6 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,10 +7,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class HomeController : BaseController
     {
-        private readonly IApiService apiService;
+        private readonly IAssessmentService apiService;
 
-        public HomeController(ISessionClient sessionClient, IApiService apiService)
-            : base(sessionClient)
+        public HomeController(ISession session, IAssessmentService apiService)
+            : base(session)
         {
             this.apiService = apiService;
         }
