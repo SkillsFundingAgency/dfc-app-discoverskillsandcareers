@@ -2,10 +2,12 @@
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface ISession
+    public interface ISessionService
     {
         public Task<string> GetSessionId();
 
         public void CreateCookie(string sessionIdAndPartionKey);
+
+        public Task<bool> HasValidSession();
     }
 }

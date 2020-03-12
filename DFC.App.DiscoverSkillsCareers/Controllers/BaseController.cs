@@ -7,11 +7,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly ISession session;
+        private readonly ISessionService sessionService;
 
-        public BaseController(ISession session)
+        public BaseController(ISessionService sessionService)
         {
-            this.session = session;
+            this.sessionService = sessionService;
         }
 
         protected IActionResult RedirectTo(string relativeAddress)
@@ -27,9 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         protected async Task<bool> HasSessionId()
         {
-            var sessionId = await session.GetSessionId().ConfigureAwait(false);
-
-            return !string.IsNullOrWhiteSpace(sessionId);
+            return await sessionService.HasValidSession().ConfigureAwait(false);
         }
     }
 }

@@ -22,10 +22,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfNoSessionExistsRedirectedToRoot()
         {
-            string sessionId = null;
             var viewModel = A.Fake<QuestionGetRequestViewModel>();
 
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(false);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
@@ -37,11 +36,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfQuestionDoesNotExistsReturnsBadRequest()
         {
-            var sessionId = "session1";
             var viewModel = new QuestionGetRequestViewModel() { AssessmentType = "at1", QuestionNumber = 1 };
             GetQuestionResponse expectedQuestion = null;
 
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
             A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
@@ -51,11 +49,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfQuestionNumberIsGreaterThanMaxMaxQuestionsCountReturnsBadRequest()
         {
-            var sessionId = "session1";
             var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1" };
             var expectedQuestion = new GetQuestionResponse() { MaxQuestionsCount = 2 };
 
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
             A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, 1)).Returns(expectedQuestion);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
@@ -65,11 +62,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfAssessmentIsCompleteRedirectsToResults()
         {
-            var sessionId = "session1";
             var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 2, AssessmentType = "name1" };
             var expectedQuestion = new GetQuestionResponse() { MaxQuestionsCount = 2, IsComplete = true };
 
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
             A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
@@ -82,11 +78,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task QuestionsMustBeAnsweredInOrder()
         {
-            var sessionId = "session1";
             var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 2, AssessmentType = "name1" };
             var expectedQuestion = new GetQuestionResponse() { MaxQuestionsCount = 3, QuestionNumber = 1 };
 
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
             A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);

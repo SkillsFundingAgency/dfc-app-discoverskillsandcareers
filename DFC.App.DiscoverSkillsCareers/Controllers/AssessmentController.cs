@@ -13,13 +13,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class AssessmentController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IAssessmentService assessmentService;
+        private readonly IAssessmentService apiService;
 
-        public AssessmentController(IMapper mapper, IAssessmentService assessmentService, ISession session)
-            : base(session)
+        public AssessmentController(IMapper mapper, IAssessmentService apiService, ISessionService sessionService)
+            : base(sessionService)
         {
             this.mapper = mapper;
-            this.assessmentService = assessmentService;
+            this.apiService = apiService;
         }
 
         [HttpGet]
@@ -89,7 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(result);
             }
 
-            var answerResponse = await assessmentService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse.IsSuccess)
             {
@@ -118,7 +118,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            await assessmentService.NewSession(assessmentType).ConfigureAwait(false);
+            await apiService.NewSession(assessmentType).ConfigureAwait(false);
 
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
         }
@@ -199,7 +199,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (ModelState.IsValid)
             {
-                await assessmentService.SendEmail($"https://{Request.Host.Value}", request.Email).ConfigureAwait(false);
+                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email).ConfigureAwait(false);
 
                 return RedirectTo("assessment/emailsent");
             }
@@ -279,13 +279,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var question = await assessmentService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
+            var question = await apiService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
             return question;
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
         {
-            var getAssessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
+            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             return getAssessmentResponse;
         }
 

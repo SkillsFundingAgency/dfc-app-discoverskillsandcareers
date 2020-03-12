@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -10,13 +9,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class FilterQuestionsController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IAssessmentService assessmentService;
+        private readonly IAssessmentService apiService;
 
-        public FilterQuestionsController(IMapper mapper, ISession session, IAssessmentService assessmentService)
-            : base(session)
+        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IAssessmentService apiService)
+            : base(sessionService)
         {
             this.mapper = mapper;
-            this.assessmentService = assessmentService;
+            this.apiService = apiService;
         }
 
         [HttpGet]
@@ -33,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessment = await assessmentService.GetAssessment().ConfigureAwait(false);
+            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
             if (!assessment.IsComplete && !assessment.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
@@ -63,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await assessmentService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse == null)
             {
@@ -98,7 +97,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var filtereredQuestion = await assessmentService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
             var response = new FilterQuestionIndexResponseViewModel
             {
                 Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),

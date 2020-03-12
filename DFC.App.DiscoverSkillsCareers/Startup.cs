@@ -85,8 +85,8 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var sessionConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
-            services.AddSessionServices(sessionConfig);
+            var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
+            services.AddSessionServices(sessionServiceConfig);
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
@@ -102,7 +102,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IResultsService, ResultsService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
-            services.AddScoped<ISession, Session>();
+            services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
 
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();

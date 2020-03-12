@@ -12,8 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenSessionIdDoesNotExistRedirectsToRoot()
         {
-            string sessionId = null;
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(false);
 
             var actionResponse = await AssessmentController.Reference().ConfigureAwait(false);
 
@@ -25,8 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task ReferenceReturnsView()
         {
-            var sessionId = "session1";
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
 
             var actionResponse = await AssessmentController.Reference().ConfigureAwait(false);
 

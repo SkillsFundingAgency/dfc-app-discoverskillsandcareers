@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,14 +10,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
-        private readonly IAssessmentService assessmentService;
+        private readonly IAssessmentService apiService;
 
-        public ResultsController(IMapper mapper, ISession session, IResultsService resultsService, IAssessmentService assessmentService)
-            : base(session)
+        public ResultsController(IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
+            : base(sessionService)
         {
             this.mapper = mapper;
             this.resultsService = resultsService;
-            this.assessmentService = assessmentService;
+            this.apiService = apiService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
@@ -51,13 +50,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
             }
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResultsByCategory(selectedCategory).ConfigureAwait(false);
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
             {

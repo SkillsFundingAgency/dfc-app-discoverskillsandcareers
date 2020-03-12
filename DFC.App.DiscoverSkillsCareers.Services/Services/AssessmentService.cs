@@ -13,21 +13,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly NotifyOptions notifyOptions;
         private readonly IAssessmentApiService assessmentApiService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
-        private readonly ISession session;
+        private readonly ISessionService sessionService;
 
         public AssessmentService(
             ILogger<AssessmentService> logger,
             NotifyOptions notifyOptions,
             IAssessmentApiService assessmentApiService,
-            IResultsApiService resultsApiService,
             ISessionIdToCodeConverter sessionIdToCodeConverter,
-            ISession session)
+            ISessionService sessionService)
         {
             this.logger = logger;
             this.notifyOptions = notifyOptions;
             this.assessmentApiService = assessmentApiService;
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
-            this.session = session;
+            this.sessionService = sessionService;
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -35,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
             if (newSessionResponse != null)
             {
-                session.CreateCookie(newSessionResponse.SessionId);
+                sessionService.CreateCookie(newSessionResponse.SessionId);
             }
 
             return newSessionResponse != null;
@@ -43,14 +42,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var sessionId = await session.GetSessionId().ConfigureAwait(false);
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var getQuestionResponse = await assessmentApiService.GetQuestion(sessionId, assessmentType, questionNumber).ConfigureAwait(false);
             return getQuestionResponse;
         }
 
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, string answer)
         {
-            var sessionId = await session.GetSessionId().ConfigureAwait(false);
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var questionSetResponse = await GetQuestion(assessmentType, questionNumberCounter).ConfigureAwait(false);
             var questionIdFull = $"{questionSetResponse.QuestionSetVersion}-{realQuestionNumber}";
             var post = new PostAnswerRequest() { QuestionId = questionIdFull, SelectedOption = answer };
@@ -60,14 +59,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetAssessmentResponse> GetAssessment()
         {
-            var sessionId = await session.GetSessionId().ConfigureAwait(false);
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var response = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
             return response;
         }
 
         public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress)
         {
-            var sessionId = await session.GetSessionId().ConfigureAwait(false);
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var sendEmailResponse = await assessmentApiService.SendEmail(sessionId, domain, emailAddress, notifyOptions.EmailTemplateId).ConfigureAwait(false);
 
             if (sendEmailResponse != null && !sendEmailResponse.IsSuccess)
@@ -80,7 +79,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)
         {
-            var sessionId = await session.GetSessionId().ConfigureAwait(false);
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             return await assessmentApiService.FilterAssessment(sessionId, jobCategory).ConfigureAwait(false);
         }
 
@@ -88,9 +87,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = sessionIdToCodeConverter.GetSessionId(referenceCode);
             var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
-            session.CreateCookie(assessment.SessionId);
+            sessionService.CreateCookie(assessment.SessionId);
             return assessment.SessionId;
         }
-
     }
 }

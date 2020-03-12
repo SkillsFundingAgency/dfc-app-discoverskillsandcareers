@@ -4,7 +4,6 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using Dfc.Session;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,16 +15,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
     {
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
-        private readonly ISession session;
+        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
 
         public IndexPostTests()
         {
             mapper = A.Fake<IMapper>();
-            session = A.Fake<ISession>();
+            sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new FilterQuestionsController(mapper, session, assessmentService);
+            controller = new FilterQuestionsController(mapper, sessionService, assessmentService);
         }
 
         [Fact]
@@ -39,9 +38,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenNoSessionIdRedirectsToRoot()
         {
-            string sessionId = null;
             var viewModel = new FilterQuestionPostRequestViewModel();
-            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => sessionService.HasValidSession()).Returns(false);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
@@ -53,7 +51,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRedirectsToFilterResults()
         {
-            var sessionId = "session1";
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
@@ -69,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 QuestionNumberCounter = questionNumberCounter,
             };
 
-            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
 
             A.CallTo(() => assessmentService.AnswerQuestion(jobCategoryName, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
@@ -83,7 +80,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenAnswerIsProvidedButAnswerIsNotRegisteredReturnsView()
         {
-            var sessionId = "session1";
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
@@ -97,7 +93,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
                 QuestionNumberReal = questionNumberReal,
             };
 
-            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);

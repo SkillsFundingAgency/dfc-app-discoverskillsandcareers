@@ -16,15 +16,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
     {
         private readonly ILogger<ResultsService> logger;
         private readonly IResultsApiService resultsApiService;
-        private readonly ISession  session;
+        private readonly IJpOverviewApiService jPOverviewAPIService;
+        private readonly ISessionService  sessionService;
         private readonly IResultsService resultsService;
 
         public ResultsServiceTests()
         {
             logger = A.Fake<ILogger<ResultsService>>();
             resultsApiService = A.Fake<IResultsApiService>();
-            session = A.Fake<ISession>();
-            resultsService = new ResultsService(logger, resultsApiService, session);
+            sessionService = A.Fake<ISessionService>();
+            jPOverviewAPIService = A.Fake<IJpOverviewApiService>();
+            resultsService = new ResultsService(logger, resultsApiService, jPOverviewAPIService, sessionService);
         }
 
         [Fact]
@@ -32,11 +34,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var sessionId = "session1";
             var resultsResponse = new GetResultsResponse();
-            A.CallTo(() => session.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => resultsApiService.GetResults(sessionId)).Returns(resultsResponse);
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
 
             await resultsService.GetResults();
-            A.CallTo(() => resultsApiService.GetResults(sessionId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }
 }

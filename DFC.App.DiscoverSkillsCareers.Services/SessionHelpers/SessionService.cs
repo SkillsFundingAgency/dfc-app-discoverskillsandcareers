@@ -7,31 +7,42 @@ using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 {
-    public class Session : ISession
+    public class SessionService : ISessionService
     {
-        private readonly ISessionClient sessionClient;
+        private readonly ISessionClient sessionServiceClient;
 
-        public Session(ISessionClient sessionClient)
+        public SessionService(ISessionClient sessionServiceClient)
         {
-            this.sessionClient = sessionClient;
+            this.sessionServiceClient = sessionServiceClient;
         }
 
         public void CreateCookie(string sessionIdAndPartionKey)
         {
             var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
             var dfcUserSession = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 };
-            sessionClient.CreateCookie(dfcUserSession, false);
+            sessionServiceClient.CreateCookie(dfcUserSession, false);
         }
 
         public async Task<string> GetSessionId()
         {
-            var result = await sessionClient.TryFindSessionCode().ConfigureAwait(false);
+            var result = await sessionServiceClient.TryFindSessionCode().ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(result))
             {
                 throw new InvalidOperationException("SessionId is null or empty");
             }
 
             return result;
+        }
+
+        public async Task<bool> HasValidSession()
+        {
+            var result = await sessionServiceClient.TryFindSessionCode().ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static Tuple<string, string> GetSessionAndPartitionKey(string value)

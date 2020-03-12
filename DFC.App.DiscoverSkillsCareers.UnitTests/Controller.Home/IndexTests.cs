@@ -12,15 +12,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
     public class IndexTests
     {
         private readonly HomeController controller;
-        private readonly ISession session;
+        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
 
         public IndexTests()
         {
-            session = A.Fake<ISession>();
+            sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
 
-            controller = new HomeController(session, assessmentService);
+            controller = new HomeController(sessionService, assessmentService);
         }
 
         [Fact]
