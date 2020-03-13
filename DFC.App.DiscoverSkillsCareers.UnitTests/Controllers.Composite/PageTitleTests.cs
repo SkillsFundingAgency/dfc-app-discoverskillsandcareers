@@ -8,12 +8,12 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
 {
-    public class IndexTests
+    public class PageTitleTests
     {
         private readonly CompositeController controller;
         private readonly ISessionService sessionService;
 
-        public IndexTests()
+        public PageTitleTests()
         {
             sessionService = A.Fake<ISessionService>();
             controller = new CompositeController(sessionService);
