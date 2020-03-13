@@ -53,7 +53,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             A.CallTo(() => Session.HasValidSession()).Returns(true);
 
-
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<ViewResult>(actionResponse);
         }

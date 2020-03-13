@@ -44,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         {
             var viewModel = new FilterQuestionsCompleteResponseViewModel();
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
- 
+
             var actionResponse = await controller.Complete(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
