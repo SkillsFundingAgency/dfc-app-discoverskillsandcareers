@@ -63,6 +63,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
+        public void AssessmentReturnReturnsPageTitle()
+        {
+            var actionResponse = controller.AssessmentReturn();
+            AssertPageTitle(actionResponse, PageTitle.AssessmentReturn);
+        }
+
+        [Fact]
         public void ResultsReturnsPageTitle()
         {
             var actionResponse = controller.Results();
