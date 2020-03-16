@@ -17,6 +17,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<FilterAssessmentResponse> FilterAssessment(string jobCategory);
 
-        Task<string> Reload(string referenceCode);
+        Task<bool> ReloadUsingReferenceCode(string referenceCode);
+
+        Task<bool> ReloadUsingSessionId(string sessionId);
     }
 }

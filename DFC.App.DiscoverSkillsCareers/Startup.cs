@@ -19,7 +19,6 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -60,6 +59,11 @@ namespace DFC.App.DiscoverSkillsCareers
                     name: "assessment",
                     pattern: RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}",
                     new { controller = "Assessment", action = "Index" });
+
+                endpoints.MapControllerRoute(
+                    name: "assessment",
+                    pattern: RouteName.Prefix + "/reload",
+                    new { controller = "Assessment", action = "Reload" });
 
                 endpoints.MapControllerRoute(
                     name: "filterQuestionsComplete",
