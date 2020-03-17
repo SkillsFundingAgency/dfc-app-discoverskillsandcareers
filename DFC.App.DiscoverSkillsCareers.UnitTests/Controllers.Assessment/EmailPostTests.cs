@@ -9,8 +9,20 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 {
-    public class EmailTests : AssessmentTestBase
+    public class EmailPostTests : AssessmentTestBase
     {
+        [Fact]
+        public async Task WhenSessionExistsAndModelStateIsNotValidReturnsView()
+        {
+            var assessmentEmailPostRequest = new AssessmentEmailPostRequest();
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
+            AssessmentController.ModelState.AddModelError("Key1", "Some Error");
+
+            var actionResponse = await AssessmentController.Email(assessmentEmailPostRequest).ConfigureAwait(false);
+
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
         [Fact]
         public async Task NullViewModelReturnsBadRequest()
         {
@@ -34,19 +46,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/emailsent", redirectResult.Url);
-        }
-
-        [Fact]
-        public async Task WhenSessionIdDoesNotExistRedirectsToRoot()
-        {
-            string sessionId = null;
-            A.CallTo(() => Session.GetSessionId()).Returns(sessionId);
-
-            var actionResponse = await AssessmentController.Email().ConfigureAwait(false);
-
-            Assert.IsType<RedirectResult>(actionResponse);
-            var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
         }
     }
 }
