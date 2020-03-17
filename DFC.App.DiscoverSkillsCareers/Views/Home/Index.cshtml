@@ -57,10 +57,42 @@
         <div class="app-related-items">
             <h2 class="govuk-heading-m">Return to an assessment</h2>
             <form method="post" asp-controller="home">
-                @Html.ValidationSummary()
-                <div class="govuk-form-group ">
-                    <label class="govuk-label" for="code">Enter your reference</label>
-                    <input class="govuk-input " id="referenceCode" name="referenceCode" type="text">
+                
+                    // IF ERROR THEN SHOW BELOW
+                @if (Model.HasError) {
+                      <div>
+                
+                        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                  <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                  </h2>
+                  <div class="govuk-error-summary__body">
+                    
+                    <ul class="govuk-list govuk-error-summary__list">
+                    
+                      <li>
+                      
+                        <a href="#referenceCode">@Model.ErrorMessage</a>
+                      
+                      </li>
+                    
+                    </ul>
+                  </div>
+                </div>
+                        </div>
+                      }
+                
+                // IF ERROR APPEND AS BELOW
+                <div class="app-resume-panel__input govuk-form-group @(Model.HasError ? "govuk-form-group--error" : string.Empty)">
+                    <label class="govuk-label" for="referenceCode">Enter your reference</label>
+                    // IF ERROR
+                    @if (Model.HasError)
+                    {
+                        <span id="code-error" class="govuk-error-message">@Model.ErrorMessage</span>
+                    }
+                    // END IF
+                    // IF ERROR APPEND AS BELOW
+                    <input class="govuk-input @(Model.HasError ? "govuk-input--error" : string.Empty)" id="referenceCode" name="referenceCode" type="text" @(Model.HasError ? "aria-describedby=code-error" : string.Empty)>
                 </div>
                 <button type="submit" class="govuk-button app-button">
                     Continue

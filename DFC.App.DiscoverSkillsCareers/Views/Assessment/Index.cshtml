@@ -9,15 +9,13 @@ else
     <a asp-route="root" class="govuk-back-link">Back to start</a>
 }
 
-@Html.ValidationSummary()
-
 <form method="post">
     <div class="govuk-grid-row app-question-progress">
         <div class="govuk-grid-column-two-thirds-from-desktop">
 
             <div class="ncs-progress">
-                <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="visually-hidden">Complete</strong></span>
-                <div class="ncs-progress__bar"><span style="width: @(Model.PercentageComplete)%"></span></div>
+                <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="govuk-visually-hidden">Complete</strong></span>
+                <div class="ncs-progress__bar"><span style="width: @(Model.PercentageComplete)%!important;"></span></div>
             </div>
 
         </div>
@@ -29,10 +27,39 @@ else
             </div>
         </div>
     </div>
-    <div class="govuk-form-group">
+    
+    // IF ERROR THEN
+    <div class="govuk-grid-row app-error">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li>
+                            <a href="#question">@Model.ErrorMessage</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    // END IF
+    
+    // APPEND IF ERROR TO CLASS AS BELOW
+    <div class="govuk-form-group @(!string.IsNullOrEmpty(Model.ErrorMessage) ? "govuk-form-group--error" : string.Empty)">
         <div class="govuk-fieldset app-question app-question--short" id="question" role="group" aria-labelledby="question-heading">
 
             <div class="govuk-fieldset__legend govuk-fieldset__legend--l app-question__question">
+                // IF ERROR
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div id="question-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @Model.ErrorMessage
+                    </div>
+                }
+                // END IF
                 <h1 class="govuk-fieldset__heading" id="question-heading">
                     @Model.QuestionText
                 </h1>
@@ -106,5 +133,10 @@ else
                 <button type="submit" class="govuk-button app-button btn-next-question">
                     Next
                 </button>
+            </div>
+            
+            <div class="app-sidebar app-save-panel app-save-panel--alt-mobile">
+                <h3 class="govuk-heading-m">Return to this later</h3>
+                <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
             </div>
 </form>
