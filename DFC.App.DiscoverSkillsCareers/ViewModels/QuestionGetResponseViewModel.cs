@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -29,6 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int RecordedAnswersCount { get; set; }
 
+        [Required(ErrorMessage = "Choose an answer to the statement")]
         public Answer? Answer { get; set; }
 
         public int AvailableQuestionsCount { get; set; }

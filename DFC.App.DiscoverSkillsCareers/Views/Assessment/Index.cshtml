@@ -43,7 +43,7 @@ else
                            id="selected_answer-1"
                            type="radio"
                            value="4"
-                           name="answer"
+                           asp-for="Answer"
                            checked="@Model.IsChecked(Answer.StronglyAgree)"
                            gov-analytics-data="SelectedAnswer | StronglyAgree">
                     <label class="govuk-label govuk-radios__label" for="selected_answer-1">
@@ -55,7 +55,7 @@ else
                            id="selected_answer-2"
                            type="radio"
                            value="3"
-                           name="answer"
+                           asp-for="Answer"
                            checked="@Model.IsChecked(Answer.Agree)"
                            gov-analytics-data="SelectedAnswer | Agree">
                     <label class="govuk-label govuk-radios__label" for="selected_answer-2">
@@ -67,7 +67,7 @@ else
                            id="selected_answer-3"
                            type="radio"
                            value="2"
-                           name="answer"
+                           asp-for="Answer"
                            checked="@Model.IsChecked(Answer.Neutral)"
                            gov-analytics-data="SelectedAnswer | Neutral">
                     <label class="govuk-label govuk-radios__label" for="selected_answer-3">
@@ -79,7 +79,7 @@ else
                            id="selected_answer-4"
                            type="radio"
                            value="1"
-                           name="answer"
+                           asp-for="Answer"
                            checked="@Model.IsChecked(Answer.Disagree)"
                            gov-analytics-data="SelectedAnswer | Disagree">
                     <label class="govuk-label govuk-radios__label" for="selected_answer-4">
@@ -98,13 +98,14 @@ else
                         Strongly disagree
                     </label>
                 </div>
+                <span asp-validation-for="Answer" class="text-danger"></span>
             </div>
         </div>
     </div>
 
-            <div class="app-controls">
-                <button type="submit" class="govuk-button app-button btn-next-question">
-                    Next
-                </button>
-            </div>
+    <div class="app-controls">
+        <button type="submit" class="govuk-button app-button btn-next-question">
+            Next
+        </button>
+    </div>
 </form>
