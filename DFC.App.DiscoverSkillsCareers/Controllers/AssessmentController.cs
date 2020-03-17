@@ -186,7 +186,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            return View("Email");
+            var viewReponse = new AssessmentEmailPostResponse();
+            return View(viewReponse);
         }
 
         [HttpPost]
@@ -205,7 +206,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/emailsent");
             }
 
-            return View(request);
+            var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+            return View(viewReponse);
         }
 
         public IActionResult EmailSent()
