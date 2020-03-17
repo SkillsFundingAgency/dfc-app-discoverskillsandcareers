@@ -1,8 +1,4 @@
-﻿using Dfc.Session;
-using Dfc.Session.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
-using DFC.App.DiscoverSkillsCareers.Models.Result;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using FakeItEasy;

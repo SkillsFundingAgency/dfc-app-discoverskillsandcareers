@@ -33,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewModel);
             }
 
-            await apiService.Reload(viewModel.ReferenceCode).ConfigureAwait(false);
+            await apiService.ReloadUsingReferenceCode(viewModel.ReferenceCode).ConfigureAwait(false);
 
             return RedirectTo("assessment/return");
         }

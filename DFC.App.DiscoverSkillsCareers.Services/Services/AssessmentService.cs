@@ -83,12 +83,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return await assessmentApiService.FilterAssessment(sessionId, jobCategory).ConfigureAwait(false);
         }
 
-        public async Task<string> Reload(string referenceCode)
+        public async Task<bool> ReloadUsingReferenceCode(string referenceCode)
         {
             var sessionId = sessionIdToCodeConverter.GetSessionId(referenceCode);
+            return await ReloadUsingSessionId(sessionId).ConfigureAwait(false);
+        }
+
+        public async Task<bool> ReloadUsingSessionId(string sessionId)
+        {
+            var result = false;
+            if (string.IsNullOrWhiteSpace(sessionId))
+            {
+                throw new ArgumentNullException(nameof(sessionId));
+            }
+
             var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
-            sessionService.CreateCookie(assessment.SessionId);
-            return assessment.SessionId;
+            if (assessment != null)
+            {
+                sessionService.CreateCookie(assessment.SessionId);
+                result = true;
+            }
+
+            return result;
         }
     }
 }
