@@ -55,37 +55,13 @@ namespace DFC.App.DiscoverSkillsCareers
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
+
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}", "Assessment", "Index");
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
                 MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
                 MapRoute(endpoints, "filterQuestions", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}", "FilterQuestions", "Index");
                 MapRoute(endpoints, "jobProfileOverviews", RouteName.Prefix + "/results/{jobCategoryName}", "Results", "JobProfileOverviews");
                 MapRoute(endpoints, "root", RouteName.Prefix, "Home", "Index");
-
-                endpoints.MapControllerRoute(
-                    name: "assessment",
-                    pattern: RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}",
-                    new { controller = "Assessment", action = "Index" });
-
-                endpoints.MapControllerRoute(
-                    name: "filterQuestionsComplete",
-                    pattern: RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete",
-                    new { controller = "FilterQuestions", action = "Complete" });
-
-                endpoints.MapControllerRoute(
-                    name: "filterQuestions",
-                    pattern: RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}",
-                    new { controller = "FilterQuestions", action = "Index"});
-
-                endpoints.MapControllerRoute(
-                    name: "jobProfileOverviews",
-                    pattern: RouteName.Prefix + "/results/{action}/{category}",
-                    new { controller = "Results", action = "JobProfileOverviews" });
-
-                endpoints.MapControllerRoute(
-                    name: "root",
-                    pattern: RouteName.Prefix,
-                    new { controller = "Home", action = "Index" });
             });
         }
 

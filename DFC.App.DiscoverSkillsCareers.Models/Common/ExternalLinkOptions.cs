@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Common
 {
