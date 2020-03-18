@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
@@ -24,8 +25,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
+            var externalLinkOptions = new ExternalLinkOptions();
 
-            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService);
+            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService, externalLinkOptions);
         }
 
         [Fact]

@@ -6,5 +6,4 @@
 <p>
     See the types of jobs that might suit you. Your results are based on your responses.
 </p>
-
-<a asp-route="results" asp-route-jobcategoryname="@Model.JobCategoryName">See results</a>
+<a asp-controller="results" asp-action="jobprofileoverviews" asp-route-id="@Model.JobCategoryName">See results</a>

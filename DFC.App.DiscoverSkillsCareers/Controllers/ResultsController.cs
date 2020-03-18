@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -11,13 +13,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService apiService;
+        private readonly ExternalLinkOptions externalLinkOptions;
 
-        public ResultsController(IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
+        public ResultsController(IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService, ExternalLinkOptions externalLinkOptions)
             : base(sessionService)
         {
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.apiService = apiService;
+            this.externalLinkOptions = externalLinkOptions;
         }
 
         public async Task<IActionResult> Index()
@@ -43,12 +47,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(resultIndexResponseViewModel);
         }
 
-        public async Task<IActionResult> JobProfileOverviews(string selectedCategory)
+        public async Task<IActionResult> JobProfileOverviews(string category)
         {
             if (!await HasSessionId().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
+
+            category = "sports-and-leisure";
 
             var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
@@ -56,15 +62,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
-            var resultsResponse = await resultsService.GetResultsByCategory(selectedCategory).ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResultsByCategory(category).ConfigureAwait(false);
 
-            var resultIndexResponseViewModel = new ResultIndexResponseViewModel
-            {
-                Results = mapper.Map<ResultsIndexResponseViewModel>(resultsResponse),
-                AssessmentReference = assessmentResponse.ReferenceCode,
-            };
+            var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
+            resultsByCategoryModel.ExploreCareersUri = externalLinkOptions.ExploreCareers;
+            resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
 
-            return View("ResultsByCategory", resultIndexResponseViewModel);
+            return View("ResultsByCategory", resultsByCategoryModel);
         }
     }
 }
