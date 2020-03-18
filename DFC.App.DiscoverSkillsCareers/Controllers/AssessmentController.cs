@@ -186,7 +186,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            return View("Email");
+            var viewReponse = new AssessmentEmailPostResponse();
+            return View(viewReponse);
         }
 
         [HttpPost]
@@ -199,12 +200,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (ModelState.IsValid)
             {
-                await apiService.SendEmail($"https://{Request.Host.Value}", request.Email).ConfigureAwait(false);
+                var emailUrl = $"https://{Request.Host.Value}/{RouteName.Prefix}/assessment";
+                await apiService.SendEmail(emailUrl, request.Email).ConfigureAwait(false);
 
                 return RedirectTo("assessment/emailsent");
             }
 
-            return View(request);
+            var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+            return View(viewReponse);
         }
 
         public IActionResult EmailSent()
@@ -251,6 +254,19 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult ReferenceSent()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Reload(string sessionId)
+        {
+            var reloadResponseSuccess = await apiService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
+            if (reloadResponseSuccess)
+            {
+                return RedirectTo("assessment/return");
+            }
+            else
+            {
+                return RedirectToRoot();
+            }
         }
 
         private static string GetAssessmentTypeName(string value)

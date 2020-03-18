@@ -1,12 +1,10 @@
-﻿using Dfc.Session;
-using Dfc.Session.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
-using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -133,7 +131,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task ReloadCallsReloadForCurrentSession()
+        public async Task ReloadUsingReferenceCodeCallsReloadForCurrentSession()
         {
             var referenceCode = "code1";
             var sessionIdForReferenceCode = "sessionId2";
@@ -141,13 +139,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => sessionIdToCodeConverter.GetSessionId(referenceCode)).Returns(sessionIdForReferenceCode);
             A.CallTo(() => assessmentApiService.GetAssessment(sessionIdForReferenceCode)).Returns(asssessmentResponse);
 
-            var response = await assessmentService.Reload(referenceCode);
+            var response = await assessmentService.ReloadUsingReferenceCode(referenceCode);
 
-            Assert.Equal(sessionIdForReferenceCode, response);
+            Assert.True(response);
         }
 
         [Fact]
-        public async Task ReloadCallsCreateCookie()
+        public async Task ReloadUsingReferenceCodeCallsCreateCookie()
         {
             var referenceCode = "code1";
             var sessionIdForReferenceCode = "p1-s1";
@@ -155,9 +153,45 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => sessionIdToCodeConverter.GetSessionId(referenceCode)).Returns(sessionIdForReferenceCode);
             A.CallTo(() => assessmentApiService.GetAssessment(sessionIdForReferenceCode)).Returns(asssessmentResponse);
 
-            await assessmentService.Reload(referenceCode);
+            await assessmentService.ReloadUsingReferenceCode(referenceCode);
 
             A.CallTo(() => sessionService.CreateCookie(sessionIdForReferenceCode)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ReloadUsingSessionIdCodeCallsCreateCookie()
+        {
+            var sessionId = "sessionId1";
+            var asssessmentResponse = new GetAssessmentResponse() { SessionId = sessionId };
+            A.CallTo(() => assessmentApiService.GetAssessment(sessionId)).Returns(asssessmentResponse);
+
+            var response = await assessmentService.ReloadUsingSessionId(sessionId);
+
+            A.CallTo(() => sessionService.CreateCookie(sessionId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ReloadUsingSessionIdThatDoesntExistReturnsFalse()
+        {
+            var sessionId = "sessionId1";
+            GetAssessmentResponse asssessmentResponse = null;
+            A.CallTo(() => assessmentApiService.GetAssessment(sessionId)).Returns(asssessmentResponse);
+
+            var response = await assessmentService.ReloadUsingSessionId(sessionId);
+
+            Assert.False(response);
+            A.CallTo(() => sessionService.CreateCookie(sessionId)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task ReloadUsingNullInvalidSessionIdReturnsFalse(string sessionId)
+        {
+            GetAssessmentResponse asssessmentResponse = null;
+            A.CallTo(() => assessmentApiService.GetAssessment(sessionId)).Returns(asssessmentResponse);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await assessmentService.ReloadUsingSessionId(sessionId).ConfigureAwait(false));
         }
     }
 }

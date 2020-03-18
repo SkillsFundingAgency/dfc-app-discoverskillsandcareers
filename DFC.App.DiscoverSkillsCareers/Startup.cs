@@ -11,6 +11,7 @@ using Dfc.Session;
 using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,7 +20,6 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -55,6 +55,12 @@ namespace DFC.App.DiscoverSkillsCareers
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
+                MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}", "Assessment", "Index");
+                MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
+                MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
+                MapRoute(endpoints, "filterQuestions", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}", "FilterQuestions", "Index");
+                MapRoute(endpoints, "jobProfileOverviews", RouteName.Prefix + "/results/{jobCategoryName}", "Results", "JobProfileOverviews");
+                MapRoute(endpoints, "root", RouteName.Prefix, "Home", "Index");
 
                 endpoints.MapControllerRoute(
                     name: "assessment",
@@ -143,9 +149,14 @@ namespace DFC.App.DiscoverSkillsCareers
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
         {
-            var policyOptions = new PolicyOptions() { HttpRetry = new RetryPolicyOptions(),  HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
+            var policyOptions = new PolicyOptions() { HttpRetry = new RetryPolicyOptions(), HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
             policyRegistry.Add(nameof(PolicyOptions.HttpRetry), HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(policyOptions.HttpRetry.Count, retryAttempt => TimeSpan.FromSeconds(Math.Pow(policyOptions.HttpRetry.BackoffPower, retryAttempt))));
             policyRegistry.Add(nameof(PolicyOptions.HttpCircuitBreaker), HttpPolicyExtensions.HandleTransientHttpError().CircuitBreakerAsync(policyOptions.HttpCircuitBreaker.ExceptionsAllowedBeforeBreaking, policyOptions.HttpCircuitBreaker.DurationOfBreak));
+        }
+
+        private static void MapRoute(IEndpointRouteBuilder routeBuilder, string name, string pattern, string controller, string action)
+        {
+            routeBuilder.MapControllerRoute(name, pattern, new { controller, action });
         }
     }
 }

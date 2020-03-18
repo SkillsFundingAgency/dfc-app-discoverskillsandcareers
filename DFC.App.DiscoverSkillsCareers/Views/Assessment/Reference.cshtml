@@ -20,7 +20,9 @@ The code above is your unique reference. You can use this to:
 We will only use this to send you a link to return to your assessment
 
 <form method="post">
-    @Html.ValidationSummary()
-    <input type="tel" name="telephone" placeholder="Telephone" />
+    <input asp-for="Telephone" />
+    <p>
+        <span asp-validation-for="Telephone" class="text-danger"></span>
+    </p>
     <button type="submit">Send</button>
 </form>
