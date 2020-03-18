@@ -58,9 +58,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             if (hasMatchedProfile)
             {
-                List<JobProfileResult> profile = new List<JobProfileResult>();
-                profile.Add(new JobProfileResult() { UrlName = "Cname1" });
-                resultsResponse.JobProfiles = profile;
+                List<JobProfileResult> profiles = new List<JobProfileResult>();
+                profiles.Add(new JobProfileResult() { UrlName = "Cname1", JobCategory = category });
+                resultsResponse.JobProfiles = profiles;
+
+                List<JobCategoryResult> categories = new List<JobCategoryResult>();
+                categories.Add(new JobCategoryResult() { JobFamilyName = category });
+                resultsResponse.JobCategories = categories;
             }
 
             A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
