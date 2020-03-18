@@ -9,15 +9,13 @@ else
     <a asp-route="root" class="govuk-back-link">Back to start</a>
 }
 
-@Html.ValidationSummary()
-
 <form method="post">
     <div class="govuk-grid-row app-question-progress">
         <div class="govuk-grid-column-two-thirds-from-desktop">
 
             <div class="ncs-progress">
-                <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="visually-hidden">Complete</strong></span>
-                <div class="ncs-progress__bar"><span style="width: @(Model.PercentageComplete)%"></span></div>
+                <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="govuk-visually-hidden">Complete</strong></span>
+                <div class="ncs-progress__bar"><span style="width: @(Model.PercentageComplete)%!important;"></span></div>
             </div>
 
         </div>
@@ -107,5 +105,9 @@ else
         <button type="submit" class="govuk-button app-button btn-next-question">
             Next
         </button>
+    </div>
+    <div class="app-sidebar app-save-panel app-save-panel--alt-mobile">
+        <h3 class="govuk-heading-m">Return to this later</h3>
+        <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
     </div>
 </form>
