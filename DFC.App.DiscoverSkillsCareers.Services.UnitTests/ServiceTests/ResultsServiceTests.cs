@@ -59,7 +59,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 resultsResponse.JobProfiles = profiles;
 
                 List<JobCategoryResult> categories = new List<JobCategoryResult>();
-                categories.Add(new JobCategoryResult() { JobFamilyName = category });
+                categories.Add(new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl =category });
                 resultsResponse.JobCategories = categories;
             }
 
