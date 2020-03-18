@@ -102,6 +102,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             Assert.True(sendEmailResponse.IsSuccess);
         }
 
+        [Fact]
+        public async Task SendSmsReturnsValidDataForSuccess()
+        {
+            var sessionId = "session1";
+            var domain = "https://localhost/site1";
+            var mobile = "07000123456";
+            var templateId = "t1";
+            httpMessageHandler.When($"{httpClient.BaseAddress}/assessment/notify/sms")
+                .Respond("application/json", "{'IsSuccess':'true'}");
+
+            var sendEmailResponse = await assessmentApiService.SendSms(sessionId, domain, mobile, templateId);
+
+            Assert.True(sendEmailResponse.IsSuccess);
+        }
 
         [Fact]
         public async Task FilterAssessmentReturnsValidDataForSuccess()

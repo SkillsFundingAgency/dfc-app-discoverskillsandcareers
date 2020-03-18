@@ -54,13 +54,12 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task WhenPostingValidModelRedirectsToAssessmentReturn()
         {
             var requestViewModel = new HomeIndexRequestViewModel();
-            
+
             var actionResponse = await controller.Index(requestViewModel).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/return", redirectResult.Url);
         }
-
     }
 }

@@ -116,6 +116,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
+        public async Task SendSmsCallsGetSendSmsForCurrentSession()
+        {
+            var sessionId = "session1";
+            var domain = "https://localhost";
+            var mobile = "0700123456";
+            var sendSmsResponse = new SendSmsResponse() { IsSuccess = true };
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentApiService.SendSms(sessionId, domain, mobile, notifyOptions.SmsTemplateId)).Returns(sendSmsResponse);
+
+            var response = await assessmentService.SendSms(domain, mobile);
+            Assert.True(response.IsSuccess);
+        }
+
+        [Fact]
         public async Task FilterAssessmentCallsFilterAssessmentForCurrentSession()
         {
             var sessionId = "session1";
