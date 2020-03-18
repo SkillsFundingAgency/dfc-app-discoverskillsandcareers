@@ -1,6 +1,4 @@
-﻿
-
-using DFC.App.DiscoverSkillsCareers.Models.Result;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {

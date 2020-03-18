@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
@@ -33,6 +32,5 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public string ShiftPatternPeriod { get; set; }
 
         public bool IsVariable => SalaryStarter == SalaryExperienced;
-
     }
 }
