@@ -200,8 +200,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (ModelState.IsValid)
             {
-                var emailUrl = $"https://{Request.Host.Value}/{RouteName.Prefix}/assessment";
-                await apiService.SendEmail(emailUrl, request.Email).ConfigureAwait(false);
+                await apiService.SendEmail(GetDomainUrl(), request.Email).ConfigureAwait(false);
 
                 return RedirectTo("assessment/emailsent");
             }
@@ -243,6 +242,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     TempData.Remove(key);
                     TempData.Add(key, request.Telephone);
                 }
+
+                await apiService.SendSms(GetDomainUrl(), request.Telephone).ConfigureAwait(false);
 
                 return RedirectTo("assessment/referencesent");
             }
@@ -334,6 +335,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.CurrentQuestionNumber}");
                 }
             }
+        }
+
+        private string GetDomainUrl()
+        {
+            return $"https://{Request.Host.Value}/{RouteName.Prefix}/assessment";
         }
     }
 }

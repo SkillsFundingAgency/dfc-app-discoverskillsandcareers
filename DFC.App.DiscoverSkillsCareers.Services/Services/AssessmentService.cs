@@ -77,6 +77,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return sendEmailResponse;
         }
 
+        public async Task<SendSmsResponse> SendSms(string domain, string mobile)
+        {
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+            var sendSmsResponse = await assessmentApiService.SendSms(sessionId, domain, mobile, notifyOptions.SmsTemplateId).ConfigureAwait(false);
+
+            if (sendSmsResponse != null && !sendSmsResponse.IsSuccess)
+            {
+                logger.LogError($"{nameof(SendSms)} failed with {sendSmsResponse.Message}");
+            }
+
+            return sendSmsResponse;
+        }
+
         public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);

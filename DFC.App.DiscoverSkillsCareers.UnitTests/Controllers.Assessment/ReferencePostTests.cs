@@ -52,5 +52,19 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             Assert.IsType<ViewResult>(actionResponse);
         }
+
+        [Fact]
+        public async Task WhenModelStateCallsSendSms()
+        {
+            AssessmentController.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext(),
+            };
+            var viewModel = new AssessmentReferencePostRequest() { Telephone = "07000123456" };
+
+            await AssessmentController.Reference(viewModel).ConfigureAwait(false);
+
+            A.CallTo(() => ApiService.SendSms(A<string>.Ignored, viewModel.Telephone)).MustHaveHappenedOnceExactly();
+        }
     }
 }
