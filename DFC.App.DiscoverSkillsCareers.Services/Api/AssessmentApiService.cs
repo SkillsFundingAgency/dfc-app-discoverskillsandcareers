@@ -94,6 +94,27 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
         }
 
+        public async Task<SendSmsResponse> SendSms(string sessionId, string domain, string mobile, string templateId)
+        {
+            var url = $"{httpClient.BaseAddress}/assessment/notify/sms";
+
+            var data = new
+            {
+                domain,
+                mobileNumber = mobile,
+                templateId,
+                sessionId,
+            };
+
+            using (var sc = new StringContent(serialiser.Serialise(data), Encoding.UTF8, MediaTypeNames.Application.Json))
+            {
+                var httpResponseMessage = await httpClient.PostAsync(url, sc).ConfigureAwait(false);
+                httpResponseMessage.EnsureSuccessStatusCode();
+                var contentResponse = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return serialiser.Deserialise<SendSmsResponse>(contentResponse);
+            }
+        }
+
         public async Task<FilterAssessmentResponse> FilterAssessment(string sessionId, string jobCategory)
         {
             var url = $"{httpClient.BaseAddress}/assessment/filtered/{sessionId}/{jobCategory}";

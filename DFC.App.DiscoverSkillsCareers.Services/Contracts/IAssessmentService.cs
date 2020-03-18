@@ -15,6 +15,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<SendEmailResponse> SendEmail(string domain, string emailAddress);
 
+        Task<SendSmsResponse> SendSms(string domain, string mobile);
+
         Task<FilterAssessmentResponse> FilterAssessment(string jobCategory);
 
         Task<bool> ReloadUsingReferenceCode(string referenceCode);
