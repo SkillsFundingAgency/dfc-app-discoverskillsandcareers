@@ -72,8 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
-            services.AddSingleton(Configuration.GetSection(nameof(ExternalLinkOptions)).Get<ExternalLinkOptions>());
-
+   
             var externalLinkOptions = Configuration.GetSection(nameof(ExternalLinkOptions)).Get<ExternalLinkOptions>();
             services.AddSingleton(externalLinkOptions ?? new ExternalLinkOptions());
 
