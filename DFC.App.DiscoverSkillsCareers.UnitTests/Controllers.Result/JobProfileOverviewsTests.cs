@@ -37,7 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             A.CallTo(() => sessionService.HasValidSession()).Returns(false);
 
-            var actionResponse = await controller.JobProfileOverviews(testCategory).ConfigureAwait(false);
+            var actionResponse = await controller.Roles(testCategory).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var actionResponse = await controller.JobProfileOverviews(testCategory).ConfigureAwait(false);
+            var actionResponse = await controller.Roles(testCategory).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -66,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var actionResponse = await controller.JobProfileOverviews(testCategory).ConfigureAwait(false);
+            var actionResponse = await controller.Roles(testCategory).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }

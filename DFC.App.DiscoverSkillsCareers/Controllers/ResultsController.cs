@@ -46,14 +46,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(resultIndexResponseViewModel);
         }
 
-        public async Task<IActionResult> JobProfileOverviews(string category)
+        public async Task<IActionResult> Roles(string id)
         {
             if (!await HasSessionId().ConfigureAwait(false))
             {
                 return RedirectToRoot();
             }
-
-            category = "sports-and-leisure";
 
             var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
@@ -61,8 +59,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
-            var resultsResponse = await resultsService.GetResultsByCategory(category).ConfigureAwait(false);
-
+            var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
             resultsByCategoryModel.ExploreCareersUri = externalLinkOptions.ExploreCareers;
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
