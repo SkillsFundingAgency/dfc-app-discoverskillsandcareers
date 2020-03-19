@@ -49,6 +49,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
+        public void AssessmentReferenceSentReturnsPageTitle()
+        {
+            var actionResponse = controller.AssessmentReferenceSent();
+            AssertPageTitle(actionResponse, PageTitle.AssessmentReferenceSent);
+        }
+
+        [Fact]
         public void AssessmentEmailReturnsPageTitle()
         {
             var actionResponse = controller.AssessmentEmail();
