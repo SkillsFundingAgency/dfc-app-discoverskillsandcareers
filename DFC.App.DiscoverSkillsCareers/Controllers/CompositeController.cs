@@ -40,6 +40,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentReference);
         }
 
+        [Route("head/assessment/referencesent")]
+        public IActionResult AssessmentReferenceSent()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
+        }
+
         [Route("head/assessment/email")]
         public IActionResult AssessmentEmail()
         {
