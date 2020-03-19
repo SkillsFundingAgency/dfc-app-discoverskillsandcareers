@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         }
 
         [Fact]
-        public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRedirectsToFilterResults()
+        public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRedirectsReturnsCompletedView()
         {
             var assessmentType = "short";
             var jobCategoryName = "sales";
@@ -72,9 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
-            Assert.IsType<RedirectResult>(actionResponse);
-            var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/results", redirectResult.Url);
+            Assert.IsType<ViewResult>(actionResponse);
         }
 
         [Fact]

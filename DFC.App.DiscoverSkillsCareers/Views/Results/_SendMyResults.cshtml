@@ -1,0 +1,10 @@
+﻿@model  string
+<h3>Send my results</h3>
+<p>Choose to have your results sent by email, or use a reference code to see them.</p>
+<a asp-controller="assessment" asp-action="save">Continue</a>
+<hr />
+<div class="app-printcode">
+    <h2 class="govuk-heading-m">Return to your results</h2>
+    <p>Your reference number is <strong>@Model</strong></p>
+</div>
+

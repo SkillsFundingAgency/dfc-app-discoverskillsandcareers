@@ -3,6 +3,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -46,8 +47,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private async Task<JobProfileOverView> GetOverviewAsync(string cName)
         {
             var response = await httpClient.GetAsync($"segment/getbyname/{cName}").ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            return new JobProfileOverView() { Cname = cName, OverViewHTML = await response.Content.ReadAsStringAsync().ConfigureAwait(false) };
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return new JobProfileOverView() { Cname = cName, ReturnedStatusCode = HttpStatusCode.NotFound, OverViewHTML = string.Empty };
+            }
+            else
+            {
+                response.EnsureSuccessStatusCode();
+                return new JobProfileOverView() { Cname = cName, ReturnedStatusCode = response.StatusCode, OverViewHTML = await response.Content.ReadAsStringAsync().ConfigureAwait(false) };
+            }
         }
     }
 }

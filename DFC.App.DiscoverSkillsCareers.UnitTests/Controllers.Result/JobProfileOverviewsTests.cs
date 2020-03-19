@@ -11,21 +11,23 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 {
-    public class IndexTests
+    public class JobProfileOverviewsTests
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
+        private readonly string testCategory;
 
-        public IndexTests()
+        public JobProfileOverviewsTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
             var externalLinkOptions = new ExternalLinkOptions();
+            testCategory = "testCategory";
 
             controller = new ResultsController(mapper, sessionService, resultsService, assessmentService, externalLinkOptions);
         }
@@ -35,7 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             A.CallTo(() => sessionService.HasValidSession()).Returns(false);
 
-            var actionResponse = await controller.Index().ConfigureAwait(false);
+            var actionResponse = await controller.JobProfileOverviews(testCategory).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -49,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var actionResponse = await controller.Index().ConfigureAwait(false);
+            var actionResponse = await controller.JobProfileOverviews(testCategory).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -64,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var actionResponse = await controller.Index().ConfigureAwait(false);
+            var actionResponse = await controller.JobProfileOverviews(testCategory).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }

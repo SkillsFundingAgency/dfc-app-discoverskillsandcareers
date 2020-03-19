@@ -35,5 +35,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public bool ResultsShown { get; set; }
 
         public string JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
+
+        public int? DisplayOrder { get; set; }
+
+        public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
     }
 }

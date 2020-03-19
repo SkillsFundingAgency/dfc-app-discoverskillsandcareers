@@ -55,6 +55,7 @@ namespace DFC.App.DiscoverSkillsCareers
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
+
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}", "Assessment", "Index");
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
                 MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
@@ -71,6 +72,8 @@ namespace DFC.App.DiscoverSkillsCareers
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
+            var externalLinkOptions = Configuration.GetSection(nameof(ExternalLinkOptions)).Get<ExternalLinkOptions>();
+            services.AddSingleton(externalLinkOptions ?? new ExternalLinkOptions());
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
