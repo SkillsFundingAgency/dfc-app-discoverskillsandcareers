@@ -60,7 +60,6 @@ namespace DFC.App.DiscoverSkillsCareers
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
                 MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
                 MapRoute(endpoints, "filterQuestions", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}", "FilterQuestions", "Index");
-                MapRoute(endpoints, "jobProfileOverviews", RouteName.Prefix + "/results/{jobCategoryName}", "Results", "JobProfileOverviews");
                 MapRoute(endpoints, "root", RouteName.Prefix, "Home", "Index");
             });
         }
