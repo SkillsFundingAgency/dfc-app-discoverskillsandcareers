@@ -10,37 +10,52 @@
 
 <partial name="_SendMyResults" model="@Model.AssessmentReference" />
 
-@foreach (var jobCategory in Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder))
-{
-    <h2><a href="@Model.ExploreCareersUri/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
+<h2 class="govuk-heading-l">Job roles that might suit you</h2>
 
-    if (jobCategory.AnswerMoreQuetions == 0)
-    {
-        if (@jobCategory.ShowThisCategory)
+<div class="app-results">
+    <div class="app-results__item" data-job-family-code="jobCategory.CategoryCode">
+
+        @foreach (var jobCategory in Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder))
         {
-            <p class="text-light">@jobCategory.JobProfiles.Count() Job role@{if (@jobCategory.JobProfiles.Count() > 0)@("s")} that might suit you</p>
-            <p><a href="/results/changeanswers/@jobCategory.CategoryUrl">Change my answers</a></p>
-            <ul>
-                @foreach (var profile in jobCategory.JobProfiles)
-                {
-                    <li>
-                        <a href=@profile.Cname>@profile.Cname</a>
-                    </li>
-                }
-            </ul>
-                }
-                else
-                {
-                    <p>No more quetions - see this profile</p>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="@Model.ExploreCareersUri/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
+                    @if (jobCategory.AnswerMoreQuetions == 0)
+                    {
+                        <p class="text-light">@jobCategory.JobProfiles.Count() Job role@{if (@jobCategory.JobProfiles.Count() > 0)@("s")} that might suit you</p>
+                        @if (jobCategory.ShowThisCategory)
+                        {
+                            <a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Change my answers</a>
+                            <ul class="app-long-results govuk-list govuk-grid-row" id="app-results-list--long">
+                                @foreach (var profile in jobCategory.JobProfiles)
+                                {
+                                    <li>
+                                        <div class="app-long-results__item">
+                                            <a href=@profile.Cname>@profile.Cname</a>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="app-noprint">View job roles you might be suited to in @jobCategory.CategoryTitle</p>
+                            <a role="button" class="govuk-button app-button" asp-controller="results" asp-action="roles" asp-route-id="@jobCategory.CategoryUrl" draggable="false">See results</a>
+                        }
                     }
-                }
-                else
-                {
-        <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
-
-        <a href="/results/filtered/@jobCategory.CategoryUrl" role="button" draggable="false" class="govuk-button app-button">
-            Answer @jobCategory.AnswerMoreQuetions more question@{if (@jobCategory.AnswerMoreQuetions > 0)@("s")}
-        </a>
-
+                    else
+                    {
+                        <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
+                        <a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Answer @jobCategory.AnswerMoreQuetions more question@{if (@jobCategory.AnswerMoreQuetions > 0)@("s")}</a>
                     }
-                }
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="show-more"> </p>
+                    <hr>
+                </div>
+            </div>
+        }
+    </div>
+</div>

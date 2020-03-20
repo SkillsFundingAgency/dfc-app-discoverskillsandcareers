@@ -11,6 +11,8 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public Uri ExploreCareersUri { get; set; }
 
+        public string AssessmentType { get; set; }
+
         public IEnumerable<string> Traits { get; set; }
 
         public IEnumerable<ResultsJobsInCategoryModel> JobsInCategory { get; set; }
