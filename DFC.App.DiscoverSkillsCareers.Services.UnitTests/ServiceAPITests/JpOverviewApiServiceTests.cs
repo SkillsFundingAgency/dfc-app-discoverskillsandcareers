@@ -36,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             for (int ii = 0; ii < numberOfProfiles; ii++ )
             {
-                expectedJobProfileOverViews.Add(new JobProfileOverView() { Cname = "profile{ii}", OverViewHTML = httpStatusCode == HttpStatusCode.OK ? "<h1>Profile{ii}</h1>" : string.Empty, ReturnedStatusCode = httpStatusCode });
+                expectedJobProfileOverViews.Add(new JobProfileOverView() { Cname = "profile{ii}", OverViewHTML = httpStatusCode == HttpStatusCode.OK ? "<h1>Profile{ii}</h1>" : "Not Found", ReturnedStatusCode = httpStatusCode });
             };
 
             foreach (var profile in expectedJobProfileOverViews)

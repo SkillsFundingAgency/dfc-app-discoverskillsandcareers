@@ -10,6 +10,8 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string CategoryTitle { get; set; }
 
+        public string CategoryCode { get; set; }
+
         public int NumberOfSuitableRoles { get; set; }
 
         public int DisplayOrder { get; set; }
