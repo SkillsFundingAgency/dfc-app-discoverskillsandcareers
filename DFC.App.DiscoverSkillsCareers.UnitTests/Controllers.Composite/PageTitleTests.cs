@@ -49,6 +49,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
+        public void AssessmentReferenceSentReturnsPageTitle()
+        {
+            var actionResponse = controller.AssessmentReferenceSent();
+            AssertPageTitle(actionResponse, PageTitle.AssessmentReferenceSent);
+        }
+
+        [Fact]
         public void AssessmentEmailReturnsPageTitle()
         {
             var actionResponse = controller.AssessmentEmail();
@@ -81,6 +88,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         {
             var actionResponse = controller.AssessmentComplete();
             AssertPageTitle(actionResponse, PageTitle.AssessmentComplete);
+        }
+
+        [Fact]
+        public void LoadSessionReturnsPageTitle()
+        {
+            var actionResponse = controller.LoadSession();
+            AssertPageTitle(actionResponse, PageTitle.LoadSession);
         }
 
         private void AssertPageTitle(object actionResponse, string expectedPageTitle)

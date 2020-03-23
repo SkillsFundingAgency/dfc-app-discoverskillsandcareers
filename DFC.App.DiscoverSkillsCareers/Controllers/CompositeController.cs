@@ -40,6 +40,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentReference);
         }
 
+        [Route("head/assessment/referencesent")]
+        public IActionResult AssessmentReferenceSent()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
+        }
+
         [Route("head/assessment/email")]
         public IActionResult AssessmentEmail()
         {
@@ -50,6 +56,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult AssessmentEmailSent()
         {
             return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
+        }
+
+        [Route("head/loadsession")]
+        public IActionResult LoadSession()
+        {
+            return CreateViewModelAndReturnView(PageTitle.LoadSession);
         }
 
         [Route("head/assessment/results")]
