@@ -90,6 +90,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
             AssertPageTitle(actionResponse, PageTitle.AssessmentComplete);
         }
 
+        [Fact]
+        public void LoadSessionReturnsPageTitle()
+        {
+            var actionResponse = controller.LoadSession();
+            AssertPageTitle(actionResponse, PageTitle.LoadSession);
+        }
+
         private void AssertPageTitle(object actionResponse, string expectedPageTitle)
         {
             Assert.IsType<ViewResult>(actionResponse);

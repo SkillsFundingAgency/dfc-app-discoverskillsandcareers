@@ -58,6 +58,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
         }
 
+        [Route("head/loadsession")]
+        public IActionResult LoadSession()
+        {
+            return CreateViewModelAndReturnView(PageTitle.LoadSession);
+        }
+
         [Route("head/assessment/results")]
         [Route("head/results/{jobCategoryName}")]
         public IActionResult Results()
