@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var response = await httpClient.GetAsync($"segment/getbyname/{cName}").ConfigureAwait(false);
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                return new JobProfileOverView() { Cname = cName, ReturnedStatusCode = HttpStatusCode.NotFound, OverViewHTML = string.Empty };
+                return new JobProfileOverView() { Cname = cName, ReturnedStatusCode = HttpStatusCode.NotFound, OverViewHTML = "Not Found" };
             }
             else
             {

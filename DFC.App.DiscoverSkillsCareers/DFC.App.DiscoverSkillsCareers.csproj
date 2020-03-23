@@ -45,4 +45,8 @@
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Services\DFC.App.DiscoverSkillsCareers.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
 </Project>
