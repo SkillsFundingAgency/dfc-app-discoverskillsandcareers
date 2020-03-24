@@ -25,11 +25,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
-        public void HeroBannerEmptyReturnsEmptyResult()
+        public void HeroBannerEmptyReturnsContentResult()
         {
             var actionResponse = controller.HeroBannerEmpty();
-            Assert.IsType<EmptyResult>(actionResponse);
+            Assert.IsType<ContentResult>(actionResponse);
         }
-
     }
 }
