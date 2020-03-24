@@ -18,10 +18,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
-        public void ReturnsView()
+        public void HeroBannerReturnsView()
         {
             var actionResponse = controller.HeroBanner();
             Assert.IsType<ViewResult>(actionResponse);
         }
+
+        [Fact]
+        public void HeroBannerEmptyReturnsEmptyResult()
+        {
+            var actionResponse = controller.HeroBannerEmpty();
+            Assert.IsType<EmptyResult>(actionResponse);
+        }
+
     }
 }

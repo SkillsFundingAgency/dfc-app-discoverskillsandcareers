@@ -89,10 +89,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        [Route("herobanner/{**data}")]
+        [Route("herobanner")]
         public IActionResult HeroBanner()
         {
             return View();
+        }
+
+        [Route("herobanner/{**data}")]
+        public IActionResult HeroBannerEmpty()
+        {
+            return new EmptyResult();
         }
 
         private static HeadResponseViewModel CreateViewModel(string title)
