@@ -85,6 +85,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentReturn);
         }
 
+        [Route("bodytop/{**data}")]
+        public IActionResult BodyTop()
+        {
+            return View();
+        }
+
+        [Route("herobanner")]
+        public IActionResult HeroBanner()
+        {
+            return View();
+        }
+
+        [Route("herobanner/{**data}")]
+        public IActionResult HeroBannerEmpty()
+        {
+            return Content(string.Empty);
+        }
+
         private static HeadResponseViewModel CreateViewModel(string title)
         {
             var result = new HeadResponseViewModel
