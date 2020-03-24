@@ -13,6 +13,14 @@
       {
         "PageRegion": 4,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/discover-your-skills-careers"
+      },
+      {
+        "PageRegion": 3,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/bodytop"
+      },
+      {
+        "PageRegion": 8,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/herobanner"
       }
     ]
   }
