@@ -1,9 +1,15 @@
 ﻿@model FilterQuestionsCompleteResponseViewModel
-
-<h1>Assessment complete</h1>
-
-<h3>What to do next</h3>
-<p>
-    See the types of jobs that might suit you. Your results are based on your responses.
-</p>
-<a asp-controller="results" asp-action="roles" asp-route-id="@Model.JobCategoryName">See results</a>
+<div class="govuk-width-container">
+    <div class="govuk-grid-row govuk-!-margin-bottom-9 govuk-!-margin-top-8">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
+                <h1 class="govuk-panel__title">
+                    Assessment complete
+                </h1>
+            </div>
+            <h2 class="govuk-heading-m">What to do next</h2>
+            <p class="govuk-body govuk-!-margin-bottom-5">See the types of jobs that might suit you. Your results are based on your responses.</p>
+            <a asp-controller="results" asp-action="roles" asp-route-id="@Model.JobCategoryName">See results</a>
+        </div>
+    </div>
+</div>

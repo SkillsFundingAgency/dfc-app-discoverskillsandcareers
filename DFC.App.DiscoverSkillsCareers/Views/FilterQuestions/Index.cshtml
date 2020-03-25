@@ -1,28 +1,68 @@
 ﻿@model FilterQuestionIndexResponseViewModel
+<div class="app-breadcrumb-panel">
+    @if (Model.Question.QuestionNumber > 1)
+    {
+        <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous question</a>
+    }
+    else
+    {
+        <a asp-controller="results">Back to results</a>
+    }
+</div>
 
-@if (Model.Question.QuestionNumber == 1)
-{
-    <br />
-    <a asp-controller="results">Back to results</a>
-}
-@if (Model.Question.QuestionNumber > 1)
-{
-    <br />
-    <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous statement</a>
-}
+<div class="govuk-main-wrapper govuk-width-container">
+    <form method="post">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <!-- Error msgs go here  -->
+                <div class="govuk-form-group ">
+                    <fieldset class="govuk-fieldset app-question app-question--long">
+                        <legend class="visually-hidden">@Model.Question.QuestionText</legend>
 
-@Html.ValidationSummary()
+                        <div class="govuk-fieldset__legend--l app-question__question">
+                            <h1 class="govuk-fieldset__heading" aria-hidden="true">
+                                @Model.Question.QuestionText
+                            </h1>
+                        </div>
+                        <div class="app-question__answer govuk-radios govuk-radios--inline" id="question">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                        id="selected_answer-1"
+                                        type="radio"
+                                        value="5"
+                                        name="answer"
+                                        checked="@Model.Question.IsChecked(Answer.Yes)"
+                                        gov-analytics-data="SelectedAnswer | Yes">
+                                <label class="govuk-label govuk-radios__label" for="selected_answer-1">
+                                    Yes
+                                </label>
+                            </div>
 
-<h1>@Model.Question.QuestionText</h1>
-
-<form method="post">
-    <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
-    <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
-    <p>
-        <input type="radio" value="5" name="answer" checked="@Model.Question.IsChecked(Answer.Yes)" />Yes
-    </p>
-    <p>
-        <input type="radio" value="6" name="answer" checked="@Model.Question.IsChecked(Answer.No)" />No
-    </p>
-    <button>Next</button>
-</form>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                        id="selected_answer-2"
+                                        type="radio"
+                                        value="6"
+                                        name="answer"
+                                        checked="@Model.Question.IsChecked(Answer.No)"
+                                        gov-analytics-data="SelectedAnswer | No">
+                                <label class="govuk-label govuk-radios__label" for="selected_answer-2">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="app-controls app-controls--left">
+                    <button type="submit" class="govuk-button app-button btn-next-question">
+                        Next
+                    </button>
+                </div>
+                <div class="app-sidebar app-save-panel app-save-panel--alt-mobile">
+                    <h3 class="govuk-heading-m">Return to this later</h3>
+                    <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -30,7 +30,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<GetResultsResponse> GetResults()
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            return await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            var results = await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            return AddInCategoryJobProfileCount(results);
         }
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
@@ -66,6 +67,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             return categories;
+        }
+
+        private GetResultsResponse AddInCategoryJobProfileCount(GetResultsResponse resultsResponse)
+        {
+            foreach (var c in resultsResponse.JobCategories)
+            {
+                c.NumberOfMatchedJobProfile = resultsResponse.JobProfiles.Count(p => p.JobCategory == c.JobFamilyUrl);
+            }
+
+            return resultsResponse;
         }
     }
 }
