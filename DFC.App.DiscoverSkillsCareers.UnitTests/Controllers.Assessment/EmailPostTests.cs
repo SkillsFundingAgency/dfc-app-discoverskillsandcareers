@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
@@ -32,18 +33,35 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         }
 
         [Fact]
-        public async Task WhenModelStateIsValidRedirectsToSendEmail()
+        public async Task WhenModelStateIsInvalidRedirectsToView()
         {
             AssessmentController.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext(),
             };
+            var sendEmailResponse = new SendEmailResponse() { IsSuccess = false };
+            var viewModel = new AssessmentEmailPostRequest() { Email = "someemail@gmail.com" };
+            A.CallTo(() => ApiService.SendEmail(A<string>.Ignored, viewModel.Email)).Returns(sendEmailResponse);
 
-            var viewModel = new AssessmentEmailPostRequest();
+            var actionResponse = await AssessmentController.Email(viewModel).ConfigureAwait(false);
+
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public async Task WhenModelStateIsValidRedirectsToView()
+        {
+            AssessmentController.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext(),
+            };
+            var sendEmailResponse = new SendEmailResponse() { IsSuccess = true };
+            var viewModel = new AssessmentEmailPostRequest() { Email = "someemail@gmail.com" };
+            A.CallTo(() => ApiService.SendEmail(A<string>.Ignored, viewModel.Email)).Returns(sendEmailResponse);
+
             var actionResponse = await AssessmentController.Email(viewModel).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
-
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/emailsent", redirectResult.Url);
         }

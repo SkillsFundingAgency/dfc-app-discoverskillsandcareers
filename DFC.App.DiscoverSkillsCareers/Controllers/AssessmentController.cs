@@ -198,15 +198,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await apiService.SendEmail(GetDomainUrl(), request.Email).ConfigureAwait(false);
-
-                return RedirectTo("assessment/emailsent");
+                var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+                return View(viewReponse);
             }
 
-            var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
-            return View(viewReponse);
+            var emailResponse = await apiService.SendEmail(GetDomainUrl(), request.Email).ConfigureAwait(false);
+            if (emailResponse.IsSuccess)
+            {
+                return RedirectTo("assessment/emailsent");
+            }
+            else
+            {
+                ModelState.AddModelError("Email", "There was a problem sending email");
+                var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+                return View(viewReponse);
+            }
         }
 
         public IActionResult EmailSent()
