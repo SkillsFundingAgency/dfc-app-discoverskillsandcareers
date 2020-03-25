@@ -1,0 +1,45 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApimRoot": {
+            "value": "https://api.example.org.uk/"
+        },
+        "ApimDysacKey": {
+            "value": "0123456789ABCDEF"
+        },
+        "resourcePrefix": {
+            "value": "dfc-foo-app-dysac"
+        },
+        "appSharedResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "appSharedStorageAccountName": {
+            "value": "dfcdevappsharedstr"
+        },
+        "sharedAppServicePlanName": {
+            "value": "dfc-dev-app-shared-asp"
+        },
+        "sharedAppServicePlanResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "JobProfileOverViewUrl": {
+            "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
+        },
+        "CdnUrl": {
+            "value": "https://foo.cdn.nationalcareers.service.uk"
+        },
+        "NotifyEmailTemplateId": {
+            "value": "12345678-ABCD-0123456789ABCDEF-3D417"
+        },
+        "NotifySmsTemplateId": {
+            "value": "12345678-ABCD-0123456789ABCDEF-3D3"
+        },
+        "Environment": {
+            "value": "FOO"
+        },
+        "enableAlerts": {
+            "value": false
+        }
+    }
+}

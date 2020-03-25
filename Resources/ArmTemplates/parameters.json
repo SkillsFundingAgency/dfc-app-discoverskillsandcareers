@@ -1,0 +1,54 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApimRoot": {
+            "value": "__ApimRoot__"
+        },
+        "ApimDysacKey": {
+            "value": "__ApimDiscoverMySkillsAndCareersKey__"
+        },
+        "resourcePrefix": {
+            "value": "__resourcePrefix__"
+        },
+        "appSharedResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "appSharedStorageAccountName": {
+            "value": "__appSharedStorageAccountName__"
+        },
+        "aseHostingEnvironmentName": {
+            "value": "__aseHostingEnvironmentName__"
+        },
+        "aseResourceGroup": {
+            "value": "__aseResourceGroup__"
+        },
+        "aspTier": {
+            "value": "__aspTier__"
+        },
+        "sharedAppServicePlanName": {
+            "value": "__sharedAppServicePlanName__"
+        },
+        "sharedAppServicePlanResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "JobProfileOverViewUrl": {
+            "value": "__JobProfileOverView__"
+        },
+        "CdnUrl": {
+            "value": "__CdnUrl__"
+        },
+        "NotifyEmailTemplateId": {
+            "value": "__NotifyEmailTemplateId__"
+        },
+        "NotifySmsTemplateId": {
+            "value": "__NotifySmsTemplateId__"
+        },
+        "Environment": {
+            "value": "__ReleaseEnvironmentName__"
+        },
+        "enableAlerts": {
+            "value": __EnableAzureMonitorAlerting__
+        }
+    }
+}

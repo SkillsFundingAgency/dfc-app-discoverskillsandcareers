@@ -1,0 +1,9 @@
+﻿<h1>Check your phone</h1>
+
+A text message has been sent to @TempData.Peek("Telephone") 
+
+Click on the link in the text message to return to your assessment.
+
+<form method="post" asp-controller="assessment" asp-action="return">
+    <button>Return to assessment</button>
+</form>

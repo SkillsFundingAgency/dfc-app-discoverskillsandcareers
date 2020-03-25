@@ -1,0 +1,13 @@
+﻿@model TestLoadSessionResponseViewModel
+@{
+    ViewData["Title"] = "Discover your skills and careers";
+}
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+    <input asp-for="SessionId" />
+    <span asp-validation-for="SessionId"></span>
+    <p>
+        <button>Load session</button>
+    </p>
+</form>

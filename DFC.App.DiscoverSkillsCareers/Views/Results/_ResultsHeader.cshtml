@@ -1,0 +1,17 @@
+﻿@model IEnumerable<string>
+
+<h1>Your results</h1>
+
+<h3>What you told us</h3>
+Your answers show that:
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>@item</li>
+        }
+    </ul>
+}
+

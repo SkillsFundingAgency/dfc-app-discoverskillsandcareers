@@ -1,0 +1,25 @@
+﻿@model AssessmentSaveResponseViewModel
+
+<a asp-controller="assessment" asp-action="return">Back</a>
+
+<h1>How would you like to return to your assessment?</h1>
+
+@Html.ValidationSummary()
+
+<form method="post">
+    <p>
+        <input type="radio" asp-for="AssessmentReturnTypeId" value="1" />Send me an email with a link
+    </p>
+
+    <p>
+        <input type="radio" asp-for="AssessmentReturnTypeId" value="2" />Get a reference code
+    </p>
+    <p>
+        <span asp-validation-for="AssessmentReturnTypeId" class="text-danger"></span>
+    </p>
+    <button>Continue</button>
+
+    <p>
+        <a asp-action="return">Return to assessment</a>
+    </p>
+</form>

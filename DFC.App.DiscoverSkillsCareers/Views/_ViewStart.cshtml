@@ -1,0 +1,11 @@
+﻿@inject IHttpContextAccessor httpContextAccessor
+@{
+    if (httpContextAccessor.HttpContext.Request.IsRequestFromComposite())
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
+}
