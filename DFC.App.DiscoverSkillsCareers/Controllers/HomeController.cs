@@ -7,12 +7,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class HomeController : BaseController
     {
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
 
-        public HomeController(ISessionService sessionService, IAssessmentService apiService)
+        public HomeController(ISessionService sessionService, IAssessmentService assessmentService)
             : base(sessionService)
         {
-            this.apiService = apiService;
+            this.assessmentService = assessmentService;
         }
 
         public IActionResult Index()
@@ -35,9 +35,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(responseViewModel);
             }
 
-            await apiService.ReloadUsingReferenceCode(viewModel.ReferenceCode).ConfigureAwait(false);
-
-            return RedirectTo("assessment/return");
+            var reloadResponse = await assessmentService.ReloadUsingReferenceCode(viewModel.ReferenceCode).ConfigureAwait(false);
+            if (reloadResponse)
+            {
+                return RedirectTo("assessment/return");
+            }
+            else
+            {
+                ModelState.AddModelError("ReferenceCode", "The reference could not be found");
+                var responseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+                return View(responseViewModel);
+            }
         }
     }
 }
