@@ -89,7 +89,7 @@ else
                            id="selected_answer-5"
                            type="radio"
                            value="0"
-                           name="answer"
+                           asp-for="Answer"
                            checked="@Model.IsChecked(Answer.StronglyDisagree)"
                            gov-analytics-data="SelectedAnswer | StronglyDisagree">
                     <label class="govuk-label govuk-radios__label" for="selected_answer-5">
