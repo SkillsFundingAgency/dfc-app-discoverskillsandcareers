@@ -32,15 +32,40 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         }
 
         [Fact]
-        public async Task WhenReferenceCodeIsProvidedRedirectsToAssessment()
+        public async Task InvalidModelReturnsBadRequest()
         {
             var viewModel = new HomeIndexRequestViewModel();
+            controller.ModelState.AddModelError("somekey", "somerror");
+
+            var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
+
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public async Task WhenReferenceCodeIsLoadedRedirectsToAssessment()
+        {
+            var referenceCode = "12345678";
+            var viewModel = new HomeIndexRequestViewModel() { ReferenceCode = referenceCode };
+            A.CallTo(() => assessmentService.ReloadUsingReferenceCode(referenceCode)).Returns(true);
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/return", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task InvalidReferenceCodeReturnsViewResult()
+        {
+            var referenceCode = "12345678";
+            var viewModel = new HomeIndexRequestViewModel() { ReferenceCode = referenceCode };
+            A.CallTo(() => assessmentService.ReloadUsingReferenceCode(referenceCode)).Returns(false);
+
+            var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
+
+            Assert.IsType<ViewResult>(actionResponse);
         }
     }
 }
