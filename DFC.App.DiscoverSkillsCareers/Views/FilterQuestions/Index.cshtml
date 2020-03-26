@@ -2,16 +2,18 @@
 <div class="app-breadcrumb-panel">
     @if (Model.Question.QuestionNumber > 1)
     {
-        <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)">Back to previous question</a>
+        <a asp-route="filterQuestions" asp-route-jobCategoryName="@Model.JobCategoryName" asp-route-questionnumber="@(Model.Question.QuestionNumber-1)" class="govuk-back-link">Back to previous question</a>
     }
     else
     {
-        <a asp-controller="results">Back to results</a>
+        <a asp-controller="results" class="govuk-back-link">Back to results</a>
     }
 </div>
 
 <div class="govuk-main-wrapper govuk-width-container">
     <form method="post">
+        <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
+        <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <!-- Error msgs go here  -->
@@ -27,12 +29,12 @@
                         <div class="app-question__answer govuk-radios govuk-radios--inline" id="question">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input"
-                                        id="selected_answer-1"
-                                        type="radio"
-                                        value="5"
-                                        name="answer"
-                                        checked="@Model.Question.IsChecked(Answer.Yes)"
-                                        gov-analytics-data="SelectedAnswer | Yes">
+                                       id="selected_answer-1"
+                                       type="radio"
+                                       value="5"
+                                       name="answer"
+                                       checked="@Model.Question.IsChecked(Answer.Yes)"
+                                       gov-analytics-data="SelectedAnswer | Yes">
                                 <label class="govuk-label govuk-radios__label" for="selected_answer-1">
                                     Yes
                                 </label>
@@ -40,12 +42,12 @@
 
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input"
-                                        id="selected_answer-2"
-                                        type="radio"
-                                        value="6"
-                                        name="answer"
-                                        checked="@Model.Question.IsChecked(Answer.No)"
-                                        gov-analytics-data="SelectedAnswer | No">
+                                       id="selected_answer-2"
+                                       type="radio"
+                                       value="6"
+                                       name="answer"
+                                       checked="@Model.Question.IsChecked(Answer.No)"
+                                       gov-analytics-data="SelectedAnswer | No">
                                 <label class="govuk-label govuk-radios__label" for="selected_answer-2">
                                     No
                                 </label>
@@ -62,7 +64,18 @@
                     <h3 class="govuk-heading-m">Return to this later</h3>
                     <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
                 </div>
+
             </div>
+
+            <div class="govuk-grid-column-one-third-from-desktop">
+
+                <div class="app-sidebar app-save-panel app-save-panel--alt">
+                    <h3 class="govuk-heading-m">Return to this later</h3>
+                    <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+                </div>
+            </div>
+
         </div>
+  
     </form>
 </div>

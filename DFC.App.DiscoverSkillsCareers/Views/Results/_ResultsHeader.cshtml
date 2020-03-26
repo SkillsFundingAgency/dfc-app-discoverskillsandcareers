@@ -1,29 +1,8 @@
-﻿@model IEnumerable<string>
-
-<div class="app-masthead">
+﻿<div class="app-masthead">
     <div class="govuk-width-container">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
                 <h1 class="govuk-heading-xl app-masthead__title">Your results</h1>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="app-grey">
-    <div class="govuk-main-wrapper govuk-width-container govuk-!-padding-top-7">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds app-intro">
-                <h2 class="govuk-heading-l">What you told us</h2>
-                <p>Your answers show that:</p>
-                @if (Model.Any())
-                {
-                    <ul class="govuk-list govuk-list--bullet">
-                        @foreach (var item in Model)
-                        {
-                            <li>@item</li>
-                        }
-                    </ul>
-                }
             </div>
         </div>
     </div>

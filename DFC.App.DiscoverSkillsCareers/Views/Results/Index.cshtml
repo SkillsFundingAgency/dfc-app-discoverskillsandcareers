@@ -1,17 +1,27 @@
 ﻿@model ResultIndexResponseViewModel
+<partial name="_ResultsHeader" model="@Model.Results.Traits" />
 <div class="app-grey">
     <div class="govuk-main-wrapper govuk-width-container govuk-!-padding-top-7">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds app-intro">
-                <partial name="_ResultsHeader" model="@Model.Results.Traits" />
-                @if (@Model.Results.JobCategories.Any())
-                {
-                    <p>The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.</p>
-                }
-                else
-                {
-                    <p>Because of your answers, we could not recommend any job categories. You might want to <a href="/q/short/01">go through the assessment again</a> to check that your responses were correct.</p>
-                }
+                <h2 class="govuk-heading-l">What you told us</h2>
+                <div class="govuk-text">
+                    <p>Your answers show that:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        @foreach (var trait in Model.Results.Traits)
+                        {
+                            <li>@trait</li>
+                        }
+                    </ul>
+                    @if (Model.Results.JobCategories.Any())
+                    {
+                        <p>The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.</p>
+                    }
+                    else
+                    {
+                        <p>Because of your answers, we could not recommend any job categories. You might want to <a href="/q/short/01">go through the assessment again</a> to check that your responses were correct.</p>
+                    }
+                </div>
             </div>
             <div class="govuk-grid-column-one-third">
                 <div>
@@ -31,11 +41,8 @@
         {
             <partial name="_SendMyResults" model="@Model.AssessmentReference" />
             <div class="app-results">
-
                 <h2 class="govuk-heading-l">@Model.Results.JobFamilyCount job categories that might suit you</h2>
-
                 <partial name="_JobCategories" />
-
                 <div>
                     <a href="#top">
                         <svg class="app-back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
@@ -44,6 +51,6 @@
                     </a>
                 </div>
             </div>
-         }
+        }
     </div>
 </div>
