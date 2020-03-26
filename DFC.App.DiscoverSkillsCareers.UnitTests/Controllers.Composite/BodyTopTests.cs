@@ -18,10 +18,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
-        public void ReturnsView()
+        public void BodyTopReturnsView()
         {
             var actionResponse = controller.BodyTop();
             Assert.IsType<ViewResult>(actionResponse);
         }
+
+        [Fact]
+        public void BodyTopEmptyReturnsView()
+        {
+            var actionResponse = controller.BodyTopEmpty();
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
     }
 }
