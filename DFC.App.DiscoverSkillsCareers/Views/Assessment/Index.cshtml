@@ -1,14 +1,4 @@
 ﻿@model QuestionGetResponseViewModel
-
-@if (Model.PreviousQuestionNumber.HasValue)
-{
-    <a class="govuk-back-link" asp-route="assessment" asp-route-assessmentType="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
-}
-else
-{
-    <a asp-route="root" class="govuk-back-link">Back to start</a>
-}
-
 <form method="post">
     <div class="govuk-grid-row app-question-progress">
         <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -89,7 +79,7 @@ else
                            id="selected_answer-5"
                            type="radio"
                            value="0"
-                           name="answer"
+                           asp-for="Answer"
                            checked="@Model.IsChecked(Answer.StronglyDisagree)"
                            gov-analytics-data="SelectedAnswer | StronglyDisagree">
                     <label class="govuk-label govuk-radios__label" for="selected_answer-5">

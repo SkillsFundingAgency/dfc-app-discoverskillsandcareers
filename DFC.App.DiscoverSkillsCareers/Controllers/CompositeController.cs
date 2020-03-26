@@ -85,6 +85,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentReturn);
         }
 
+        [Route("bodytop")]
+        public IActionResult BodyTopEmpty()
+        {
+            return View();
+        }
+
         [Route("bodytop/{**data}")]
         public IActionResult BodyTop()
         {
