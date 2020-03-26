@@ -1,11 +1,30 @@
 ﻿@model ResultsByCategoryModel
-<partial name="_ResultsHeader" model="@Model.Traits" />
-
-<div>
-    <partial name="_Print" />
-</div>
-<div>
-    <partial name="_SpeakToAnAdviser" />
+<partial name="_ResultsHeader"/>
+<div class="app-grey">
+    <div class="govuk-main-wrapper govuk-width-container govuk-!-padding-top-7">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds app-intro">
+                <h2 class="govuk-heading-l">What you told us</h2>
+                <div class="govuk-text">
+                    <p>Your answers show that:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        @foreach (var trait in Model.Traits)
+                        {
+                            <li>@trait</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <div>
+                    <partial name="_Print" />
+                </div>
+                <div>
+                    <partial name="_SpeakToAnAdviser" />
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <partial name="_SendMyResults" model="@Model.AssessmentReference" />
@@ -14,25 +33,33 @@
 
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
     <div class="app-results">
-
         @foreach (var jobCategory in Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder))
         {
             <div class="app-results__item" data-job-family-code="@jobCategory.CategoryCode">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
-                        <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="@Model.ExploreCareersUri/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="https://nationalcareers.service.gov.uk/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
                         @if (jobCategory.AnswerMoreQuetions == 0)
                         {
-                            <p class="text-light">@jobCategory.JobProfiles.Count() Job role@{if (@jobCategory.JobProfiles.Count() > 0)@("s")} that might suit you</p>
+
+                            if (@jobCategory.JobProfiles.Count() > 0)
+                            {
+                                <p class="text-light">@jobCategory.JobProfiles.Count() Job role@{if (@jobCategory.JobProfiles.Count() > 0)@("s")} that might suit you</p>
+                            }
+                            else
+                            {
+                                <p class="text-light"><span>No job roles were found that might be suited to you</span></p>
+                            }
+                            <p><a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Change my answers</a></p>
+
                             @if (jobCategory.ShowThisCategory)
                             {
-                                <p><a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Change my answers</a></p>
                                 <ul class="app-long-results govuk-list govuk-grid-row" id="app-results-list--long">
                                     @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound))
                                     {
                                         <li class="">
                                             <div class="app-long-results__item">
-                                                    @Html.Raw(profile.OverViewHTML)
+                                                @Html.Raw(profile.OverViewHTML)
                                             </div>
                                         </li>
                                     }
@@ -47,9 +74,10 @@
                         else
                         {
                             <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
-                            <a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Answer @jobCategory.AnswerMoreQuetions more question@{if (@jobCategory.AnswerMoreQuetions > 0)@("s")}</a>
+                            <a asp-route="filterquestions" role="button" class="govuk-button app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Answer @jobCategory.AnswerMoreQuetions more question@{if (@jobCategory.AnswerMoreQuetions > 0)@("s")}</a>
                         }
                     </div>
+
                 </div>
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
@@ -59,6 +87,5 @@
                 </div>
             </div>
         }
-
     </div>
 </div>

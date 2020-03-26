@@ -5,6 +5,7 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -35,13 +36,30 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [Fact]
         public async Task GetResults()
         {
+            //Arrange
+            var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
+            List<JobProfileResult> profiles = new List<JobProfileResult>
+            {
+                    new JobProfileResult() { UrlName = category, JobCategory = category }
+            };
+            resultsResponse.JobProfiles = profiles;
+
+            List<JobCategoryResult> categories = new List<JobCategoryResult>
+             {
+                    new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl = category }
+            };
+            resultsResponse.JobCategories = categories;
+
             A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
 
+            //Act
             var results = await resultsService.GetResults();
 
+            //Assert
             A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             results.SessionId.Should().Be(sessionId);
+            results.JobCategories.FirstOrDefault().NumberOfMatchedJobProfile.Should().Be(1);
         }
 
         [Theory]
@@ -49,28 +67,36 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [InlineData(true, 1)]
         public async Task GetResultsByCategory (bool hasMatchedProfile, int expectedNumberOfcalls)
         {
+            //Arrange
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId};
 
             if (hasMatchedProfile)
             {
-                List<JobProfileResult> profiles = new List<JobProfileResult>();
-                profiles.Add(new JobProfileResult() { UrlName = "Cname1", JobCategory = category });
+                List<JobProfileResult> profiles = new List<JobProfileResult>
+                {
+                    new JobProfileResult() { UrlName = "Cname1", JobCategory = category }
+                };
                 resultsResponse.JobProfiles = profiles;
 
-                List<JobCategoryResult> categories = new List<JobCategoryResult>();
-                categories.Add(new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl =category });
+                List<JobCategoryResult> categories = new List<JobCategoryResult>
+                {
+                    new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl = category }
+                };
                 resultsResponse.JobCategories = categories;
             }
 
             A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
             A.CallTo(() => jPOverviewAPIService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).Returns(A.CollectionOfDummy<JobProfileOverView>(2));
 
+            //Act
             var results = await resultsService.GetResultsByCategory(category);
             
+            //Assert
             A.CallTo(() => resultsApiService.GetResults(sessionId, category)).MustHaveHappenedOnceExactly();
             A.CallTo(() => jPOverviewAPIService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).MustHaveHappened(expectedNumberOfcalls, Times.Exactly);
             results.SessionId.Should().Be(sessionId);
         }
+
     }
 }
