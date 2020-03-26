@@ -7,5 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         [Display(Name = "Reference Code")]
         [Required]
         public string ReferenceCode { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

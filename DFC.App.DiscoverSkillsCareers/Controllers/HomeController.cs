@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -31,7 +32,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var responseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+                var responseViewModel = new HomeIndexResponseViewModel()
+                {
+                    ReferenceCode = viewModel.ReferenceCode,
+                    ErrorMessage = ErrorMessage.ReferenceNotFound,
+                };
                 return View(responseViewModel);
             }
 
@@ -42,8 +47,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
             else
             {
-                ModelState.AddModelError("ReferenceCode", "The reference could not be found");
-                var responseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+                var responseViewModel = new HomeIndexResponseViewModel()
+                {
+                    ReferenceCode = viewModel.ReferenceCode,
+                    ErrorMessage = ErrorMessage.ReferenceNotFound,
+                };
                 return View(responseViewModel);
             }
         }

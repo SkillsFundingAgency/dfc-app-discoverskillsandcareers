@@ -1,6 +1,7 @@
 ﻿@model HomeIndexResponseViewModel
 @{
     ViewData["Title"] = "Discover your skills and careers";
+    var hasError = !string.IsNullOrWhiteSpace(Model.ErrorMessage);
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -36,9 +37,31 @@
             <h2 class="govuk-heading-m">Return to an assessment</h2>
             <form method="post" asp-controller="home">
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="ReferenceCode">Enter your reference</label>
-                    <input class="govuk-input" asp-for="ReferenceCode">
-                    <span asp-validation-for="ReferenceCode" class="text-danger"></span>
+                    @if (hasError)
+                    {
+                        <div>
+                            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                                    There is a problem
+                                </h2>
+                                <div class="govuk-error-summary__body">
+                                    <ul class="govuk-list govuk-error-summary__list">
+                                        <li>
+                                            <a href="#referenceCode">@Model.ErrorMessage</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="app-resume-panel__input govuk-form-group @(hasError ? "govuk-form-group--error" : string.Empty)">
+                        <label class="govuk-label" for="referenceCode">Enter your reference</label>
+                        @if (hasError)
+                        {
+                            <span id="code-error" class="govuk-error-message">@Model.ErrorMessage</span>
+                        }
+                        <input class="govuk-input @(hasError ? "govuk-input--error" : string.Empty)" data-val="true" data-val-required="The Reference Code field is required." id="referenceCode" name="referenceCode" type="text" @(hasError ? "aria-describedby=code-error" : string.Empty)>
+                    </div>
                 </div>
                 <button type="submit" class="govuk-button app-button">
                     Continue
