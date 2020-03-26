@@ -60,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             foreach (var c in categories)
             {
                 c.DisplayOrder = c.FilterAssessment?.SuggestedJobProfiles.Count();
-                if (c.JobFamilyNameUrl == selectedCategory)
+                if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
                 {
                     c.DisplayOrder = 9999;
                 }

@@ -37,6 +37,5 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public string JobFamilyNameUrl { get; set; }
 
         public int NumberOfMatchedJobProfile { get; set; }
-
     }
 }
