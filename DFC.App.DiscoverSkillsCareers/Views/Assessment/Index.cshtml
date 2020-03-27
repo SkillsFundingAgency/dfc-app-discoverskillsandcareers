@@ -1,30 +1,52 @@
 ﻿@model QuestionGetResponseViewModel
+@{
+    var errorMessage = "Choose an answer to the statement";
+}
 <form method="post">
     <div class="govuk-grid-row app-question-progress">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-
             <div class="ncs-progress">
                 <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="govuk-visually-hidden">Complete</strong></span>
                 <div class="ncs-progress__bar"><span style="width: @(Model.PercentageComplete)%!important;"></span></div>
             </div>
-
         </div>
         <div class="govuk-grid-column-one-third-from-desktop">
-
             <div class="app-sidebar app-save-panel app-save-panel--alt">
                 <h3 class="govuk-heading-m">Return to this later</h3>
                 <p class="govuk-body"><a asp-action="save" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
             </div>
         </div>
     </div>
-    <div class="govuk-form-group">
+
+    <div class="govuk-grid-row app-error validation-section hidden">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li>
+                            <a href="#question">@errorMessage</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-form-group @(!string.IsNullOrEmpty(errorMessage) ? "govuk-form-group--error" : string.Empty)">
         <div class="govuk-fieldset app-question app-question--short" id="question" role="group" aria-labelledby="question-heading">
 
             <div class="govuk-fieldset__legend govuk-fieldset__legend--l app-question__question">
+                <div id="question-error" class="govuk-error-message validation-section hidden">
+                    <span class="govuk-visually-hidden"></span> @errorMessage
+                </div>
                 <h1 class="govuk-fieldset__heading" id="question-heading">
                     @Model.QuestionText
                 </h1>
             </div>
+
             <div class="app-question__answer govuk-radios govuk-radios--inline">
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input"
@@ -86,7 +108,6 @@
                         Strongly disagree
                     </label>
                 </div>
-                <span asp-validation-for="Answer" class="text-danger"></span>
             </div>
         </div>
     </div>
@@ -101,3 +122,34 @@
         <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
     </div>
 </form>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+
+    $(function () {
+        setUpEvents();
+    });
+
+    function setUpEvents() {
+        $("button[type='submit']").click(function () {
+            if (!isFormValid()) {
+                $(".validation-section").show();
+            } else {
+                $(".validation-section").hide();
+            }
+        });
+        $("input[name='Answer']").click(function () {
+            $(".validation-section").hide();
+        });
+    }
+
+    function isFormValid() {
+        return $("input[name='Answer']:checked").val() != undefined;
+    }
+
+</script>
