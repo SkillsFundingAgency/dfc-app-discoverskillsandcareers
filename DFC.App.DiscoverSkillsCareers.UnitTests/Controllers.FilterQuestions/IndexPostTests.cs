@@ -72,7 +72,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
-            Assert.IsType<ViewResult>(actionResponse);
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/{assessmentType}/filterquestions/{jobCategoryName}/complete", redirectResult.Url);
         }
 
         [Fact]

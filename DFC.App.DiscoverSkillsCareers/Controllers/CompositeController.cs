@@ -72,7 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.Results);
         }
 
-        [Route("head/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
+        [Route("head/filterquestions/complete")]
         [Route("head/assessment/complete")]
         public IActionResult AssessmentComplete()
         {
