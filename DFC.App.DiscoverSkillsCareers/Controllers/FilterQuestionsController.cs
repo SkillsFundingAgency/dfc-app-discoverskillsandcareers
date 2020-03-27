@@ -80,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (answerResponse.IsComplete)
             {
-                return View("complete", new FilterQuestionsCompleteResponseViewModel() { JobCategoryName = viewModel.JobCategoryName });
+                return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/complete");
             }
 
             return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
