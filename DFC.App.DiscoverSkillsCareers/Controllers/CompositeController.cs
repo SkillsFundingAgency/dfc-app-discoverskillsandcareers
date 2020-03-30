@@ -97,6 +97,29 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        [Route("bodytop/assessment/{assessmentType}/1")]
+        public IActionResult BodyTopFirstQuestion()
+        {
+            return View();
+        }
+
+        [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
+        public IActionResult BodyTopQuestions(string assessmentType, int questionNumber)
+        {
+            var previousQuestionNumber = questionNumber - 1;
+            if (previousQuestionNumber < 0)
+            {
+                previousQuestionNumber = 0;
+            }
+
+            var vm = new BodyTopQuestionsViewModel()
+            {
+                AssessmentType = assessmentType,
+                PreviousQuestionNumber = previousQuestionNumber,
+            };
+            return View(vm);
+        }
+
         [Route("herobanner")]
         public IActionResult HeroBanner()
         {
