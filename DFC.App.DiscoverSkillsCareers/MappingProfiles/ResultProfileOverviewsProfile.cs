@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
@@ -26,6 +27,10 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             .ForMember(d => d.JobProfilesOverview, s => s.Ignore());
 
             CreateMap<JobProfileOverView, ResultJobProfileOverViewModel>();
+
+            CreateMap<GetResultsResponse, ResultsHeroBannerViewModel>()
+            .ForMember(d => d.NumberOfCategories, s => s.MapFrom(a => a.JobCategories.Count()));
+
         }
     }
 }
