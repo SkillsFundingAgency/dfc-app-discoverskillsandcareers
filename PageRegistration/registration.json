@@ -21,6 +21,10 @@
       {
         "PageRegion": 8,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/herobanner"
+      },
+      {
+        "PageRegion": 7,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/bodyfooter"
       }
     ]
   }
