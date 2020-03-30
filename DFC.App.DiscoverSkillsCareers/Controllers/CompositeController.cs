@@ -103,6 +103,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        [Route("bodyfooter/{**data}")]
+        public IActionResult BodyFooter()
+        {
+            return View();
+        }
+
         [Route("herobanner/{**data}")]
         public IActionResult HeroBannerEmpty()
         {
