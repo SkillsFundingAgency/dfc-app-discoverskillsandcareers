@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -31,5 +32,25 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
             Assert.IsType<ViewResult>(actionResponse);
         }
 
+        [Fact]
+        public void BodyTopFirstQuestionReturnsView()
+        {
+            var actionResponse = controller.BodyTopFirstQuestion();
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public void BodyTopQuestionsReturnsView()
+        {
+            var assessmentType = "short";
+            var questionNumber = 2;
+            var actionResponse = controller.BodyTopQuestions(assessmentType, questionNumber);
+            Assert.IsType<ViewResult>(actionResponse);
+
+            var viewResult = actionResponse as ViewResult;
+            var model = viewResult.Model as BodyTopQuestionsViewModel;
+            Assert.Equal(questionNumber - 1, model.PreviousQuestionNumber);
+            Assert.Equal(assessmentType, model.AssessmentType);
+        }
     }
 }
