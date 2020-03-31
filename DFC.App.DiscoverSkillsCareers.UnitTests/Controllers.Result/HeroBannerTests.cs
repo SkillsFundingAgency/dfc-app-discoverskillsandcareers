@@ -51,8 +51,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         }
 
         [Theory]
-        [InlineData(null, false)]
-        [InlineData("ACategory", true)]
+        [InlineData(null, true)]
+        [InlineData("ACategory", false)]
         public async Task ShowsHeroBanner(string category, bool expectedCategory)
         {
             // Setup

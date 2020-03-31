@@ -80,7 +80,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.IsCategoryBanner = !string.IsNullOrEmpty(id);
+
+            // if a category is passed in then we are on the roles page and do not want to display category text
+            resultsHeroBannerViewModel.IsCategoryBanner = string.IsNullOrEmpty(id);
 
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
         }

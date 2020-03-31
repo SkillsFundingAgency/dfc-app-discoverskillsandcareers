@@ -1,23 +1,40 @@
 ﻿@model AssessmentSaveResponseViewModel
+<div class="govuk-main-wrapper govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl govuk-visually-hidden">Save your progress</h1>
+            <form method="post">
+               <!-- Error msgs go here  -->
+               <!-- @Html.ValidationSummary() -->
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                            <h1 class="govuk-fieldset__heading">
+                                How would you like to return to your assessment?
+                            </h1>
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input type="radio" asp-for="AssessmentReturnTypeId" class="govuk-radios__input" id="SelectedOption-1" value="1" />
+                                <label class="govuk-label govuk-radios__label" for="SelectedOption-1">
+                                    Send me an email with a link
+                                </label>
+                            </div>
 
-<h1>How would you like to return to your assessment?</h1>
-
-@Html.ValidationSummary()
-
-<form method="post">
-    <p>
-        <input type="radio" asp-for="AssessmentReturnTypeId" value="1" />Send me an email with a link
-    </p>
-
-    <p>
-        <input type="radio" asp-for="AssessmentReturnTypeId" value="2" />Get a reference code
-    </p>
-    <p>
-        <span asp-validation-for="AssessmentReturnTypeId" class="text-danger"></span>
-    </p>
-    <button>Continue</button>
-
-    <p>
-        <a asp-action="return">Return to assessment</a>
-    </p>
-</form>
+                            <div class="govuk-radios__item">
+                                <input type="radio" asp-for="AssessmentReturnTypeId" class="govuk-radios__input" id="SelectedOption-2"  value="2" />
+                                <label class="govuk-label govuk-radios__label" for="SelectedOption-2">
+                                    Get a reference code
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <button type="submit" class="govuk-button">Continue</button>
+            </form>
+            <div class="govuk-body">
+                <p><a asp-action="return">Return to assessment</a></p>
+            </div>
+        </div>
+    </div>
+</div>
