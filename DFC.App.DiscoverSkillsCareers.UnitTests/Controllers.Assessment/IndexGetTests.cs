@@ -76,13 +76,31 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         }
 
         [Fact]
+        public async Task GetAssessmentWhenAssessmentDoesntExistReturnsBadResponse()
+        {
+            var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 2, AssessmentType = "name1" };
+            var expectedQuestion = new GetQuestionResponse();
+            GetAssessmentResponse expectedAssessment = null;
+
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
+            A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
+            A.CallTo(() => ApiService.GetAssessment()).Returns(expectedAssessment);
+
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
+
+            Assert.IsType<BadRequestResult>(actionResponse);
+        }
+
+        [Fact]
         public async Task QuestionsMustBeAnsweredInOrder()
         {
             var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 2, AssessmentType = "name1" };
             var expectedQuestion = new GetQuestionResponse() { MaxQuestionsCount = 3, QuestionNumber = 1 };
+            var expectedAssessment = new GetAssessmentResponse() { CurrentQuestionNumber = 1 };
 
             A.CallTo(() => Session.HasValidSession()).Returns(true);
             A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
+            A.CallTo(() => ApiService.GetAssessment()).Returns(expectedAssessment);
 
             var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
