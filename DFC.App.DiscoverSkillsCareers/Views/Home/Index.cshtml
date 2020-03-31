@@ -2,54 +2,57 @@
 @{
     ViewData["Title"] = "Discover your skills and careers";
 }
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <p>
-            This assessment asks you to think about the type of work you want to do. It takes 5 to 10 minutes, or slightly longer if you’re using a screen reader or magnifier.
-        </p>
+<div class="govuk-width-container">
+    <div class="govuk-grid-row govuk-!-margin-bottom-9 govuk-!-margin-top-7">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body">
+                This assessment asks you to think about the type of work you want to do. It takes 5 to 10 minutes, or slightly longer if you’re using a screen reader or magnifier.
+            </p>
 
-        <p>
-            At the end, you’ll get a summary of job groups that might interest you based on your answers, for example creative careers or working in healthcare.
-        </p>
+            <p class="govuk-body">
+                At the end, you’ll get a summary of job groups that might interest you based on your answers, for example creative careers or working in healthcare.
+            </p>
 
-        <p>
-            You can answer a few more questions to see particular jobs that may suit you, like an animator or a paramedic. From here, you can get more detailed information about each role.
-        </p>
+            <p class="govuk-body">
+                You can answer a few more questions to see particular jobs that may suit you, like an animator or a paramedic. From here, you can get more detailed information about each role.
+            </p>
 
-        <p>
-            You can save your results and come back to them at any time.
-        </p>
+            <p class="govuk-body">
+                You can save your results and come back to them at any time.
+            </p>
 
-        <form method="post" asp-action="new" asp-controller="assessment">
-            <input type="hidden" id="assessmentType" name="assessmentType" value="short" />
-            <button role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
-                Start assessment
-                <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
-                    <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
-                </svg>
-            </button>
-        </form>
-    </div>
-
-    <div class="govuk-grid-column-one-third">
-        <div class="app-related-items">
-            <h2 class="govuk-heading-m">Return to an assessment</h2>
-            <form method="post" asp-controller="home">
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="ReferenceCode">Enter your reference</label>
-                    <input class="govuk-input" asp-for="ReferenceCode">
-                    <span asp-validation-for="ReferenceCode" class="text-danger"></span>
-                </div>
-                <button type="submit" class="govuk-button app-button">
-                    Continue
+            <form method="post" asp-action="new" asp-controller="assessment">
+                <input type="hidden" id="assessmentType" name="assessmentType" value="short" />
+                <button role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+                    Start assessment
+                    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
+                        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+                    </svg>
                 </button>
             </form>
         </div>
-        <div class="app-related-items">
-            <h2 class="govuk-heading-m">Want to speak to an adviser?</h2>
-            <p class="govuk-body-m"><span class="govuk-body govuk-!-font-weight-bold">Call</span> 0800 100 900 or <a class="govuk-link" href="/webchat/chat/" rel="external" target="'_blank'">use webchat</a></p>
-            <p class="govuk-caption-m">8am to 10pm, 7 days a week</p>
+
+        <div class="govuk-grid-column-one-third">
+            <div class="app-sidebar app-resume-panel">
+                <h2 class="govuk-heading-m">Return to an assessment</h2>
+                <form method="post" asp-controller="home">
+                    <div class="app-resume-panel__input govuk-form-group">
+                        <label class="govuk-label" for="ReferenceCode">Enter your reference</label>
+                        <input class="govuk-input" asp-for="ReferenceCode">
+                        <span asp-validation-for="ReferenceCode" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="govuk-button app-button">
+                        Continue
+                    </button>
+                </form>
+            </div>
+
+            <div class="app-sidebar app-advisor-panel">
+                <h3 class="govuk-heading-m">Want to speak to an adviser?</h3>
+                <p class="govuk-body"><b>Call</b> 0800 100 900 or <a href="https://nationalcareers.service.gov.uk/webchat/chat/" class="govuk-link govuk-link--no-visited-state">use webchat</a></p>
+                <p class="govuk-caption-m app-advisor-hours">8am to 10pm, 7 days a week</p>
+            </div>
+
         </div>
     </div>
-
 </div>
