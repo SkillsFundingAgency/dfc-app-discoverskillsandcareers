@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             return CreateViewModelAndReturnView(PageTitle.Results);
         }
-            
+
         [Route("head/assessment/return")]
         public IActionResult AssessmentReturn()
         {
