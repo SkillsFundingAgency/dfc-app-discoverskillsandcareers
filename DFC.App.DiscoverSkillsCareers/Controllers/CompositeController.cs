@@ -28,6 +28,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView($"Q{questionNumber}");
         }
 
+        [Route("head/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
+        [Route("head/assessment/complete")]
+        public IActionResult AssessmentComplete()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
+        }
+
         [Route("head/assessment/save")]
         public IActionResult AssessmentSave()
         {
@@ -70,13 +77,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult Results()
         {
             return CreateViewModelAndReturnView(PageTitle.Results);
-        }
-
-        [Route("head/filterquestions/complete")]
-        [Route("head/assessment/complete")]
-        public IActionResult AssessmentComplete()
-        {
-            return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
         }
 
         [Route("head/assessment/return")]

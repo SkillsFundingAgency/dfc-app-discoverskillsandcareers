@@ -15,7 +15,7 @@
                         else
                         {
                             <a role="button" draggable="false" class="govuk-button app-button" asp-route="filterquestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyUrl" asp-route-questionNumber="1">
-                                Answer @item.TotalQuestions more question@{if (item.TotalQuestions > 0)@("s")}
+                                Answer @item.TotalQuestions more question@{if (item.TotalQuestions > 1)@("s")}
                                 <span class="govuk-visually-hidden"> for @item.JobFamilyName</span>
                             </a>
                         }
