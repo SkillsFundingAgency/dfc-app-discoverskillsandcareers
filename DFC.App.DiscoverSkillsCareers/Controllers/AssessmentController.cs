@@ -43,6 +43,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
+            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            if (assessment == null)
+            {
+                return BadRequest();
+            }
+
             if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
                 return BadRequest();
@@ -53,9 +59,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("results");
             }
 
-            if (requestViewModel.QuestionNumber > questionResponse.QuestionNumber)
+            if (requestViewModel.QuestionNumber > assessment.CurrentQuestionNumber)
             {
-                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{questionResponse.QuestionNumber}");
+                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
