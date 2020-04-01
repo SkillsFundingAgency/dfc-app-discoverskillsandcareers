@@ -1,26 +1,47 @@
 ﻿@model AssessmentReferenceGetResponse
+<div class="govuk-main-wrapper govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">Your reference code</h1>
+            <div class="app-your-reference govuk-body">
+                <p>
+                    <span class="app-your-reference__code govuk-heading-xl">@Model.ReferenceCode</span>
+                </p>
+                <div class="app-your-reference__meta govuk-grid-row">
+                    <p class="govuk-grid-column-one-third govuk-body-s">@Model.AssessmentStarted</p>
+                    <p class="govuk-grid-column-two-thirds govuk-body-s"></p>
+                </div>
+            </div>
 
-<h1>Your reference code</h1>
-@Model.ReferenceCode
-<br />
-@Model.AssessmentStarted
-<hr />
+            <div class="govuk-body">
+                <h2 class="govuk-heading-m">What to do with your reference</h2>
+                <p>The code above is your unique reference. You can use this to:</p>
+                <ul>
+                    <li>return to your assessment and continue</li>
+                    <li>see your results, if you have finished the assessment</li>
+                </ul>
+            </div>
 
-<h3>What to do with your reference</h3>
-The code above is your unique reference. You can use this to:
+            <h2 class="govuk-heading-m">Send reference code in a text message</h2>
 
-<ul>
-    <li>return to your assessment and continue</li>
-    <li>see your results, if you have finished the assessment</li>
-</ul>
+            <form method="post" class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                    <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
+                    <div>
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="mobileNumber">
+                                Phone number
+                            </label>
+                            <input class="govuk-input" type="text" asp-for="Telephone" />
+                        </div>
+                    </div>
+                    <button class="govuk-button" type="submit">Send</button>
+                </div>
+            </form>
+            <div class="govuk-body">
+                <p><a asp-action="return">Return to assessment</a></p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h3>Send reference code in a text message</h3>
-We will only use this to send you a link to return to your assessment
-
-<form method="post">
-    <input asp-for="Telephone" />
-    <p>
-        <span asp-validation-for="Telephone" class="text-danger"></span>
-    </p>
-    <button type="submit">Send</button>
-</form>
