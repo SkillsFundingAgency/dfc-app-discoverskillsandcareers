@@ -192,7 +192,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var viewReponse = new AssessmentEmailPostResponse();
+            var viewReponse = new AssessmentEmailPostRequest();
             return View(viewReponse);
         }
 
@@ -206,7 +206,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
                 return View(viewReponse);
             }
 
@@ -218,7 +218,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             else
             {
                 ModelState.AddModelError("Email", "There was a problem sending email");
-                var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
                 return View(viewReponse);
             }
         }

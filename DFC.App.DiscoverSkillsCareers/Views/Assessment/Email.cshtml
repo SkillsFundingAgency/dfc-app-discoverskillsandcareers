@@ -1,4 +1,4 @@
-﻿@model AssessmentEmailPostResponse
+﻿@model AssessmentEmailPostRequest
 <div class="govuk-width-container">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -9,16 +9,16 @@
                 <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
                 <!-- @Html.ValidationSummary() -->
                 <div class="govuk-body">
-                    <form method="post">
-                          <div>
+                    <form method="post" class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds">
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="email">
                                     Email
                                 </label>
                                 <input class="govuk-input" id="email" asp-for="Email" type="text">
                             </div>
-                          </div>
-                          <button class="govuk-button" type="submit">Send</button>
+                        </div>
+                        <button class="govuk-button" type="submit">Send</button>
                     </form>
                 </div>
             </fieldset>
