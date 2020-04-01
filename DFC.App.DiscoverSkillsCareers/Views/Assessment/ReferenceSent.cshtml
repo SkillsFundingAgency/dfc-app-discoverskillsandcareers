@@ -1,9 +1,18 @@
-﻿<h1>Check your phone</h1>
+﻿<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Check your phone</h1>
 
-A text message has been sent to @TempData.Peek("Telephone") 
+            <p>A text message has been sent to @TempData.Peek("Telephone")</p>
+            <p>Click on the link in the text message to return to your assessment.</p>
 
-Click on the link in the text message to return to your assessment.
+            <form method="post" asp-controller="assessment" asp-action="return">
+                <button>Return to assessment</button>
+            </form>
+       
+            <p><a href="/">Back to start</a></p>
 
-<form method="post" asp-controller="assessment" asp-action="return">
-    <button>Return to assessment</button>
-</form>
+        </div>
+
+    </div>
+</div>
