@@ -7,7 +7,7 @@
                     <h1 class="govuk-fieldset__heading">Email address</h1>
                 </legend>
                 <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
-                <!-- @Html.ValidationSummary() -->
+                @Html.ValidationSummary(true)
                 <div class="govuk-body">
                     <form method="post" class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
@@ -17,8 +17,8 @@
                                 </label>
                                 <input class="govuk-input" id="email" asp-for="Email" type="text">
                             </div>
+                            <button class="govuk-button" type="submit">Send</button>
                         </div>
-                        <button class="govuk-button" type="submit">Send</button>
                     </form>
                 </div>
             </fieldset>
