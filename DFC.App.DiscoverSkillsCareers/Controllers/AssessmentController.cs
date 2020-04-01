@@ -213,6 +213,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var emailResponse = await apiService.SendEmail(GetDomainUrl(), request.Email).ConfigureAwait(false);
             if (emailResponse.IsSuccess)
             {
+                TempData["SentEmail"] = request.Email;
                 return RedirectTo("assessment/emailsent");
             }
             else
