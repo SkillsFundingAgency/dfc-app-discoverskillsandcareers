@@ -86,6 +86,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop")]
+        [Route("bodytop/assessment/complete")]
         public IActionResult BodyTopDefault()
         {
             return View();
