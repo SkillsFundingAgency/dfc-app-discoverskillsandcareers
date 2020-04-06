@@ -7,7 +7,7 @@
         {
             <div class="app-results__item" data-job-family-code="@jobCategory.CategoryCode">
                 <div class="govuk-grid-row">
-                    <div class="">
+                    <div class="govuk-grid-column-full">
                         <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="https://nationalcareers.service.gov.uk/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
                         @if (jobCategory.AnswerMoreQuetions == 0)
                         {
@@ -20,7 +20,7 @@
                             {
                                 <p class="text-light"><span>No job roles were found that might be suited to you</span></p>
                             }
-                            <p><a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Change my answers</a></p>
+                            <p><a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change my answers</a></p>
 
                             @if (jobCategory.ShowThisCategory)
                             {
@@ -44,10 +44,9 @@
                         else
                         {
                             <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
-                            <a asp-route="filterquestions" role="button" class="govuk-button app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="1">Answer @jobCategory.AnswerMoreQuetions more question@{if (@jobCategory.AnswerMoreQuetions > 1)@("s")}</a>
+                            <a asp-route="filterquestions" role="button" class="govuk-button app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Answer @jobCategory.AnswerMoreQuetions more question@{if (@jobCategory.AnswerMoreQuetions > 1)@("s")}</a>
                         }
                     </div>
-
                 </div>
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">

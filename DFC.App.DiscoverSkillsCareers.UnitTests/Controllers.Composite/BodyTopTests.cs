@@ -28,7 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         [Fact]
         public void BodyTopEmptyReturnsView()
         {
-            var actionResponse = controller.BodyTopEmpty();
+            var actionResponse = controller.BodyTopDefault();
             Assert.IsType<ViewResult>(actionResponse);
         }
 

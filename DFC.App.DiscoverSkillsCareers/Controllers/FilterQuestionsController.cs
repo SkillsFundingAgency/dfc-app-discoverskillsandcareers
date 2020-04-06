@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -39,8 +40,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
-            var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
-            var response = await GetQuestion(viewModel.JobCategoryName, filterAssessment.QuestionNumber).ConfigureAwait(false);
+            if (viewModel.QuestionNumber == 0)
+            {
+                var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
+                return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
+            }
+
+            var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
             return View(response);
         }
 
@@ -83,7 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/complete");
             }
 
-            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
+            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{viewModel.QuestionNumberCounter + 1}");
         }
 
         public async Task<IActionResult> Complete(FilterQuestionsCompleteResponseViewModel viewModel)
@@ -95,6 +101,26 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/{QuestionNumber}")]
+        public IActionResult BodyTopQuestions(FilterBodyTopViewModel resultsBodyTopViewModel)
+        {
+            if (resultsBodyTopViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            resultsBodyTopViewModel.QuestionNumber -= 1;
+            return View(resultsBodyTopViewModel);
+        }
+
+        [HttpGet]
+        [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
+        public IActionResult BodyTopComplete()
+        {
+             return View("BodyTopDefault");
         }
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)

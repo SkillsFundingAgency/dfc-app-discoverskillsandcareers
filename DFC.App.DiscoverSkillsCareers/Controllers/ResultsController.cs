@@ -86,5 +86,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
         }
+
+        [HttpGet]
+        [Route("bodytop/results")]
+        [Route("bodytop/results/roles/{category}")]
+        public IActionResult BodyTop()
+        {
+            return View("BodyTopDefault");
+        }
     }
 }
