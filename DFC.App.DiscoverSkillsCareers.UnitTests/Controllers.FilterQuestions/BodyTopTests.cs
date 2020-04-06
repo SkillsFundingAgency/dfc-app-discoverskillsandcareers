@@ -39,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
             var viewResult = Assert.IsType<ViewResult>(actionResponse);
 
             FilterBodyTopViewModel model = Assert.IsType<FilterBodyTopViewModel>(viewResult.Model);
-            model.QuestionNumber.Should().Be(filterBodyTopViewModel.QuestionNumber + 1);
+            model.QuestionNumber.Should().Be(0);
         }
 
         [Fact]
