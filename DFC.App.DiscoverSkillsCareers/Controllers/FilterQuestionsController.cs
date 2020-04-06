@@ -105,13 +105,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [HttpGet]
         [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/{QuestionNumber}")]
-        public IActionResult BodyTopQuestions(ResultsBodyTopViewModel resultsBodyTopViewModel)
+        public IActionResult BodyTopQuestions(FilterBodyTopViewModel resultsBodyTopViewModel)
         {
             if (resultsBodyTopViewModel == null)
             {
-                throw new ArgumentNullException(nameof(resultsBodyTopViewModel));
+                return BadRequest();
             }
-            resultsBodyTopViewModel.QuestionNumber = resultsBodyTopViewModel.QuestionNumber - 1;
+
+            resultsBodyTopViewModel.QuestionNumber -= 1;
             return View(resultsBodyTopViewModel);
         }
 
