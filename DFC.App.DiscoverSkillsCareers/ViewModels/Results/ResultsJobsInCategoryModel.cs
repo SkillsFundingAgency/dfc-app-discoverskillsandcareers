@@ -18,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public bool ShowThisCategory { get; set; }
 
-        public int AnswerMoreQuetions { get; set; }
+        public int AnswerMoreQuestions { get; set; }
 
         public IEnumerable<ResultJobProfileOverViewModel> JobProfiles { get; set; }
     }
