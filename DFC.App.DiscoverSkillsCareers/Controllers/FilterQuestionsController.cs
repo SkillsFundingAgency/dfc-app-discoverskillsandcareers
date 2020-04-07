@@ -120,7 +120,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
         public IActionResult BodyTopComplete()
         {
-             return View("BodyTopDefault");
+             return View("BodyTopEmpty");
         }
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
