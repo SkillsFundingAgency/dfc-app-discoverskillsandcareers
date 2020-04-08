@@ -86,7 +86,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop")]
-        [Route("bodytop/assessment/complete")]
         public IActionResult BodyTopEmpty()
         {
             return View();
@@ -99,7 +98,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop/assessment/{assessmentType}/1")]
-        public IActionResult BodyTopFirstQuestion()
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BodyTopBackToStart()
         {
             return View();
         }

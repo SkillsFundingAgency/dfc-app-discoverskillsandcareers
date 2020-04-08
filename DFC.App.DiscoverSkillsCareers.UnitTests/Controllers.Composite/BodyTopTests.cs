@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         [Fact]
         public void BodyTopFirstQuestionReturnsView()
         {
-            var actionResponse = controller.BodyTopFirstQuestion();
+            var actionResponse = controller.BodyTopBackToStart();
             Assert.IsType<ViewResult>(actionResponse);
         }
 
