@@ -95,7 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View("BodyTopDefault");
         }
 
-        public async Task<IActionResult> ReturnToMatchSkills()
+        public IActionResult ReturnToMatchSkills()
         {
             return Redirect(externalLinkOptions.MatchSkillsResultsEndpoint);
         }
