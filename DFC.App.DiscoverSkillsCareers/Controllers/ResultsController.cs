@@ -3,6 +3,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -37,6 +38,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+
+            var lastFilterCategory = resultsResponse.JobCategories
+                                                  .Where(x => x.FilterAssessment != null)
+                                                  .OrderByDescending(x => x.FilterAssessment.CreatedDt)
+                                                  .FirstOrDefault();
+            if (lastFilterCategory != null)
+            {
+                return RedirectTo($"results/roles/{lastFilterCategory.JobFamilyNameUrl}");
+            }
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
             {
@@ -85,6 +95,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             resultsHeroBannerViewModel.IsCategoryBanner = string.IsNullOrEmpty(id);
 
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
+        }
+
+        [HttpGet]
+        [Route("bodytop/results")]
+        [Route("bodytop/results/roles/{category}")]
+        public IActionResult BodyTop()
+        {
+            return View("BodyTopEmpty");
         }
     }
 }
