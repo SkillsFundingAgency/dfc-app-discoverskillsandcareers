@@ -18,9 +18,9 @@
       },
       {
         "PageRegion": 4,
-        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/find-a-course/discover-your-skills-careers",
         "HealthCheckRequired": false,
-        "IsHealthy": true
+        "IsHealthy": true,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/find-a-course/discover-your-skills-careers"
       },
       {
         "PageRegion": 3,
@@ -32,7 +32,7 @@
         "PageRegion": 7,
         "HealthCheckRequired": false,
         "IsHealthy": true,
-        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/bodyfooter",
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/bodyfooter"
       },
       {
         "PageRegion": 8,
