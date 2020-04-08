@@ -19,7 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             .ForMember(d => d.CategoryUrl, s => s.MapFrom(a => a.JobFamilyUrl))
             .ForMember(d => d.CategoryCode, s => s.MapFrom(a => a.JobFamilyCode))
             .ForMember(d => d.JobProfiles, s => s.MapFrom(a => a.JobProfilesOverviews))
-            .ForMember(d => d.AnswerMoreQuetions, s => s.MapFrom(a => a.TotalQuestions))
+            .ForMember(d => d.AnswerMoreQuestions, s => s.MapFrom(a => a.TotalQuestions))
             .ForMember(d => d.ShowThisCategory, s => s.MapFrom(a => a.ResultsShown))
             .ForMember(d => d.NumberOfSuitableRoles, s => s.Ignore());
 

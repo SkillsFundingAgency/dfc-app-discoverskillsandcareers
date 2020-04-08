@@ -56,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         }
 
         [Fact]
-        public void BodyTopCompleteReturnsBodyTopDefault()
+        public void BodyTopCompleteReturnsBodyTopEmpty()
         {
             // Act
             var actionResponse = controller.BodyTopComplete();
