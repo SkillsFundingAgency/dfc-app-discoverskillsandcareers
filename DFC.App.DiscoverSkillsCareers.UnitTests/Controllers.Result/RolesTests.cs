@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 {
-    public class JobProfileOverviewsTests
+    public class RolesTests
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly string testCategory;
 
-        public JobProfileOverviewsTests()
+        public RolesTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();

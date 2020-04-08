@@ -5,11 +5,7 @@
 
             <p>A text message has been sent to @TempData.Peek("Telephone")</p>
             <p>Click on the link in the text message to return to your assessment.</p>
-
-            <form method="post" asp-controller="assessment" asp-action="return">
-                <button>Return to assessment</button>
-            </form>
-       
+            <a asp-controller="assessment" class="govuk-button" asp-action="return">Return to assessment</a>
             <p><a href="/">Back to start</a></p>
         </div>
     </div>

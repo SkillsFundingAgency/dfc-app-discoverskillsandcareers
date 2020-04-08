@@ -28,7 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         }
 
         [Fact]
-        public void BodyTopCompleteReturnsBodyTopDefault()
+        public void BodyTopCompleteReturnsBodyTopEmpty()
         {
             // Act
             var actionResponse = controller.BodyTop();

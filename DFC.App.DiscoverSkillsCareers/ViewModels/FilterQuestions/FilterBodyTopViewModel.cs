@@ -9,6 +9,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int QuestionNumber { get; set; }
 
-        public int AssessmentType { get; set; }
+        public string AssessmentType { get; set; }
     }
 }
