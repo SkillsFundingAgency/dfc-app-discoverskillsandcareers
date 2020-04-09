@@ -7,6 +7,5 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Common
         public Uri ExploreCareers { get; set; }
 
         public string MatchSkillsResultsEndpoint { get; set; }
-
     }
 }
