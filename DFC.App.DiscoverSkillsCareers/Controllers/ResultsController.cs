@@ -107,7 +107,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public IActionResult ReturnToMatchSkills()
         {
-            return Redirect(externalLinkOptions.MatchSkillsResultsEndpoint);
+            return !string.IsNullOrWhiteSpace(externalLinkOptions.MatchSkillsResultsEndpoint) ? Redirect(externalLinkOptions.MatchSkillsResultsEndpoint) : RedirectTo("assessment/return");
         }
     }
 }

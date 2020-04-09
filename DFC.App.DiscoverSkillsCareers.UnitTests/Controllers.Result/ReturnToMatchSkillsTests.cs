@@ -34,14 +34,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Arrange
             var options = new ExternalLinkOptions();
-            var endpoint = options.MatchSkillsResultsEndpoint;
-            externalLinkOptions.MatchSkillsResultsEndpoint = options.MatchSkillsResultsEndpoint;
-
             if (string.IsNullOrWhiteSpace(options.MatchSkillsResultsEndpoint))
             {
                 options.MatchSkillsResultsEndpoint = "endpoint";
             }
 
+            var endpoint = options.MatchSkillsResultsEndpoint;
+            externalLinkOptions.MatchSkillsResultsEndpoint = options.MatchSkillsResultsEndpoint;
             // Act
             var actionResponse = controller.ReturnToMatchSkills();
 
