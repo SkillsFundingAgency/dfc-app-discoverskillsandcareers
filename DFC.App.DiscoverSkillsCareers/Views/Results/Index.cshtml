@@ -6,6 +6,7 @@
             <partial name="_SendMyResults" model="@Model.AssessmentReference" />
             <div class="app-results">
                 <h2 class="govuk-heading-l">@Model.Results.JobFamilyCount job categories that might suit you</h2>
+                <partial name ="_ReturnToMatchSkills"/>
                 <partial name="_JobCategories" />
                 <div>
                     <a href="#top">

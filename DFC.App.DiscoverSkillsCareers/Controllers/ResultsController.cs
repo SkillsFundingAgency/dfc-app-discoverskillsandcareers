@@ -104,5 +104,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             return View("BodyTopEmpty");
         }
+
+        public IActionResult ReturnToMatchSkills()
+        {
+            return !string.IsNullOrWhiteSpace(externalLinkOptions.MatchSkillsResultsEndpoint) ? Redirect(externalLinkOptions.MatchSkillsResultsEndpoint) : RedirectTo("assessment/return");
+        }
     }
 }
