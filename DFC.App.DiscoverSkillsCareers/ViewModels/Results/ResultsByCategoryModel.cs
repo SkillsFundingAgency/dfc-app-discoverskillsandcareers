@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -8,8 +7,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     public class ResultsByCategoryModel
     {
         public string AssessmentReference { get; set; }
-
-        public Uri ExploreCareersUri { get; set; }
 
         public string AssessmentType { get; set; }
 

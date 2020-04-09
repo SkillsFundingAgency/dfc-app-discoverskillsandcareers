@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +12,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService apiService;
-        private readonly ExternalLinkOptions externalLinkOptions;
 
-        public ResultsController(IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService, ExternalLinkOptions externalLinkOptions)
+        public ResultsController(IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
             : base(sessionService)
         {
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.apiService = apiService;
-            this.externalLinkOptions = externalLinkOptions;
         }
 
         public async Task<IActionResult> Index()
@@ -71,7 +68,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
-            resultsByCategoryModel.ExploreCareersUri = externalLinkOptions.ExploreCareers;
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
 
             return View("ResultsByCategory", resultsByCategoryModel);
