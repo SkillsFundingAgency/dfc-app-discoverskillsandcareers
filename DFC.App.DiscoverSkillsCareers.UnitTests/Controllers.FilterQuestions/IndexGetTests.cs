@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         [Fact]
         public async Task WhenNotAnsweredReturnsView()
         {
-            var viewModel = new FilterQuestionIndexRequestViewModel() { JobCategoryName="TestCategory", QuestionNumber = 0, AssessmentType = "short" };
+            var viewModel = new FilterQuestionIndexRequestViewModel() { JobCategoryName = "TestCategory", QuestionNumber = 0, AssessmentType = "short" };
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.FilterAssessment(A<string>.Ignored)).Returns(new FilterAssessmentResponse() { QuestionNumber = 1 });
 

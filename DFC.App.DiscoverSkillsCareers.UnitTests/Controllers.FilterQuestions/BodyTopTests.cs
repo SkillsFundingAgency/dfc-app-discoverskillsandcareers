@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
