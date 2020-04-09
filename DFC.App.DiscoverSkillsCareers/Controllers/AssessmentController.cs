@@ -336,7 +336,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (assessment.IsComplete)
                 {
-                    return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.JobCategorySafeUrl}/complete");
+                    return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
                 else
                 {
