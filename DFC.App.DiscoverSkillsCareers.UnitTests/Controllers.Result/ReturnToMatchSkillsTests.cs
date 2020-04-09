@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -31,17 +32,20 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         [Fact]
         public void ReturnToMatchSkillsReturnsRedirect()
         {
-            var options = new ExternalLinkOptions();
-
-            //Arrange
-            options.MatchSkillsResultsEndpoint = "endpoint";
+            // Arrange
+            var options = new ExternalLinkOptions
+            {
+                MatchSkillsResultsEndpoint = "endpoint",
+            };
             var endpoint = options.MatchSkillsResultsEndpoint;
+            externalLinkOptions.MatchSkillsResultsEndpoint = options.MatchSkillsResultsEndpoint;
+
             // Act
             var actionResponse = controller.ReturnToMatchSkills();
 
             // Asserts
             Assert.IsType<RedirectResult>(actionResponse);
-            Assert.Equal(endpoint,externalLinkOptions.MatchSkillsResultsEndpoint);
+            Assert.Equal(endpoint,options.MatchSkillsResultsEndpoint);
         }
     }
 }
