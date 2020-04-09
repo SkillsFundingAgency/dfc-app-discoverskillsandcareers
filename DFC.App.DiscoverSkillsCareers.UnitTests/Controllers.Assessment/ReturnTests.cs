@@ -39,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/short/filterquestions/sports/complete", redirectResult.Url);
+            Assert.Equal($"~/{RouteName.Prefix}/results/roles/sports", redirectResult.Url);
         }
 
         [Fact]

@@ -20,7 +20,7 @@
         "PageRegion": 4,
         "HealthCheckRequired": false,
         "IsHealthy": true,
-        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/find-a-course/discover-your-skills-careers"
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/discover-your-skills-careers"
       },
       {
         "PageRegion": 3,
