@@ -11,8 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         {
             CreateMap<GetResultsResponse, ResultsByCategoryModel>()
             .ForMember(d => d.JobsInCategory, s => s.MapFrom(a => a.JobCategories))
-            .ForMember(d => d.AssessmentReference, s => s.Ignore())
-            .ForMember(d => d.ExploreCareersUri, s => s.Ignore());
+            .ForMember(d => d.AssessmentReference, s => s.Ignore());
 
             CreateMap<JobCategoryResult, ResultsJobsInCategoryModel>()
             .ForMember(d => d.CategoryTitle, s => s.MapFrom(a => a.JobFamilyName))

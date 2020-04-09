@@ -28,10 +28,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
-            var externalLinkOptions = new ExternalLinkOptions();
             testCategory = "testCategory";
 
-            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService, externalLinkOptions);
+            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService);
         }
 
         [Fact]
