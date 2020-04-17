@@ -204,6 +204,10 @@
                                 "value": "[concat(parameters('ApimRoot'), 'assessments/api')]"
                             },
                             {
+                                "name": "ExternalLinkOptions__MatchSkillsResultsEndpoint",
+                                "value": "/matchskills/dysacResults"
+                            },
+                            {
                                 "name": "JobProfileOverViewClientOptions__BaseAddress",
                                 "value": "[parameters('JobProfileOverViewUrl')]"
                             },
