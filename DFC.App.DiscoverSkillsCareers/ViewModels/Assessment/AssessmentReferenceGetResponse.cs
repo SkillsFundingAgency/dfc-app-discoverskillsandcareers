@@ -10,7 +10,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string AssessmentStarted { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Enter a phone number")]
         [DataType(DataType.PhoneNumber)]
         public string Telephone { get; set; }
     }
