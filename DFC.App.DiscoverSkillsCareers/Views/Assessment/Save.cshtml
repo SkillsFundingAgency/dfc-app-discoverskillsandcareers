@@ -4,8 +4,12 @@
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-xl govuk-visually-hidden">Save your progress</h1>
             <form method="post">
-               <!-- Error msgs go here  -->
-               <!-- @Html.ValidationSummary() -->
+                <!-- Error msgs go here  -->
+                <div class="govuk-grid-row app-error">
+                    <div class="govuk-grid-column-two-thirds-from-desktop">
+                        <partial name="ValidationSummary" model="ViewData.ModelState" />
+                    </div>
+                </div>
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
@@ -13,6 +17,7 @@
                                 How would you like to return to your assessment?
                             </h1>
                         </legend>
+                        <span asp-validation-for="AssessmentReturnTypeId" class="text-danger govuk-error-message"></span>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
                                 <input type="radio" asp-for="AssessmentReturnTypeId" class="govuk-radios__input" id="SelectedOption-1" value="1" />
@@ -22,7 +27,7 @@
                             </div>
 
                             <div class="govuk-radios__item">
-                                <input type="radio" asp-for="AssessmentReturnTypeId" class="govuk-radios__input" id="SelectedOption-2"  value="2" />
+                                <input type="radio" asp-for="AssessmentReturnTypeId" class="govuk-radios__input" id="SelectedOption-2" value="2" />
                                 <label class="govuk-label govuk-radios__label" for="SelectedOption-2">
                                     Get a reference code
                                 </label>
