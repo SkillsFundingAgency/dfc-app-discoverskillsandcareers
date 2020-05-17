@@ -1,6 +1,6 @@
 ﻿@model ModelStateDictionary
 
-<div class="@(Html.ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") govuk-error-summary"
+<div class="@(ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") govuk-error-summary"
      data-valmsg-summary="true">
     <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
     <div class="govuk-error-summary__body">
