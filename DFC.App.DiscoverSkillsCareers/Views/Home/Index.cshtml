@@ -36,7 +36,7 @@
             <div class="app-sidebar app-resume-panel">
                 <h2 class="govuk-heading-m">Return to an assessment</h2>
                 <form method="post" asp-controller="home">
-                    <partial name="ValidationSummary" model="ViewData.ModelState"/>
+                    <partial name="ValidationSummary" model="ViewData.ModelState" />
                     <div class="app-resume-panel__input govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
                         <label class="govuk-label" for="ReferenceCode">Enter your reference</label>
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>

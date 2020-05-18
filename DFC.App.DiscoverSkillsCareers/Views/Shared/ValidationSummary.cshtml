@@ -1,19 +1,16 @@
 ﻿@model ModelStateDictionary
 
-@*@if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
-{*@
-    <div class="@(ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") govuk-error-summary" data-valmsg-summary="true">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-        <div class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
-                @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
-                {
+<div class="@(ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") govuk-error-summary" data-valmsg-summary="true">
+    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+    <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+            @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
+    {
 
-                    <li>
-                        <a href="" class="govuk-link govuk-link--no-visited-state">@modelError.ErrorMessage</a>
-                    </li>
-                }
-            </ul>
-        </div>
+        <li>
+            <a href="#code" class="govuk-link govuk-link--no-visited-state">@modelError.ErrorMessage</a>
+        </li>
+    }
+        </ul>
     </div>
-@*}*@
+</div>
