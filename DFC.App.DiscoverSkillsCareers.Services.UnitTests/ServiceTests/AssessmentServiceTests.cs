@@ -208,5 +208,27 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await assessmentService.ReloadUsingSessionId(sessionId).ConfigureAwait(false));
         }
+
+        [Fact]
+        public void CheckWhetherAReferenceCodeExists()
+        {
+            var refCode = "dshh88228";
+            A.CallTo(() => assessmentService.ReferenceCodeExists(refCode)).Returns(true);
+
+            var response = assessmentService.ReferenceCodeExists(refCode);
+
+            Assert.True(response);
+        }
+
+        [Fact]
+        public void CheckWhetherAReferenceCodeDoesNotExists()
+        {
+            var refCode = "dshh88228";
+            A.CallTo(() => assessmentService.ReferenceCodeExists(refCode)).Returns(false);
+
+            var response = assessmentService.ReferenceCodeExists(refCode);
+
+            Assert.False(response);
+        }
     }
 }
