@@ -213,22 +213,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public void CheckWhetherAReferenceCodeExists()
         {
             var refCode = "dshh88228";
-            A.CallTo(() => assessmentService.ReferenceCodeExists(refCode)).Returns(true);
+            GetAssessmentResponse asssessmentResponse = null;
+            A.CallTo(() => assessmentApiService.GetAssessment(refCode)).Returns(asssessmentResponse);
 
             var response = assessmentService.ReferenceCodeExists(refCode);
 
             Assert.True(response);
-        }
-
-        [Fact]
-        public void CheckWhetherAReferenceCodeDoesNotExists()
-        {
-            var refCode = "dshh88228";
-            A.CallTo(() => assessmentService.ReferenceCodeExists(refCode)).Returns(false);
-
-            var response = assessmentService.ReferenceCodeExists(refCode);
-
-            Assert.False(response);
         }
     }
 }
