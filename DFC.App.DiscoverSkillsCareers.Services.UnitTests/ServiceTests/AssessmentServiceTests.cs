@@ -208,5 +208,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await assessmentService.ReloadUsingSessionId(sessionId).ConfigureAwait(false));
         }
+
+        [Fact]
+        public void CheckWhetherAReferenceCodeExists()
+        {
+            var refCode = "dshh88228";
+            GetAssessmentResponse asssessmentResponse = null;
+            A.CallTo(() => assessmentApiService.GetAssessment(refCode)).Returns(asssessmentResponse);
+
+            var response = assessmentService.ReferenceCodeExists(refCode);
+
+            Assert.True(response);
+        }
     }
 }
