@@ -28,12 +28,15 @@
                                     @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound))
                                     {
                                         <li class="">
-                                            <div class="app-long-results__item">
-                                                @Html.Raw(profile.OverViewHTML)
-                                            </div>
+                                            @Html.Raw(profile.OverViewHTML)
                                         </li>
                                     }
                                 </ul>
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        <p class="show-more"> </p>
+                                    </div>
+                                </div>
                             }
                             else
                             {
