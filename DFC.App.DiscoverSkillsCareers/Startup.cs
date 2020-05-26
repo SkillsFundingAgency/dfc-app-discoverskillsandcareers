@@ -1,4 +1,6 @@
 using AutoMapper;
+using CorrelationId;
+using DFC.App.DiscoverSkillsCareers.ClientHandlers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
@@ -35,6 +37,13 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCorrelationId(new CorrelationIdOptions
+            {
+                Header = "DssCorrelationId",
+                UseGuidForCorrelationId = true,
+                UpdateTraceIdentifier = false,
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -76,7 +85,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
-
+            services.AddCorrelationId();
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
@@ -86,6 +95,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+
+            services.AddTransient<CorrelationIdDelegatingHandler>();
 
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
