@@ -1,11 +1,13 @@
 ﻿using CorrelationId;
 using DFC.Logger.AppInsights.Contracts;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.ClientHandlers
 {
+    [ExcludeFromCodeCoverage]
     public class CorrelationIdDelegatingHandler : DelegatingHandler
     {
         private readonly ICorrelationContextAccessor correlationContextAccessor;

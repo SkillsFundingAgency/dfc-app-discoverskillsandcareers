@@ -8,11 +8,14 @@ using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Mime;
 
 namespace DFC.App.DiscoverSkillsCareers.Extensions
 {
+
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddPolicies(
@@ -58,7 +61,7 @@ namespace DFC.App.DiscoverSkillsCareers.Extensions
                                 .GetRequiredService<IOptions<TClientOptions>>()
                                 .Value;
                             var dysacClientOptions = configuration?.GetSection("DysacClientOptions").Get<DysacClientOptions>();
-                            options.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
+                            options.BaseAddress = dysacClientOptions?.AssessmentApiBaseAddress;
                             options.Timeout = httpClientOptions.Timeout;
                             options.DefaultRequestHeaders.Clear();
                             options.DefaultRequestHeaders.Add(HeaderNames.Accept, MediaTypeNames.Application.Json);
