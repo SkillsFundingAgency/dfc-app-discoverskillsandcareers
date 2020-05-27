@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -14,13 +15,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         private readonly TestController controller;
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
+        private readonly ILogService logService;
 
         public LoadSessionPostTests()
         {
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
+            logService = A.Fake<ILogService>();
 
-            controller = new TestController(sessionService, assessmentService);
+            controller = new TestController(logService, sessionService, assessmentService);
         }
 
         [Fact]

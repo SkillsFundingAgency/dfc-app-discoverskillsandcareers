@@ -22,6 +22,8 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using DFC.Logger.AppInsights.Contracts;
+using DFC.App.DiscoverSkillsCareers.Framework;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -37,13 +39,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCorrelationId(new CorrelationIdOptions
-            {
-                Header = "DssCorrelationId",
-                UseGuidForCorrelationId = true,
-                UpdateTraceIdentifier = false,
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -88,6 +83,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddCorrelationId();
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
             services.AddScoped<IAssessmentService, AssessmentService>();
             services.AddScoped<IResultsService, ResultsService>();
