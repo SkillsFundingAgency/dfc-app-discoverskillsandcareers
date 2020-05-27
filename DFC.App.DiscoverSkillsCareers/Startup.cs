@@ -39,6 +39,13 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCorrelationId(new CorrelationIdOptions
+            {
+                Header = "DssCorrelationId",
+                UseGuidForCorrelationId = true,
+                UpdateTraceIdentifier = false,
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
