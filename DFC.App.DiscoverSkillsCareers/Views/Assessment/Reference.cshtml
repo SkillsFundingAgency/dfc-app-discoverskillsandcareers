@@ -1,55 +1,53 @@
 ﻿@model AssessmentReferenceGetResponse
     <div class="govuk-width-container">
         <div class="govuk-grid-row">
-            <form method="post" class="govuk-grid-row">
-                <div class="govuk-main-wrapper govuk-width-container">
-                <div class="govuk-grid-row app-error">
-                    <div class="govuk-grid-column-two-thirds-from-desktop">
-                                <partial name="ValidationSummary" model="ViewData.ModelState" />
+            <div class="govuk-grid-column-two-thirds">
+                <form method="post" class="govuk-grid-row">
+                    <div class="govuk-grid-row app-error">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <partial name="ValidationSummary" model="ViewData.ModelState" />
+                        </div>
                     </div>
-                </div>
-                </div>
-                        <div class="govuk-grid-column-two-thirds">
-                            <h1 class="govuk-heading-l">Your reference code</h1>
-                            <div class="app-your-reference govuk-body">
-                                <p>
-                                    <span class="app-your-reference__code govuk-heading-xl">@Model.ReferenceCode</span>
-                                </p>
-                                <div class="app-your-reference__meta govuk-grid-row">
-                                    <p class="govuk-grid-column-one-third govuk-body-s">@Model.AssessmentStarted</p>
-                                    <p class="govuk-grid-column-two-thirds govuk-body-s"></p>
-                                </div>
-                            </div>
-
-                            <div class="govuk-body">
-                                <h2 class="govuk-heading-m">What to do with your reference</h2>
-                                <p>The code above is your unique reference. You can use this to:</p>
-                                <ul>
-                                    <li>return to your assessment and continue</li>
-                                    <li>see your results, if you have finished the assessment</li>
-                                </ul>
-                            </div>
-
-                            <h2 class="govuk-heading-m">Send reference code in a text message</h2>
-
-
-                            <div class="govuk-grid-column-two-thirds-from-desktop">
-                                <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
-                                <div>
-                                    <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
-                                        <label class="govuk-label" for="mobileNumber">
-                                            Phone number
-                                        </label>
-                                        <span asp-validation-for="Telephone" class="govuk-error-message"></span>
-                                        <input class="govuk-input" type="text" asp-for="Telephone" />
-                                    </div>
-                                </div>
-                                <button class="govuk-button" type="submit">Send</button>
+                        <h1 class="govuk-heading-l">Your reference code</h1>
+                        <div class="app-your-reference govuk-body">
+                            <p>
+                                <span class="app-your-reference__code govuk-heading-xl">@Model.ReferenceCode</span>
+                            </p>
+                            <div class="app-your-reference__meta govuk-grid-row">
+                                <p class="govuk-grid-column-one-third govuk-body-s">@Model.AssessmentStarted</p>
+                                <p class="govuk-grid-column-two-thirds govuk-body-s"></p>
                             </div>
                         </div>
-</form>
-            <div class="govuk-body">
-                <p><a asp-action="return">Return to assessment</a></p>
+
+                        <div class="govuk-body">
+                            <h2 class="govuk-heading-m">What to do with your reference</h2>
+                            <p>The code above is your unique reference. You can use this to:</p>
+                            <ul>
+                                <li>return to your assessment and continue</li>
+                                <li>see your results, if you have finished the assessment</li>
+                            </ul>
+                        </div>
+
+                        <h2 class="govuk-heading-m">Send reference code in a text message</h2>
+
+
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
+                            <div>
+                                <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+                                    <label class="govuk-label" for="mobileNumber">
+                                        Phone number
+                                    </label>
+                                    <span asp-validation-for="Telephone" class="govuk-error-message"></span>
+                                    <input class="govuk-input" type="text" asp-for="Telephone" />
+                                </div>
+                            </div>
+                            <button class="govuk-button" type="submit">Send</button>
+                        </div>
+                </form>
+                <div class="govuk-body">
+                    <p><a asp-action="return">Return to assessment</a></p>
+                </div>
             </div>
         </div>
 </div>
