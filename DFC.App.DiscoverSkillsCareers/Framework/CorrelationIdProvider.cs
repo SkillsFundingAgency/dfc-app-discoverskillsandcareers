@@ -1,10 +1,12 @@
 ﻿using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Framework
 {
+    [ExcludeFromCodeCoverage]
     public class CorrelationIdProvider : ICorrelationIdProvider
     {
         private const string CorrelationId = "CorrelationId";
