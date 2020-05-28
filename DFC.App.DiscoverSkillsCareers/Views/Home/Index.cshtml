@@ -40,7 +40,7 @@
                     <div class="app-resume-panel__input govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
                         <label class="govuk-label" for="ReferenceCode">Enter your reference</label>
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
-                        <input class="govuk-input" asp-for="ReferenceCode" id="code" />
+                        <input class="govuk-input" asp-for="ReferenceCode" id="code" aria-label="Reference-Code" />
                     </div>
                     <button type="submit" class="govuk-button app-button">
                         Continue
