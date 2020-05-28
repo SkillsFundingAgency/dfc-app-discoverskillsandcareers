@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -15,6 +16,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
+        private readonly ILogService logService;
 
         public BodyTopTests()
         {
@@ -22,8 +24,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
+            logService = A.Fake<ILogService>();
 
-            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
         }
 
         [Fact]

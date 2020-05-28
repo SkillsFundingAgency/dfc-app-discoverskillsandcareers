@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -11,10 +12,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IMapper mapper;
         private readonly IAssessmentService apiService;
+        private readonly ILogService logService;
 
-        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IAssessmentService apiService)
+        public FilterQuestionsController(ILogService logService, IMapper mapper, ISessionService sessionService, IAssessmentService apiService)
             : base(sessionService)
         {
+            this.logService = logService;
             this.mapper = mapper;
             this.apiService = apiService;
         }
@@ -113,6 +116,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             resultsBodyTopViewModel.QuestionNumber -= 1;
+
+            this.logService.LogInformation($"{nameof(this.BodyTopQuestions)} generated the model and ready to pass to the view");
+
             return View(resultsBodyTopViewModel);
         }
 
@@ -131,6 +137,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),
                 JobCategoryName = assessment,
             };
+
+            this.logService.LogInformation($"{nameof(this.GetQuestion)} generated the model and ready to pass to the view");
             return response;
         }
     }

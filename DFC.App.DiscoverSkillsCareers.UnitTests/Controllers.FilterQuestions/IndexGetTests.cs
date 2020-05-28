@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,14 +18,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
+        private readonly ILogService logService;
 
         public IndexGetTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
+            logService = A.Fake<ILogService>();
 
-            controller = new FilterQuestionsController(mapper, sessionService, assessmentService);
+            controller = new FilterQuestionsController(logService, mapper, sessionService, assessmentService);
         }
 
         [Fact]

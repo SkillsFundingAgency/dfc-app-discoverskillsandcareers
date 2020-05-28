@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +13,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService apiService;
+        private readonly ILogService logService;
 
-        public ResultsController(IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
+        public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
             : base(sessionService)
         {
+            this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.apiService = apiService;
@@ -70,6 +73,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
 
+            this.logService.LogInformation($"{nameof(this.Roles)} generated the model and ready to pass to the view");
+
             return View("ResultsByCategory", resultsByCategoryModel);
         }
 
@@ -89,6 +94,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             // if a category is passed in then we are on the roles page and do not want to display category text
             resultsHeroBannerViewModel.IsCategoryBanner = string.IsNullOrEmpty(id);
+
+            this.logService.LogInformation($"{nameof(this.HeroBanner)} generated the model and ready to pass to the view");
 
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
         }
