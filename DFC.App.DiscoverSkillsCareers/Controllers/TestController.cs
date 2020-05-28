@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,10 +9,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class TestController : BaseController
     {
         private readonly IAssessmentService apiService;
+        private readonly ILogService logService;
 
-        public TestController(ISessionService sessionService, IAssessmentService apiService)
+        public TestController(ILogService logService, ISessionService sessionService, IAssessmentService apiService)
             : base(sessionService)
         {
+            this.logService = logService;
             this.apiService = apiService;
         }
 
@@ -46,6 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 ModelState.AddModelError("SessionId", "SessionId is not valid");
                 var responseViewModel = new TestLoadSessionResponseViewModel() { SessionId = viewModel.SessionId };
+                this.logService.LogInformation($"{nameof(this.LoadSession)} generated the model and ready to pass to the view");
                 return View(responseViewModel);
             }
         }

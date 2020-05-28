@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
@@ -11,14 +12,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
+        private readonly ILogService logService;
 
         public AssessmentTestBase()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
+            logService = A.Fake<ILogService>();
 
-            assessmentController = new AssessmentController(mapper, assessmentService, sessionService);
+            assessmentController = new AssessmentController(logService, mapper, assessmentService, sessionService);
         }
 
         protected AssessmentController AssessmentController

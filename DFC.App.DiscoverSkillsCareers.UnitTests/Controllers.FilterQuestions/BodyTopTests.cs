@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
+        private readonly ILogService logService;
 
         public BodyTopTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
-            controller = new FilterQuestionsController(mapper, sessionService, assessmentService);
+            logService = A.Fake<ILogService>();
+
+            controller = new FilterQuestionsController(logService, mapper, sessionService, assessmentService);
         }
 
         [Fact]
