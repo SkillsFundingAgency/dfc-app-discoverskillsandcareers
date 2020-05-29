@@ -8,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     public class AssessmentSaveRequestViewModel
     {
         [Display(Name = "Return option")]
-        [Required]
+        [Required(ErrorMessage = "Choose how you would like to return to your assessment")]
         public AssessmentReturnType? AssessmentReturnTypeId { get; set; }
     }
 }

@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.App.DiscoverSkillsCareers.Framework;
+using DFC.Logger.AppInsights.Extensions;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -100,7 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
 
             services.AddTransient<CorrelationIdDelegatingHandler>();
-
+            services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
             AddPolicies(policyRegistry);
