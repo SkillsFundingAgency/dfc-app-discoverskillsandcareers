@@ -7,7 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     public class HomeIndexRequestViewModel
     {
         [Display(Name = "Reference Code")]
-        [Required]
+        [Required(ErrorMessage = "Enter your reference")]
         public string ReferenceCode { get; set; }
     }
 }

@@ -5,7 +5,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <!-- Error msgs go here  -->
-                <div class="govuk-form-group ">
+                <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
                     <fieldset class="govuk-fieldset app-question app-question--long">
                         <legend class="govuk-visually-hidden">@Model.Question.QuestionText</legend>
 

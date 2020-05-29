@@ -95,7 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddTransient<CorrelationIdDelegatingHandler>();
-
+            services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
             AddPolicies(policyRegistry);

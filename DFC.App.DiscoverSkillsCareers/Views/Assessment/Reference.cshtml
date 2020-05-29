@@ -38,8 +38,8 @@
                                     <label class="govuk-label" for="mobileNumber">
                                         Phone number
                                     </label>
-                                    <span asp-validation-for="Telephone" class="govuk-error-message"></span>
-                                    <input class="govuk-input" type="text" asp-for="Telephone" />
+                                    <span asp-validation-for="Telephone" class="govuk-error-message" data-valmsg-replace="true"></span>
+                                    <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" type="text" asp-for="Telephone" id="code" />
                                 </div>
                             </div>
                             <button class="govuk-button" type="submit">Send</button>
