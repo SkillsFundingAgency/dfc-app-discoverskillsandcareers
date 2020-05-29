@@ -20,7 +20,7 @@
                                     Email
                                 </label>
                                 <span asp-validation-for="Email" class="govuk-error-message"></span>
-                                <input class="govuk-input" id="email" asp-for="Email" type="text">
+                                <input class="govuk-input  @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" id="code" asp-for="Email" type="text">
                             </div>
                             <button class="govuk-button" type="submit">Send</button>
                         </div>
