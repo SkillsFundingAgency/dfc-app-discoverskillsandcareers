@@ -212,6 +212,22 @@
                                 "value": "[parameters('JobProfileOverViewUrl')]"
                             },
                             {
+                                "name": "Policies__HttpCircuitBreaker__DurationOfBreak",
+                                "value": "00:01:00"
+                            },                            
+                            {
+                                "name": "Policies__HttpCircuitBreaker__ExceptionsAllowedBeforeBreaking",
+                                "value": 3
+                            },                            
+                            {
+                                "name": "Policies__HttpRetry__BackoffPower",
+                                "value": 2
+                            },                            
+                            {
+                                "name": "Policies__HttpRetry__Count",
+                                "value": 3
+                            },                            
+                            {
                                 "name": "Notify__EmailTemplateId",
                                 "value": "[parameters('NotifyEmailTemplateId')]"
                             },
@@ -221,7 +237,7 @@
                             },
                             {
                                 "name": "SessionConfig__ApplicationName",
-                                "value": "session"
+                                "value": "sessionService"
                             },
                             {
                                 "name": "SessionConfig__Salt",
