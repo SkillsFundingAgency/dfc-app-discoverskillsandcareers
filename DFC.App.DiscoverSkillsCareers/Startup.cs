@@ -40,13 +40,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCorrelationId(new CorrelationIdOptions
-            {
-                Header = "DssCorrelationId",
-                UseGuidForCorrelationId = true,
-                UpdateTraceIdentifier = false,
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -99,6 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+            services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddTransient<CorrelationIdDelegatingHandler>();
             services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
