@@ -39,7 +39,7 @@
                                         Phone number
                                     </label>
                                     <span asp-validation-for="Telephone" class="govuk-error-message" data-valmsg-replace="true"></span>
-                                    <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" type="text" asp-for="Telephone" id="code" />
+                                    <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" type="text" asp-for="Telephone" id="code" value="@(!ViewData.ModelState.IsValid ? "": "")"/>
                                 </div>
                             </div>
                             <button class="govuk-button" type="submit">Send</button>

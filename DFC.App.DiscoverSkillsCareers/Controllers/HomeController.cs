@@ -32,6 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             if (!ModelState.IsValid)
             {
                 var responseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+
                 return View(responseViewModel);
             }
 
