@@ -3,17 +3,22 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <fieldset class="govuk-fieldset" aria-describedby="passport-issued-hint" role="group">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                    <h1 class="govuk-fieldset__heading">Email address</h1>
-                </legend>
-                <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
-                <div class="govuk-body">
-                    <form method="post" class="govuk-grid-row">
-                        <div class="govuk-grid-row app-error">
-                            <div class="govuk-grid-column-two-thirds-from-desktop">
-                                <partial name="ValidationSummary" model="ViewData.ModelState" />
-                            </div>
+                <form method="post" class="govuk-grid-row">
+                    <div class="govuk-grid-row app-error">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <partial name="ValidationSummary" model="ViewData.ModelState" />
                         </div>
+                    </div>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">Email address</h1>
+                    </legend>
+                    <span class="govuk-hint">
+                        We will only use this to send you a link to return to your as
+                        essment
+                    </span>
+                    <div class="govuk-body">
+
+
                         <div class="govuk-grid-column-two-thirds">
                             <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
                                 <label class="govuk-label" for="email">
@@ -24,8 +29,8 @@
                             </div>
                             <button class="govuk-button" type="submit">Send</button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </fieldset>
         </div>
     </div>
