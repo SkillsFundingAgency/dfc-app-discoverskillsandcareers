@@ -1,7 +1,4 @@
 ﻿@model ModelStateDictionary
-@{
-    var showHideErrorSummary = Model.IsValid ? "dfc-composite-shell-hide" : "";
-}
 
     <div class="@(Model.IsValid ? "validation-summary-valid" : "validation-summary-errors") govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary" data-valmsg-summary="true">
      <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
