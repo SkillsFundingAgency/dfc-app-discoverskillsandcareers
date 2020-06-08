@@ -3,7 +3,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-xl govuk-visually-hidden">Save your progress</h1>
-            <form method="post">
+            <form method="post" id="dysac-form">
                 <!-- Error msgs go here  -->
                 <div class="govuk-grid-row app-error">
                     <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -35,7 +35,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <button type="submit" class="govuk-button">Continue</button>
+                <button type="submit" class="govuk-button" id="dysac-submit-button">Continue</button>
             </form>
             <div class="govuk-body">
                 <p><a asp-action="return">Return to assessment</a></p>

@@ -1,6 +1,6 @@
 ﻿@model HomeIndexResponseViewModel
 @{
-    ViewData["Title"] = "Discover your skills and careers";
+     ViewData["Title"] = "Discover your skills and careers";
 }
 <div class="govuk-width-container">
     <div class="govuk-grid-row govuk-!-margin-bottom-9 govuk-!-margin-top-7">
@@ -42,7 +42,7 @@
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
                         <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code" aria-label="Reference-Code" value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
-                    <button type="submit" class="govuk-button app-button">
+                    <button type="submit" class="govuk-button app-button" id="dysac-submit-button">
                         Continue
                     </button>
                 </form>
