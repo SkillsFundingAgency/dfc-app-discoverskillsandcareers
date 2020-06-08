@@ -3,7 +3,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <fieldset class="govuk-fieldset" aria-describedby="passport-issued-hint" role="group">
-                <form method="post" class="govuk-grid-row">
+                <form method="post" class="govuk-grid-row" id="dysac-form">
                     <div class="govuk-grid-row app-error">
                         <div class="govuk-grid-column-two-thirds-from-desktop">
                             <partial name="ValidationSummary" model="ViewData.ModelState" />
@@ -25,7 +25,7 @@
                                 <span asp-validation-for="Email" class="govuk-error-message"></span>
                                 <input class="govuk-input  @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" id="code" asp-for="Email" type="text" value="@(!ViewData.ModelState.IsValid ? "": "")">
                             </div>
-                            <button class="govuk-button" type="submit">Send</button>
+                            <button class="govuk-button" type="submit" id="dysac-submit-button">Send</button>
                         </div>
                     </div>
                 </form>

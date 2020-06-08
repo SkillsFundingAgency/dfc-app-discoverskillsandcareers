@@ -1,5 +1,5 @@
 ﻿@model FilterQuestionIndexResponseViewModel
-    <form method="post">
+    <form method="post" id="dysac-form">
         <input type="hidden" name="QuestionNumberReal" value="@Model.Question.CurrentQuestionNumber" />
         <input type="hidden" name="QuestionNumberCounter" value="@Model.Question.QuestionNumber" />
         <div class="govuk-grid-row">
@@ -44,7 +44,7 @@
                     </fieldset>
                 </div>
                 <div class="app-controls--left">
-                    <button type="submit" class="govuk-button app-button btn-next-question">
+                    <button type="submit" class="govuk-button app-button btn-next-question" id="dysac-submit-button">
                         Next
                     </button>
                 </div>
