@@ -101,7 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("bodytop/assessment/complete")]
         public IActionResult BodyTopBackToStart()
         {
-            return View();
+            return View(); 
         }
 
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
