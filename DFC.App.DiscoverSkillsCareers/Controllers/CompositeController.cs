@@ -104,14 +104,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        [Route("bodytop/assessment/save")]
-        [Route("bodytop/assessment/email")]
-        [Route("bodytop/assessment/reference")]
-        public IActionResult BodyTopBack()
-        {
-            return View();
-        }
-
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
         public IActionResult BodyTopQuestions(string assessmentType, int questionNumber)
         {
