@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
@@ -11,6 +13,9 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         }
 
         public QuestionGetResponseViewModel Question { get; set; }
+
+        [Required(ErrorMessage = "Choose an answer to the statement")]
+        public Answer? Answer { get; set; }
 
         public string JobCategoryName { get; set; }
     }

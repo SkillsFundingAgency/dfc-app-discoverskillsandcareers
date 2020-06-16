@@ -5,11 +5,18 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <!-- Error msgs go here  -->
+
+                <div class="govuk-grid-row app-error">
+                    <div class="govuk-grid-column-two-thirds-from-desktop">
+                        <partial name="ValidationSummary" model="ViewData.ModelState" />
+                    </div>
+                </div>
                 <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
                     <fieldset class="govuk-fieldset app-question app-question--long">
                         <legend class="govuk-visually-hidden">@Model.Question.QuestionText</legend>
 
                         <div class="govuk-fieldset__legend--l app-question__question">
+                            <span asp-validation-for="Answer" class="text-danger govuk-error-message"></span>
                             <h1 class="govuk-fieldset__heading" aria-hidden="true">
                                 @Model.Question.QuestionText
                             </h1>
@@ -21,6 +28,7 @@
                                        type="radio"
                                        value="5"
                                        name="answer"
+                                       asp-for="Answer"
                                        checked="@Model.Question.IsChecked(Answer.Yes)"
                                        gov-analytics-data="SelectedAnswer | Yes">
                                 <label class="govuk-label govuk-radios__label" for="selected_answer-1">
@@ -34,6 +42,7 @@
                                        type="radio"
                                        value="6"
                                        name="answer"
+                                       asp-for="Answer"
                                        checked="@Model.Question.IsChecked(Answer.No)"
                                        gov-analytics-data="SelectedAnswer | No">
                                 <label class="govuk-label govuk-radios__label" for="selected_answer-2">
@@ -50,7 +59,7 @@
                 </div>
                 <div class="app-sidebar app-save-panel app-save-panel--alt-mobile">
                     <h3 class="govuk-heading-m">Return to this later</h3>
-                    <p class="govuk-body"><a asp-action="save" asp-controller="assessment"  class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+                    <p class="govuk-body"><a asp-action="save" asp-controller="assessment" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
                 </div>
 
             </div>
@@ -61,5 +70,5 @@
                     <p class="govuk-body"><a asp-action="save" asp-controller="assessment" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
                 </div>
             </div>
-        </div>  
+        </div>
     </form>
