@@ -11,7 +11,7 @@
                         <partial name="ValidationSummary" model="ViewData.ModelState" />
                     </div>
                 </div>
-                <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+                <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")" id="code">
                     <fieldset class="govuk-fieldset app-question app-question--long">
                         <legend class="govuk-visually-hidden">@Model.Question.QuestionText</legend>
 
@@ -27,7 +27,7 @@
                                        id="selected_answer-1"
                                        type="radio"
                                        value="5"
-                                       name="answer"
+                                       name="Answer"
                                        asp-for="Answer"
                                        checked="@Model.Question.IsChecked(Answer.Yes)"
                                        gov-analytics-data="SelectedAnswer | Yes">
@@ -41,7 +41,7 @@
                                        id="selected_answer-2"
                                        type="radio"
                                        value="6"
-                                       name="answer"
+                                       name="Answer"
                                        asp-for="Answer"
                                        checked="@Model.Question.IsChecked(Answer.No)"
                                        gov-analytics-data="SelectedAnswer | No">
