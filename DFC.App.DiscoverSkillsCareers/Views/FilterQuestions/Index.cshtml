@@ -11,7 +11,7 @@
                         <partial name="ValidationSummary" model="ViewData.ModelState" />
                     </div>
                 </div>
-                <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+                <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")" id="code">
                     <fieldset class="govuk-fieldset app-question app-question--long">
                         <legend class="govuk-visually-hidden">@Model.Question.QuestionText</legend>
 
