@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Logger.AppInsights.Contracts;
@@ -16,13 +17,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IAssessmentService apiService;
         private readonly ILogService logService;
+        private readonly NotifyOptions notifyOptions;
 
-        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, ISessionService sessionService)
+        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, 
+            ISessionService sessionService, NotifyOptions notifyOptions)
             : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.apiService = apiService;
+            this.notifyOptions = notifyOptions;
         }
 
         [HttpGet]
@@ -230,7 +234,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewReponse);
             }
 
-            var emailResponse = await apiService.SendEmail(GetDomainUrl(), request.Email).ConfigureAwait(false);
+            var emailResponse = await apiService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
             if (emailResponse.IsSuccess)
             {
                 if (TempData != null)
@@ -302,6 +306,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        [Route("head/reload")]
         public async Task<IActionResult> Reload(string sessionId)
         {
             var reloadResponseSuccess = await apiService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
