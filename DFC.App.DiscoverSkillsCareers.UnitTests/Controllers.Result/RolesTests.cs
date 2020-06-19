@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 {
-    public class JobProfileOverviewsTests
+    public class RolesTests
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
@@ -19,17 +20,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
         private readonly string testCategory;
+        private readonly ILogService logService;
 
-        public JobProfileOverviewsTests()
+        public RolesTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
-            var externalLinkOptions = new ExternalLinkOptions();
             testCategory = "testCategory";
+            logService = A.Fake<ILogService>();
 
-            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService, externalLinkOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
         }
 
         [Fact]

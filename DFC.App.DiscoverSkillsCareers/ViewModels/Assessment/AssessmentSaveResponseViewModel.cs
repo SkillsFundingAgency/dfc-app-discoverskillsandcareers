@@ -5,10 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     [ExcludeFromCodeCoverage]
-    public class AssessmentSaveRequestViewModel
+    public class AssessmentSaveResponseViewModel
     {
         [Display(Name = "Return option")]
-        [Required]
+        [Required(ErrorMessage = "Choose how you would like to return to your assessment")]
         public AssessmentReturnType? AssessmentReturnTypeId { get; set; }
     }
 }

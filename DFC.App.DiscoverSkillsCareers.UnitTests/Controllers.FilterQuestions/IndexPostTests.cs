@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,14 +18,16 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
+        private readonly ILogService logService;
 
         public IndexPostTests()
         {
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
+            logService = A.Fake<ILogService>();
 
-            controller = new FilterQuestionsController(mapper, sessionService, assessmentService);
+            controller = new FilterQuestionsController(logService, mapper, sessionService, assessmentService);
         }
 
         [Fact]
@@ -48,15 +51,17 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
             Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
         }
 
-        [Fact]
-        public async Task WhenAnswerIsProvidedAndFilterQuestionsAreCompleteRedirectsReturnsCompletedView()
+        [Theory]
+        [InlineData(true, "complete")]
+        [InlineData(false, "2")]
+        public async Task WhenAnsweredRedirectsToCorrectNextView(bool isComplete, string expectedRedirect)
         {
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
             var questionNumberCounter = 1;
             var answer = "answer";
-            var answerResponse = new PostAnswerResponse() { IsComplete = true, IsSuccess = true };
+            var answerResponse = new PostAnswerResponse() { IsComplete = isComplete, IsSuccess = true };
             var viewModel = new FilterQuestionPostRequestViewModel()
             {
                 AssessmentType = assessmentType,
@@ -72,7 +77,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
-            Assert.IsType<ViewResult>(actionResponse);
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/{assessmentType}/filterquestions/{jobCategoryName}/{expectedRedirect}", redirectResult.Url);
         }
 
         [Fact]
@@ -93,6 +100,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
 
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.AnswerQuestion(assessmentType, questionNumberReal, questionNumberReal, answer)).Returns(answerResponse);
+
+            var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
+
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public async Task IfModelStateInvalidReturnsBackToQuestion()
+        {
+            var viewModel = new FilterQuestionPostRequestViewModel();
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            controller.ModelState.AddModelError("key", "Test Error");
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 

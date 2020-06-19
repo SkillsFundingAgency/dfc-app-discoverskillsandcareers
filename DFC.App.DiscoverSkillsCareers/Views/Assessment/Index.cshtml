@@ -1,113 +1,110 @@
 ﻿@model QuestionGetResponseViewModel
-
-@if (Model.PreviousQuestionNumber.HasValue)
-{
-    <a class="govuk-back-link" asp-route="assessment" asp-route-assessmentType="@Model.QuestionSetName" asp-route-questionnumber="@Model.PreviousQuestionNumber">Back to previous statement</a>
-}
-else
-{
-    <a asp-route="root" class="govuk-back-link">Back to start</a>
-}
-
-<form method="post">
-    <div class="govuk-grid-row app-question-progress">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-
-            <div class="ncs-progress">
-                <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="govuk-visually-hidden">Complete</strong></span>
-                <div class="ncs-progress__bar"><span style="width: @(Model.PercentageComplete)%!important;"></span></div>
+    <form method="post" id="dysac-form">
+        <div class="govuk-grid-row app-question-progress">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <div class="ncs-progress">
+                    <span class="ncs-progress__count govuk-body"><strong class="govuk-!-font-size-36">@(Model.PercentageComplete)%</strong> <strong class="govuk-visually-hidden">Complete</strong></span>
+                    <div class="ncs-progress__bar"><span class="ncs-progress__@(Model.PercentageComplete)"></span></div>
+                </div>
             </div>
+            <div class="govuk-grid-column-one-third-from-desktop">
 
-        </div>
-        <div class="govuk-grid-column-one-third-from-desktop">
-
-            <div class="app-sidebar app-save-panel app-save-panel--alt">
-                <h3 class="govuk-heading-m">Return to this later</h3>
-                <p class="govuk-body"><a asp-action="save" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+                <div class="app-sidebar app-save-panel app-save-panel--alt">
+                    <h3 class="govuk-heading-m">Return to this later</h3>
+                    <p class="govuk-body"><a asp-action="save" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="govuk-form-group">
-        <div class="govuk-fieldset app-question app-question--short" id="question" role="group" aria-labelledby="question-heading">
-
-            <div class="govuk-fieldset__legend govuk-fieldset__legend--l app-question__question">
-                <h1 class="govuk-fieldset__heading" id="question-heading">
-                    @Model.QuestionText
-                </h1>
-            </div>
-            <div class="app-question__answer govuk-radios govuk-radios--inline">
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           id="selected_answer-1"
-                           type="radio"
-                           value="4"
-                           asp-for="Answer"
-                           checked="@Model.IsChecked(Answer.StronglyAgree)"
-                           gov-analytics-data="SelectedAnswer | StronglyAgree">
-                    <label class="govuk-label govuk-radios__label" for="selected_answer-1">
-                        Strongly agree
-                    </label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           id="selected_answer-2"
-                           type="radio"
-                           value="3"
-                           asp-for="Answer"
-                           checked="@Model.IsChecked(Answer.Agree)"
-                           gov-analytics-data="SelectedAnswer | Agree">
-                    <label class="govuk-label govuk-radios__label" for="selected_answer-2">
-                        Agree
-                    </label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           id="selected_answer-3"
-                           type="radio"
-                           value="2"
-                           asp-for="Answer"
-                           checked="@Model.IsChecked(Answer.Neutral)"
-                           gov-analytics-data="SelectedAnswer | Neutral">
-                    <label class="govuk-label govuk-radios__label" for="selected_answer-3">
-                        It depends
-                    </label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           id="selected_answer-4"
-                           type="radio"
-                           value="1"
-                           asp-for="Answer"
-                           checked="@Model.IsChecked(Answer.Disagree)"
-                           gov-analytics-data="SelectedAnswer | Disagree">
-                    <label class="govuk-label govuk-radios__label" for="selected_answer-4">
-                        Disagree
-                    </label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           id="selected_answer-5"
-                           type="radio"
-                           value="0"
-                           asp-for="Answer"
-                           checked="@Model.IsChecked(Answer.StronglyDisagree)"
-                           gov-analytics-data="SelectedAnswer | StronglyDisagree">
-                    <label class="govuk-label govuk-radios__label" for="selected_answer-5">
-                        Strongly disagree
-                    </label>
-                </div>
-                <span asp-validation-for="Answer" class="text-danger"></span>
+        <div class="govuk-grid-row app-error">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <partial name="ValidationSummary" model="ViewData.ModelState" />
             </div>
         </div>
-    </div>
+        <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+            <div class="govuk-fieldset app-question app-question--short" id="code" role="group" aria-labelledby="question-heading">
+                <div class="govuk-fieldset__legend govuk-fieldset__legend--l app-question__question">
+                    <span asp-validation-for="Answer" class="text-danger govuk-error-message"></span>
+                    <h1 class="govuk-fieldset__heading" id="question-heading">
+                        @Model.QuestionText
+                    </h1>
+                </div>
+                <div class="app-question__answer govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               id="selected_answer-1"
+                               type="radio"
+                               value="4"
+                               asp-for="Answer"
+                               tabindex="1"
+                               checked="@Model.IsChecked(Answer.StronglyAgree)"
+                               gov-analytics-data="SelectedAnswer | StronglyAgree">
+                        <label class="govuk-label govuk-radios__label" for="selected_answer-1">
+                            Strongly agree
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               id="selected_answer-2"
+                               type="radio"
+                               value="3"
+                               tabindex="2"
+                               asp-for="Answer"
+                               checked="@Model.IsChecked(Answer.Agree)"
+                               gov-analytics-data="SelectedAnswer | Agree">
+                        <label class="govuk-label govuk-radios__label" for="selected_answer-2">
+                            Agree
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               id="selected_answer-3"
+                               type="radio"
+                               value="2"
+                               tabindex="3"
+                               asp-for="Answer"
+                               checked="@Model.IsChecked(Answer.Neutral)"
+                               gov-analytics-data="SelectedAnswer | Neutral">
+                        <label class="govuk-label govuk-radios__label" for="selected_answer-3">
+                            It depends
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               id="selected_answer-4"
+                               type="radio"
+                               value="1"
+                               tabindex="4"
+                               asp-for="Answer"
+                               checked="@Model.IsChecked(Answer.Disagree)"
+                               gov-analytics-data="SelectedAnswer | Disagree">
+                        <label class="govuk-label govuk-radios__label" for="selected_answer-4">
+                            Disagree
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               id="selected_answer-5"
+                               type="radio"
+                               value="0"
+                               asp-for="Answer"
+                               tabindex="5"
+                               checked="@Model.IsChecked(Answer.StronglyDisagree)"
+                               gov-analytics-data="SelectedAnswer | StronglyDisagree">
+                        <label class="govuk-label govuk-radios__label" for="selected_answer-5">
+                            Strongly disagree
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="app-controls">
-        <button type="submit" class="govuk-button app-button btn-next-question">
-            Next
-        </button>
-    </div>
-    <div class="app-sidebar app-save-panel app-save-panel--alt-mobile">
-        <h3 class="govuk-heading-m">Return to this later</h3>
-        <p class="govuk-body"><a href="/save-my-progress" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
-    </div>
-</form>
+        <div class="app-controls">
+            <button type="submit" class="govuk-button app-button btn-next-question" id="dysac-submit-button">
+                Next
+            </button>
+        </div>
+        <div class="app-sidebar app-save-panel app-save-panel--alt-mobile">
+            <h3 class="govuk-heading-m">Return to this later</h3>
+            <p class="govuk-body"><a asp-action="save" class="govuk-link govuk-link--no-visited-state">Save my progress</a></p>
+        </div>
+    </form>

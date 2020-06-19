@@ -20,6 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         {
             var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
             var dfcUserSession = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 };
+            
             sessionServiceClient.CreateCookie(dfcUserSession, false);
         }
 

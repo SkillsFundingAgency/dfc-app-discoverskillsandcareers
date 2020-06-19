@@ -28,6 +28,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView($"Q{questionNumber}");
         }
 
+        [Route("head/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
+        [Route("head/assessment/complete")]
+        public IActionResult AssessmentComplete()
+        {
+            return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
+        }
+
         [Route("head/assessment/save")]
         public IActionResult AssessmentSave()
         {
@@ -72,17 +79,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.Results);
         }
 
-        [Route("head/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
-        [Route("head/assessment/complete")]
-        public IActionResult AssessmentComplete()
-        {
-            return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
-        }
-
         [Route("head/assessment/return")]
         public IActionResult AssessmentReturn()
         {
             return CreateViewModelAndReturnView(PageTitle.AssessmentReturn);
+        }
+
+        [Route("bodytop")]
+        public IActionResult BodyTopEmpty()
+        {
+            return View();
         }
 
         [Route("bodytop/{**data}")]
@@ -91,8 +97,38 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        [Route("bodytop/assessment/{assessmentType}/1")]
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BodyTopBackToStart()
+        {
+            return View();
+        }
+
+        [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
+        public IActionResult BodyTopQuestions(string assessmentType, int questionNumber)
+        {
+            var previousQuestionNumber = questionNumber - 1;
+            if (previousQuestionNumber < 0)
+            {
+                previousQuestionNumber = 0;
+            }
+
+            var vm = new BodyTopQuestionsViewModel()
+            {
+                AssessmentType = assessmentType,
+                PreviousQuestionNumber = previousQuestionNumber,
+            };
+            return View(vm);
+        }
+
         [Route("herobanner")]
         public IActionResult HeroBanner()
+        {
+            return View();
+        }
+
+        [Route("bodyfooter/{**data}")]
+        public IActionResult BodyFooter()
         {
             return View();
         }
