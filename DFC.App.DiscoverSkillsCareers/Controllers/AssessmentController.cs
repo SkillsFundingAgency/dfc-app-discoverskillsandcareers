@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -14,10 +15,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IMapper mapper;
         private readonly IAssessmentService apiService;
+        private readonly ILogService logService;
 
-        public AssessmentController(IMapper mapper, IAssessmentService apiService, ISessionService sessionService)
+        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, ISessionService sessionService)
             : base(sessionService)
         {
+            this.logService = logService;
             this.mapper = mapper;
             this.apiService = apiService;
         }
@@ -25,6 +28,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(QuestionGetRequestViewModel requestViewModel)
         {
+            this.logService.LogInformation($"{nameof(this.Index)} started");
+
             if (requestViewModel == null)
             {
                 return BadRequest();
@@ -43,6 +48,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
+            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            if (assessment == null)
+            {
+                return BadRequest();
+            }
+
             if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
                 return BadRequest();
@@ -53,12 +64,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("results");
             }
 
-            if (requestViewModel.QuestionNumber > questionResponse.QuestionNumber)
+            if (requestViewModel.QuestionNumber > assessment.CurrentQuestionNumber)
             {
-                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{questionResponse.QuestionNumber}");
+                return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
+            this.logService.LogInformation($"{nameof(this.Index)} generated the model and ready to pass to the view");
+
             return View(responseViewModel);
         }
 
@@ -113,6 +126,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> New(string assessmentType)
         {
+            this.logService.LogInformation($"{nameof(this.New)} started");
+
             if (string.IsNullOrEmpty(assessmentType))
             {
                 return BadRequest();
@@ -120,11 +135,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             await apiService.NewSession(assessmentType).ConfigureAwait(false);
 
+            this.logService.LogInformation($"{nameof(this.New)} generated the model and ready to pass to the view");
+
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
         }
 
         public IActionResult Complete()
         {
+            this.logService.LogInformation($"{nameof(this.Complete)} generated the model and ready to pass to the view");
+
             return View();
         }
 
@@ -137,6 +156,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessment = await GetAssessment().ConfigureAwait(false);
+
+            this.logService.LogInformation($"{nameof(this.Return)} generated the model and ready to pass to the view");
+
             return NavigateTo(assessment);
         }
 
@@ -148,6 +170,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
+            this.logService.LogInformation($"{nameof(this.Save)} generated the model and ready to pass to the view");
             return View();
         }
 
@@ -186,7 +209,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var viewReponse = new AssessmentEmailPostResponse();
+            var viewReponse = new AssessmentEmailPostRequest();
+
+            this.logService.LogInformation($"{nameof(this.Email)} generated the model and ready to pass to the view");
+
             return View(viewReponse);
         }
 
@@ -200,25 +226,32 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
                 return View(viewReponse);
             }
 
             var emailResponse = await apiService.SendEmail(GetDomainUrl(), request.Email).ConfigureAwait(false);
             if (emailResponse.IsSuccess)
             {
+                if (TempData != null)
+                {
+                    TempData["SentEmail"] = request.Email;
+                }
+
                 return RedirectTo("assessment/emailsent");
             }
             else
             {
                 ModelState.AddModelError("Email", "There was a problem sending email");
-                var viewReponse = new AssessmentEmailPostResponse() { Email = request.Email };
+                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
                 return View(viewReponse);
             }
         }
 
         public IActionResult EmailSent()
         {
+            this.logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
+
             return View();
         }
 
@@ -231,6 +264,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
+
+            this.logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
             return View(responseViewModel);
         }
 
@@ -257,6 +292,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
+            this.logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
+
             return View(responseViewModel);
         }
 
@@ -270,6 +307,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var reloadResponseSuccess = await apiService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
             if (reloadResponseSuccess)
             {
+                this.logService.LogInformation($"{nameof(this.Reload)} generated the model and ready to pass to the view");
+
                 return RedirectTo("assessment/return");
             }
             else
@@ -325,7 +364,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (assessment.IsComplete)
                 {
-                    return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.JobCategorySafeUrl}/complete");
+                    return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
                 else
                 {

@@ -1,4 +1,6 @@
 using AutoMapper;
+using CorrelationId;
+using DFC.App.DiscoverSkillsCareers.ClientHandlers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
@@ -20,6 +22,9 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using DFC.Logger.AppInsights.Contracts;
+using DFC.App.DiscoverSkillsCareers.Framework;
+using DFC.Logger.AppInsights.Extensions;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -72,15 +77,14 @@ namespace DFC.App.DiscoverSkillsCareers
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
-            var externalLinkOptions = Configuration.GetSection(nameof(ExternalLinkOptions)).Get<ExternalLinkOptions>();
-            services.AddSingleton(externalLinkOptions ?? new ExternalLinkOptions());
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
-
+            services.AddCorrelationId();
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
             services.AddScoped<IAssessmentService, AssessmentService>();
             services.AddScoped<IResultsService, ResultsService>();
@@ -88,7 +92,10 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+            services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
+            services.AddTransient<CorrelationIdDelegatingHandler>();
+            services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
             AddPolicies(policyRegistry);

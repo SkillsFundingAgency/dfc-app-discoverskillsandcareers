@@ -1,16 +1,35 @@
-﻿@model AssessmentEmailPostResponse
-<a asp-controller="assessment" asp-action="save">Back</a>
-
-<h1>Email address</h1>
-
-@Html.ValidationSummary()
-
-We will only use this to send you a link to return to your assessment
-
-<form method="post">
-    <input asp-for="Email" />
-    <p>
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </p>
-    <button>Send</button>
+﻿@model AssessmentEmailPostRequest
+<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <fieldset class="govuk-fieldset" aria-describedby="passport-issued-hint" role="group">
+                <form method="post" id="dysac-form">
+                    <partial name="ValidationSummary" model="ViewData.ModelState" />
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">Email address</h1>
+                    </legend>
+                    <span class="govuk-hint">We will only use this to send you a link to return to your assessment</span>
+                    <div class="govuk-body">
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-two-thirds-from-desktop">
+                                <div>
+                                    <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+                                        <div class="govuk-form-group">
+                                            <label class="govuk-label" for="email">
+                                                Email
+                                            </label>
+                                        </div>
+                                        <span asp-validation-for="Email" class="govuk-error-message"></span>
+                                        <input class="govuk-input  @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" id="code" asp-for="Email" type="text" value="@(!ViewData.ModelState.IsValid ? "": "")">
+                                    </div>
+                                </div>
+                                <button class="govuk-button" type="submit" id="dysac-submit-button">Send</button>
+                            </div>
+                            </div>
+                        </div>
 </form>
+            </fieldset>
+        </div>
+    </div>
+</div>
+

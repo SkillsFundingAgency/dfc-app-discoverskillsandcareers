@@ -3,9 +3,13 @@ using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,6 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
+        private readonly ILogService logService;
 
         public IndexTests()
         {
@@ -25,9 +30,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
-            var externalLinkOptions = new ExternalLinkOptions();
+            logService = A.Fake<ILogService>();
 
-            controller = new ResultsController(mapper, sessionService, resultsService, assessmentService, externalLinkOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
         }
 
         [Fact]
@@ -57,6 +62,26 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         }
 
         [Fact]
+        public async Task WhenHasPreviousCompleteCategoryRedirectsToRoles()
+        {
+            var category = "testcategory";
+            var assessmentResponse = new GetAssessmentResponse() { IsFilterAssessment = true,  MaxQuestionsCount = 2, RecordedAnswersCount = 2,  };
+            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
+
+            var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category) };
+
+            A.CallTo(() => resultsService.GetResults()).Returns(resultsResponse);
+
+            var actionResponse = await controller.Index().ConfigureAwait(false);
+
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+
+            Assert.Equal($"~/{RouteName.Prefix}/results/roles/{category}", redirectResult.Url);
+        }
+
+        [Fact]
         public async Task WhenAssessmentIsCompleteShowsResults()
         {
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
@@ -67,6 +92,11 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             var actionResponse = await controller.Index().ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        private IEnumerable<JobCategoryResult> GetJobCategories(string category)
+        {
+            yield return new JobCategoryResult() { JobFamilyName = category,   FilterAssessment = new FilterAssessmentResult() { CreatedDt = DateTime.Now } };
         }
     }
 }

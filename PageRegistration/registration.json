@@ -1,25 +1,43 @@
 [
   {
     "Path": "discover-your-skills-careers",
-    "TopNavigationText": "",
     "TopNavigationOrder": 100,
     "Layout": 1,
-    "OfflineHtml": "<div class=\"govuk-width-container\"><H2>Discover your skills and careers is unavailable.</H2></div>",
+    "OfflineHtml": "<div class=\"govuk-width-container\"><H2>Discover your skills and careers is unavailable, Please try again later</H2></div>",
+    "PhaseBannerHtml":"<div  class=\"govuk-phase-banner\"><p class=\"govuk-phase-banner__content\"><strong class=\"govuk-tag govuk-phase-bannertag \">beta</strong> <span class=\"govuk-phase-banner__text\">Complete <a target=\"_blank\" class=\"govuk-link\" href=\"https://surveys.ipsosinteractive.com/mrIWeb/mrIWeb.dll?I.Project=S1039833&amp;id=&amp;cf=ovl \">Ipsos MORI survey</a> to give us your feedback about the service.</span> </p></div>",
+    "IsOnline": true,
+    "SitemapUrl": "",
+    "RobotsUrl": "",
+    "ExternalUrl": "",
     "Regions": [
       {
         "PageRegion": 1,
+        "HealthCheckRequired": false,
+        "IsHealthy": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/head"
       },
       {
         "PageRegion": 4,
+        "HealthCheckRequired": false,
+        "IsHealthy": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/discover-your-skills-careers"
       },
       {
         "PageRegion": 3,
+        "HealthCheckRequired": false,
+        "IsHealthy": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/bodytop"
       },
       {
+        "PageRegion": 7,
+        "HealthCheckRequired": false,
+        "IsHealthy": true,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/bodyfooter"
+      },
+      {
         "PageRegion": 8,
+        "HealthCheckRequired": false,
+        "IsHealthy": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/herobanner"
       }
     ]
