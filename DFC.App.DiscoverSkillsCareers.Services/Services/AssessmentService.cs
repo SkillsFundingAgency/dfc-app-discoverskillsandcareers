@@ -119,5 +119,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             return result;
         }
+
+        public bool ReferenceCodeExists(string referenceCode)
+        {
+            var result = false;
+            var sessionId = sessionIdToCodeConverter.GetSessionId(referenceCode);
+            if (string.IsNullOrWhiteSpace(sessionId))
+            {
+                result = true;
+            }
+
+            return result;
+        }
     }
 }

@@ -38,6 +38,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public int? DisplayOrder { get; set; }
 
+        public int NumberOfMatchedJobProfile { get; set; }
+
         public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
     }
 }

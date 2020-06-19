@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -10,10 +12,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IMapper mapper;
         private readonly IAssessmentService apiService;
+        private readonly ILogService logService;
 
-        public FilterQuestionsController(IMapper mapper, ISessionService sessionService, IAssessmentService apiService)
+        public FilterQuestionsController(ILogService logService, IMapper mapper, ISessionService sessionService, IAssessmentService apiService)
             : base(sessionService)
         {
+            this.logService = logService;
             this.mapper = mapper;
             this.apiService = apiService;
         }
@@ -39,8 +43,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
-            var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
-            var response = await GetQuestion(viewModel.JobCategoryName, filterAssessment.QuestionNumber).ConfigureAwait(false);
+            if (viewModel.QuestionNumber == 0)
+            {
+                var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
+                return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
+            }
+
+            var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
             return View(response);
         }
 
@@ -80,10 +89,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (answerResponse.IsComplete)
             {
-                return View("complete", new FilterQuestionsCompleteResponseViewModel() { JobCategoryName = viewModel.JobCategoryName });
+                return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/complete");
             }
 
-            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{answerResponse.NextQuestionNumber}");
+            return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{viewModel.QuestionNumberCounter + 1}");
         }
 
         public async Task<IActionResult> Complete(FilterQuestionsCompleteResponseViewModel viewModel)
@@ -97,6 +106,29 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/{QuestionNumber}")]
+        public IActionResult BodyTopQuestions(FilterBodyTopViewModel resultsBodyTopViewModel)
+        {
+            if (resultsBodyTopViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            resultsBodyTopViewModel.QuestionNumber -= 1;
+
+            this.logService.LogInformation($"{nameof(this.BodyTopQuestions)} generated the model and ready to pass to the view");
+
+            return View(resultsBodyTopViewModel);
+        }
+
+        [HttpGet]
+        [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
+        public IActionResult BodyTopComplete()
+        {
+             return View("BodyTopEmpty");
+        }
+
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
             var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
@@ -105,6 +137,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),
                 JobCategoryName = assessment,
             };
+
+            this.logService.LogInformation($"{nameof(this.GetQuestion)} generated the model and ready to pass to the view");
             return response;
         }
     }
