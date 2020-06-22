@@ -63,6 +63,9 @@
         "NotifySmsTemplateId": {
             "type": "string"
         },
+        "NotifyReturnUrl": {
+            "type": "string"
+        },
         "Environment": {
             "type": "string"
         },
@@ -234,6 +237,10 @@
                             {
                                 "name": "Notify__SmsTemplateId",
                                 "value": "[parameters('NotifySmsTemplateId')]"
+                            },
+                            {
+                                "name": "Notify__ReturnUrl",
+                                "value": "[parameters('NotifyReturnUrl')]"
                             },
                             {
                                 "name": "SessionConfig__ApplicationName",
