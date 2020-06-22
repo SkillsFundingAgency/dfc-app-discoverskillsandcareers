@@ -44,6 +44,9 @@
         "NotifySmsTemplateId": {
             "value": "__NotifySmsTemplateId__"
         },
+        "NotifyReturnUrl": {
+            "value": "__NotifyReturnUrl__"
+        },
         "Environment": {
             "value": "__ReleaseEnvironmentName__"
         },
