@@ -36,7 +36,7 @@
             "value": "12345678-ABCD-0123456789ABCDEF-3D3"
         },
         "NotifyReturnUrl": {
-            "value": "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-careers"
+            "value": "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers"
         },
         "Environment": {
             "value": "FOO"
