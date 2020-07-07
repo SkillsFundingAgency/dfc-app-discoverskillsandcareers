@@ -1,6 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using Dfc.Session;
-using Dfc.Session.Models;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,20 +9,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 {
     public class SessionService : ISessionService
     {
-        private readonly ISessionClient sessionServiceClient;
-
-        public SessionService(ISessionClient sessionServiceClient)
+        public SessionService(ISessionStateService<SessionDataModel> sessionStateService)
         {
-            this.sessionServiceClient = sessionServiceClient;
+            SessionStateService = sessionStateService;
         }
 
         public void CreateCookie(string sessionIdAndPartionKey)
         {
             var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
-            var dfcUserSession = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 };
+            var dfcUserSession = new DfcUserSession()
+                                {Salt = "ncs",
+                                    PartitionKey = sessionIdAndPartitionKeyDetails.Item1,
+                                    SessionId = sessionIdAndPartitionKeyDetails.Item2 };
             
             sessionServiceClient.CreateCookie(dfcUserSession, false);
+            
+            
         }
+
+        protected ISessionStateService<SessionDataModel> SessionStateService { get; private set; }
 
         public async Task<string> GetSessionId()
         {

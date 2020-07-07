@@ -4,26 +4,27 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class AssessmentController : BaseController
+    public class AssessmentController : BaseController<AssessmentController>
     {
         private readonly IMapper mapper;
         private readonly IAssessmentService apiService;
-        private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
-        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, 
-            ISessionService sessionService, NotifyOptions notifyOptions)
-            : base(sessionService)
+        public AssessmentController(ILogger<AssessmentController> logger, IMapper mapper, IAssessmentService apiService,
+            ISessionStateService<SessionDataModel> sessionStateService, NotifyOptions notifyOptions)
+            : base(logger, sessionStateService)
         {
-            this.logService = logService;
             this.mapper = mapper;
             this.apiService = apiService;
             this.notifyOptions = notifyOptions;
@@ -32,14 +33,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(QuestionGetRequestViewModel requestViewModel)
         {
-            this.logService.LogInformation($"{nameof(this.Index)} started");
+            Logger.LogInformation($"{nameof(this.Index)} started");
 
             if (requestViewModel == null)
             {
                 return BadRequest();
             }
 
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -52,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessment = await apiService.GetAssessment(Request.CompositeSessionId()).ConfigureAwait(false);
             if (assessment == null)
             {
                 return BadRequest();
@@ -74,7 +75,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
-            this.logService.LogInformation($"{nameof(this.Index)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Index)} generated the model and ready to pass to the view");
 
             return View(responseViewModel);
         }
@@ -87,7 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -106,7 +107,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(result);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer, Request.CompositeSessionId()).ConfigureAwait(false);
 
             if (answerResponse.IsSuccess)
             {
@@ -130,30 +131,30 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> New(string assessmentType)
         {
-            this.logService.LogInformation($"{nameof(this.New)} started");
+            Logger.LogInformation($"{nameof(this.New)} started");
 
             if (string.IsNullOrEmpty(assessmentType))
             {
                 return BadRequest();
             }
 
-            await apiService.NewSession(assessmentType).ConfigureAwait(false);
+            await apiService.NewSession(assessmentType, Request.CompositeSessionId()).ConfigureAwait(false);
 
-            this.logService.LogInformation($"{nameof(this.New)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.New)} generated the model and ready to pass to the view");
 
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
         }
 
         public IActionResult Complete()
         {
-            this.logService.LogInformation($"{nameof(this.Complete)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Complete)} generated the model and ready to pass to the view");
 
             return View();
         }
 
         public async Task<IActionResult> Return()
         {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -161,20 +162,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var assessment = await GetAssessment().ConfigureAwait(false);
 
-            this.logService.LogInformation($"{nameof(this.Return)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Return)} generated the model and ready to pass to the view");
 
             return NavigateTo(assessment);
         }
 
         public async Task<IActionResult> Save()
         {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
             }
 
-            this.logService.LogInformation($"{nameof(this.Save)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Save)} generated the model and ready to pass to the view");
             return View();
         }
 
@@ -207,7 +208,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Email()
         {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -215,7 +216,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var viewReponse = new AssessmentEmailPostRequest();
 
-            this.logService.LogInformation($"{nameof(this.Email)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Email)} generated the model and ready to pass to the view");
 
             return View(viewReponse);
         }
@@ -234,7 +235,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewReponse);
             }
 
-            var emailResponse = await apiService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
+            var emailResponse = await apiService.SendEmail(notifyOptions.ReturnUrl, request.Email, Request.CompositeSessionId()).ConfigureAwait(false);
             if (emailResponse.IsSuccess)
             {
                 if (TempData != null)
@@ -254,14 +255,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public IActionResult EmailSent()
         {
-            this.logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
 
             return View();
         }
 
         public async Task<IActionResult> Reference()
         {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -269,7 +270,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
 
-            this.logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
             return View(responseViewModel);
         }
 
@@ -290,13 +291,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     TempData.Add(key, request.Telephone);
                 }
 
-                await apiService.SendSms(GetDomainUrl(), request.Telephone).ConfigureAwait(false);
+                await apiService.SendSms(GetDomainUrl(), request.Telephone, Request.CompositeSessionId()).ConfigureAwait(false);
 
                 return RedirectTo("assessment/referencesent");
             }
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
-            this.logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
+            Logger.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
 
             return View(responseViewModel);
         }
@@ -309,10 +310,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("head/reload")]
         public async Task<IActionResult> Reload(string sessionId)
         {
-            var reloadResponseSuccess = await apiService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
+            var reloadResponseSuccess = await apiService.ReloadUsingSessionId(Request.CompositeSessionId()).ConfigureAwait(false);
             if (reloadResponseSuccess)
             {
-                this.logService.LogInformation($"{nameof(this.Reload)} generated the model and ready to pass to the view");
+                Logger.LogInformation($"{nameof(this.Reload)} generated the model and ready to pass to the view");
 
                 return RedirectTo("assessment/return");
             }
@@ -348,13 +349,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var question = await apiService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
+            var question = await apiService.GetQuestion(assessmentType, questionNumber, GetDysacIdAsync()).ConfigureAwait(false);
+
             return question;
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var getAssessmentResponse = await apiService.GetAssessment(Request.CompositeSessionId()).ConfigureAwait(false);
             return getAssessmentResponse;
         }
 

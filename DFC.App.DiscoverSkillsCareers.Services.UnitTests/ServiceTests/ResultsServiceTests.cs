@@ -1,9 +1,12 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,25 +16,26 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
     public class ResultsServiceTests
     {
-        private readonly ILogger<ResultsService> logger;
         private readonly IResultsApiService resultsApiService;
         private readonly IJpOverviewApiService jPOverviewAPIService;
-        private readonly ISessionService  sessionService;
         private readonly IResultsService resultsService;
-        private readonly string sessionId;
+        private readonly Guid sessionId;
 
         public ResultsServiceTests()
         {
-            logger = A.Fake<ILogger<ResultsService>>();
             resultsApiService = A.Fake<IResultsApiService>();
-            sessionService = A.Fake<ISessionService>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
+            Logger = A.Fake<ILogger<ResultsService>>();
             jPOverviewAPIService = A.Fake<IJpOverviewApiService>();
-            resultsService = new ResultsService(logger, resultsApiService, jPOverviewAPIService, sessionService);
+            resultsService = new ResultsService(Logger, resultsApiService, jPOverviewAPIService, FakeSessionStateService);
 
-            sessionId = "session1";
-            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-
+            sessionId = new Guid();
+            A.CallTo(() => FakeSessionStateService.GetSessionId()).Returns(sessionId);
         }
+
+        protected ILogger<ResultsService> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public async Task GetResults()
@@ -51,13 +55,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             };
             resultsResponse.JobCategories = categories;
 
-            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
+            A.CallTo(() => resultsApiService.GetResults(sessionId.ToString(), A<string>.Ignored)).Returns(resultsResponse);
 
             //Act
-            var results = await resultsService.GetResults();
+            var results = await resultsService.GetResults(sessionId);
 
             //Assert
-            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => resultsApiService.GetResults(sessionId.ToString(), A<string>.Ignored)).MustHaveHappenedOnceExactly();
             results.SessionId.Should().Be(sessionId);
             results.JobCategories.FirstOrDefault().NumberOfMatchedJobProfile.Should().Be(1);
         }
@@ -69,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             //Arrange
             var category = "ACategory";
-            var resultsResponse = new GetResultsResponse() { SessionId = sessionId};
+            var resultsResponse = new GetResultsResponse() { SessionId = sessionId.ToString()};
 
             if (hasMatchedProfile)
             {
@@ -86,16 +90,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 resultsResponse.JobCategories = categories;
             }
 
-            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
+            A.CallTo(() => resultsApiService.GetResults(sessionId.ToString(), A<string>.Ignored)).Returns(resultsResponse);
             A.CallTo(() => jPOverviewAPIService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).Returns(A.CollectionOfDummy<JobProfileOverView>(2));
 
             //Act
-            var results = await resultsService.GetResultsByCategory(category);
+            var results = await resultsService.GetResultsByCategory(category, sessionId);
             
             //Assert
-            A.CallTo(() => resultsApiService.GetResults(sessionId, category)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => resultsApiService.GetResults(sessionId.ToString(), category)).MustHaveHappenedOnceExactly();
             A.CallTo(() => jPOverviewAPIService.GetOverviewsForProfilesAsync(A<IEnumerable<string>>.Ignored)).MustHaveHappened(expectedNumberOfcalls, Times.Exactly);
-            results.SessionId.Should().Be(sessionId);
+            results.SessionId.Should().Be(sessionId.ToString());
         }
 
     }

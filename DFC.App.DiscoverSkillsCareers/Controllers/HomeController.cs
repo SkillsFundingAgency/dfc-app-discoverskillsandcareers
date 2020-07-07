@@ -1,16 +1,19 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : BaseController<HomeController>
     {
         private readonly IAssessmentService assessmentService;
 
-        public HomeController(ISessionService sessionService, IAssessmentService assessmentService)
-            : base(sessionService)
+        public HomeController(ILogger<HomeController> logger, ISessionStateService<SessionDataModel> sessionStateService, IAssessmentService assessmentService)
+            : base(logger, sessionStateService)
         {
             this.assessmentService = assessmentService;
         }

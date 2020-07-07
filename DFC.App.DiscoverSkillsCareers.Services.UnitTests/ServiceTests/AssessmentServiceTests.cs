@@ -2,6 +2,8 @@
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,23 +14,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
     public class AssessmentServiceTests
     {
-        private readonly ILogger<AssessmentService> logger;
         private readonly NotifyOptions notifyOptions;
         private readonly IAssessmentService assessmentService;
         private readonly IAssessmentApiService assessmentApiService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
-        private readonly ISessionService sessionService;
 
         public AssessmentServiceTests()
         {
-            logger = A.Fake<ILogger<AssessmentService>>();
             notifyOptions = A.Fake<NotifyOptions>();
             assessmentApiService = A.Fake<IAssessmentApiService>();
             sessionIdToCodeConverter = A.Fake<ISessionIdToCodeConverter>();
-            sessionService = A.Fake<ISessionService>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
+            Logger = A.Fake<ILogger<AssessmentService>>();
 
-            assessmentService = new AssessmentService(logger, notifyOptions, assessmentApiService, sessionIdToCodeConverter, sessionService);
+            assessmentService = new AssessmentService(Logger, notifyOptions, assessmentApiService, sessionIdToCodeConverter, FakeSessionStateService);
         }
+
+        protected ILogger<AssessmentService> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public async Task NewSessionReturnTrueWhenNewSessionIsCreated()

@@ -16,7 +16,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         public async Task WhenSessionExistsAndModelStateIsNotValidReturnsView()
         {
             var assessmentEmailPostRequest = new AssessmentEmailPostRequest();
-            A.CallTo(() => Session.HasValidSession()).Returns(true);
+            A.CallTo(() => HasValidSession()).Returns(true);
             AssessmentController.ModelState.AddModelError("Key1", "Some Error");
 
             var actionResponse = await AssessmentController.Email(assessmentEmailPostRequest).ConfigureAwait(false);

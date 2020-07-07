@@ -12,7 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenSessionDoesNotExistRedirectsToRoot()
         {
-            A.CallTo(() => Session.HasValidSession()).Returns(false);
+            A.CallTo(() => HasValidSession()).Returns(false);
 
             var actionResponse = await AssessmentController.Email().ConfigureAwait(false);
 
@@ -24,7 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenSessionExistsReturnsView()
         {
-            A.CallTo(() => Session.HasValidSession()).Returns(true);
+            A.CallTo(() => HasValidSession()).Returns(true);
 
             var actionResponse = await AssessmentController.Email().ConfigureAwait(false);
 

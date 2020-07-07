@@ -1,16 +1,18 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class CompositeController : BaseController
+    public class CompositeController : BaseController<CompositeController>
     {
         private const string ViewName = "Index";
 
-        public CompositeController(ISessionService sessionService)
-            : base(sessionService)
+        public CompositeController(ILogger<CompositeController> logger, ISessionStateService<SessionDataModel> sessionStateService)
+            : base(logger, sessionStateService)
         {
         }
 

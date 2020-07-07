@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using DFC.Logger.AppInsights.Contracts;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
@@ -14,19 +16,21 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
     {
         private readonly FilterQuestionsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
-        private readonly ILogService logService;
 
         public BodyTopTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
             assessmentService = A.Fake<IAssessmentService>();
-            logService = A.Fake<ILogService>();
+            Logger = A.Fake<ILogger<FilterQuestionsController>>();
 
-            controller = new FilterQuestionsController(logService, mapper, sessionService, assessmentService);
+            controller = new FilterQuestionsController(Logger, mapper, FakeSessionStateService, assessmentService);
         }
+
+        protected ILogger<FilterQuestionsController> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public void BodyTopQuestionsReturnView()

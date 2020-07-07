@@ -1,9 +1,12 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,16 +15,20 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
     public class IndexTests
     {
         private readonly HomeController controller;
-        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
 
         public IndexTests()
         {
-            sessionService = A.Fake<ISessionService>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
             assessmentService = A.Fake<IAssessmentService>();
+            Logger = A.Fake<ILogger<HomeController>>();
 
-            controller = new HomeController(sessionService, assessmentService);
+            controller = new HomeController(Logger, FakeSessionStateService, assessmentService);
         }
+
+        protected ILogger<HomeController> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public async Task NullViewModelReturnsBadRequest()

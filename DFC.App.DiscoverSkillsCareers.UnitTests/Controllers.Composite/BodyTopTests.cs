@@ -1,8 +1,10 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
@@ -10,13 +12,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
     public class BodyTopTests
     {
         private readonly CompositeController controller;
-        private readonly ISessionService sessionService;
 
         public BodyTopTests()
         {
-            sessionService = A.Fake<ISessionService>();
-            controller = new CompositeController(sessionService);
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
+            Logger = A.Fake<ILogger<CompositeController>>();
+
+            controller = new CompositeController(Logger, FakeSessionStateService);
         }
+
+        protected ILogger<CompositeController> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public void BodyTopReturnsView()

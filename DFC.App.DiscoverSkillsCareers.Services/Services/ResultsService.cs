@@ -1,7 +1,10 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,34 +13,35 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
     public class ResultsService : IResultsService
     {
-        private readonly ILogger<ResultsService> logger;
         private readonly IResultsApiService resultsApiService;
         private readonly IJpOverviewApiService jPOverviewAPIService;
-        private readonly ISessionService sessionService;
 
         public ResultsService(
             ILogger<ResultsService> logger,
             IResultsApiService resultsApiService,
             IJpOverviewApiService jPOverviewAPIService,
-            ISessionService sessionService)
+            ISessionStateService<SessionDataModel> sessionStateService)
         {
-            this.logger = logger;
+            this.Logger = logger;
             this.resultsApiService = resultsApiService;
             this.jPOverviewAPIService = jPOverviewAPIService;
-            this.sessionService = sessionService;
+            this.SessionStateService = sessionStateService;
         }
 
-        public async Task<GetResultsResponse> GetResults()
+        protected ILogger<ResultsService> Logger { get; private set; }
+
+        protected ISessionStateService<SessionDataModel> SessionStateService { get; private set; }
+
+
+        public async Task<GetResultsResponse> GetResults(Guid? sessionId)
         {
-            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var results = await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            var results = await resultsApiService.GetResults(sessionId.ToString(), AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
             return AddInCategoryJobProfileCount(results);
         }
 
-        public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
+        public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory, Guid? sessionId)
         {
-            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory).ConfigureAwait(false);
+            var resultsResponse = await resultsApiService.GetResults(sessionId.ToString(), jobCategory).ConfigureAwait(false);
 
             foreach (var category in resultsResponse.JobCategories)
             {
@@ -45,9 +49,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 if (selectedJobprofiles.Any())
                 {
-                    logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
+                    Logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
                     category.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
-                    logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
+                    Logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
                 }
             }
 

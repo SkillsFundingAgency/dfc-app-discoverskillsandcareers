@@ -1,22 +1,25 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class ResultsController : BaseController
+    public class ResultsController : BaseController<ResultsController>
     {
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService apiService;
         private readonly ILogService logService;
 
-        public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
-            : base(sessionService)
+        public ResultsController(ILogger<ResultsController> logger, IMapper mapper, ISessionStateService<SessionDataModel> sessionStateService, IResultsService resultsService, IAssessmentService apiService)
+            : base(logger, sessionStateService)
         {
             this.logService = logService;
             this.mapper = mapper;
@@ -26,18 +29,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (!await HasSessionId().ConfigureAwait(false))
+            if (!HasSessionId())
             {
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await apiService.GetAssessment(Request.CompositeSessionId()).ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
             }
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(Request.CompositeSessionId()).ConfigureAwait(false);
 
             var lastFilterCategory = resultsResponse.JobCategories
                                                   .Where(x => x.FilterAssessment != null)
@@ -58,18 +61,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Roles(string id)
         {
-            if (!await HasSessionId().ConfigureAwait(false))
+            if (!HasSessionId())
             {
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await apiService.GetAssessment(Request.CompositeSessionId()).ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
             }
 
-            var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResultsByCategory(id, Request.CompositeSessionId()).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
 
@@ -83,12 +86,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("herobanner/results/roles/{id}")]
         public async Task<IActionResult> HeroBanner(string id)
         {
-            if (!await HasSessionId().ConfigureAwait(false))
+            if (!HasSessionId())
             {
                 return RedirectToRoot();
             }
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(Request.CompositeSessionId()).ConfigureAwait(false);
 
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
 

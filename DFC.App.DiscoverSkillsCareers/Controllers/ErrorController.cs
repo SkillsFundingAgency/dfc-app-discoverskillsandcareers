@@ -1,12 +1,14 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class ErrorController : BaseController
+    public class ErrorController : BaseController<ErrorController>
     {
-        public ErrorController(ISessionService sessionService)
-            : base(sessionService)
+        public ErrorController(ILogger<ErrorController> logger, ISessionStateService<SessionDataModel> sessionStateService)
+            : base(logger, sessionStateService)
         {
         }
 

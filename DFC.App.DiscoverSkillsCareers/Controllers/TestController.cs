@@ -1,18 +1,22 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class TestController : BaseController
+    public class TestController : BaseController<TestController>
     {
         private readonly IAssessmentService apiService;
         private readonly ILogService logService;
 
-        public TestController(ILogService logService, ISessionService sessionService, IAssessmentService apiService)
-            : base(sessionService)
+        public TestController(ILogger<TestController> logger, ISessionStateService<SessionDataModel> sessionStateService, IAssessmentService apiService)
+            : base(logger, sessionStateService)
         {
             this.logService = logService;
             this.apiService = apiService;
@@ -39,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(responseViewModel);
             }
 
-            var result = await apiService.ReloadUsingSessionId(viewModel.SessionId).ConfigureAwait(false);
+            var result = await apiService.ReloadUsingSessionId(Guid.Parse(viewModel.SessionId)).ConfigureAwait(false);
 
             if (result)
             {

@@ -2,8 +2,10 @@
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.Logger.AppInsights.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
+using Microsoft.Extensions.Logging;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
 {
@@ -11,21 +13,23 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
     {
         private readonly AssessmentController assessmentController;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
-        private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
         public AssessmentTestBase()
         {
             mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
-            logService = A.Fake<ILogService>();
             notifyOptions = A.Fake<NotifyOptions>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
+            Logger = A.Fake<ILogger<AssessmentController>>();
 
-            assessmentController = new AssessmentController(logService, mapper, assessmentService, sessionService, notifyOptions);
+            assessmentController = new AssessmentController(Logger, mapper, assessmentService, FakeSessionStateService, notifyOptions);
         }
+
+        protected ILogger<AssessmentController> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         protected AssessmentController AssessmentController
         {
@@ -37,14 +41,19 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             get { return mapper; }
         }
 
-        protected ISessionService Session
+        protected ISessionStateService<SessionDataModel> Session
         {
-            get { return sessionService; }
+            get { return FakeSessionStateService; }
         }
 
         protected IAssessmentService ApiService
         {
             get { return assessmentService; }
+        }
+
+        protected bool HasValidSession()
+        {
+            return assessmentController.HasSessionId();
         }
     }
 }

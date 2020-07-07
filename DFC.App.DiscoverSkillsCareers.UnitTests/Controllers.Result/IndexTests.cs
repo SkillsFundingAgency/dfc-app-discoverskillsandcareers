@@ -2,12 +2,13 @@
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.Logger.AppInsights.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,26 +20,28 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
     {
         private readonly ResultsController controller;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
-        private readonly ILogService logService;
 
         public IndexTests()
         {
             mapper = A.Fake<IMapper>();
-            sessionService = A.Fake<ISessionService>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
-            logService = A.Fake<ILogService>();
+            Logger = A.Fake<ILogger<ResultsController>>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
+            controller = new ResultsController(Logger, mapper, FakeSessionStateService, resultsService, assessmentService);
         }
+
+        protected ILogger<ResultsController> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public async Task WhenNoSessionIdRedirectsToRoot()
         {
-            A.CallTo(() => sessionService.HasValidSession()).Returns(false);
+            A.CallTo(() => controller.HasSessionId()).Returns(false);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
 
@@ -51,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         public async Task WhenAssessmentIsNotCompleteRedirectsToAssessment()
         {
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 1 };
-            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => controller.HasSessionId()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);
@@ -66,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var category = "testcategory";
             var assessmentResponse = new GetAssessmentResponse() { IsFilterAssessment = true,  MaxQuestionsCount = 2, RecordedAnswersCount = 2,  };
-            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => controller.HasSessionId()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
             var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category) };
@@ -86,7 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
 
-            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
+            A.CallTo(() => controller.HasSessionId()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
             var actionResponse = await controller.Index().ConfigureAwait(false);

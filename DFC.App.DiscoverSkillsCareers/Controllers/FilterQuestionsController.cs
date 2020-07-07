@@ -1,23 +1,24 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Sessionstate;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
-    public class FilterQuestionsController : BaseController
+    public class FilterQuestionsController : BaseController<FilterQuestionsController>
     {
         private readonly IMapper mapper;
         private readonly IAssessmentService apiService;
         private readonly ILogService logService;
 
-        public FilterQuestionsController(ILogService logService, IMapper mapper, ISessionService sessionService, IAssessmentService apiService)
-            : base(sessionService)
+        public FilterQuestionsController(ILogger<FilterQuestionsController> logger, IMapper mapper, ISessionStateService<SessionDataModel> sessionStateService, IAssessmentService apiService)
+            : base(logger, sessionStateService)
         {
-            this.logService = logService;
             this.mapper = mapper;
             this.apiService = apiService;
         }
@@ -30,14 +31,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
 
             if (!hasSessionId)
             {
                 return RedirectToRoot();
             }
 
-            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessment = await apiService.GetAssessment(Request.CompositeSessionId()).ConfigureAwait(false);
             if (!assessment.IsComplete && !assessment.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
@@ -45,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (viewModel.QuestionNumber == 0)
             {
-                var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
+                var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName, Request.CompositeSessionId()).ConfigureAwait(false);
                 return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
             }
 
@@ -61,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -73,7 +74,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer, Request.CompositeSessionId()).ConfigureAwait(false);
 
             if (answerResponse == null)
             {
@@ -97,7 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Complete(FilterQuestionsCompleteResponseViewModel viewModel)
         {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            var hasSessionId = HasSessionId();
             if (!hasSessionId)
             {
                 return RedirectToRoot();
@@ -131,7 +132,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var filtereredQuestion = await apiService.GetQuestion(assessment, questionNumber, Request.CompositeSessionId()).ConfigureAwait(false);
             var response = new FilterQuestionIndexResponseViewModel
             {
                 Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),

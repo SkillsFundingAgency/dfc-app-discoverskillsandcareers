@@ -1,10 +1,12 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using DFC.Logger.AppInsights.Contracts;
+using DFC.Compui.Sessionstate;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,18 +15,20 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
     public class LoadSessionPostTests
     {
         private readonly TestController controller;
-        private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
-        private readonly ILogService logService;
 
         public LoadSessionPostTests()
         {
-            sessionService = A.Fake<ISessionService>();
+            FakeSessionStateService = A.Fake<ISessionStateService<SessionDataModel>>();
             assessmentService = A.Fake<IAssessmentService>();
-            logService = A.Fake<ILogService>();
+            Logger = A.Fake<ILogger<TestController>>();
 
-            controller = new TestController(logService, sessionService, assessmentService);
+            controller = new TestController(Logger, FakeSessionStateService, assessmentService);
         }
+
+        protected ILogger<TestController> Logger { get; }
+
+        protected ISessionStateService<SessionDataModel> FakeSessionStateService { get; }
 
         [Fact]
         public async Task NullModelReturnsBadRequest()

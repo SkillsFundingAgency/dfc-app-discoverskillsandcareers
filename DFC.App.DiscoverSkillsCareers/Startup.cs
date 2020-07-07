@@ -2,15 +2,19 @@ using AutoMapper;
 using CorrelationId;
 using DFC.App.DiscoverSkillsCareers.ClientHandlers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Data;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
-using Dfc.Session;
-using Dfc.Session.Models;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Sessionstate;
+using DFC.Logger.AppInsights.Contracts;
+using DFC.Logger.AppInsights.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -22,18 +26,19 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using DFC.Logger.AppInsights.Contracts;
-using DFC.App.DiscoverSkillsCareers.Framework;
-using DFC.Logger.AppInsights.Extensions;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private const string CosmosDbSessionStateConfigAppSettings = "SessionState";
+        private readonly IWebHostEnvironment env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         private IConfiguration Configuration { get; }
@@ -72,8 +77,10 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
-            services.AddSessionServices(sessionServiceConfig);
+            var cosmosDbConnectionSessionState = Configuration.GetSection(CosmosDbSessionStateConfigAppSettings).Get<CosmosDbConnection>();
+            services.AddSessionStateServices<SessionDataModel>(cosmosDbConnectionSessionState, env.IsDevelopment());
+
+            // var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionDataModel>();
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
@@ -90,7 +97,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IResultsService, ResultsService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
-            services.AddScoped<ISessionService, SessionService>();
+           // services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 

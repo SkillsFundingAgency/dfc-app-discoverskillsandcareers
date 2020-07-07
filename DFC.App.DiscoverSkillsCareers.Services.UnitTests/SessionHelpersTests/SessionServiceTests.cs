@@ -1,5 +1,5 @@
-﻿using Dfc.Session;
-using Dfc.Session.Models;
+﻿//using Dfc.Session;
+//using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using FakeItEasy;
 using FluentAssertions;
