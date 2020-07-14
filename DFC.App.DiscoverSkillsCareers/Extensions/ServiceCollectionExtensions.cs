@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Extensions
                     string circuitBreakerPolicyName)
                     where TClient : class
                     where TImplementation : class, TClient
-                    where TClientOptions : DysacClientOptions, new() =>
+                    where TClientOptions : ClientOptionsModel, new() =>
                     services
                         .Configure<TClientOptions>(configuration?.GetSection(configurationSectionName))
                         .AddHttpClient<TClient, TImplementation>()
@@ -60,11 +60,13 @@ namespace DFC.App.DiscoverSkillsCareers.Extensions
                             var httpClientOptions = sp
                                 .GetRequiredService<IOptions<TClientOptions>>()
                                 .Value;
-                            var dysacClientOptions = configuration?.GetSection("DysacClientOptions").Get<DysacClientOptions>();
-                            options.BaseAddress = dysacClientOptions?.AssessmentApiBaseAddress;
+                            options.BaseAddress = httpClientOptions.BaseAddress;
                             options.Timeout = httpClientOptions.Timeout;
-                            options.DefaultRequestHeaders.Clear();
-                            options.DefaultRequestHeaders.Add(HeaderNames.Accept, MediaTypeNames.Application.Json);
+
+                            if (!string.IsNullOrWhiteSpace(httpClientOptions.ApiKey))
+                            {
+                                options.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", httpClientOptions.ApiKey);
+                            }
                         })
                         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
                         {
@@ -72,7 +74,6 @@ namespace DFC.App.DiscoverSkillsCareers.Extensions
                         })
                         .AddPolicyHandlerFromRegistry($"{configurationSectionName}_{retryPolicyName}")
                         .AddPolicyHandlerFromRegistry($"{configurationSectionName}_{circuitBreakerPolicyName}")
-                        .AddHttpMessageHandler<CorrelationIdDelegatingHandler>()
                         .Services;
     }
 }

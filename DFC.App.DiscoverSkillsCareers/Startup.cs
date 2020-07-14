@@ -2,13 +2,26 @@ using AutoMapper;
 using CorrelationId;
 using DFC.App.DiscoverSkillsCareers.ClientHandlers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Extensions;
+using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
+using DFC.App.Pages.Data.Contracts;
+using DFC.App.Pages.HostedServices;
+using DFC.App.Pages.Services.ApiProcessorService;
+using DFC.App.Pages.Services.EventProcessorService;
+using DFC.Compui.Cosmos;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Cosmos.Models;
+using DFC.Compui.Telemetry;
+using DFC.Logger.AppInsights.Contracts;
+using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
 using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
@@ -22,18 +35,19 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using DFC.Logger.AppInsights.Contracts;
-using DFC.App.DiscoverSkillsCareers.Framework;
-using DFC.Logger.AppInsights.Extensions;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private const string CosmosDbContentPagesConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
+        private readonly IWebHostEnvironment env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         private IConfiguration Configuration { get; }
@@ -75,8 +89,14 @@ namespace DFC.App.DiscoverSkillsCareers
             var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
             services.AddSessionServices(sessionServiceConfig);
 
+            var cosmosDbConnectionContentPages = Configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
+            services.AddContentPageServices<ContentItemModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
+
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
+
+            var sharedContent = Configuration.GetSection("SharedContent").Get<SharedContent>();
+            services.AddSingleton(sharedContent);
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
@@ -92,14 +112,34 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+
+            services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddTransient<IContentCacheService, ContentCacheService>();
+            services.AddTransient<ICacheReloadService, CacheReloadService>();
+            services.AddTransient<IApiDataProcessorService, ApiDataProcessorService>();
+            services.AddTransient<IApiService, ApiService>();
+            services.AddHostedServiceTelemetryWrapper();
+            services.AddTransient<IEventMessageService<ContentItemModel>, EventMessageService<ContentItemModel>>();
+
+            // services.AddScoped<IWebhooksService, WebhooksService>();
+            services.AddHostedService<CacheReloadBackgroundService>();
+
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddTransient<CorrelationIdDelegatingHandler>();
             services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
+
+            const string AppSettingsPolicies = "Policies";
+            var policyOptions = Configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
+
             var policyRegistry = services.AddPolicyRegistry();
             AddPolicies(policyRegistry);
 
+            services
+                .AddPolicies(policyRegistry, nameof(CmsApiClientOptions), policyOptions)
+                .AddHttpClient<ICmsApiService, CmsApiService, CmsApiClientOptions>(Configuration, nameof(CmsApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+ 
             services.AddHttpClient<IResultsApiService, ResultsApiService>(
                 httpClient =>
                 {

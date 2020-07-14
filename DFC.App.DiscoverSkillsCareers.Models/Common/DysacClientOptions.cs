@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.Models.Common
 {
     [ExcludeFromCodeCoverage]
-    public class DysacClientOptions
+    public class DysacClientOptions : ClientOptionsModel
     {
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
 

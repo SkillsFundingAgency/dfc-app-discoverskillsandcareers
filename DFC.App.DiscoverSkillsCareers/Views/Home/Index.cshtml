@@ -2,6 +2,7 @@
 @{
      ViewData["Title"] = "Discover your skills and careers";
 }
+
 <div class="govuk-width-container">
     <div class="govuk-grid-row govuk-!-margin-bottom-9">
         <div class="govuk-grid-column-two-thirds">
@@ -48,12 +49,12 @@
                 </form>
             </div>
 
-            <div class="app-sidebar app-advisor-panel">
+            @*<div class="app-sidebar app-advisor-panel">
                 <h3 class="govuk-heading-m">Want to speak to an adviser?</h3>
                 <p class="govuk-body"><strong>Call</strong> 0800 100 900 or <a href="https://nationalcareers.service.gov.uk/webchat/chat/" class="govuk-link govuk-link--no-visited-state">use webchat</a></p>
                 <p class="govuk-caption-m app-advisor-hours">8am to 10pm, 7 days a week</p>
-            </div>
-
+            </div>*@
+            @await Component.InvokeAsync("SpeakToAnAdvisor")
         </div>
     </div>
 </div>
