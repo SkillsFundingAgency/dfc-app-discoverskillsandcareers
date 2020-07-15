@@ -79,7 +79,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
-            services.AddApplicationInsightsTelemetry();
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
