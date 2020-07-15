@@ -180,7 +180,15 @@
                             },
                             {
                                 "name": "Logging__LogLevel__Default",
-                                "value": "Warning"
+                                "value": "Error"
+                            },
+                            {
+                                "name": "ApplicationInsights__LogLevel__Default",
+                                "value": "Information"
+                            },
+                            {
+                                "name": "Configuration__ApplicationName",
+                                "value": "DFC-App-discoverskillsandcareers"
                             },
                             {
                                 "name": "AllowedHosts",
