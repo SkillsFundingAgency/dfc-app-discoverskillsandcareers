@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-            if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
+            if (assessmentResponse == null)
             {
                 return RedirectTo("assessment/return");
             }
