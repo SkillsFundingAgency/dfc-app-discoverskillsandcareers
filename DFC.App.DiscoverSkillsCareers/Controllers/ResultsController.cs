@@ -34,8 +34,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
             if (assessmentResponse == null)
             {
+                logService.LogInformation("Assesment is null");
                 return RedirectTo("assessment/return");
             }
+
+            logService.LogInformation("Assessment is not null");
 
             var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
@@ -53,6 +56,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 Results = mapper.Map<ResultsIndexResponseViewModel>(resultsResponse),
                 AssessmentReference = assessmentResponse.ReferenceCode,
             };
+
+            logService.LogInformation("About to display results view");
             return View(resultIndexResponseViewModel);
         }
 
