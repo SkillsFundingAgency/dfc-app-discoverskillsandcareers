@@ -31,8 +31,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 $"{cmsApiClientOptions.BaseAddress}{sharedContent.UrlExtension}{sharedContent.SpeakToAdvisorContentId}",
                 UriKind.Absolute);
 
-         //   var url = new Uri("https://dev.api.nationalcareersservice.org.uk/content/getcontent/api/execute/html/428a6072-f7b4-4014-ad50-ccf350b68272");
-
             return await apiDataProcessorService.GetAsync<ContentItemModel>(httpClient, url)
                 .ConfigureAwait(false);
         }
