@@ -55,8 +55,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                         return;
                     }
-
-                  //  await DeleteStaleCacheEntriesAsync(sharedContent, stoppingToken).ConfigureAwait(false);
                 }
 
                 logger.LogInformation("Reload cache completed");
