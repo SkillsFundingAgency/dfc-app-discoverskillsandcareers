@@ -53,7 +53,7 @@ namespace DFC.App.Pages.HostedServices
                     if (task.Exception != null)
                     {
                         logger.LogError(task.Exception.ToString());
-                       throw task.Exception;
+                        throw task.Exception;
                     }
                 }
 
