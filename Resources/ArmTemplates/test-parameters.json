@@ -41,6 +41,15 @@
         "Environment": {
             "value": "FOO"
         },
+        "aspSize": {
+            "value": "2"
+        },
+        "aspTier": {
+            "value": "Standard"
+        },
+        "aspInstances": {
+            "value": 2
+        },
         "enableAlerts": {
             "value": false
         }
