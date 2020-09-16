@@ -1,4 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Compui.Cosmos.Models;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
@@ -18,14 +19,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
     {
         private readonly ILogger<CacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IEventMessageService<ContentDysacModel> eventMessageService;
+        private readonly IEventMessageService<DysacContentModel> eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
-            IEventMessageService<ContentDysacModel> eventMessageService,
+            IEventMessageService<DysacContentModel> eventMessageService,
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService)
         {
@@ -137,69 +138,72 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task GetAndSaveItemAsync(ApiSummaryItemModel item, CancellationToken stoppingToken)
         {
-            //_ = item ?? throw new ArgumentNullException(nameof(item));
+            _ = item ?? throw new ArgumentNullException(nameof(item));
 
-            //try
-            //{
-            //    logger.LogInformation($"Get details for {item.Title} - {item.Url}");
+            try
+            {
+                logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-            //    var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(item.Url!).ConfigureAwait(false);
+                //Heirarchy for DYSaC via Content API is as follows
+                // Question Set -> Short Question -> Trait
+                
 
-            //    if (apiDataModel == null)
-            //    {
-            //        logger.LogWarning($"No details returned from {item.Title} - {item.Url}");
 
-            //        return;
-            //    }
+                var apiDataModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiShortQuestion>(item.Url!).ConfigureAwait(false);
 
-            //    if (stoppingToken.IsCancellationRequested)
-            //    {
-            //        logger.LogWarning("Process item get and save cancelled");
+                if (apiDataModel == null)
+                {
+                    logger.LogWarning($"No details returned from {item.Title} - {item.Url}");
 
-            //        return;
-            //    }
+                    return;
+                }
 
-            //    var contentPageModel = mapper.Map<ContentDysacModel>(apiDataModel);
+                if (stoppingToken.IsCancellationRequested)
+                {
+                    logger.LogWarning("Process item get and save cancelled");
 
-            //    if (!TryValidateModel(contentPageModel))
-            //    {
-            //        logger.LogError($"Validation failure for {item.Title} - {item.Url}");
+                    return;
+                }
 
-            //        return;
-            //    }
+                var contentPageModel = mapper.Map<DysacContentModel>(apiDataModel);
 
-            //    logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
+                if (!TryValidateModel(contentPageModel))
+                {
+                    logger.LogError($"Validation failure for {item.Title} - {item.Url}");
 
-            //    var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
+                    return;
+                }
 
-            //    if (result == HttpStatusCode.NotFound)
-            //    {
-            //        logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
+                logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
 
-            //        result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
+                var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
-            //        if (result == HttpStatusCode.Created)
-            //        {
-            //            logger.LogInformation($"Created cache with {item.Title} - {item.Url}");
-            //        }
-            //        else
-            //        {
-            //            logger.LogError($"Cache create error status {result} from {item.Title} - {item.Url}");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
-            //    }
+                if (result == HttpStatusCode.NotFound)
+                {
+                    logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
 
-            //    contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
-            //}
-            //catch (Exception ex)
-            //{
-            //    logger.LogError(ex, $"Error in get and save for {item.Title} - {item.Url}");
-            //}
+                    result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
 
-            return;
+                    if (result == HttpStatusCode.Created)
+                    {
+                        logger.LogInformation($"Created cache with {item.Title} - {item.Url}");
+                    }
+                    else
+                    {
+                        logger.LogError($"Cache create error status {result} from {item.Title} - {item.Url}");
+                    }
+                }
+                else
+                {
+                    logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
+                }
+
+                contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error in get and save for {item.Title} - {item.Url}");
+            }
         }
 
         public async Task DeleteStaleCacheEntriesAsync(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
@@ -221,7 +225,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             logger.LogInformation("Delete stale cache items completed");
         }
 
-        public async Task DeleteStaleItemsAsync(List<ContentDysacModel> staleItems, CancellationToken stoppingToken)
+        public async Task DeleteStaleItemsAsync(List<DysacContentModel> staleItems, CancellationToken stoppingToken)
         {
             _ = staleItems ?? throw new ArgumentNullException(nameof(staleItems));
 

@@ -23,15 +23,30 @@ using System.Diagnostics.CodeAnalysis;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.Logger.AppInsights.Extensions;
+using DFC.Compui.Telemetry;
+using DFC.App.DiscoverSkillsCareers.HostedServices;
+using DFC.Content.Pkg.Netcore.Extensions;
+using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.Compui.Cosmos;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Services;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IWebHostEnvironment Env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         private IConfiguration Configuration { get; }
@@ -89,12 +104,27 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+            services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddTransient<ICacheReloadService, CacheReloadService>();
+            services.AddTransient<IContentCacheService, ContentCacheService>();
+            services.AddTransient<IEventMessageService<DysacContentModel>, EventMessageService<DysacContentModel>>();
+            var cosmosDbConnectionContentPages = Configuration.GetSection(nameof(CosmosDbConnection)).Get<CosmosDbConnection>();
+            services.AddContentPageServices<DysacContentModel>(cosmosDbConnectionContentPages, Env.IsDevelopment());
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
+
+            const string AppSettingsPolicies = "Policies";
+            var policyOptions = Configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             AddPolicies(policyRegistry);
+
+            services.AddPolicies(policyRegistry, "content", policyOptions);
+            services.AddHostedServiceTelemetryWrapper();
+            services.AddHostedService<CacheReloadBackgroundService>();
+
+            services.AddApiServices(Configuration, policyRegistry);
 
             services.AddHttpClient<IResultsApiService, ResultsApiService>(
                 httpClient =>
