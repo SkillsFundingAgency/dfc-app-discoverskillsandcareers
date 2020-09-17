@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 {
     public interface IEventMessageService<TModel>
-        where TModel : class, IContentPageModel
+        where TModel : class, IDocumentModel
     {
         Task<IList<TModel>?> GetAllCachedItemsAsync();
 

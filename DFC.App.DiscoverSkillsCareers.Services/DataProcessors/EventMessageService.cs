@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 {
     public class EventMessageService<TModel> : IEventMessageService<TModel>
-           where TModel : class, IContentPageModel
+           where TModel : class, IDocumentModel
     {
         private readonly ILogger<EventMessageService<TModel>> logger;
-        private readonly IContentPageService<TModel> contentPageService;
+        private readonly IDocumentService<TModel> contentPageService;
 
-        public EventMessageService(ILogger<EventMessageService<TModel>> logger, IContentPageService<TModel> contentPageService)
+        public EventMessageService(ILogger<EventMessageService<TModel>> logger, IDocumentService<TModel> contentPageService)
         {
             this.logger = logger;
             this.contentPageService = contentPageService;
@@ -44,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 
             var response = await contentPageService.UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 
-            logger.LogInformation($"{nameof(CreateAsync)} has upserted content for: {upsertDocumentModel.CanonicalName} with response code {response}");
+            logger.LogInformation($"{nameof(CreateAsync)} has upserted content for: {upsertDocumentModel.Id} with response code {response}");
 
             return response;
         }
@@ -72,18 +72,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 
                 if (deleted)
                 {
-                    logger.LogInformation($"{nameof(UpdateAsync)} has deleted content for: {existingDocument.CanonicalName} due to partition key change: {existingDocument.PartitionKey} -> {upsertDocumentModel.PartitionKey}");
+                    logger.LogInformation($"{nameof(UpdateAsync)} has deleted content for: {existingDocument.Id} due to partition key change: {existingDocument.PartitionKey} -> {upsertDocumentModel.PartitionKey}");
                 }
                 else
                 {
-                    logger.LogWarning($"{nameof(UpdateAsync)} failed to delete content for: {existingDocument.CanonicalName} due to partition key change: {existingDocument.PartitionKey} -> {upsertDocumentModel.PartitionKey}");
+                    logger.LogWarning($"{nameof(UpdateAsync)} failed to delete content for: {existingDocument.Id} due to partition key change: {existingDocument.PartitionKey} -> {upsertDocumentModel.PartitionKey}");
                     return HttpStatusCode.BadRequest;
                 }
             }
 
             var response = await contentPageService.UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 
-            logger.LogInformation($"{nameof(UpdateAsync)} has upserted content for: {upsertDocumentModel.CanonicalName} with response code {response}");
+            logger.LogInformation($"{nameof(UpdateAsync)} has upserted content for: {upsertDocumentModel.Id} with response code {response}");
 
             return response;
         }

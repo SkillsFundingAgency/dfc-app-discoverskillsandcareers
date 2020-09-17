@@ -1,7 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.Compui.Cosmos.Models;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.Extensions.Logging;
@@ -19,14 +18,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
     {
         private readonly ILogger<CacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IEventMessageService<DysacContentModel> eventMessageService;
+        private readonly IEventMessageService<DysacQuestionSetContentModel> eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
-            IEventMessageService<DysacContentModel> eventMessageService,
+            IEventMessageService<DysacQuestionSetContentModel> eventMessageService,
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService)
         {
@@ -148,8 +147,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 // Question Set -> Short Question -> Trait
                 
 
-
-                var apiDataModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiShortQuestion>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
@@ -165,7 +163,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                var contentPageModel = mapper.Map<DysacContentModel>(apiDataModel);
+                var contentPageModel = mapper.Map<DysacQuestionSetContentModel>(apiDataModel);
 
                 if (!TryValidateModel(contentPageModel))
                 {
@@ -225,7 +223,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             logger.LogInformation("Delete stale cache items completed");
         }
 
-        public async Task DeleteStaleItemsAsync(List<DysacContentModel> staleItems, CancellationToken stoppingToken)
+        public async Task DeleteStaleItemsAsync(List<DysacQuestionSetContentModel> staleItems, CancellationToken stoppingToken)
         {
             _ = staleItems ?? throw new ArgumentNullException(nameof(staleItems));
 
@@ -238,22 +236,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                logger.LogInformation($"Deleting cache with {staleContentPage.CanonicalName} - {staleContentPage.Id}");
+                logger.LogInformation($"Deleting cache with {staleContentPage.Title} - {staleContentPage.Id}");
 
                 var deletionResult = await eventMessageService.DeleteAsync(staleContentPage.Id).ConfigureAwait(false);
 
                 if (deletionResult == HttpStatusCode.OK)
                 {
-                    logger.LogInformation($"Deleted stale cache item {staleContentPage.CanonicalName} - {staleContentPage.Id}");
+                    logger.LogInformation($"Deleted stale cache item {staleContentPage.Title} - {staleContentPage.Id}");
                 }
                 else
                 {
-                    logger.LogError($"Cache delete error status {deletionResult} from {staleContentPage.CanonicalName} - {staleContentPage.Id}");
+                    logger.LogError($"Cache delete error status {deletionResult} from {staleContentPage.Title} - {staleContentPage.Id}");
                 }
             }
         }
 
-        public bool TryValidateModel(ContentPageModel contentPageModel)
+        public bool TryValidateModel(DysacQuestionSetContentModel contentPageModel)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
 
@@ -265,7 +263,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {contentPageModel.CanonicalName} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {contentPageModel.Title} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 

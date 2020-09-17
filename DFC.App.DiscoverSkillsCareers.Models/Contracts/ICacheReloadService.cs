@@ -15,7 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 
         Task GetAndSaveItemAsync(ApiSummaryItemModel item, CancellationToken stoppingToken);
 
-        Task DeleteStaleItemsAsync(List<DysacContentModel> staleItems, CancellationToken stoppingToken);
+        Task DeleteStaleItemsAsync(List<DysacQuestionSetContentModel> staleItems, CancellationToken stoppingToken);
 
         Task DeleteStaleCacheEntriesAsync(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken);
     }
