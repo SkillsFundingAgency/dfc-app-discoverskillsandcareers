@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
 using System;

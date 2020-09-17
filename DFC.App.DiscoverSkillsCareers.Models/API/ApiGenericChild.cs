@@ -16,20 +16,20 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
         public Uri? Url { get; set; }
 
         [JsonProperty("skos__PrefLabel")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string Impact { get; set; }
+        public string? Impact { get; set; }
 
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
-        public string WebsiteURI { get; set; }
+        public string? WebsiteURI { get; set; }
 
         public int Ordinal { get; set; }
 
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         [JsonProperty("_links")]
-        public JObject? Links { get; set; }
+        public JObject? Links { get; }
 
         [JsonIgnore]
         public ContentLinksModel? ContentLinks
@@ -39,8 +39,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
             set => PrivateLinksModel = value;
         }
 
-        public IList<ApiGenericChild> ContentItems { get; set; } = new List<ApiGenericChild>();
-        public string Description { get; set; }
+        public IList<ApiGenericChild>? ContentItems { get; set; } = new List<ApiGenericChild>();
+
+        public string? Description { get; set; }
+
         private ContentLinksModel? PrivateLinksModel { get; set; }
     }
 }

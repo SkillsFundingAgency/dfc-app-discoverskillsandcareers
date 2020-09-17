@@ -6,9 +6,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 {
     public class DysacShortQuestion
     {
-        public string Impact { get; set; }
+        public string? Impact { get; set; }
 
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public Uri? Url { get; set; }
 

@@ -143,10 +143,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                //Heirarchy for DYSaC via Content API is as follows
-                // Question Set -> Short Question -> Trait
-                
-
                 var apiDataModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
@@ -196,7 +192,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
-                contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
+                if (contentPageModel.AllContentItemIds != null)
+                {
+                    contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
+                }
             }
             catch (Exception ex)
             {
