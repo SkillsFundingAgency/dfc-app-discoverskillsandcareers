@@ -22,6 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
 
         public string Type { get; set; }
 
+        public string WebsiteURI { get; set; }
+
         public int Ordinal { get; set; }
 
         public string ContentType { get; set; }

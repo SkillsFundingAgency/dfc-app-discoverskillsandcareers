@@ -17,6 +17,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public string Title { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<DysacShortQuestion> ContentItems { get; set; } = new List<DysacShortQuestion>();
+        public List<JobCategory> ContentItems { get; set; } = new List<JobCategory>();
     }
 }
