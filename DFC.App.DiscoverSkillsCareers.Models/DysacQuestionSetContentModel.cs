@@ -1,4 +1,5 @@
-﻿using DFC.Compui.Cosmos.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.Compui.Cosmos.Contracts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
-    public class DysacQuestionSetContentModel : DocumentModel, IDocumentModel
+    public class DysacQuestionSetContentModel : DocumentModel, IDocumentModel, IDysacContentModel
     {
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }

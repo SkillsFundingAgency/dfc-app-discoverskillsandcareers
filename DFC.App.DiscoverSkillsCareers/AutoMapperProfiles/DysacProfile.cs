@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
             {
                 var question = new DysacShortQuestion { Traits = new List<DysacTrait>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
 
-                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTrait { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, ContentItems = BuildJobCategories(z.ContentItems) }));
+                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTrait { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = BuildJobCategories(z.ContentItems) }));
                 listOfQuestions.Add(question);
             }
 

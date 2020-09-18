@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
         public string? Type { get; set; }
 
         [JsonProperty("_links")]
-        public JObject? Links { get; }
+        public JObject? Links { get; set; }
 
         [JsonIgnore]
         public ContentLinksModel? ContentLinks

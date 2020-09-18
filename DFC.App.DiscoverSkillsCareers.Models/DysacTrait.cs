@@ -1,11 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.Compui.Cosmos.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
-    public class DysacTrait
+    public class DysacTrait : DocumentModel, IDysacContentModel
     {
+        [Required]
+        public override string? PartitionKey { get; set; } = "Trait";
+
         public Uri? Url { get; set; }
 
         public Guid? ItemId { get; set; }
@@ -15,6 +22,14 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public string? Title { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<JobCategory> ContentItems { get; set; } = new List<JobCategory>();
+        public List<JobCategory> JobCategories { get; set; } = new List<JobCategory>();
+
+        [JsonIgnore]
+        public List<Guid>? AllContentItemIds => GetAllContentItemIds();
+
+        private List<Guid>? GetAllContentItemIds()
+        {
+            return JobCategories.Select(z => z.ItemId!.Value).ToList();
+        }
     }
 }

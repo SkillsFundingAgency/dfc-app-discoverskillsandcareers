@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.Extensions.Logging;
@@ -18,14 +19,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
     {
         private readonly ILogger<CacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IEventMessageService<DysacQuestionSetContentModel> eventMessageService;
+        private readonly IEventMessageService eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
-            IEventMessageService<DysacQuestionSetContentModel> eventMessageService,
+            IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService)
         {
@@ -42,30 +43,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
-                await RemoveDuplicateCacheItems().ConfigureAwait(false);
-
-                var summaryList = await GetSummaryListAsync().ConfigureAwait(false);
-
-                if (stoppingToken.IsCancellationRequested)
-                {
-                    logger.LogWarning("Reload cache cancelled");
-
-                    return;
-                }
-
-                if (summaryList != null && summaryList.Any())
-                {
-                    await ProcessSummaryListAsync(summaryList, stoppingToken).ConfigureAwait(false);
-
-                    if (stoppingToken.IsCancellationRequested)
-                    {
-                        logger.LogWarning("Reload cache cancelled");
-
-                        return;
-                    }
-
-                    await DeleteStaleCacheEntriesAsync(summaryList, stoppingToken).ConfigureAwait(false);
-                }
+                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>("personalityquestionset", stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType("personalitytrait", stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType("personalityskill", stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
@@ -75,11 +55,42 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
         }
 
-        public async Task RemoveDuplicateCacheItems()
+        private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
+            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TDestModel : class, IDysacContentModel
+        {
+            await RemoveDuplicateCacheItems<TDestModel>().ConfigureAwait(false);
+
+            var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
+
+            if (stoppingToken.IsCancellationRequested)
+            {
+                logger.LogWarning($"Reload cache cancelled for {contentType}");
+
+                return;
+            }
+
+            if (summaryList != null && summaryList.Any())
+            {
+                await ProcessSummaryListAsync<TModel, TDestModel>(summaryList, stoppingToken).ConfigureAwait(false);
+
+                if (stoppingToken.IsCancellationRequested)
+                {
+                    logger.LogWarning($"Reload cache cancelled for {contentType}");
+
+                    return;
+                }
+
+                await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList, stoppingToken).ConfigureAwait(false);
+            }
+        }
+
+        public async Task RemoveDuplicateCacheItems<TDestModel>()
+             where TDestModel : class, IDysacContentModel
         {
             logger.LogInformation("Removing duplicate cache items");
 
-            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
+            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync<TDestModel>().ConfigureAwait(false);
             var duplicates = cachedContentPages?.GroupBy(s => s.Url).SelectMany(grp => grp.Skip(1)).Select(t => t.Id).ToList();
 
             if (duplicates != null && duplicates.Any())
@@ -88,7 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        if (await eventMessageService.DeleteAsync(id).ConfigureAwait(false) == HttpStatusCode.OK)
+                        if (await eventMessageService.DeleteAsync<TDestModel>(id).ConfigureAwait(false) == HttpStatusCode.OK)
                         {
                             break;
                         }
@@ -103,18 +114,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
         }
 
-        public async Task<IList<ApiSummaryItemModel>?> GetSummaryListAsync()
+        public async Task<IList<ApiSummaryItemModel>?> GetSummaryListAsync(string contentType)
         {
             logger.LogInformation("Get summary list");
 
-            var summaryList = await cmsApiService.GetSummaryAsync<ApiSummaryItemModel>().ConfigureAwait(false);
+            var summaryList = await cmsApiService.GetSummaryAsync<ApiSummaryItemModel>(contentType).ConfigureAwait(false);
 
             logger.LogInformation("Get summary list completed");
 
             return summaryList;
         }
 
-        public async Task ProcessSummaryListAsync(IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
+        public async Task ProcessSummaryListAsync<TModel, TDestModel>(IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
+            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TDestModel : class, IDysacContentModel
         {
             logger.LogInformation("Process summary list started");
 
@@ -129,13 +142,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                await GetAndSaveItemAsync(item, stoppingToken).ConfigureAwait(false);
+                await GetAndSaveItemAsync<TModel, TDestModel>(item, stoppingToken).ConfigureAwait(false);
             }
 
             logger.LogInformation("Process summary list completed");
         }
 
-        public async Task GetAndSaveItemAsync(ApiSummaryItemModel item, CancellationToken stoppingToken)
+        public async Task GetAndSaveItemAsync<TModel, TDestModel>(ApiSummaryItemModel item, CancellationToken stoppingToken)
+            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TDestModel : class, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
 
@@ -143,7 +158,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<TModel, ApiGenericChild>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
@@ -159,7 +174,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                var contentPageModel = mapper.Map<DysacQuestionSetContentModel>(apiDataModel);
+                var contentPageModel = mapper.Map<TDestModel>(apiDataModel);
 
                 if (!TryValidateModel(contentPageModel))
                 {
@@ -170,13 +185,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
 
-                var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
+                var result = await eventMessageService.UpdateAsync<TDestModel>(contentPageModel).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.NotFound)
                 {
                     logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
 
-                    result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
+                    result = await eventMessageService.CreateAsync<TDestModel>(contentPageModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
@@ -203,11 +218,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
         }
 
-        public async Task DeleteStaleCacheEntriesAsync(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
+        public async Task DeleteStaleCacheEntriesAsync<TDestModel>(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
+            where TDestModel : class, IDysacContentModel
         {
             logger.LogInformation("Delete stale cache items started");
 
-            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
+            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync<TDestModel>().ConfigureAwait(false);
 
             if (cachedContentPages != null && cachedContentPages.Any())
             {
@@ -222,7 +238,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             logger.LogInformation("Delete stale cache items completed");
         }
 
-        public async Task DeleteStaleItemsAsync(List<DysacQuestionSetContentModel> staleItems, CancellationToken stoppingToken)
+        public async Task DeleteStaleItemsAsync<TModel>(List<TModel> staleItems, CancellationToken stoppingToken)
+            where TModel : class, IDysacContentModel
         {
             _ = staleItems ?? throw new ArgumentNullException(nameof(staleItems));
 
@@ -237,7 +254,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 logger.LogInformation($"Deleting cache with {staleContentPage.Title} - {staleContentPage.Id}");
 
-                var deletionResult = await eventMessageService.DeleteAsync(staleContentPage.Id).ConfigureAwait(false);
+                var deletionResult = await eventMessageService.DeleteAsync<TModel>(staleContentPage.Id).ConfigureAwait(false);
 
                 if (deletionResult == HttpStatusCode.OK)
                 {
@@ -250,7 +267,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
         }
 
-        public bool TryValidateModel(DysacQuestionSetContentModel contentPageModel)
+        public bool TryValidateModel<TDestModel>(TDestModel contentPageModel)
+            where TDestModel : IDysacContentModel
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
 

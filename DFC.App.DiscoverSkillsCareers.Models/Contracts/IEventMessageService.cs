@@ -1,20 +1,22 @@
-﻿using DFC.Compui.Cosmos.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 {
-    public interface IEventMessageService<TModel>
-        where TModel : class, IDocumentModel
+    public interface IEventMessageService
     {
-        Task<IList<TModel>?> GetAllCachedItemsAsync();
+        Task<IList<TDestModel>?> GetAllCachedItemsAsync<TDestModel>()
+            where TDestModel : class, IDysacContentModel;
 
-        Task<HttpStatusCode> CreateAsync(TModel? upsertDocumentModel);
+        Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)
+            where TModel : class, IDysacContentModel;
 
-        Task<HttpStatusCode> UpdateAsync(TModel? upsertDocumentModel);
+        Task<HttpStatusCode> UpdateAsync<TModel>(TModel upsertDocumentModel)
+            where TModel : class, IDysacContentModel;
 
-        Task<HttpStatusCode> DeleteAsync(Guid id);
+        Task<HttpStatusCode> DeleteAsync<TModel>(Guid id)
+             where TModel : class, IDysacContentModel;
     }
 }
