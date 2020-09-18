@@ -111,7 +111,8 @@ namespace DFC.App.DiscoverSkillsCareers
             var cosmosDbConnectionContentPages = Configuration.GetSection(nameof(CosmosDbConnection)).Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddDocumentServices<DysacTrait>(cosmosDbConnectionContentPages, env.IsDevelopment());
-            services.AddTransient<IDocumentServiceWrapper, DocumentServiceWrapper>();
+            services.AddDocumentServices<DysacSkill>(cosmosDbConnectionContentPages, env.IsDevelopment());
+            services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 

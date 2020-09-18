@@ -2,7 +2,7 @@
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
-    public interface IDocumentServiceWrapper
+    public interface IDocumentServiceFactory
     {
         object GetDocumentService<TModel>()
             where TModel : class, IDocumentModel;

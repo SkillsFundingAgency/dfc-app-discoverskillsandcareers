@@ -13,9 +13,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
     public class EventMessageService : IEventMessageService
     {
         private readonly ILogger<EventMessageService> logger;
-        private readonly IDocumentServiceWrapper documentServiceWrapper;
+        private readonly IDocumentServiceFactory documentServiceWrapper;
 
-        public EventMessageService(ILogger<EventMessageService> logger, IDocumentServiceWrapper documentServiceWrapper)
+        public EventMessageService(ILogger<EventMessageService> logger, IDocumentServiceFactory documentServiceWrapper)
         {
             this.logger = logger;
             this.documentServiceWrapper = documentServiceWrapper;

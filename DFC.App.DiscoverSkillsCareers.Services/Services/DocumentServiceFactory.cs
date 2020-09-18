@@ -2,20 +2,20 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
-    public class DocumentServiceWrapper : IDocumentServiceWrapper
+    public class DocumentServiceFactory : IDocumentServiceFactory
     {
         private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
         private readonly IDocumentService<DysacTrait> dysacTraitDocumentService;
+        private readonly IDocumentService<DysacSkill> dysacSkillDocumentService;
 
-        public DocumentServiceWrapper(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTrait> dysacTraitDocumentService)
+        public DocumentServiceFactory(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTrait> dysacTraitDocumentService, IDocumentService<DysacSkill> dysacSkillDocumentService)
         {
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.dysacTraitDocumentService = dysacTraitDocumentService;
+            this.dysacSkillDocumentService = dysacSkillDocumentService;
         }
 
         public object GetDocumentService<TModel>()
@@ -29,6 +29,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             if (typeof(TModel) == typeof(DysacTrait))
             {
                 return dysacTraitDocumentService;
+            }
+
+            if (typeof(TModel) == typeof(DysacSkill))
+            {
+                return dysacSkillDocumentService;
             }
 
             throw new InvalidOperationException($"No document service for {typeof(TModel)} found");

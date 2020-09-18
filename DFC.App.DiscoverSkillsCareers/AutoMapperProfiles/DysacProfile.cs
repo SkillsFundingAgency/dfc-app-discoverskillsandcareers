@@ -17,6 +17,13 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
                 .ForMember(d => d.ShortQuestions, s => s.MapFrom(z => Construct(z.ContentItems)));
 
+            CreateMap<ApiTrait, DysacTrait>()
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+                .ForMember(d => d.JobCategories, s => s.MapFrom(z => ConstructJobCategories(z.ContentItems)));
+
+            CreateMap<ApiSkill, DysacSkill>()
+              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
+
             CreateMap<LinkDetails, ApiGenericChild>()
              .ForMember(d => d.Url, s => s.Ignore())
              .ForMember(d => d.ItemId, s => s.Ignore())
@@ -31,14 +38,14 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
             {
                 var question = new DysacShortQuestion { Traits = new List<DysacTrait>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
 
-                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTrait { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = BuildJobCategories(z.ContentItems) }));
+                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTrait { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
                 listOfQuestions.Add(question);
             }
 
             return listOfQuestions;
         }
 
-        private List<JobCategory> BuildJobCategories(IList<ApiGenericChild> z)
+        private List<JobCategory> ConstructJobCategories(IList<ApiGenericChild> z)
         {
             return z.Select(x => new JobCategory { Description = x.Description, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }).ToList();
         }
