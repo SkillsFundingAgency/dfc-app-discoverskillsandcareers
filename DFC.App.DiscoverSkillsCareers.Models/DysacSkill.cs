@@ -10,7 +10,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
     public class DysacSkill : DocumentModel, IDysacContentModel
-    {   
+    {
         [Required]
         public override string? PartitionKey { get; set; } = "Skill";
 
@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public string? Description { get; set; }
 
         public string? Title { get; set; }
-    
+
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 

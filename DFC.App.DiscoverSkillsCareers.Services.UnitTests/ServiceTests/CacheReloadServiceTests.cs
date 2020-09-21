@@ -133,7 +133,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedTwiceExactly();
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustNotHaveHappened();
         }

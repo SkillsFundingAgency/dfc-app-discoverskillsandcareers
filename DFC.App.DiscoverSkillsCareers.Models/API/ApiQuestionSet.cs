@@ -17,7 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }
 
-        [JsonProperty("skos__PrefLabel")]
+        [JsonProperty("skos__prefLabel")]
         public string? Title { get; set; }
 
         public string? Type { get; set; }

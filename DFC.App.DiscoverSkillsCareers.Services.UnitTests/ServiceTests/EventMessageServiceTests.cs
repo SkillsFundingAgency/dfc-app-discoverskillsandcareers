@@ -7,6 +7,7 @@ using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             // arrange
             var expectedResult = A.CollectionOfFake<DysacQuestionSetContentModel>(2);
 
-            A.CallTo(() => fakeDocumentService.GetAllAsync(A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => fakeDocumentService.GetAsync(A<Expression<Func<DysacQuestionSetContentModel,bool>>>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentServiceFactory);
 
@@ -40,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>().ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentService.GetAsync(A<Expression<Func<DysacQuestionSetContentModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 

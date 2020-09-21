@@ -20,12 +20,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
             this.documentServiceFactory = documentServiceWrapper;
         }
 
-        public async Task<IList<TDestModel>> GetAllCachedItemsAsync<TDestModel>()
+        public async Task<IList<TDestModel?>> GetAllCachedItemsAsync<TDestModel>()
             where TDestModel : class, IDysacContentModel
         {
-            var serviceDataModels = await documentServiceFactory.GetDocumentService<TDestModel>().GetAllAsync().ConfigureAwait(false);
+            var itemInstance = (TDestModel)Activator.CreateInstance(typeof(TDestModel));
+            var serviceDataModels = await documentServiceFactory.GetDocumentService<TDestModel>().GetAsync(x => x.PartitionKey == itemInstance!.PartitionKey).ConfigureAwait(false);
 
-            return serviceDataModels.ToList();
+            return serviceDataModels?.ToList();
         }
 
         public async Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)

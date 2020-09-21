@@ -17,6 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
     public class CacheReloadService : ICacheReloadService
     {
+        private readonly List<ApiSummaryItemModel> loadedItems;
         private readonly ILogger<CacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly IEventMessageService eventMessageService;
@@ -62,6 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             await RemoveDuplicateCacheItems<TDestModel>().ConfigureAwait(false);
 
             var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
+            await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);
 
             if (stoppingToken.IsCancellationRequested)
             {
@@ -77,11 +79,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 if (stoppingToken.IsCancellationRequested)
                 {
                     logger.LogWarning($"Reload cache cancelled for {contentType}");
-
-                    return;
                 }
-
-                await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList, stoppingToken).ConfigureAwait(false);
             }
         }
 
