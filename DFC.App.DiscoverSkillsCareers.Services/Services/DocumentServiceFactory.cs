@@ -18,22 +18,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.dysacSkillDocumentService = dysacSkillDocumentService;
         }
 
-        public object GetDocumentService<TModel>()
+        public IDocumentService<TModel> GetDocumentService<TModel>()
             where TModel : class, IDocumentModel
         {
             if (typeof(TModel) == typeof(DysacQuestionSetContentModel))
             {
-                return dysacQuestionSetDocumentService;
+                return (IDocumentService<TModel>)dysacQuestionSetDocumentService;
             }
 
             if (typeof(TModel) == typeof(DysacTrait))
             {
-                return dysacTraitDocumentService;
+                return (IDocumentService<TModel>)dysacTraitDocumentService;
             }
 
             if (typeof(TModel) == typeof(DysacSkill))
             {
-                return dysacSkillDocumentService;
+                return (IDocumentService<TModel>)dysacSkillDocumentService;
             }
 
             throw new InvalidOperationException($"No document service for {typeof(TModel)} found");

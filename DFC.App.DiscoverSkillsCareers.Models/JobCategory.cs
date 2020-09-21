@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
+    [ExcludeFromCodeCoverage]
     public class JobCategory
     {
         public string? Title { get; set; }

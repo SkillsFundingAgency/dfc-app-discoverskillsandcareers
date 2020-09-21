@@ -4,11 +4,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
+    [ExcludeFromCodeCoverage]
     public class DysacSkill : DocumentModel, IDysacContentModel
-    {
+    {   
         [Required]
         public override string? PartitionKey { get; set; } = "Skill";
 
