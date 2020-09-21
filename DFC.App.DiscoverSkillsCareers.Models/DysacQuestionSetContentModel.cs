@@ -16,7 +16,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [Required]
         public override string? PartitionKey { get; set; } = "QuestionSet";
 
-        public List<DysacShortQuestion>? ShortQuestions { get; } = new List<DysacShortQuestion>();
+        public List<DysacShortQuestion>? ShortQuestions { get; set; } = new List<DysacShortQuestion>();
 
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
