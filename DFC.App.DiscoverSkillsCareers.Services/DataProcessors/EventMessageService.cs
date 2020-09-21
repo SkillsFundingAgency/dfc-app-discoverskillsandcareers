@@ -1,6 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,26 +12,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
     public class EventMessageService : IEventMessageService
     {
         private readonly ILogger<EventMessageService> logger;
-        private readonly IDocumentServiceFactory documentServiceWrapper;
+        private readonly IDocumentServiceFactory documentServiceFactory;
 
         public EventMessageService(ILogger<EventMessageService> logger, IDocumentServiceFactory documentServiceWrapper)
         {
             this.logger = logger;
-            this.documentServiceWrapper = documentServiceWrapper;
+            this.documentServiceFactory = documentServiceWrapper;
         }
 
         public async Task<IList<TDestModel>> GetAllCachedItemsAsync<TDestModel>()
             where TDestModel : class, IDysacContentModel
         {
-            var serviceDataModels = await GetDocumentService<TDestModel>().GetAllAsync().ConfigureAwait(false);
+            var serviceDataModels = await documentServiceFactory.GetDocumentService<TDestModel>().GetAllAsync().ConfigureAwait(false);
 
-            return serviceDataModels?.ToList();
-        }
-
-        private IDocumentService<TDestModel> GetDocumentService<TDestModel>()
-            where TDestModel : class, IDysacContentModel
-        {
-            return (IDocumentService<TDestModel>)documentServiceWrapper.GetDocumentService<TDestModel>();
+            return serviceDataModels.ToList();
         }
 
         public async Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)
@@ -43,13 +36,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
                 return HttpStatusCode.BadRequest;
             }
 
-            var existingDocument = await GetDocumentService<TModel>().GetByIdAsync(upsertDocumentModel.Id).ConfigureAwait(false);
+            var existingDocument = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(upsertDocumentModel.Id).ConfigureAwait(false);
             if (existingDocument != null)
             {
                 return HttpStatusCode.AlreadyReported;
             }
 
-            var response = await GetDocumentService<TModel>().UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
+            var response = await documentServiceFactory.GetDocumentService<TModel>().UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 
             logger.LogInformation($"{nameof(CreateAsync)} has upserted content for: {upsertDocumentModel.Id} with response code {response}");
 
@@ -64,7 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
                 return HttpStatusCode.BadRequest;
             }
 
-            var existingDocument = await GetDocumentService<TModel>().GetByIdAsync(upsertDocumentModel.Id).ConfigureAwait(false);
+            var existingDocument = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(upsertDocumentModel.Id).ConfigureAwait(false);
             if (existingDocument == null)
             {
                 return HttpStatusCode.NotFound;
@@ -76,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
             }
             else
             {
-                var deleted = await GetDocumentService<TModel>().DeleteAsync(existingDocument.Id).ConfigureAwait(false);
+                var deleted = await documentServiceFactory.GetDocumentService<TModel>().DeleteAsync(existingDocument.Id).ConfigureAwait(false);
 
                 if (deleted)
                 {
@@ -89,7 +82,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
                 }
             }
 
-            var response = await GetDocumentService<TModel>().UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
+            var response = await documentServiceFactory.GetDocumentService<TModel>().UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 
             logger.LogInformation($"{nameof(UpdateAsync)} has upserted content for: {upsertDocumentModel.Id} with response code {response}");
 
@@ -99,7 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         public async Task<HttpStatusCode> DeleteAsync<TModel>(Guid id)
              where TModel : class, IDysacContentModel
         {
-            var isDeleted = await GetDocumentService<TModel>().DeleteAsync(id).ConfigureAwait(false);
+            var isDeleted = await documentServiceFactory.GetDocumentService<TModel>().DeleteAsync(id).ConfigureAwait(false);
 
             if (isDeleted)
             {
