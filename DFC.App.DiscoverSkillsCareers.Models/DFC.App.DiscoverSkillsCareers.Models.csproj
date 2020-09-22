@@ -31,5 +31,9 @@
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Core\DFC.App.DiscoverSkillsCareers.Core.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Storage\" />
+  </ItemGroup>
 
 </Project>

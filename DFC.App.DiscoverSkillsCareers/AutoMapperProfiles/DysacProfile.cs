@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -30,24 +31,27 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
              .ForMember(d => d.ContentItems, s => s.Ignore());
         }
 
+        private static List<IDysacContentModel> ConstructJobCategories(IList<ApiGenericChild> z)
+        {
+            var listToReturn = new List<IDysacContentModel>();
+            listToReturn.AddRange(z.Select(x => new JobCategory { Description = x.Description, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }));
+
+            return listToReturn;
+        }
+
         private IEnumerable<DysacShortQuestion> Construct(IList<ApiGenericChild> z)
         {
             var listOfQuestions = new List<DysacShortQuestion>();
 
             foreach (var item in z)
             {
-                var question = new DysacShortQuestion { Traits = new List<DysacTrait>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
+                var question = new DysacShortQuestion { Traits = new List<IDysacContentModel>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
 
                 question.Traits.AddRange(item.ContentItems.Select(z => new DysacTrait { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
                 listOfQuestions.Add(question);
             }
 
             return listOfQuestions;
-        }
-
-        private List<JobCategory> ConstructJobCategories(IList<ApiGenericChild> z)
-        {
-            return z.Select(x => new JobCategory { Description = x.Description, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }).ToList();
         }
     }
 }

@@ -66,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedTwiceExactly();
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
         }
@@ -103,7 +103,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedTwiceExactly();
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
         }
@@ -133,52 +133,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedTwiceExactly();
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustNotHaveHappened();
         }
-
-        [Fact]
-        public async Task CacheReloadServiceRemoveDuplicateCacheItemsIsSuccessful()
-        {
-            // arrange
-            const int NumberOfItems = 1;
-            var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfItems);
-
-            fakeCachedDysacQuestionSetContentModels.Add(fakeCachedDysacQuestionSetContentModels.First());
-
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
-            A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
-
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
-
-            // act
-            await cacheReloadService.RemoveDuplicateCacheItems<DysacQuestionSetContentModel>().ConfigureAwait(false);
-
-            // assert
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustHaveHappened(NumberOfItems, Times.Exactly);
-        }
-
-        [Fact]
-        public async Task CacheReloadServiceRemoveDuplicateCacheItemsNoData()
-        {
-            // arrange
-            const int NumberOfItems = 0;
-            var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfItems);
-
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
-
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
-
-            // act
-            await cacheReloadService.RemoveDuplicateCacheItems<DysacQuestionSetContentModel>().ConfigureAwait(false);
-
-            // assert
-            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustNotHaveHappened();
-        }
-
+        
         [Fact]
         public async Task CacheReloadServiceGetAndSaveItemIsSuccessfulForCreate()
         {
@@ -387,7 +346,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             {
                 ItemId = Guid.NewGuid(),
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
-                Title = "A title",
                 ContentLinks = new ContentLinksModel(new JObject())
                 {
                     ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
@@ -426,15 +384,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             {
                 Id = Guid.NewGuid(),
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
-                Title = "A Title",
                 Type = "Short",
-                ShortQuestions = new List<DysacShortQuestion>
+                ShortQuestions = new List<IDysacContentModel>
                 {
                     new DysacShortQuestion
                     {
                         ItemId = Guid.NewGuid(),
                         Title = "title",
-                        Traits = new List<DysacTrait>
+                        Traits = new List<IDysacContentModel>
                         {
                             new DysacTrait
                             {   

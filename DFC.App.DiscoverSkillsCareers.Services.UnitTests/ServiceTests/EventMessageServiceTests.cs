@@ -1,4 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.Compui.Cosmos.Contracts;
@@ -265,13 +266,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var model = new DysacQuestionSetContentModel
             {
-                ShortQuestions = new List<DysacShortQuestion>
+                ShortQuestions = new List<IDysacContentModel>
                 {
                     new DysacShortQuestion
                     {
                         Title = "A short question",
                         Impact = "Positive",
-                        Traits = new List<DysacTrait>
+                        Traits = new List<IDysacContentModel>
                         {
                             new DysacTrait
                             {

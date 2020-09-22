@@ -11,19 +11,28 @@ namespace DFC.App.DiscoverSkillsCareers.Models
     [ExcludeFromCodeCoverage]
     public class DysacSkill : DocumentModel, IDysacContentModel
     {
+        public Guid? ItemId { get; set; }
+
         [Required]
         public override string? PartitionKey { get; set; } = "Skill";
 
         public Uri? Url { get; set; }
 
-        public Guid? ItemId { get; set; }
-
         public string? Description { get; set; }
 
         public string? Title { get; set; }
 
+        public string? ContentType { get; set; }
+
+        public DateTime? LastCached { get; set; }
+
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
+
+        public List<IDysacContentModel>? GetContentItems()
+        {
+            return new List<IDysacContentModel>();
+        }
 
         private List<Guid>? GetAllContentItemIds()
         {

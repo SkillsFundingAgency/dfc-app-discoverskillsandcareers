@@ -56,62 +56,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
         }
 
-        private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
-            where TDestModel : class, IDysacContentModel
-        {
-            await RemoveDuplicateCacheItems<TDestModel>().ConfigureAwait(false);
-
-            var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
-            await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);
-
-            if (stoppingToken.IsCancellationRequested)
-            {
-                logger.LogWarning($"Reload cache cancelled for {contentType}");
-
-                return;
-            }
-
-            if (summaryList != null && summaryList.Any())
-            {
-                await ProcessSummaryListAsync<TModel, TDestModel>(summaryList, stoppingToken).ConfigureAwait(false);
-
-                if (stoppingToken.IsCancellationRequested)
-                {
-                    logger.LogWarning($"Reload cache cancelled for {contentType}");
-                }
-            }
-        }
-
-        public async Task RemoveDuplicateCacheItems<TDestModel>()
-             where TDestModel : class, IDysacContentModel
-        {
-            logger.LogInformation("Removing duplicate cache items");
-
-            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync<TDestModel>().ConfigureAwait(false);
-            var duplicates = cachedContentPages?.GroupBy(s => s.Url).SelectMany(grp => grp.Skip(1)).Select(t => t.Id).ToList();
-
-            if (duplicates != null && duplicates.Any())
-            {
-                foreach (var id in duplicates)
-                {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        if (await eventMessageService.DeleteAsync<TDestModel>(id).ConfigureAwait(false) == HttpStatusCode.OK)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                logger.LogInformation($"Removed {duplicates.Count} duplicate cache items");
-            }
-            else
-            {
-                logger.LogInformation("No duplicate items to be removed");
-            }
-        }
-
         public async Task<IList<ApiSummaryItemModel>?> GetSummaryListAsync(string contentType)
         {
             logger.LogInformation("Get summary list");
@@ -172,9 +116,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                var contentPageModel = mapper.Map<TDestModel>(apiDataModel);
+                var destinationModel = mapper.Map<TDestModel>(apiDataModel);
+                destinationModel.LastCached = DateTime.UtcNow;
 
-                if (!TryValidateModel(contentPageModel))
+                if (!TryValidateModel(destinationModel))
                 {
                     logger.LogError($"Validation failure for {item.Title} - {item.Url}");
 
@@ -183,13 +128,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
 
-                var result = await eventMessageService.UpdateAsync<TDestModel>(contentPageModel).ConfigureAwait(false);
+                var result = await eventMessageService.UpdateAsync(destinationModel).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.NotFound)
                 {
                     logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
 
-                    result = await eventMessageService.CreateAsync<TDestModel>(contentPageModel).ConfigureAwait(false);
+                    result = await eventMessageService.CreateAsync<TDestModel>(destinationModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
@@ -205,9 +150,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
-                if (contentPageModel.AllContentItemIds != null)
+                if (destinationModel.AllContentItemIds != null)
                 {
-                    contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
+                    contentCacheService.AddOrReplace(destinationModel.Id, destinationModel.AllContentItemIds);
                 }
             }
             catch (Exception ex)
@@ -250,17 +195,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                logger.LogInformation($"Deleting cache with {staleContentPage.Title} - {staleContentPage.Id}");
+                logger.LogInformation($"Deleting cache with {staleContentPage.Id}");
 
                 var deletionResult = await eventMessageService.DeleteAsync<TModel>(staleContentPage.Id).ConfigureAwait(false);
 
                 if (deletionResult == HttpStatusCode.OK)
                 {
-                    logger.LogInformation($"Deleted stale cache item {staleContentPage.Title} - {staleContentPage.Id}");
+                    logger.LogInformation($"Deleted stale cache item {staleContentPage.Id}");
                 }
                 else
                 {
-                    logger.LogError($"Cache delete error status {deletionResult} from {staleContentPage.Title} - {staleContentPage.Id}");
+                    logger.LogError($"Cache delete error status {deletionResult} from {staleContentPage.Id}");
                 }
             }
         }
@@ -278,11 +223,36 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {contentPageModel.Title} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {contentPageModel.Id} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 
             return isValid;
+        }
+
+        private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
+           where TModel : class, IBaseContentItemModel<ApiGenericChild>
+           where TDestModel : class, IDysacContentModel
+        {
+            var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
+            await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);
+
+            if (stoppingToken.IsCancellationRequested)
+            {
+                logger.LogWarning($"Reload cache cancelled for {contentType}");
+
+                return;
+            }
+
+            if (summaryList != null && summaryList.Any())
+            {
+                await ProcessSummaryListAsync<TModel, TDestModel>(summaryList, stoppingToken).ConfigureAwait(false);
+
+                if (stoppingToken.IsCancellationRequested)
+                {
+                    logger.LogWarning($"Reload cache cancelled for {contentType}");
+                }
+            }
         }
     }
 }
