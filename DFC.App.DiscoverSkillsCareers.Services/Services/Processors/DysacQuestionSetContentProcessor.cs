@@ -3,6 +3,8 @@ using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,8 +25,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             AutoMapper.IMapper mapper,
             IEventMessageService eventMessageService,
             IContentCacheService contentCacheService,
-            ILogger<BaseContentProcessor> logger)
-            : base(logger)
+            ILogger<BaseContentProcessor> logger,
+            IDocumentServiceFactory documentService,
+            IMappingService mappingService)
+            : base(logger, documentService, mappingService, eventMessageService)
         {
             this.cmsApiService = cmsApiService;
             this.mapper = mapper;
@@ -34,7 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public string Type => nameof(DysacQuestionSetContentModel);
 
-        public async Task<HttpStatusCode> Process(Uri url, Guid contentId)
+        public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
         {
             var questionModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<DysacQuestionSetContentModel>(questionModel);
@@ -64,6 +68,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             }
 
             return contentResult;
+        }
+
+        public async Task<HttpStatusCode> ProcessContentItem(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
+        {
+            return await ProcessContentItem<DysacQuestionSetContentModel>(parentId, contentItemId, apiItem).ConfigureAwait(false);
         }
     }
 }

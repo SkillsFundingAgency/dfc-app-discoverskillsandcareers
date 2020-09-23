@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.45" />
+    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.47" />
     <PackageReference Include="Dfc.Session" Version="0.3.5" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
       <PrivateAssets>all</PrivateAssets>

@@ -29,6 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
              .ForMember(d => d.Url, s => s.Ignore())
              .ForMember(d => d.ItemId, s => s.Ignore())
              .ForMember(d => d.ContentItems, s => s.Ignore());
+
+            CreateMap<ApiGenericChild, DysacShortQuestion>();
         }
 
         private static List<IDysacContentModel> ConstructJobCategories(IList<ApiGenericChild> z)

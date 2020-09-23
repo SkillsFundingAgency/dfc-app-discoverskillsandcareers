@@ -11,7 +11,6 @@ using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -124,22 +123,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private IDysacContentModel GetDsyacTypeFromContentType(string contentType)
         {
-            if (contentType.ToLowerInvariant() == "personalityquestionset")
+            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityQuestionSet.ToUpperInvariant())
             {
                 return new DysacQuestionSetContentModel();
             }
 
-            if (contentType.ToLowerInvariant() == "personalityskill")
+            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalitySkill.ToUpperInvariant())
             {
                 return new DysacSkill();
             }
 
-            if (contentType.ToLowerInvariant() == "personalitytrait")
+            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityTrait.ToUpperInvariant())
             {
                 return new DysacTrait();
             }
 
-            if (contentType.ToLowerInvariant() == "jobcategory")
+            if (contentType.ToUpperInvariant() == Constants.ContentTypeJobCategory.ToUpperInvariant())
             {
                 return new JobCategory();
             }
@@ -178,13 +177,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         {
             var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == destType.GetType().Name);
-            return await contentProcessor.Process(url, contentId).ConfigureAwait(false);
+            return await contentProcessor.ProcessContent(url, contentId).ConfigureAwait(false);
         }
 
         public async Task<HttpStatusCode> ProcessContentItemAsync<TModel>(TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
         {
-            if (!contentCacheStatuses.Any())
+            if (contentCacheStatuses == null || !contentCacheStatuses.Any())
             {
                 return HttpStatusCode.NoContent;
             }
@@ -198,17 +197,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentPageModel = await documentServiceFactory.GetDocumentService<IDysacContentModel>(cacheResult.ContentType).GetByIdAsync(cacheResult.ParentContentId!).ConfigureAwait(false);
+                var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == GetDsyacTypeFromContentType(cacheResult.ContentType).GetType().Name);
 
-                if (contentPageModel != null)
-                {
-                    var contentItemModel = FindContentItem(contentItemId, contentPageModel.GetContentItems());
-
-                    mapper.Map(apiDataContentItemModel, contentItemModel);
-                    contentItemModel!.LastCached = DateTime.UtcNow;
-
-                    await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
-                }
+                await contentProcessor.ProcessContentItem(cacheResult.ParentContentId!.Value, contentItemId, apiDataContentItemModel).ConfigureAwait(false);
             }
 
             return HttpStatusCode.OK;
@@ -225,83 +216,34 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public async Task<HttpStatusCode> DeleteContentItemAsync<TModel>(TModel destinationType, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
         {
-            if (!contentCacheStatuses.Any())
+            if (contentCacheStatuses == null || !contentCacheStatuses.Any())
             {
                 return HttpStatusCode.NoContent;
             }
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>(cacheResult.ContentType!).GetByIdAsync(cacheResult.ParentContentId!).ConfigureAwait(false);
+                //var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == GetDsyacTypeFromContentType(cacheResult.ContentType).GetType().Name);
 
-                if (contentPageModel != null)
-                {
-                    var removedContentitem = RemoveContentItem(contentItemId, contentPageModel.GetContentItems());
+                //var contentPageModel = await contentProcessor.GetByIdAsync<TModel>(cacheResult.ParentContentId!.Value).ConfigureAwait(false);
 
-                    if (removedContentitem)
-                    {
-                        var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
+                //if (contentPageModel != null)
+                //{
+                //    var removedContentitem = RemoveContentItem(contentItemId, contentPageModel.GetContentItems());
 
-                        if (result == HttpStatusCode.OK)
-                        {
-                            contentCacheService.RemoveContentItem(cacheResult.ParentContentId!, contentItemId);
-                        }
-                    }
-                }
+                //    if (removedContentitem)
+                //    {
+                //        //var result = await eventMessageService.UpdateAsync<TModel>(contentPageModel).ConfigureAwait(false);
+
+                //        //if (result == HttpStatusCode.OK)
+                //        //{
+                //        //    contentCacheService.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId);
+                //        //}
+                //    }
+                //}
             }
 
             return HttpStatusCode.OK;
-        }
-
-        public IDysacContentModel? FindContentItem(Guid contentItemId, List<IDysacContentModel>? items)
-        {
-            if (items == null || !items.Any())
-            {
-                return default;
-            }
-
-            foreach (var contentItemModel in items)
-            {
-                if (contentItemModel.ItemId == contentItemId)
-                {
-                    return contentItemModel;
-                }
-
-                var childContentItemModel = FindContentItem(contentItemId, contentItemModel.GetContentItems());
-
-                if (childContentItemModel != null)
-                {
-                    return childContentItemModel;
-                }
-            }
-
-            return default;
-        }
-
-        public bool RemoveContentItem(Guid contentItemId, List<IDysacContentModel>? items)
-        {
-            if (items == null || !items.Any())
-            {
-                return false;
-            }
-
-            foreach (var contentItemModel in items)
-            {
-                if (contentItemModel.ItemId == contentItemId)
-                {
-                    items.Remove(contentItemModel);
-                    return true;
-                }
-
-                var removedContentitem = RemoveContentItem(contentItemId, contentItemModel.GetContentItems());
-
-                if (removedContentitem)
-                {
-                    return removedContentitem;
-                }
-            }
-
-            return false;
         }
     }
 }

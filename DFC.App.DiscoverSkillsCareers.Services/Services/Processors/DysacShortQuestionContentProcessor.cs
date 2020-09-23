@@ -23,8 +23,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             AutoMapper.IMapper mapper,
             IEventMessageService eventMessageService,
             IContentCacheService contentCacheService,
-            ILogger<BaseContentProcessor> logger)
-            : base(logger)
+            ILogger<BaseContentProcessor> logger,
+            IDocumentServiceFactory documentService,
+            IMappingService mappingService)
+            : base(logger, documentService, mappingService, eventMessageService)
         {
             this.cmsApiService = cmsApiService;
             this.mapper = mapper;
@@ -34,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public string Type => nameof(DysacShortQuestion);
 
-        public async Task<HttpStatusCode> Process(Uri url, Guid contentId)
+        public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
         {
             var questionModel = await cmsApiService.GetItemAsync<ApiShortQuestion, ApiGenericChild>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<DysacShortQuestion>(questionModel);
@@ -64,6 +66,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             }
 
             return contentResult;
+        }
+
+        public Task<HttpStatusCode> ProcessContentItem(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
+        {
+            throw new NotImplementedException();
         }
     }
 }

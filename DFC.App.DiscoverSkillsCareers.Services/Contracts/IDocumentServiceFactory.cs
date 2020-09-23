@@ -6,9 +6,5 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     {
         IDocumentService<TModel> GetDocumentService<TModel>()
             where TModel : class, IDocumentModel;
-
-        IDocumentService<TModel> GetDocumentService<TModel>(string contentType)
-           where TModel : class, IDocumentModel;
-
     }
 }

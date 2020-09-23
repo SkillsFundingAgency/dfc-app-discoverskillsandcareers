@@ -116,6 +116,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddDocumentServices<DysacSkill>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IMappingService, MappingService>();
 
             services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
             services.AddTransient<IContentProcessor, DysacShortQuestionContentProcessor>();
