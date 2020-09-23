@@ -7,6 +7,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Enums;
+using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ICmsApiService cmsApiService;
         private readonly IDocumentServiceFactory documentServiceFactory;
         private readonly IContentCacheService contentCacheService;
+        private readonly IEnumerable<IContentProcessor> contentProcessors;
 
         public WebhooksService(
             ILogger<WebhooksService> logger,
@@ -33,7 +35,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
             IDocumentServiceFactory documentServiceFactory,
-            IContentCacheService contentCacheService)
+            IContentCacheService contentCacheService,
+            IEnumerable<IContentProcessor> contentProcessors)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -41,6 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.cmsApiService = cmsApiService;
             this.documentServiceFactory = documentServiceFactory;
             this.contentCacheService = contentCacheService;
+            this.contentProcessors = contentProcessors;
         }
 
         public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType)
@@ -50,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new ArgumentNullException(nameof(contentType));
             }
 
-            var contentItemCacheStatus = contentCacheService.CheckIsContentItem(contentId);
+            var contentItemCacheStatus = contentCacheService.GetContentCacheStatus(contentId);
 
             //Todo - Move mappings to a helper
             var destinationType = GetDsyacTypeFromContentType(contentType);
@@ -59,37 +63,63 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             switch (webhookCacheOperation)
             {
                 case WebhookCacheOperation.Delete:
-                    switch (contentItemCacheStatus)
-                    {
-                        case ContentCacheStatus.ContentItem:
-                            return await DeleteContentItemAsync(destinationType, contentId).ConfigureAwait(false);
-                        case ContentCacheStatus.Content:
-                            return await DeleteContentAsync(destinationType, contentId).ConfigureAwait(false);
-                        default:
-                            return HttpStatusCode.NotFound;
-                    }
+                    return await HandleWebhookDelete(contentId, contentItemCacheStatus, destinationType).ConfigureAwait(false);
 
                 case WebhookCacheOperation.CreateOrUpdate:
-
-                    if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
-                    {
-                        throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
-                    }
-
-                    switch (contentItemCacheStatus)
-                    {
-                        case ContentCacheStatus.ContentItem:
-                            return await ProcessContentItemAsync(destinationType, url, contentId).ConfigureAwait(false);
-                        case ContentCacheStatus.Content:
-                            return await ProcessContentAsync(sourceType, destinationType, url, contentId).ConfigureAwait(false);
-                        default:
-                            return HttpStatusCode.NotFound;
-                    }
-
+                    return await HandleWebhookCreateOrUpdate(contentId, apiEndpoint, eventId, contentItemCacheStatus, destinationType, sourceType).ConfigureAwait(false);
                 default:
                     logger.LogError($"Event Id: {eventId} got unknown cache operation - {webhookCacheOperation}");
                     return HttpStatusCode.BadRequest;
             }
+        }
+
+        private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(Guid contentId, string apiEndpoint, Guid eventId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType, IBaseContentItemModel<ApiGenericChild> sourceType)
+        {
+            if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
+            {
+                throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
+            }
+
+            var parentContentItems = contentItemCacheStatus.Where(x => x.Result == ContentCacheStatus.ContentItem);
+
+            if (parentContentItems.Any())
+            {
+                await ProcessContentItemAsync(destinationType, url, contentId, parentContentItems.Where(x => x.Result == ContentCacheStatus.ContentItem)).ConfigureAwait(false);
+            }
+
+            if (contentItemCacheStatus.Any(z => z.Result == ContentCacheStatus.Content))
+            {
+                await ProcessContentAsync(sourceType, destinationType, url, contentId).ConfigureAwait(false);
+            }
+
+            if (contentItemCacheStatus.All(x => x.Result == ContentCacheStatus.NotFound))
+            {
+                return HttpStatusCode.NotFound;
+            }
+
+            return HttpStatusCode.OK;
+        }
+
+        private async Task<HttpStatusCode> HandleWebhookDelete(Guid contentId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType)
+        {
+            var parentContentItems = contentItemCacheStatus.Where(x => x.Result == ContentCacheStatus.ContentItem);
+
+            if (parentContentItems.Any())
+            {
+                await DeleteContentItemAsync(destinationType, contentId, parentContentItems.Where(x => x.Result == ContentCacheStatus.ContentItem)).ConfigureAwait(false);
+            }
+
+            if (contentItemCacheStatus.Any(z => z.Result == ContentCacheStatus.Content))
+            {
+                await DeleteContentAsync(destinationType, contentId).ConfigureAwait(false);
+            }
+
+            if (contentItemCacheStatus.All(x => x.Result == ContentCacheStatus.NotFound))
+            {
+                return HttpStatusCode.NotFound;
+            }
+
+            return HttpStatusCode.OK;
         }
 
         private IDysacContentModel GetDsyacTypeFromContentType(string contentType)
@@ -147,44 +177,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             where TDestModel : class, IDysacContentModel
 
         {
-            var apiDataModel = await cmsApiService.GetItemAsync<TModel, ApiGenericChild>(url).ConfigureAwait(false);
-            var contentPageModel = mapper.Map<TDestModel>(apiDataModel);
-
-            if (contentPageModel == null)
-            {
-                return HttpStatusCode.NoContent;
-            }
-
-            if (!TryValidateModel(contentPageModel))
-            {
-                return HttpStatusCode.BadRequest;
-            }
-
-            var existingContentPageModel = await documentServiceFactory.GetDocumentService<TDestModel>().GetByIdAsync(contentId).ConfigureAwait(false);
-
-            var contentResult = await eventMessageService.UpdateAsync<TDestModel>(contentPageModel).ConfigureAwait(false);
-
-            if (contentResult == HttpStatusCode.NotFound)
-            {
-                contentResult = await eventMessageService.CreateAsync<TDestModel>(contentPageModel).ConfigureAwait(false);
-            }
-
-            if (contentResult == HttpStatusCode.OK || contentResult == HttpStatusCode.Created)
-            {
-                var contentItemIds = contentPageModel.AllContentItemIds;
-
-                contentCacheService.AddOrReplace(contentId, contentItemIds);
-            }
-
-            return contentResult;
+            var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == destType.GetType().Name);
+            return await contentProcessor.Process(url, contentId).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> ProcessContentItemAsync<TModel>(TModel modelType, Uri url, Guid contentItemId)
+        public async Task<HttpStatusCode> ProcessContentItemAsync<TModel>(TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
         {
-            var contentIds = contentCacheService.GetContentIdsContainingContentItemId(contentItemId);
-
-            if (!contentIds.Any())
+            if (!contentCacheStatuses.Any())
             {
                 return HttpStatusCode.NoContent;
             }
@@ -196,9 +196,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return HttpStatusCode.NoContent;
             }
 
-            foreach (var contentId in contentIds)
+            foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(contentId).ConfigureAwait(false);
+                var contentPageModel = await documentServiceFactory.GetDocumentService<IDysacContentModel>(cacheResult.ContentType).GetByIdAsync(cacheResult.ParentContentId!).ConfigureAwait(false);
 
                 if (contentPageModel != null)
                 {
@@ -222,19 +222,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return result;
         }
 
-        public async Task<HttpStatusCode> DeleteContentItemAsync<TModel>(TModel destinationType, Guid contentItemId)
+        public async Task<HttpStatusCode> DeleteContentItemAsync<TModel>(TModel destinationType, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
         {
-            var contentIds = contentCacheService.GetContentIdsContainingContentItemId(contentItemId);
-
-            if (!contentIds.Any())
+            if (!contentCacheStatuses.Any())
             {
                 return HttpStatusCode.NoContent;
             }
 
-            foreach (var contentId in contentIds)
+            foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(contentId).ConfigureAwait(false);
+                var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>(cacheResult.ContentType!).GetByIdAsync(cacheResult.ParentContentId!).ConfigureAwait(false);
 
                 if (contentPageModel != null)
                 {
@@ -246,7 +244,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                         if (result == HttpStatusCode.OK)
                         {
-                            contentCacheService.RemoveContentItem(contentId, contentItemId);
+                            contentCacheService.RemoveContentItem(cacheResult.ParentContentId!, contentItemId);
                         }
                     }
                 }
@@ -304,25 +302,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return false;
-        }
-
-        public bool TryValidateModel(IDysacContentModel? contentPageModel)
-        {
-            _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
-
-            var validationContext = new ValidationContext(contentPageModel, null, null);
-            var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(contentPageModel, validationContext, validationResults, true);
-
-            if (!isValid && validationResults.Any())
-            {
-                foreach (var validationResult in validationResults)
-                {
-                    logger.LogError($"Error validating {contentPageModel.Id} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
-                }
-            }
-
-            return isValid;
         }
     }
 }

@@ -36,6 +36,7 @@ using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
+using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -107,13 +108,17 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddTransient<ICacheReloadService, CacheReloadService>();
-            services.AddTransient<IContentCacheService, ContentCacheService>();
+            services.AddSingleton<IContentCacheService, ContentCacheService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
             var cosmosDbConnectionContentPages = Configuration.GetSection(nameof(CosmosDbConnection)).Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddDocumentServices<DysacTrait>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddDocumentServices<DysacSkill>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
+            services.AddTransient<IWebhooksService, WebhooksService>();
+
+            services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacShortQuestionContentProcessor>();
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 

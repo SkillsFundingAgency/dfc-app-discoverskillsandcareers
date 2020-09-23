@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
@@ -34,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public List<IDysacContentModel>? GetContentItems()
         {
-            return new List<IDysacContentModel>();
+            return Traits.Union(Traits.SelectMany(x => x.GetContentItems())).ToList();
         }
     }
 }

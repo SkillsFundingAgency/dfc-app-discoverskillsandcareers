@@ -67,13 +67,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return summaryList;
         }
 
-        public async Task ProcessSummaryListAsync<TModel, TDestModel>(IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
+        public async Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
             where TDestModel : class, IDysacContentModel
         {
             logger.LogInformation("Process summary list started");
-
-            contentCacheService.Clear();
 
             foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.Title))
             {
@@ -84,13 +82,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     return;
                 }
 
-                await GetAndSaveItemAsync<TModel, TDestModel>(item, stoppingToken).ConfigureAwait(false);
+                await GetAndSaveItemAsync<TModel, TDestModel>(contentType, item, stoppingToken).ConfigureAwait(false);
             }
 
             logger.LogInformation("Process summary list completed");
         }
 
-        public async Task GetAndSaveItemAsync<TModel, TDestModel>(ApiSummaryItemModel item, CancellationToken stoppingToken)
+        public async Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
             where TDestModel : class, IDysacContentModel
         {
@@ -152,7 +150,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 if (destinationModel.AllContentItemIds != null)
                 {
-                    contentCacheService.AddOrReplace(destinationModel.Id, destinationModel.AllContentItemIds);
+                    contentCacheService.AddOrReplace(destinationModel.Id, destinationModel.AllContentItemIds, contentType);
                 }
             }
             catch (Exception ex)
@@ -246,7 +244,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (summaryList != null && summaryList.Any())
             {
-                await ProcessSummaryListAsync<TModel, TDestModel>(summaryList, stoppingToken).ConfigureAwait(false);
+                await ProcessSummaryListAsync<TModel, TDestModel>(contentType, summaryList, stoppingToken).ConfigureAwait(false);
 
                 if (stoppingToken.IsCancellationRequested)
                 {

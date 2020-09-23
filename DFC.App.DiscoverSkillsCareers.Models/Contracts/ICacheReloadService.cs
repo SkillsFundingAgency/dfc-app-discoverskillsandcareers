@@ -13,11 +13,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 
         Task<IList<ApiSummaryItemModel>?> GetSummaryListAsync(string contentType);
 
-        Task ProcessSummaryListAsync<TModel, TDestModel>(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
+        Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
              where TModel : class, IBaseContentItemModel<ApiGenericChild>
              where TDestModel : class, IDysacContentModel;
 
-        Task GetAndSaveItemAsync<TModel, TDestModel>(ApiSummaryItemModel item, CancellationToken stoppingToken)
+        Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
               where TModel : class, IBaseContentItemModel<ApiGenericChild>
               where TDestModel : class, IDysacContentModel;
 
