@@ -10,6 +10,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
     {
         public string? Type { get; set; }
 
-        public IList<ApiGenericChild> ContentItems { get; set; } = new List<ApiGenericChild>();
+        public new IList<ApiGenericChild> ContentItems { get; set; } = new List<ApiGenericChild>();
     }
 }

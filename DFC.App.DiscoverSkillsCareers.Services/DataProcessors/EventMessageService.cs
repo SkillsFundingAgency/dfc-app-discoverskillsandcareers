@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<IList<TDestModel?>> GetAllCachedItemsAsync<TDestModel>()
-            where TDestModel : class, IDysacPersistenceModel
+            where TDestModel : class, IDocumentModel
         {
             var itemInstance = (TDestModel)Activator.CreateInstance(typeof(TDestModel));
             var serviceDataModels = await documentServiceFactory.GetDocumentService<TDestModel>().GetAsync(x => x.PartitionKey == itemInstance!.PartitionKey).ConfigureAwait(false);
@@ -30,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)
-            where TModel : class, IDysacPersistenceModel
+            where TModel : class, IDocumentModel
         {
             if (upsertDocumentModel == null)
             {
@@ -51,7 +52,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<HttpStatusCode> UpdateAsync<TModel>(TModel upsertDocumentModel)
-              where TModel : class, IDysacPersistenceModel
+              where TModel : class, IDocumentModel
         {
             if (upsertDocumentModel == null)
             {
@@ -91,7 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<HttpStatusCode> DeleteAsync<TModel>(Guid id)
-             where TModel : class, IDysacPersistenceModel
+             where TModel : class, IDocumentModel
         {
             var isDeleted = await documentServiceFactory.GetDocumentService<TModel>().DeleteAsync(id).ConfigureAwait(false);
 

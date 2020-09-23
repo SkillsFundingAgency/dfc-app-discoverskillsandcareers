@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacSkillContentModel : DocumentModel, IDysacPersistenceModel, IDysacContentModel
+    public class DysacSkillContentModel : DocumentModel, IDocumentModel, IDysacContentModel
     {
         public Guid? ItemId { get; set; }
 

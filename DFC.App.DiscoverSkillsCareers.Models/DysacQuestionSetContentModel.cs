@@ -11,7 +11,7 @@ using System.Linq;
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacQuestionSetContentModel : DocumentModel, IDysacPersistenceModel, IDysacContentModel
+    public class DysacQuestionSetContentModel : DocumentModel, IDocumentModel, IDysacContentModel
     {
         public Guid? ItemId { get; set; }
 

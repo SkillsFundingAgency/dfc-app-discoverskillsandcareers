@@ -9,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
     public class ApiGenericChild : BaseContentItemModel, IBaseContentItemModel<ApiGenericChild>
     {
         public string? Title { get; set; }
-        
+
         public string? Description { get; set; }
 
         public string? Impact { get; set; }
@@ -20,6 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
 
         public int Ordinal { get; set; }
 
-        public IList<ApiGenericChild>? ContentItems { get; set; } = new List<ApiGenericChild>();
+        public new IList<ApiGenericChild>? ContentItems { get; set; } = new List<ApiGenericChild>();
     }
 }

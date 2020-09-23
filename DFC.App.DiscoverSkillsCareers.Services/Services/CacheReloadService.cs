@@ -23,22 +23,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IEventMessageService eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
-        private readonly IMappingService mappingService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
             IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
-            IContentCacheService contentCacheService,
-            IMappingService mappingService)
+            IContentCacheService contentCacheService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.eventMessageService = eventMessageService;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
-            this.mappingService = mappingService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -72,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
-            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
+            where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             logger.LogInformation("Process summary list started");
 
@@ -93,7 +90,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
-            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
+            where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
 
@@ -163,7 +160,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task DeleteStaleCacheEntriesAsync<TDestModel>(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
-            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
+            where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             logger.LogInformation("Delete stale cache items started");
 
@@ -183,7 +180,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task DeleteStaleItemsAsync<TModel>(List<TModel> staleItems, CancellationToken stoppingToken)
-            where TModel : class, IDysacPersistenceModel, IDysacContentModel
+            where TModel : class, IDocumentModel, IDysacContentModel
         {
             _ = staleItems ?? throw new ArgumentNullException(nameof(staleItems));
 
@@ -212,7 +209,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public bool TryValidateModel<TDestModel>(TDestModel contentPageModel)
-            where TDestModel : IDysacPersistenceModel, IDysacContentModel
+            where TDestModel : IDocumentModel, IDysacContentModel
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
 
@@ -233,7 +230,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
            where TModel : class, IBaseContentItemModel<ApiGenericChild>
-           where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
+           where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
             await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);

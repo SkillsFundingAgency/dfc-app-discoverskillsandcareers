@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             if (!TryValidateModel(contentPageModel))
             {
                 return HttpStatusCode.BadRequest;
-            };
+            }
 
             var contentResult = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 

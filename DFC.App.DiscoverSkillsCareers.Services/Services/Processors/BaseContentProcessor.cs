@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
@@ -50,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         }
 
         public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
-            where TModel : class, IDysacPersistenceModel, IDysacContentModel
+            where TModel : class, IDocumentModel, IDysacContentModel
         {
             var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(parentId).ConfigureAwait(false);
 
@@ -69,7 +70,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         }
 
         public async Task<HttpStatusCode> RemoveContentItem<TModel>(Guid contentId, Guid contentItemId)
-             where TModel : class, IDysacPersistenceModel, IDysacContentModel
+             where TModel : class, IDocumentModel, IDysacContentModel
         {
             var model = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(contentId).ConfigureAwait(false);
 
@@ -89,7 +90,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         }
 
         public async Task<HttpStatusCode> RemoveContent<TModel>(Guid contentId)
-            where TModel : class, IDysacPersistenceModel
+            where TModel : class, IDocumentModel
         {
             var result = await eventMessageService.DeleteAsync<TModel>(contentId).ConfigureAwait(false);
 

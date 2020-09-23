@@ -15,40 +15,40 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.mapper = mapper;
         }
 
-        public IDysacContentModel Map<TDestination>(TDestination source, ApiGenericChild child)
+        public IDysacContentModel Map<TDestination>(TDestination destination, ApiGenericChild child)
             where TDestination : class, IDysacContentModel
         {
-            if (source == null)
+            if (destination == null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(destination));
             }
 
-            if (source!.GetType() == typeof(DysacQuestionSetContentModel))
+            if (destination!.GetType() == typeof(DysacQuestionSetContentModel))
             {
-                mapper.Map(child, source as DysacQuestionSetContentModel);
+                mapper.Map(child, destination as DysacQuestionSetContentModel);
             }
 
-            if (source!.GetType() == typeof(DysacShortQuestionContentItemModel))
+            if (destination!.GetType() == typeof(DysacShortQuestionContentItemModel))
             {
-                mapper.Map(child, source as DysacShortQuestionContentItemModel);
+                mapper.Map(child, destination as DysacShortQuestionContentItemModel);
             }
 
-            if (source!.GetType() == typeof(DysacSkillContentModel))
+            if (destination!.GetType() == typeof(DysacSkillContentModel))
             {
-                mapper.Map(child, source as DysacSkillContentModel);
+                mapper.Map(child, destination as DysacSkillContentModel);
             }
 
-            if (source!.GetType() == typeof(DysacTraitContentModel))
+            if (destination!.GetType() == typeof(DysacTraitContentModel))
             {
-                mapper.Map(child, source as DysacTraitContentModel);
+                mapper.Map(child, destination as DysacTraitContentModel);
             }
 
-            if (source!.GetType() == typeof(JobCategoryContentItemModel))
+            if (destination!.GetType() == typeof(JobCategoryContentItemModel))
             {
-                mapper.Map(child, source as JobCategoryContentItemModel);
+                mapper.Map(child, destination as JobCategoryContentItemModel);
             }
 
-            return source;
+            return destination;
         }
     }
 }
