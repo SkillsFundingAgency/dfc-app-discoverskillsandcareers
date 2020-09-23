@@ -43,22 +43,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 throw new ArgumentNullException(contentType);
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityQuestionSet.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityQuestionSet.ToUpperInvariant())
             {
                 return new DysacQuestionSetContentModel();
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalitySkill.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalitySkill.ToUpperInvariant())
             {
                 return new DysacSkillContentModel();
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityTrait.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityTrait.ToUpperInvariant())
             {
                 return new DysacTraitContentModel();
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypeJobCategory.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeJobCategory.ToUpperInvariant())
             {
                 return new JobCategoryContentItemModel();
             }
@@ -68,22 +68,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
         public static IBaseContentItemModel<ApiGenericChild> GetApiTypeFromContentType(string contentType)
         {
-            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityQuestionSet.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityQuestionSet.ToUpperInvariant())
             {
                 return new ApiQuestionSet();
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalitySkill.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalitySkill.ToUpperInvariant())
             {
                 return new ApiSkill();
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityTrait.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityTrait.ToUpperInvariant())
             {
                 return new ApiTrait();
             }
 
-            if (contentType.ToUpperInvariant() == Constants.ContentTypeJobCategory.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeJobCategory.ToUpperInvariant())
             {
                 return new ApiJobCategory();
             }

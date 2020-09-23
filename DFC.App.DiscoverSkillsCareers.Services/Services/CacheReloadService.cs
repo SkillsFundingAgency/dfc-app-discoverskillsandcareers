@@ -47,9 +47,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
-                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(Constants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiTrait, DysacTraitContentModel>(Constants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiSkill, DysacSkillContentModel>(Constants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }

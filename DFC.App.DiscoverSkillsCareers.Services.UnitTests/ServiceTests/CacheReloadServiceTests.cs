@@ -157,7 +157,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, mappingService);
 
             // act
-            await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(Constants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
+            await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
@@ -184,7 +184,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, mappingService);
 
             // act
-            await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(Constants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
+            await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
@@ -207,7 +207,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, mappingService);
 
             // act
-            await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(Constants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
+            await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();

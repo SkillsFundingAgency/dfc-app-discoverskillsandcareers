@@ -5,7 +5,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 {
     public interface IDysacContentModel
     {
-        Uri Url { get; set; }
+        Uri? Url { get; set; }
 
         List<Guid>? AllContentItemIds { get; }
 

@@ -13,18 +13,28 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Converters
             return true;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var items = serializer!.Deserialize<IEnumerable<TConcrete>>(reader!);
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            var items = serializer.Deserialize<IEnumerable<TConcrete>>(reader!);
             var listToReturn = new List<IDysacContentModel>();
-            listToReturn.AddRange(items);
+            listToReturn.AddRange(items!);
 
             return listToReturn;
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            serializer!.Serialize(writer, value);
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            serializer.Serialize(writer, value);
         }
     }
 }
