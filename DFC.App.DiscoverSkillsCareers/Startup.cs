@@ -36,6 +36,7 @@ using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
+using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -133,7 +134,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddPolicies(policyRegistry, "content", policyOptions);
             services.AddHostedServiceTelemetryWrapper();
-            //services.AddSubscriptionBackgroundService(Configuration);
+            services.AddSubscriptionBackgroundService(Configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
 
             services.AddApiServices(Configuration, policyRegistry);

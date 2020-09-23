@@ -266,13 +266,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var model = new DysacQuestionSetContentModel
             {
-                ShortQuestions = new List<IDysacPersistenceModel>
+                ShortQuestions = new List<IDysacContentModel>
                 {
                     new DysacShortQuestionContentItemModel
                     {
                         Title = "A short question",
                         Impact = "Positive",
-                        Traits = new List<IDysacPersistenceModel>
+                        Traits = new List<IDysacContentModel>
                         {
                             new DysacTraitContentModel
                             {
