@@ -48,7 +48,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var fakePagesSummaryItemModels = BuldFakeQuestionSetSummaryItemModel(NumerOfSummaryItems);
             var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
 
-            A.CallTo(() => fakeContentCacheService.Clear());
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).Returns(fakePagesSummaryItemModels);
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(expectedValidDysacQuestionSetContentModel);
@@ -84,7 +83,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var fakePagesSummaryItemModels = BuldFakeQuestionSetSummaryItemModel(NumerOfSummaryItems);
             var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
 
-            A.CallTo(() => fakeContentCacheService.Clear());
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).Returns(fakePagesSummaryItemModels);
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(expectedValidDysacQuestionSetContentModel);
@@ -100,7 +98,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             // assert
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(3, Times.Exactly);
-            A.CallTo(() => fakeContentCacheService.Clear()).MustHaveHappened(3, Times.Exactly);
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
