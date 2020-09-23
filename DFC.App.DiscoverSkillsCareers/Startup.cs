@@ -35,7 +35,6 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 
 namespace DFC.App.DiscoverSkillsCareers
@@ -112,8 +111,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IEventMessageService, EventMessageService>();
             var cosmosDbConnectionContentPages = Configuration.GetSection(nameof(CosmosDbConnection)).Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
-            services.AddDocumentServices<DysacTrait>(cosmosDbConnectionContentPages, env.IsDevelopment());
-            services.AddDocumentServices<DysacSkill>(cosmosDbConnectionContentPages, env.IsDevelopment());
+            services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
+            services.AddDocumentServices<DysacSkilContentModell>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();

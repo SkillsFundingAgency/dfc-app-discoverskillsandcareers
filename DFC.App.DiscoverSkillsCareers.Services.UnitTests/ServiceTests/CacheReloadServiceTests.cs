@@ -385,15 +385,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 Id = Guid.NewGuid(),
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
                 Type = "Short",
-                ShortQuestions = new List<IDysacContentModel>
+                ShortQuestions = new List<IDysacPersistenceModel>
                 {
-                    new DysacShortQuestion
+                    new DysacShortQuestionContentItemModel
                     {
                         ItemId = Guid.NewGuid(),
                         Title = "title",
-                        Traits = new List<IDysacContentModel>
+                        Traits = new List<IDysacPersistenceModel>
                         {
-                            new DysacTrait
+                            new DysacTraitContentModel
                             {   
                                 Url = new Uri("http://www.test.com"),
                                 ItemId = Guid.NewGuid(),

@@ -8,10 +8,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
     public class DocumentServiceFactory : IDocumentServiceFactory
     {
         private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
-        private readonly IDocumentService<DysacTrait> dysacTraitDocumentService;
-        private readonly IDocumentService<DysacSkill> dysacSkillDocumentService;
+        private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
+        private readonly IDocumentService<DysacSkilContentModell> dysacSkillDocumentService;
 
-        public DocumentServiceFactory(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTrait> dysacTraitDocumentService, IDocumentService<DysacSkill> dysacSkillDocumentService)
+        public DocumentServiceFactory(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTraitContentModel> dysacTraitDocumentService, IDocumentService<DysacSkilContentModell> dysacSkillDocumentService)
         {
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.dysacTraitDocumentService = dysacTraitDocumentService;
@@ -26,12 +26,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (IDocumentService<TModel>)dysacQuestionSetDocumentService;
             }
 
-            if (typeof(TModel) == typeof(DysacTrait))
+            if (typeof(TModel) == typeof(DysacTraitContentModel))
             {
                 return (IDocumentService<TModel>)dysacTraitDocumentService;
             }
 
-            if (typeof(TModel) == typeof(DysacSkill))
+            if (typeof(TModel) == typeof(DysacSkilContentModell))
             {
                 return (IDocumentService<TModel>)dysacSkillDocumentService;
             }

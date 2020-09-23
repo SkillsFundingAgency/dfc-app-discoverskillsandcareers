@@ -28,24 +28,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 mapper.Map(child, source as DysacQuestionSetContentModel);
             }
 
-            if (source!.GetType() == typeof(DysacShortQuestion))
+            if (source!.GetType() == typeof(DysacShortQuestionContentItemModel))
             {
-                mapper.Map(child, source as DysacShortQuestion);
+                mapper.Map(child, source as DysacShortQuestionContentItemModel);
             }
 
-            if (source!.GetType() == typeof(DysacSkill))
+            if (source!.GetType() == typeof(DysacSkilContentModell))
             {
-                mapper.Map(child, source as DysacSkill);
+                mapper.Map(child, source as DysacSkilContentModell);
             }
 
-            if (source!.GetType() == typeof(DysacTrait))
+            if (source!.GetType() == typeof(DysacTraitContentModel))
             {
-                mapper.Map(child, source as DysacTrait);
+                mapper.Map(child, source as DysacTraitContentModel);
             }
 
-            if (source!.GetType() == typeof(JobCategory))
+            if (source!.GetType() == typeof(JobCategoryContentItemModel))
             {
-                mapper.Map(child, source as JobCategory);
+                mapper.Map(child, source as JobCategoryContentItemModel);
             }
 
             return source;

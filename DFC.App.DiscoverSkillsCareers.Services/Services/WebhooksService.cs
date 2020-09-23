@@ -1,6 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
+﻿using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Enums;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -88,7 +86,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == ContentHelpers.GetDsyacTypeFromContentType(cacheResult.ContentType).GetType().Name);
+                var contentProcessor = GetContentProcessor(cacheResult.ContentType);
 
                 await contentProcessor.ProcessContentItem(cacheResult.ParentContentId!.Value, contentItemId, apiDataContentItemModel).ConfigureAwait(false);
             }
@@ -116,7 +114,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == ContentHelpers.GetDsyacTypeFromContentType(cacheResult.ContentType).GetType().Name);
+                var contentProcessor = GetContentProcessor(cacheResult.ContentType);
 
                 var result = await contentProcessor.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId).ConfigureAwait(false);
 
@@ -127,6 +125,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return HttpStatusCode.OK;
+        }
+
+        private IContentProcessor GetContentProcessor(string contentType)
+        {
+            return contentProcessors.FirstOrDefault(x => x.Type.ToUpperInvariant() == ContentHelpers.GetDsyacTypeFromContentType(contentType).GetType().Name);
         }
 
         private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(Guid contentId, string apiEndpoint, Guid eventId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType, IBaseContentItemModel<ApiGenericChild> sourceType)

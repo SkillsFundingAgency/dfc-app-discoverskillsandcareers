@@ -34,12 +34,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             this.contentCacheService = contentCacheService;
         }
 
-        public string Type => nameof(DysacTrait);
+        public string Type => nameof(DysacTraitContentModel);
 
         public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
         {
             var questionModel = await cmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(url).ConfigureAwait(false);
-            var contentPageModel = mapper.Map<DysacTrait>(questionModel);
+            var contentPageModel = mapper.Map<DysacTraitContentModel>(questionModel);
 
             if (contentPageModel == null)
             {
@@ -70,17 +70,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
         {
-            return await ProcessContentItem<DysacTrait>(contentId, contentItemId, apiItem).ConfigureAwait(false);
+            return await ProcessContentItem<DysacTraitContentModel>(contentId, contentItemId, apiItem).ConfigureAwait(false);
         }
 
         public async Task<HttpStatusCode> RemoveContentItem(Guid contentId, Guid contentItemId)
         {
-            return await RemoveContentItem<DysacTrait>(contentId, contentItemId).ConfigureAwait(false);
+            return await RemoveContentItem<DysacTraitContentModel>(contentId, contentItemId).ConfigureAwait(false);
         }
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
-            return await RemoveContent<DysacTrait>(contentId).ConfigureAwait(false);
+            return await RemoveContent<DysacTraitContentModel>(contentId).ConfigureAwait(false);
         }
     }
 }

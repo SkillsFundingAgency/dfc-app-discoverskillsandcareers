@@ -50,17 +50,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
             if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalitySkill.ToUpperInvariant())
             {
-                return new DysacSkill();
+                return new DysacSkilContentModell();
             }
 
             if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityTrait.ToUpperInvariant())
             {
-                return new DysacTrait();
+                return new DysacTraitContentModel();
             }
 
             if (contentType.ToUpperInvariant() == Constants.ContentTypeJobCategory.ToUpperInvariant())
             {
-                return new JobCategory();
+                return new JobCategoryContentItemModel();
             }
 
             throw new InvalidOperationException($"{contentType} not supported in {nameof(ContentHelpers)}");

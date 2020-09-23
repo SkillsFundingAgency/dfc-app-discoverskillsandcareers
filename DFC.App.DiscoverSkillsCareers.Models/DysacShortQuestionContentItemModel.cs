@@ -1,22 +1,17 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Converters;
-using DFC.Compui.Cosmos.Contracts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacShortQuestion : DocumentModel, IDysacContentModel
+    public class DysacShortQuestionContentItemModel : IDysacContentModel
     {
         public Guid? ItemId { get; set; }
-
-        [Required]
-        public override string? PartitionKey { get; set; } = "ShortQuestion";
 
         public string? Impact { get; set; }
 
@@ -26,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public Uri? Url { get; set; }
 
-        [JsonConverter(typeof(ConcreteTypeConverter<DysacTrait>))]
+        [JsonConverter(typeof(ConcreteTypeConverter<DysacTraitContentModel>))]
         public List<IDysacContentModel> Traits { get; set; } = new List<IDysacContentModel>();
 
         public DateTime? LastCached { get; set; }

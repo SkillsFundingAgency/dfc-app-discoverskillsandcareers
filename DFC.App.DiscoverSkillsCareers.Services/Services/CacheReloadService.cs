@@ -18,25 +18,27 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
     public class CacheReloadService : ICacheReloadService
     {
-        private readonly List<ApiSummaryItemModel> loadedItems;
         private readonly ILogger<CacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly IEventMessageService eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IMappingService mappingService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
             IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
-            IContentCacheService contentCacheService)
+            IContentCacheService contentCacheService,
+            IMappingService mappingService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.eventMessageService = eventMessageService;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
+            this.mappingService = mappingService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -46,8 +48,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 logger.LogInformation("Reload cache started");
 
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(Constants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiTrait, DysacTrait>(Constants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiSkill, DysacSkill>(Constants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiTrait, DysacTraitContentModel>(Constants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiSkill, DysacSkilContentModell>(Constants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
@@ -70,7 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
-            where TDestModel : class, IDysacContentModel
+            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             logger.LogInformation("Process summary list started");
 
@@ -91,7 +93,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
-            where TDestModel : class, IDysacContentModel
+            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
 
@@ -161,7 +163,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task DeleteStaleCacheEntriesAsync<TDestModel>(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
-            where TDestModel : class, IDysacContentModel
+            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             logger.LogInformation("Delete stale cache items started");
 
@@ -181,7 +183,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task DeleteStaleItemsAsync<TModel>(List<TModel> staleItems, CancellationToken stoppingToken)
-            where TModel : class, IDysacContentModel
+            where TModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             _ = staleItems ?? throw new ArgumentNullException(nameof(staleItems));
 
@@ -210,7 +212,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public bool TryValidateModel<TDestModel>(TDestModel contentPageModel)
-            where TDestModel : IDysacContentModel
+            where TDestModel : IDysacPersistenceModel, IDysacContentModel
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
 
@@ -231,7 +233,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
            where TModel : class, IBaseContentItemModel<ApiGenericChild>
-           where TDestModel : class, IDysacContentModel
+           where TDestModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
             await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);

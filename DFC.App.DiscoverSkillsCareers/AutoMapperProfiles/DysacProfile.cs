@@ -18,11 +18,11 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
                 .ForMember(d => d.ShortQuestions, s => s.MapFrom(z => Construct(z.ContentItems)));
 
-            CreateMap<ApiTrait, DysacTrait>()
+            CreateMap<ApiTrait, DysacTraitContentModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
                 .ForMember(d => d.JobCategories, s => s.MapFrom(z => ConstructJobCategories(z.ContentItems)));
 
-            CreateMap<ApiSkill, DysacSkill>()
+            CreateMap<ApiSkill, DysacSkilContentModell>()
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
 
             CreateMap<LinkDetails, ApiGenericChild>()
@@ -30,26 +30,30 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
              .ForMember(d => d.ItemId, s => s.Ignore())
              .ForMember(d => d.ContentItems, s => s.Ignore());
 
-            CreateMap<ApiGenericChild, DysacShortQuestion>();
+            CreateMap<ApiGenericChild, DysacQuestionSetContentModel>();
+            CreateMap<ApiGenericChild, DysacShortQuestionContentItemModel>();
+            CreateMap<ApiGenericChild, DysacSkilContentModell>();
+            CreateMap<ApiGenericChild, DysacTraitContentModel>();
+            CreateMap<ApiGenericChild, JobCategoryContentItemModel>();
         }
 
         private static List<IDysacContentModel> ConstructJobCategories(IList<ApiGenericChild> z)
         {
             var listToReturn = new List<IDysacContentModel>();
-            listToReturn.AddRange(z.Select(x => new JobCategory { Description = x.Description, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }));
+            listToReturn.AddRange(z.Select(x => new JobCategoryContentItemModel { Description = x.Description, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }));
 
             return listToReturn;
         }
 
-        private IEnumerable<DysacShortQuestion> Construct(IList<ApiGenericChild> z)
+        private IEnumerable<DysacShortQuestionContentItemModel> Construct(IList<ApiGenericChild> z)
         {
-            var listOfQuestions = new List<DysacShortQuestion>();
+            var listOfQuestions = new List<DysacShortQuestionContentItemModel>();
 
             foreach (var item in z)
             {
-                var question = new DysacShortQuestion { Traits = new List<IDysacContentModel>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
+                var question = new DysacShortQuestionContentItemModel { Traits = new List<IDysacContentModel>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
 
-                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTrait { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
+                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTraitContentModel { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
                 listOfQuestions.Add(question);
             }
 

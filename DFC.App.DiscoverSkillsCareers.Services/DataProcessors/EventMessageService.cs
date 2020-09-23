@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<IList<TDestModel?>> GetAllCachedItemsAsync<TDestModel>()
-            where TDestModel : class, IDysacContentModel
+            where TDestModel : class, IDysacPersistenceModel
         {
             var itemInstance = (TDestModel)Activator.CreateInstance(typeof(TDestModel));
             var serviceDataModels = await documentServiceFactory.GetDocumentService<TDestModel>().GetAsync(x => x.PartitionKey == itemInstance!.PartitionKey).ConfigureAwait(false);
@@ -30,7 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)
-            where TModel : class, IDysacContentModel
+            where TModel : class, IDysacPersistenceModel
         {
             if (upsertDocumentModel == null)
             {
@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<HttpStatusCode> UpdateAsync<TModel>(TModel upsertDocumentModel)
-              where TModel : class, IDysacContentModel
+              where TModel : class, IDysacPersistenceModel
         {
             if (upsertDocumentModel == null)
             {
@@ -91,7 +91,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         }
 
         public async Task<HttpStatusCode> DeleteAsync<TModel>(Guid id)
-             where TModel : class, IDysacContentModel
+             where TModel : class, IDysacPersistenceModel
         {
             var isDeleted = await documentServiceFactory.GetDocumentService<TModel>().DeleteAsync(id).ConfigureAwait(false);
 

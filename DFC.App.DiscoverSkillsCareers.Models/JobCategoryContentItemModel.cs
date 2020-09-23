@@ -1,19 +1,14 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class JobCategory : DocumentModel, IDysacContentModel
+    public class JobCategoryContentItemModel : IDysacContentModel
     {
         public string? Title { get; set; }
-
-        [Required]
-        public override string? PartitionKey { get; set; } = "JobCategory";
 
         public Uri? Url { get; set; }
 
@@ -36,7 +31,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public void RemoveContentItem(Guid contentItemId)
         {
-           
         }
     }
 }

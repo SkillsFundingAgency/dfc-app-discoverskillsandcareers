@@ -15,16 +15,16 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 
         Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
              where TModel : class, IBaseContentItemModel<ApiGenericChild>
-             where TDestModel : class, IDysacContentModel;
+             where TDestModel : class, IDysacPersistenceModel, IDysacContentModel;
 
         Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
               where TModel : class, IBaseContentItemModel<ApiGenericChild>
-              where TDestModel : class, IDysacContentModel;
+              where TDestModel : class, IDysacPersistenceModel, IDysacContentModel;
 
         Task DeleteStaleItemsAsync<TModel>(List<TModel> staleItems, CancellationToken stoppingToken)
-            where TModel : class, IDysacContentModel;
+            where TModel : class, IDysacPersistenceModel, IDysacContentModel;
 
         Task DeleteStaleCacheEntriesAsync<TDestModel>(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
-            where TDestModel : class, IDysacContentModel;
+            where TDestModel : class, IDysacPersistenceModel, IDysacContentModel;
     }
 }

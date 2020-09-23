@@ -11,7 +11,7 @@ using System.Linq;
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacQuestionSetContentModel : DocumentModel, IDysacContentModel
+    public class DysacQuestionSetContentModel : DocumentModel, IDysacPersistenceModel, IDysacContentModel
     {
         public Guid? ItemId { get; set; }
 
@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [Required]
         public override string? PartitionKey { get; set; } = "QuestionSet";
 
-        [JsonConverter(typeof(ConcreteTypeConverter<DysacShortQuestion>))]
+        [JsonConverter(typeof(ConcreteTypeConverter<DysacShortQuestionContentItemModel>))]
         public List<IDysacContentModel>? ShortQuestions { get; set; } = new List<IDysacContentModel>();
 
         [JsonIgnore]

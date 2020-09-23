@@ -1,22 +1,20 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Models.Converters;
 using DFC.Compui.Cosmos.Contracts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacTrait : DocumentModel, IDysacContentModel
+    public class DysacSkilContentModell : DocumentModel, IDysacPersistenceModel, IDysacContentModel
     {
         public Guid? ItemId { get; set; }
 
         [Required]
-        public override string? PartitionKey { get; set; } = "Trait";
+        public override string? PartitionKey { get; set; } = "Skill";
 
         public Uri? Url { get; set; }
 
@@ -28,31 +26,22 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public DateTime? LastCached { get; set; }
 
-        [JsonConverter(typeof(ConcreteTypeConverter<JobCategory>))]
-        public List<IDysacContentModel> JobCategories { get; set; } = new List<IDysacContentModel>();
-
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
         public List<IDysacContentModel>? GetContentItems()
         {
-            return JobCategories;
+            return new List<IDysacContentModel>();
         }
 
         public void RemoveContentItem(Guid contentItemId)
         {
-            foreach (var jobCategory in JobCategories.ToList())
-            {
-                if (jobCategory.ItemId == contentItemId)
-                {
-                    JobCategories.Remove(jobCategory);
-                }
-            }
+            throw new NotImplementedException();
         }
 
         private List<Guid>? GetAllContentItemIds()
         {
-            return JobCategories.Select(z => z.ItemId!.Value).ToList();
+            return new List<Guid>();
         }
     }
 }

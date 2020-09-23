@@ -42,7 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {contentPageModel.Id} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 
@@ -50,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         }
 
         public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
-            where TModel : class, IDysacContentModel
+            where TModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(parentId).ConfigureAwait(false);
 
@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         }
 
         public async Task<HttpStatusCode> RemoveContentItem<TModel>(Guid contentId, Guid contentItemId)
-             where TModel : class, IDysacContentModel
+             where TModel : class, IDysacPersistenceModel, IDysacContentModel
         {
             var model = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(contentId).ConfigureAwait(false);
 
@@ -89,7 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         }
 
         public async Task<HttpStatusCode> RemoveContent<TModel>(Guid contentId)
-            where TModel : class, IDysacContentModel
+            where TModel : class, IDysacPersistenceModel
         {
             var result = await eventMessageService.DeleteAsync<TModel>(contentId).ConfigureAwait(false);
 
