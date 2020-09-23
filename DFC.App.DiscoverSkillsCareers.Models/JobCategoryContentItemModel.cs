@@ -29,6 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public void RemoveContentItem(Guid contentItemId)
         {
+            throw new NotSupportedException("Job Categories have no children");
         }
     }
 }
