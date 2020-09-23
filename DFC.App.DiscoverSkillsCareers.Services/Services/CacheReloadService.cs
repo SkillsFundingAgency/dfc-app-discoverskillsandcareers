@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
@@ -44,9 +45,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
-                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>("personalityquestionset", stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiTrait, DysacTrait>("personalitytrait", stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiSkill, DysacSkill>("personalityskill", stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(Constants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiTrait, DysacTrait>(Constants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiSkill, DysacSkill>(Constants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }

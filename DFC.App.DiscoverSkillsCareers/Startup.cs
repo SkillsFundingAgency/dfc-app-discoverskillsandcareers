@@ -119,7 +119,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IMappingService, MappingService>();
 
             services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
-            services.AddTransient<IContentProcessor, DysacShortQuestionContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
