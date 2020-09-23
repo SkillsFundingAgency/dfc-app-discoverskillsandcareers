@@ -18,8 +18,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Description { get; set; }
 
-        public string? ContentType { get; set; }
-
         public DateTime? LastCached { get; set; }
 
         public List<Guid>? AllContentItemIds => new List<Guid>();

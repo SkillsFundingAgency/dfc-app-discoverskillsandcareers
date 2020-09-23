@@ -33,9 +33,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 mapper.Map(child, source as DysacShortQuestionContentItemModel);
             }
 
-            if (source!.GetType() == typeof(DysacSkilContentModell))
+            if (source!.GetType() == typeof(DysacSkillContentModel))
             {
-                mapper.Map(child, source as DysacSkilContentModell);
+                mapper.Map(child, source as DysacSkillContentModel);
             }
 
             if (source!.GetType() == typeof(DysacTraitContentModel))

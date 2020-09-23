@@ -112,7 +112,7 @@ namespace DFC.App.DiscoverSkillsCareers
             var cosmosDbConnectionContentPages = Configuration.GetSection(nameof(CosmosDbConnection)).Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
-            services.AddDocumentServices<DysacSkilContentModell>(cosmosDbConnectionContentPages, env.IsDevelopment());
+            services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();

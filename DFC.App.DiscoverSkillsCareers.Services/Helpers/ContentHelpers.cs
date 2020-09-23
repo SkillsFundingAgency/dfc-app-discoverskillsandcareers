@@ -50,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
             if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalitySkill.ToUpperInvariant())
             {
-                return new DysacSkilContentModell();
+                return new DysacSkillContentModel();
             }
 
             if (contentType.ToUpperInvariant() == Constants.ContentTypePersonalityTrait.ToUpperInvariant())

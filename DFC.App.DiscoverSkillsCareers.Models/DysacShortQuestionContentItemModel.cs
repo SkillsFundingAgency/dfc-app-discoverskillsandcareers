@@ -17,11 +17,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Title { get; set; }
 
-        public string? ContentType { get; set; }
-
         public Uri? Url { get; set; }
 
-        [JsonConverter(typeof(ConcreteTypeConverter<DysacTraitContentModel>))]
+        [JsonConverter(typeof(ConcreteTypeConverter<DysacTraitContentItemModel>))]
         public List<IDysacContentModel> Traits { get; set; } = new List<IDysacContentModel>();
 
         public DateTime? LastCached { get; set; }

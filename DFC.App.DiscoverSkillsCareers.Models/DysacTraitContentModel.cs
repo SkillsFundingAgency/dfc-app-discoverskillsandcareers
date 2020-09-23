@@ -24,8 +24,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Title { get; set; }
 
-        public string? ContentType { get; set; }
-
         public DateTime? LastCached { get; set; }
 
         [JsonConverter(typeof(ConcreteTypeConverter<JobCategoryContentItemModel>))]

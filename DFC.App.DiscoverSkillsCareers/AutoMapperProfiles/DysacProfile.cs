@@ -22,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
                 .ForMember(d => d.JobCategories, s => s.MapFrom(z => ConstructJobCategories(z.ContentItems)));
 
-            CreateMap<ApiSkill, DysacSkilContentModell>()
+            CreateMap<ApiSkill, DysacSkillContentModel>()
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
 
             CreateMap<LinkDetails, ApiGenericChild>()
@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
 
             CreateMap<ApiGenericChild, DysacQuestionSetContentModel>();
             CreateMap<ApiGenericChild, DysacShortQuestionContentItemModel>();
-            CreateMap<ApiGenericChild, DysacSkilContentModell>();
+            CreateMap<ApiGenericChild, DysacSkillContentModel>();
             CreateMap<ApiGenericChild, DysacTraitContentModel>();
             CreateMap<ApiGenericChild, JobCategoryContentItemModel>();
         }
@@ -53,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
             {
                 var question = new DysacShortQuestionContentItemModel { Traits = new List<IDysacContentModel>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
 
-                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTraitContentModel { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
+                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTraitContentItemModel { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
                 listOfQuestions.Add(question);
             }
 
