@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             ILogger<BaseContentProcessor> logger,
             IDocumentServiceFactory documentService,
             IMappingService mappingService)
-            : base(logger, documentService, mappingService, eventMessageService)
+            : base(logger, documentService, mappingService, eventMessageService, contentCacheService)
         {
             this.cmsApiService = cmsApiService;
             this.mapper = mapper;
@@ -68,9 +68,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return contentResult;
         }
 
-        public Task<HttpStatusCode> ProcessContentItem(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
+        public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
         {
-            throw new NotImplementedException();
+            return await ProcessContentItem<DysacShortQuestion>(contentId, contentItemId, apiItem).ConfigureAwait(false);
+        }
+
+        public async Task<HttpStatusCode> RemoveContentItem(Guid contentId, Guid contentItemId)
+        {
+            return await RemoveContentItem<DysacShortQuestion>(contentId, contentItemId).ConfigureAwait(false);
+        }
+
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
+        {
+            return await RemoveContent<DysacShortQuestion>(contentId).ConfigureAwait(false);
         }
     }
 }

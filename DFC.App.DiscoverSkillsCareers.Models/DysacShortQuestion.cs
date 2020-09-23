@@ -37,5 +37,18 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         {
             return Traits.Union(Traits.SelectMany(x => x.GetContentItems())).ToList();
         }
+
+        public void RemoveContentItem(Guid contentItemId)
+        {
+            foreach (var trait in Traits.ToList())
+            {
+                trait.RemoveContentItem(contentItemId);
+
+                if (trait.ItemId == contentItemId)
+                {
+                    Traits.Remove(trait);
+                }
+            }
+        }
     }
 }

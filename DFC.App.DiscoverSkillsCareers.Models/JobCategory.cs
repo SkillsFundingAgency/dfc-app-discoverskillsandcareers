@@ -33,5 +33,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         {
             return new List<IDysacContentModel>();
         }
+
+        public void RemoveContentItem(Guid contentItemId)
+        {
+           
+        }
     }
 }

@@ -39,6 +39,17 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             return JobCategories;
         }
 
+        public void RemoveContentItem(Guid contentItemId)
+        {
+            foreach (var jobCategory in JobCategories.ToList())
+            {
+                if (jobCategory.ItemId == contentItemId)
+                {
+                    JobCategories.Remove(jobCategory);
+                }
+            }
+        }
+
         private List<Guid>? GetAllContentItemIds()
         {
             return JobCategories.Select(z => z.ItemId!.Value).ToList();

@@ -3,8 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Helpers;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
@@ -28,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             ILogger<BaseContentProcessor> logger,
             IDocumentServiceFactory documentService,
             IMappingService mappingService)
-            : base(logger, documentService, mappingService, eventMessageService)
+            : base(logger, documentService, mappingService, eventMessageService, contentCacheService)
         {
             this.cmsApiService = cmsApiService;
             this.mapper = mapper;
@@ -73,6 +71,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         public async Task<HttpStatusCode> ProcessContentItem(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
         {
             return await ProcessContentItem<DysacQuestionSetContentModel>(parentId, contentItemId, apiItem).ConfigureAwait(false);
+        }
+
+        public async Task<HttpStatusCode> RemoveContentItem(Guid contentId, Guid contentItemId)
+        {
+            return await RemoveContentItem<DysacQuestionSetContentModel>(contentId, contentItemId).ConfigureAwait(false);
+        }
+
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
+        {
+            return await RemoveContent<DysacQuestionSetContentModel>(contentId).ConfigureAwait(false);
         }
     }
 }

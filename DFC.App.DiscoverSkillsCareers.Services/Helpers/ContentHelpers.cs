@@ -32,11 +32,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             return default;
         }
 
-        public static bool RemoveContentItem(Guid contentItemId, List<IDysacContentModel>? items)
+        public static void RemoveContentItem(Guid contentItemId, List<IDysacContentModel>? items)
         {
             if (items == null || !items.Any())
             {
-                return false;
+                return;
             }
 
             foreach (var contentItemModel in items)
@@ -44,18 +44,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 if (contentItemModel.ItemId == contentItemId)
                 {
                     items.Remove(contentItemModel);
-                    return true;
+                    return;
                 }
 
-                var removedContentitem = RemoveContentItem(contentItemId, contentItemModel.GetContentItems());
-
-                if (removedContentitem)
-                {
-                    return removedContentitem;
-                }
+                RemoveContentItem(contentItemId, contentItemModel.GetContentItems());
             }
-
-            return false;
         }
     }
 }

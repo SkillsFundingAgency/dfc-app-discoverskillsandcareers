@@ -208,7 +208,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public async Task<HttpStatusCode> DeleteContentAsync<TModel>(TModel destinationType, Guid contentId)
             where TModel : class, IDysacContentModel
         {
-            var result = await eventMessageService.DeleteAsync<TModel>(contentId).ConfigureAwait(false);
+            var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == destinationType.GetType().Name);
+
+            var result = await contentProcessor.DeleteContentAsync(contentId).ConfigureAwait(false);
 
             return result;
         }
@@ -223,24 +225,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                //var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == GetDsyacTypeFromContentType(cacheResult.ContentType).GetType().Name);
+                var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == GetDsyacTypeFromContentType(cacheResult.ContentType).GetType().Name);
 
-                //var contentPageModel = await contentProcessor.GetByIdAsync<TModel>(cacheResult.ParentContentId!.Value).ConfigureAwait(false);
+                var result = await contentProcessor.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId).ConfigureAwait(false);
 
-                //if (contentPageModel != null)
-                //{
-                //    var removedContentitem = RemoveContentItem(contentItemId, contentPageModel.GetContentItems());
-
-                //    if (removedContentitem)
-                //    {
-                //        //var result = await eventMessageService.UpdateAsync<TModel>(contentPageModel).ConfigureAwait(false);
-
-                //        //if (result == HttpStatusCode.OK)
-                //        //{
-                //        //    contentCacheService.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId);
-                //        //}
-                //    }
-                //}
+                if (result == HttpStatusCode.OK)
+                {
+                    contentCacheService.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId);
+                }
             }
 
             return HttpStatusCode.OK;

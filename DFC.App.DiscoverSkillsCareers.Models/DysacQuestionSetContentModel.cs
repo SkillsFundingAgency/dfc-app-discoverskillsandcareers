@@ -39,6 +39,19 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             return ShortQuestions!.ToList();
         }
 
+        public void RemoveContentItem(Guid contentItemId)
+        {
+            foreach (var question in ShortQuestions.ToList())
+            {
+                question.RemoveContentItem(contentItemId);
+
+                if (question.ItemId == contentItemId)
+                {
+                    ShortQuestions?.Remove(question);
+                }
+            }
+        }
+
         private List<Guid>? GetAllContentItemIds()
         {
             return ShortQuestions.Select(z => z.ItemId!.Value).Union(ShortQuestions.SelectMany(z => z.GetContentItems().Select(y => y.ItemId!.Value))).ToList();

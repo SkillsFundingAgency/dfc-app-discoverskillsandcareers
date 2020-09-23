@@ -2,7 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
-using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,13 +19,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         private readonly IDocumentServiceFactory documentServiceFactory;
         private readonly IMappingService mappingService;
         private readonly IEventMessageService eventMessageService;
+        private readonly IContentCacheService contentCacheService;
 
-        public BaseContentProcessor(ILogger<BaseContentProcessor> logger, IDocumentServiceFactory documentServiceFactory, IMappingService mappingService, IEventMessageService eventMessageService)
+        public BaseContentProcessor(ILogger<BaseContentProcessor> logger, IDocumentServiceFactory documentServiceFactory, IMappingService mappingService, IEventMessageService eventMessageService, IContentCacheService contentCacheService)
         {
             this.logger = logger;
             this.documentServiceFactory = documentServiceFactory;
             this.mappingService = mappingService;
             this.eventMessageService = eventMessageService;
+            this.contentCacheService = contentCacheService;
         }
 
         public bool TryValidateModel(IDysacContentModel? contentPageModel)
@@ -56,13 +58,42 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             {
                 var contentItemModel = ContentHelpers.FindContentItem(contentItemId, contentPageModel.GetContentItems());
 
-                mappingService.Map(contentItemModel, apiItem);
+                mappingService.Map(contentItemModel!, apiItem);
+
                 contentItemModel!.LastCached = DateTime.UtcNow;
 
                 await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
             }
 
             return HttpStatusCode.OK;
+        }
+
+        public async Task<HttpStatusCode> RemoveContentItem<TModel>(Guid contentId, Guid contentItemId)
+             where TModel : class, IDysacContentModel
+        {
+            var model = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(contentId).ConfigureAwait(false);
+
+            if (model != null)
+            {
+                model.RemoveContentItem(contentItemId);
+
+                var result = await eventMessageService.UpdateAsync<TModel>(model).ConfigureAwait(false);
+
+                if (result == HttpStatusCode.OK)
+                {
+                    contentCacheService.RemoveContentItem(contentId, contentItemId);
+                }
+            }
+
+            return HttpStatusCode.OK;
+        }
+
+        public async Task<HttpStatusCode> RemoveContent<TModel>(Guid contentId)
+            where TModel : class, IDysacContentModel
+        {
+            var result = await eventMessageService.DeleteAsync<TModel>(contentId).ConfigureAwait(false);
+
+            return result;
         }
     }
 }

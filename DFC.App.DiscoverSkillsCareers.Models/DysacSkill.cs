@@ -34,6 +34,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             return new List<IDysacContentModel>();
         }
 
+        public void RemoveContentItem(Guid contentItemId)
+        {
+            throw new NotImplementedException();
+        }
+
         private List<Guid>? GetAllContentItemIds()
         {
             return new List<Guid>();

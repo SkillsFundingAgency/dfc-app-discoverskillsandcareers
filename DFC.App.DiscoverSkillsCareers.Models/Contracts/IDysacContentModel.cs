@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 {
     public interface IDysacContentModel : IDocumentModel
-    { 
+    {
         string ContentType { get; set; }
 
         Uri Url { get; set; }
@@ -17,5 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
         Guid? ItemId { get; }
 
         List<IDysacContentModel>? GetContentItems();
+
+        void RemoveContentItem(Guid contentItemId);
     }
 }
