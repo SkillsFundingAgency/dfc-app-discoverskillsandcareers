@@ -25,30 +25,30 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (destination!.GetType() == typeof(DysacQuestionSetContentModel))
             {
-                mapper.Map(child, destination as DysacQuestionSetContentModel);
+                return mapper.Map(child, destination as DysacQuestionSetContentModel)!;
             }
 
             if (destination!.GetType() == typeof(DysacShortQuestionContentItemModel))
             {
-                mapper.Map(child, destination as DysacShortQuestionContentItemModel);
+                return mapper.Map(child, destination as DysacShortQuestionContentItemModel)!;
             }
 
             if (destination!.GetType() == typeof(DysacSkillContentModel))
             {
-                mapper.Map(child, destination as DysacSkillContentModel);
+                return mapper.Map(child, destination as DysacSkillContentModel)!;
             }
 
             if (destination!.GetType() == typeof(DysacTraitContentModel))
             {
-                mapper.Map(child, destination as DysacTraitContentModel);
+                return mapper.Map(child, destination as DysacTraitContentModel)!;
             }
 
             if (destination!.GetType() == typeof(JobCategoryContentItemModel))
             {
-                mapper.Map(child, destination as JobCategoryContentItemModel);
+                return mapper.Map(child, destination as JobCategoryContentItemModel)!;
             }
 
-            return destination;
+            throw new InvalidOperationException($"{destination.GetType().Name} not found");
         }
     }
 }

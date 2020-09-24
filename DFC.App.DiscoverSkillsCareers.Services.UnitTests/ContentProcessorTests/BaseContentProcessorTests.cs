@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         public IDocumentService<DysacQuestionSetContentModel> FakeDysacQuestionSetDocumentService = A.Fake<IDocumentService<DysacQuestionSetContentModel>>();
         public IDocumentService<DysacSkillContentModel> FakeDysacSkillDocumentService = A.Fake<IDocumentService<DysacSkillContentModel>>();
         public IDocumentService<DysacTraitContentModel> FakeDysacTraitDocumentService = A.Fake<IDocumentService<DysacTraitContentModel>>();
-        
+
         public IMappingService FakeMappingService = A.Fake<IMappingService>();
         public IEventMessageService FakeEventMessageService = A.Fake<IEventMessageService>();
         public IContentCacheService FakeContentCacheService = A.Fake<IContentCacheService>();
@@ -31,17 +31,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         public Guid QuestionSetId { get; private set; }
 
         public Guid SkillId { get; private set; }
-
         public Guid SkillItemId { get; private set; }
+        public Guid TraitId { get; private set; }
+        public Guid TraitItemId { get; private set; }
 
         public void Setup()
         {
             var questionSetModel = BuildQuestionSetModel();
             var apiQuestionSetModel = BuildApiQuestionSetModel();
 
+            var traitModel = BuildTraitModel();
+
             A.CallTo(() => FakeDysacQuestionSetDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(questionSetModel);
+            A.CallTo(() => FakeDysacTraitDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(traitModel);
+
             A.CallTo(() => FakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(questionSetModel);
             A.CallTo(() => FakeMapper.Map<DysacSkillContentModel>(A<ApiSkill>.Ignored)).Returns(BuildSkillModel());
+            A.CallTo(() => FakeMapper.Map<DysacTraitContentModel>(A<ApiTrait>.Ignored)).Returns(traitModel);
 
             A.CallTo(() => FakeDocumentServiceFactory.GetDocumentService<DysacQuestionSetContentModel>()).Returns(FakeDysacQuestionSetDocumentService);
             A.CallTo(() => FakeDocumentServiceFactory.GetDocumentService<DysacSkillContentModel>()).Returns(FakeDysacSkillDocumentService);
@@ -50,6 +56,30 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(apiQuestionSetModel);
             A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(A<Uri>.Ignored)).Returns(BuildApiTraitModel());
             A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiSkill, ApiGenericChild>(A<Uri>.Ignored)).Returns(BuildApiSkillModel());
+        }
+
+        private DysacTraitContentModel BuildTraitModel()
+        {
+            TraitId = Guid.NewGuid();
+            TraitItemId = Guid.NewGuid();
+
+            return new DysacTraitContentModel
+            {
+                Id = TraitId,
+                ItemId = TraitId,
+                Description = "A trait description",
+                Title = "A trait",
+                JobCategories = new List<IDysacContentModel>
+                {
+                    new JobCategoryContentItemModel
+                    {
+                        ItemId = TraitItemId,
+                        Url = new Uri("http://somewhere.com/somewherelse/alocation"),
+                        Description = "A Job Category",
+                        Title = "Job category"
+                    }
+                }
+            };
         }
 
         private ApiQuestionSet BuildApiQuestionSetModel()
