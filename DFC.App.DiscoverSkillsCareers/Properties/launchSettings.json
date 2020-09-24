@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:44342/discover-your-skills-careers",
+      "launchUrl": "https://localhost:44342/discover-your-skills-and-careers",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

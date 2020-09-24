@@ -48,20 +48,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         }
 
         [Fact]
-        public async Task WhenAssessmentIsNotCompleteRedirectsToAssessment()
-        {
-            var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 1 };
-            A.CallTo(() => sessionService.HasValidSession()).Returns(true);
-            A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
-
-            var actionResponse = await controller.Index().ConfigureAwait(false);
-
-            Assert.IsType<RedirectResult>(actionResponse);
-            var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/assessment/return", redirectResult.Url);
-        }
-
-        [Fact]
         public async Task WhenHasPreviousCompleteCategoryRedirectsToRoles()
         {
             var category = "testcategory";

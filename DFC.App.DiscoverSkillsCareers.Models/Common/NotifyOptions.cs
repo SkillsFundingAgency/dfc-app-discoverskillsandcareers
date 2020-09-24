@@ -5,5 +5,7 @@
         public string EmailTemplateId { get; set; }
 
         public string SmsTemplateId { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }
