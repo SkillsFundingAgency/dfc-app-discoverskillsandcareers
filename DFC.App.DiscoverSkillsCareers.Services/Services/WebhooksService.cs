@@ -63,7 +63,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public async Task<HttpStatusCode> ProcessContentAsync<TModel, TDestModel>(TModel sourceType, TDestModel destType, Uri url, Guid contentId)
             where TModel : class, IBaseContentItemModel<ApiGenericChild>
             where TDestModel : class, IDysacContentModel
-
         {
             var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == destType.GetType().Name);
             return await contentProcessor.ProcessContent(url, contentId).ConfigureAwait(false);
@@ -86,7 +85,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentProcessor = GetContentProcessor(cacheResult.ContentType);
+                var contentProcessor = GetContentProcessor(cacheResult.ContentType!);
 
                 await contentProcessor.ProcessContentItem(cacheResult.ParentContentId!.Value, contentItemId, apiDataContentItemModel).ConfigureAwait(false);
             }
@@ -114,7 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var cacheResult in contentCacheStatuses)
             {
-                var contentProcessor = GetContentProcessor(cacheResult.ContentType);
+                var contentProcessor = GetContentProcessor(cacheResult.ContentType!);
 
                 var result = await contentProcessor.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId).ConfigureAwait(false);
 
