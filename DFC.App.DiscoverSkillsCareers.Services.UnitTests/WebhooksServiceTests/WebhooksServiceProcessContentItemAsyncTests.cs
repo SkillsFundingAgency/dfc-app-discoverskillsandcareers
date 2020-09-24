@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
         public async Task WebhooksServiceDeleteContentItemAsyncForCreateReturnsNoContent()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.NotFound;
+            const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var service = BuildWebhooksService();
             A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(HttpStatusCode.NotFound);
