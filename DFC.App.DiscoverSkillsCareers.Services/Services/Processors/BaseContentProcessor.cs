@@ -69,6 +69,36 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return HttpStatusCode.OK;
         }
 
+        public async Task<HttpStatusCode> ProcessContent<TModel>(Guid contentId, TModel contentPageModel)
+            where TModel : class, IDocumentModel, IDysacContentModel
+        {
+            if (contentPageModel == null)
+            {
+                return HttpStatusCode.NoContent;
+            }
+
+            if (!TryValidateModel(contentPageModel))
+            {
+                return HttpStatusCode.BadRequest;
+            }
+
+            var contentResult = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
+
+            if (contentResult == HttpStatusCode.NotFound)
+            {
+                contentResult = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
+            }
+
+            if (contentResult == HttpStatusCode.OK || contentResult == HttpStatusCode.Created)
+            {
+                var contentItemIds = contentPageModel.AllContentItemIds;
+
+                contentCacheService.AddOrReplace(contentId, contentItemIds!);
+            }
+
+            return contentResult;
+        }
+
         public async Task<HttpStatusCode> RemoveContentItem<TModel>(Guid contentId, Guid contentItemId)
              where TModel : class, IDocumentModel, IDysacContentModel
         {

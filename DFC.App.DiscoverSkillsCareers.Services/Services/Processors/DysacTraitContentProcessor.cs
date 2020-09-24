@@ -15,8 +15,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
     {
         private readonly ICmsApiService cmsApiService;
         private readonly IMapper mapper;
-        private readonly IEventMessageService eventMessageService;
-        private readonly IContentCacheService contentCacheService;
 
         public DysacTraitContentProcessor(
             ICmsApiService cmsApiService,
@@ -30,42 +28,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         {
             this.cmsApiService = cmsApiService;
             this.mapper = mapper;
-            this.eventMessageService = eventMessageService;
-            this.contentCacheService = contentCacheService;
         }
 
         public string Type => nameof(DysacTraitContentModel);
 
         public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
         {
-            var questionModel = await cmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(url).ConfigureAwait(false);
-            var contentPageModel = mapper.Map<DysacTraitContentModel>(questionModel);
+            var traitModel = await cmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(url).ConfigureAwait(false);
+            var contentPageModel = mapper.Map<DysacTraitContentModel>(traitModel);
 
-            if (contentPageModel == null)
-            {
-                return HttpStatusCode.NoContent;
-            }
-
-            if (!TryValidateModel(contentPageModel))
-            {
-                return HttpStatusCode.BadRequest;
-            }
-
-            var contentResult = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
-
-            if (contentResult == HttpStatusCode.NotFound)
-            {
-                contentResult = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
-            }
-
-            if (contentResult == HttpStatusCode.OK || contentResult == HttpStatusCode.Created)
-            {
-                var contentItemIds = contentPageModel.AllContentItemIds;
-
-                contentCacheService.AddOrReplace(contentId, contentItemIds!);
-            }
-
-            return contentResult;
+            return await ProcessContent(contentId, contentPageModel).ConfigureAwait(false);
         }
 
         public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
