@@ -11,8 +11,10 @@
     <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.47" />
     <PackageReference Include="FakeItEasy" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="6.0.0" />
+    <PackageReference Include="System.Net.Http.Formatting.Extension" Version="5.2.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Models\DFC.App.DiscoverSkillsCareers.Models.csproj" />
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Services\DFC.App.DiscoverSkillsCareers.Services.csproj" />
+    <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers\DFC.App.DiscoverSkillsCareers.csproj" />
   </ItemGroup>
 
 </Project>
