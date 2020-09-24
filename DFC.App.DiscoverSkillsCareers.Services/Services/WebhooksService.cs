@@ -128,7 +128,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private IContentProcessor GetContentProcessor(string contentType)
         {
-            return contentProcessors.FirstOrDefault(x => x.Type.ToUpperInvariant() == ContentHelpers.GetDsyacTypeFromContentType(contentType).GetType().Name);
+            return contentProcessors.FirstOrDefault(x => x.Type.ToUpperInvariant() == ContentHelpers.GetDsyacTypeFromContentType(contentType).GetType().Name.ToUpperInvariant());
         }
 
         private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(Guid contentId, string apiEndpoint, Guid eventId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType, IBaseContentItemModel<ApiGenericChild> sourceType)

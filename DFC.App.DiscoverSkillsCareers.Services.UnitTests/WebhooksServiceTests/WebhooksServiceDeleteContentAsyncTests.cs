@@ -34,8 +34,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             const HttpStatusCode expectedResponse = HttpStatusCode.NotFound;
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var service = BuildWebhooksService();
-            // Assert
             A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
+
+            // Assert
 
             // Act
             var result = await service.DeleteContentAsync(new DysacQuestionSetContentModel(), ContentIdForDelete).ConfigureAwait(false);

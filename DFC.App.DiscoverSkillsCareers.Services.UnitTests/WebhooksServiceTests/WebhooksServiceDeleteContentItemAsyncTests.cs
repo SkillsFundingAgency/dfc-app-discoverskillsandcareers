@@ -1,4 +1,7 @@
-﻿using FakeItEasy;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.Content.Pkg.Netcore.Data.Models;
+using FakeItEasy;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,56 +13,39 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
     [Trait("Category", "Webhooks Service DeleteContentItemAsync Unit Tests")]
     public class WebhooksServiceDeleteContentItemAsyncTests : BaseWebhooksServiceTests
     {
-        //[Fact]
-        //public async Task WebhooksServiceDeleteContentItemAsyncForCreateReturnsSuccess()
-        //{
-        //    // Arrange
-        //    const HttpStatusCode expectedResponse = HttpStatusCode.OK;
-        //    var exptectedGuidList = new List<Guid> { ContentIdForCreate, Guid.NewGuid() };
-        //    var expectedValidContentPageModel = BuildValidContentPageModel();
-        //    var service = BuildWebhooksService();
+        [Fact]
+        public async Task WebhooksServiceDeleteContentItemAsyncForCreateReturnsSuccess()
+        {
+            // Arrange
+            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
+            var expectedValidContentPageModel = BuildValidContentPageModel();
+            var service = BuildWebhooksService();
 
-        //    A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).Returns(exptectedGuidList);
-        //    A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(expectedValidContentPageModel);
-        //    A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.OK);
-        //    A.CallTo(() => FakeContentCacheService.RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored));
+            // Act
+            var result = await service.DeleteContentItemAsync(new DysacQuestionSetContentModel(), ContentIdForDelete, new List<ContentCacheResult>() { new ContentCacheResult() { ContentType = DysacConstants.ContentTypePersonalityQuestionSet, ParentContentId = Guid.NewGuid() } }).ConfigureAwait(false);
 
-        //    // Act
-        //    var result = await service.DeleteContentItemAsync(ContentItemIdForDelete).ConfigureAwait(false);
+            // Assert
+            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
-        //    // Assert
-        //    A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
-        //    A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceOrMore();
-        //    A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceOrMore();
-        //    A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
-        //    A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
-        //    A.CallTo(() => FakeContentCacheService.RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            Assert.Equal(expectedResponse, result);
+        }
 
-        //    Assert.Equal(expectedResponse, result);
-        //}
+        [Fact]
+        public async Task WebhooksServiceDeleteContentItemAsyncNotCacheForCreateReturnsNoContent()
+        {
+            // Arrange
+            const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
+            var expectedValidContentPageModel = BuildValidContentPageModel();
+            var service = BuildWebhooksService();
+            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
 
-        //[Fact]
-        //public async Task WebhooksServiceDeleteContentItemAsyncForUpdateReturnsNoContent()
-        //{
-        //    // Arrange
-        //    const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
-        //    var exptectedEmptyGuidList = new List<Guid>();
-        //    var service = BuildWebhooksService();
+            // Act
+            var result = await service.DeleteContentItemAsync(new DysacQuestionSetContentModel(), ContentIdForDelete, new List<ContentCacheResult>()).ConfigureAwait(false);
 
-        //    A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).Returns(exptectedEmptyGuidList);
+            // Assert
+            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).MustNotHaveHappened();
 
-        //    // Act
-        //    var result = await service.DeleteContentItemAsync(ContentItemIdForDelete).ConfigureAwait(false);
-
-        //    // Assert
-        //    A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
-        //    A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustNotHaveHappened();
-        //    A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
-        //    A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
-        //    A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
-        //    A.CallTo(() => FakeContentCacheService.RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).MustNotHaveHappened();
-
-        //    Assert.Equal(expectedResponse, result);
-        //}
+            Assert.Equal(expectedResponse, result);
+        }
     }
 }
