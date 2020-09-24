@@ -24,7 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
 
             //Assert
 
-            Assert.Equal(nameof(DysacShortQuestionContentItemModel), result.GetType().BaseType.Name);
+            Assert.Equal(nameof(DysacShortQuestionContentItemModel), result!.GetType().BaseType!.Name);
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var result = mappingService.Map(new DysacTraitContentModel(), new ApiGenericChild());
 
             //Assert
-            Assert.Equal(nameof(DysacTraitContentModel), result.GetType().BaseType.Name);
+            Assert.Equal(nameof(DysacTraitContentModel), result!.GetType().BaseType!.Name);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var result = mappingService.Map(new DysacSkillContentModel(), new ApiGenericChild());
 
             //Assert
-            Assert.Equal(nameof(DysacSkillContentModel), result.GetType().BaseType.Name);
+            Assert.Equal(nameof(DysacSkillContentModel), result!.GetType().BaseType!.Name);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var result = mappingService.Map(new JobCategoryContentItemModel(), new ApiGenericChild());
 
             //Assert
-            Assert.Equal(nameof(JobCategoryContentItemModel), result.GetType().BaseType.Name);
+            Assert.Equal(nameof(JobCategoryContentItemModel), result!.GetType().BaseType!.Name);
         }
 
         [Fact]

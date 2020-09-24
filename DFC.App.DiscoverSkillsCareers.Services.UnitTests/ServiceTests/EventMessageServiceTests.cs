@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentServiceFactory);
 
             // act
-            var result = await eventMessageService.CreateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
+            var result = await eventMessageService.CreateAsync(DysacQuestionSetContentModel!).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
@@ -197,7 +197,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentServiceFactory);
 
             // act
-            var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
+            var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel!).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
