@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacQuestionSetContentModel>(A<DysacQuestionSetContentModel>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacQuestionSetContentModel>(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.OK);
             var processor = new DysacQuestionSetContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
 
             //Act
@@ -87,6 +87,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Assert
             A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustHaveHappened();
+
+            Assert.Equal(HttpStatusCode.OK, result);
+        }
+
+        [Fact]
+        public async Task DysacQuestionSetProcessorRemoveContentItemAsyncCreateReturnsOk()
+        {
+            base.Setup();
+
+            //Arrange
+            var processor = new DysacQuestionSetContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacQuestionSetContentModel>(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.OK);
+
+            //Act
+            var result = await processor.RemoveContentItem<DysacQuestionSetContentModel>(QuestionSetId, QuestionSetItemId);
+
+            //Assert
+            A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacQuestionSetContentModel>(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }

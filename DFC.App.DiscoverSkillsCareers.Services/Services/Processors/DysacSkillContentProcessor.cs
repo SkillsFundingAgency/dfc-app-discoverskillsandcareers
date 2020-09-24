@@ -38,8 +38,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
         {
-            var questionModel = await cmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(url).ConfigureAwait(false);
-            var contentPageModel = mapper.Map<DysacTraitContentModel>(questionModel);
+            var questionModel = await cmsApiService.GetItemAsync<ApiSkill, ApiGenericChild>(url).ConfigureAwait(false);
+            var contentPageModel = mapper.Map<DysacSkillContentModel>(questionModel);
 
             if (contentPageModel == null)
             {
