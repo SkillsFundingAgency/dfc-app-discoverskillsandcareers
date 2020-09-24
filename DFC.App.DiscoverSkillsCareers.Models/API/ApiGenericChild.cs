@@ -20,6 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
 
         public int Ordinal { get; set; }
 
-        public new IList<ApiGenericChild>? ContentItems { get; set; } = new List<ApiGenericChild>();
+        public new IList<ApiGenericChild> ContentItems { get; set; } = new List<ApiGenericChild>()
     }
 }
