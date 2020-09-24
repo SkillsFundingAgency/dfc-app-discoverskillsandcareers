@@ -25,7 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var result = await service.DeleteContentItemAsync(new DysacQuestionSetContentModel(), ContentIdForDelete, new List<ContentCacheResult>() { new ContentCacheResult() { ContentType = DysacConstants.ContentTypePersonalityQuestionSet, ParentContentId = Guid.NewGuid() } }).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -37,13 +37,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var service = BuildWebhooksService();
-            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
 
             // Act
             var result = await service.DeleteContentItemAsync(new DysacQuestionSetContentModel(), ContentIdForDelete, new List<ContentCacheResult>()).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResponse, result);
         }

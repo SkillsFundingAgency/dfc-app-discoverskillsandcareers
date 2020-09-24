@@ -73,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return await ProcessContentItem<DysacQuestionSetContentModel>(contentId, contentItemId, apiItem).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> RemoveContentItem(Guid contentId, Guid contentItemId)
+        public async Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId)
         {
             return await RemoveContentItem<DysacQuestionSetContentModel>(contentId, contentItemId).ConfigureAwait(false);
         }

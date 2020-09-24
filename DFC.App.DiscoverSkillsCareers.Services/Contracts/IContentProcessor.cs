@@ -13,7 +13,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem);
 
-        Task<HttpStatusCode> RemoveContentItem(Guid contentId, Guid contentItemId);
+        Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId);
 
         Task<HttpStatusCode> DeleteContentAsync(Guid contentId);
     }

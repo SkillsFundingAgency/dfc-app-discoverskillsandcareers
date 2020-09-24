@@ -115,7 +115,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 var contentProcessor = GetContentProcessor(cacheResult.ContentType!);
 
-                var result = await contentProcessor.RemoveContentItem(cacheResult.ParentContentId!.Value, contentItemId).ConfigureAwait(false);
+                var result = await contentProcessor.DeleteContentItemAsync(cacheResult.ParentContentId!.Value, contentItemId).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.OK)
                 {

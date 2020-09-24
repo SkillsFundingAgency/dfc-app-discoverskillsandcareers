@@ -83,7 +83,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
             //Act
-            var result = await processor.RemoveContent<DysacQuestionSetContentModel>(QuestionSetId);
+            var result = await processor.DeleteContentAsync(QuestionSetId);
 
             //Assert
             A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).MustHaveHappened();
@@ -101,7 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacQuestionSetContentModel>(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.OK);
 
             //Act
-            var result = await processor.RemoveContentItem<DysacQuestionSetContentModel>(QuestionSetId, QuestionSetItemId);
+            var result = await processor.DeleteContentItemAsync(QuestionSetId, QuestionSetItemId);
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacQuestionSetContentModel>(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened();

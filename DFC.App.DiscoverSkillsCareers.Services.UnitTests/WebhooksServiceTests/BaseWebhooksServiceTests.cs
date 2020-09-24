@@ -154,21 +154,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             FakeContentProcessors[0] = A.Fake<IContentProcessor>();
             A.CallTo(() => FakeContentProcessors[0].Type).Returns(nameof(DysacQuestionSetContentModel));
             A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
-            A.CallTo(() => FakeContentProcessors[0].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[0].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
 
             FakeContentProcessors[1] = A.Fake<IContentProcessor>();
             A.CallTo(() => FakeContentProcessors[1].Type).Returns(nameof(DysacTraitContentModel));
             A.CallTo(() => FakeContentProcessors[1].DeleteContentAsync(A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
-            A.CallTo(() => FakeContentProcessors[1].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeContentProcessors[1].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[1].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[1].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
 
             FakeContentProcessors[2] = A.Fake<IContentProcessor>();
             A.CallTo(() => FakeContentProcessors[2].Type).Returns(nameof(DysacSkillContentModel));
             A.CallTo(() => FakeContentProcessors[2].DeleteContentAsync(A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
-            A.CallTo(() => FakeContentProcessors[2].RemoveContentItem(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeContentProcessors[2].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[2].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[2].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
         }
