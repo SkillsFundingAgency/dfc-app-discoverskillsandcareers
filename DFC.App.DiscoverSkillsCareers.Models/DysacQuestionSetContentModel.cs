@@ -27,7 +27,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
-
         [Required]
         public string? Type { get; set; }
 

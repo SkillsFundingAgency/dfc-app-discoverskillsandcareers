@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             if (!TryValidateModel(contentPageModel))
             {
                 return HttpStatusCode.BadRequest;
-            };
+            }
 
             var contentResult = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
@@ -62,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             {
                 var contentItemIds = contentPageModel.AllContentItemIds;
 
-                contentCacheService.AddOrReplace(contentId, contentItemIds);
+                contentCacheService.AddOrReplace(contentId, contentItemIds!);
             }
 
             return contentResult;

@@ -11,7 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId);
 
-        Task<HttpStatusCode> ProcessContentItem(Guid parentId, Guid contentItemId, ApiGenericChild apiItem);
+        Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem);
 
         Task<HttpStatusCode> RemoveContentItem(Guid contentId, Guid contentItemId);
 

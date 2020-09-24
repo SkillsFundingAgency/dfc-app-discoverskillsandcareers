@@ -62,13 +62,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             {
                 var contentItemIds = contentPageModel.AllContentItemIds;
 
-                contentCacheService.AddOrReplace(contentId, contentItemIds);
+                contentCacheService.AddOrReplace(contentId, contentItemIds!);
             }
 
             return contentResult;
         }
 
-        public async Task<HttpStatusCode> ProcessContentItem(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
+        public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
         {
             return await ProcessContentItem<DysacQuestionSetContentModel>(parentId, contentItemId, apiItem).ConfigureAwait(false);
         }
