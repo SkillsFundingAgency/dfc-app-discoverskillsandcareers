@@ -1,7 +1,8 @@
 [
   {
-    "Path": "discover-your-skills-careers",
-    "TopNavigationOrder": 100,
+    "Path": "discover-your-skills-and-careers",
+    "TopNavigationText": null,
+    "TopNavigationOrder": 2000,
     "Layout": 1,
     "OfflineHtml": "<div class=\"govuk-width-container\"><H2>Discover your skills and careers is unavailable, Please try again later</H2></div>",
     "PhaseBannerHtml":"<div  class=\"govuk-phase-banner\"><p class=\"govuk-phase-banner__content\"><strong class=\"govuk-tag govuk-phase-bannertag \">beta</strong> <span class=\"govuk-phase-banner__text\">Complete <a target=\"_blank\" class=\"govuk-link\" href=\"https://surveys.ipsosinteractive.com/mrIWeb/mrIWeb.dll?I.Project=S1039833&amp;id=&amp;cf=ovl \">Ipsos MORI survey</a> to give us your feedback about the service.</span> </p></div>",
@@ -20,7 +21,7 @@
         "PageRegion": 4,
         "HealthCheckRequired": false,
         "IsHealthy": true,
-        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/discover-your-skills-careers"
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/discover-your-skills-and-careers"
       },
       {
         "PageRegion": 3,

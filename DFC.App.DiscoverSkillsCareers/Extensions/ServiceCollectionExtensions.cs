@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.ClientHandlers;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -72,7 +71,6 @@ namespace DFC.App.DiscoverSkillsCareers.Extensions
                         })
                         .AddPolicyHandlerFromRegistry($"{configurationSectionName}_{retryPolicyName}")
                         .AddPolicyHandlerFromRegistry($"{configurationSectionName}_{circuitBreakerPolicyName}")
-                        .AddHttpMessageHandler<CorrelationIdDelegatingHandler>()
                         .Services;
     }
 }
