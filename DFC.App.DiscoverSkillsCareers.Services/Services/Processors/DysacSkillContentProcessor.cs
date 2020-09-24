@@ -68,14 +68,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return contentResult;
         }
 
-        public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
+        public Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
         {
-            return await ProcessContentItem<DysacSkillContentModel>(contentId, contentItemId, apiItem).ConfigureAwait(false);
+            throw new NotImplementedException($"{nameof(ProcessContentItem)}");
         }
 
-        public async Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId)
+        public Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId)
         {
-            return await RemoveContentItem<DysacSkillContentModel>(contentId, contentItemId).ConfigureAwait(false);
+            throw new NotImplementedException($"{nameof(DeleteContentItemAsync)}");
         }
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)

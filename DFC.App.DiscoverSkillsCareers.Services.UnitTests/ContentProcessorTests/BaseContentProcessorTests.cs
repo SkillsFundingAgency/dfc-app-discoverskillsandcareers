@@ -30,6 +30,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         public Guid QuestionSetItemId { get; private set; }
         public Guid QuestionSetId { get; private set; }
 
+        public Guid SkillId { get; private set; }
+
+        public Guid SkillItemId { get; private set; }
+
         public void Setup()
         {
             var questionSetModel = BuildQuestionSetModel();
@@ -81,13 +85,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
         public DysacSkillContentModel BuildSkillModel()
         {
-            var id = Guid.NewGuid();
+            SkillId = Guid.NewGuid();
 
             return new DysacSkillContentModel
             {
                 Title = "A skill",
-                ItemId = id,
-                Id = id
+                ItemId = SkillId,
+                Id = SkillId
             };
         }
 
