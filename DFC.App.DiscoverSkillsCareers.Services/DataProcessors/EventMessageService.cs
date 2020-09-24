@@ -4,7 +4,6 @@ using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -21,13 +20,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
             this.documentServiceFactory = documentServiceWrapper;
         }
 
-        public async Task<IList<TDestModel?>> GetAllCachedItemsAsync<TDestModel>()
+        public async Task<IEnumerable<TDestModel>?> GetAllCachedItemsAsync<TDestModel>()
             where TDestModel : class, IDocumentModel
         {
-            var itemInstance = (TDestModel)Activator.CreateInstance(typeof(TDestModel));
+            var itemInstance = (TDestModel?)Activator.CreateInstance(typeof(TDestModel));
+
+            if (itemInstance == null)
+            {
+                throw new ArgumentException($"{typeof(TDestModel)} is null");
+            }
+
             var serviceDataModels = await documentServiceFactory.GetDocumentService<TDestModel>().GetAsync(x => x.PartitionKey == itemInstance!.PartitionKey).ConfigureAwait(false);
 
-            return serviceDataModels?.ToList();
+            return serviceDataModels;
         }
 
         public async Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)

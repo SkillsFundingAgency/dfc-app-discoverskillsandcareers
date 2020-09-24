@@ -8,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 {
     public interface IEventMessageService
     {
-        Task<IList<TDestModel>?> GetAllCachedItemsAsync<TDestModel>()
+        Task<IEnumerable<TDestModel>?> GetAllCachedItemsAsync<TDestModel>()
             where TDestModel : class, IDocumentModel;
 
         Task<HttpStatusCode> CreateAsync<TModel>(TModel upsertDocumentModel)

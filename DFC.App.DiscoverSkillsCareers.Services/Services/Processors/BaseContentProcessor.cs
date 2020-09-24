@@ -83,10 +83,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
                 if (result == HttpStatusCode.OK)
                 {
                     contentCacheService.RemoveContentItem(contentId, contentItemId);
+                    return HttpStatusCode.OK;
                 }
             }
 
-            return HttpStatusCode.OK;
+            return HttpStatusCode.NotFound;
         }
 
         public async Task<HttpStatusCode> RemoveContent<TModel>(Guid contentId)

@@ -68,6 +68,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
         public static IBaseContentItemModel<ApiGenericChild> GetApiTypeFromContentType(string contentType)
         {
+            if (string.IsNullOrEmpty(contentType))
+            {
+                throw new ArgumentNullException(nameof(contentType));
+            }
+
             if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityQuestionSet.ToUpperInvariant())
             {
                 return new ApiQuestionSet();

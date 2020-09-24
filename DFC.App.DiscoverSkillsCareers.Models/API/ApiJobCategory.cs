@@ -2,9 +2,11 @@
 using DFC.Content.Pkg.Netcore.Data.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.API
 {
+    [ExcludeFromCodeCoverage]
     public class ApiJobCategory : BaseContentItemModel, IBaseContentItemModel<ApiGenericChild>
     {
         [JsonProperty("skos__prefLabel")]
