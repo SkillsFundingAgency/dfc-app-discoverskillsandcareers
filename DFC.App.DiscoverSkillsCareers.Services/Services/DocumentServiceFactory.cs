@@ -2,9 +2,11 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
+    [ExcludeFromCodeCoverage]
     public class DocumentServiceFactory : IDocumentServiceFactory
     {
         private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;

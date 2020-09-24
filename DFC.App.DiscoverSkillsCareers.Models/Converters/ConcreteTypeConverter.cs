@@ -2,9 +2,11 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Converters
 {
+    [ExcludeFromCodeCoverage]
     public class ConcreteTypeConverter<TConcrete> : JsonConverter
         where TConcrete : class, IDysacContentModel
     {
