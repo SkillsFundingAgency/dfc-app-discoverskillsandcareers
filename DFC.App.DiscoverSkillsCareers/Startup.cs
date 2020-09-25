@@ -37,6 +37,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
+using DFC.Compui.Sessionstate;
+using DFC.App.DiscoverSkillsCareers.Models.Session;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -110,10 +112,12 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddSingleton<IContentCacheService, ContentCacheService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
-            var cosmosDbConnectionContentPages = Configuration.GetSection(nameof(CosmosDbConnection)).Get<CosmosDbConnection>();
+
+            var cosmosDbConnectionContentPages = Configuration.GetSection("Configuration:CosmosDbConnections:DysacQuestions").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
             services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
+
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();
@@ -121,6 +125,9 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
             services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
+
+            var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
+            services.AddSessionStateServices<SessionDataModel>(cosmosDbConnectionSessionState, env.IsDevelopment());
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 

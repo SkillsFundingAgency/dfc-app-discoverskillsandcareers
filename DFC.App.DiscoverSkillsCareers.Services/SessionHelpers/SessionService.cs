@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using Dfc.Session;
+using DFC.Compui.Sessionstate;
 using Dfc.Session.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,41 +10,53 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 {
     public class SessionService : ISessionService
     {
-        private readonly ISessionClient sessionServiceClient;
+        private readonly ISessionStateService<DfcUserSession> sessionStateService;
+        private readonly IHttpContextAccessor accessor;
 
-        public SessionService(ISessionClient sessionServiceClient)
+        public SessionService(ISessionStateService<DfcUserSession> sessionServiceClient, IHttpContextAccessor accessor)
         {
-            this.sessionServiceClient = sessionServiceClient;
+            this.sessionStateService = sessionServiceClient;
+            this.accessor = accessor;
         }
 
-        public void CreateCookie(string sessionIdAndPartionKey)
+        public async Task CreateCookie(string sessionIdAndPartionKey)
         {
             var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
-            var dfcUserSession = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 };
-            
-            sessionServiceClient.CreateCookie(dfcUserSession, false);
+            var dfcUserSession = new SessionStateModel<DfcUserSession> { State = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 } };
+
+            await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
         }
 
         public async Task<string> GetSessionId()
         {
-            var result = await sessionServiceClient.TryFindSessionCode().ConfigureAwait(false);
-            if (string.IsNullOrWhiteSpace(result))
+            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
+            if (compositeSessionId.HasValue)
             {
-                throw new InvalidOperationException("SessionId is null or empty");
+                var sessionStateModel = await sessionStateService.GetAsync(compositeSessionId.Value).ConfigureAwait(false);
+
+                if (sessionStateModel != null)
+                {
+                    return sessionStateModel.State!.SessionId;
+                }
             }
 
-            return result;
+            throw new InvalidOperationException("SessionId is null or empty");
         }
 
         public async Task<bool> HasValidSession()
         {
-            var result = await sessionServiceClient.TryFindSessionCode().ConfigureAwait(false);
-            if (string.IsNullOrWhiteSpace(result))
+            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
+            if (compositeSessionId.HasValue)
             {
-                return false;
+                var sessionStateModel = await sessionStateService.GetAsync(compositeSessionId.Value).ConfigureAwait(false);
+
+                if (sessionStateModel != null)
+                {
+                    return true;
+                }
             }
 
-            return true;
+            return false;
         }
 
         private static Tuple<string, string> GetSessionAndPartitionKey(string value)
