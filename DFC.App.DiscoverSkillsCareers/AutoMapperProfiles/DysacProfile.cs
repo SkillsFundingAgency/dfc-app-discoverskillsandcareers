@@ -14,8 +14,12 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
     {
         public DysacProfile()
         {
+            CreateMap<LinkDetails, DysacShortQuestionContentItemModel>();
+            CreateMap<LinkDetails, ApiGenericChild>();
+
             CreateMap<ApiQuestionSet, DysacQuestionSetContentModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+                .ForMember(d => d.Type, s => s.MapFrom(a => a.Type.ToLower()))
                 .ForMember(d => d.ShortQuestions, s => s.MapFrom(z => Construct(z.ContentItems)));
 
             CreateMap<ApiTrait, DysacTraitContentModel>()
@@ -24,6 +28,12 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
 
             CreateMap<ApiSkill, DysacSkillContentModel>()
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
+
+            CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
+             .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+             .ForMember(d => d.Text, s => s.MapFrom(a => a.Title))
+             .ForMember(d => d.IsNegative, s => s.MapFrom(a => a.Impact.ToUpperInvariant() == "POSITIVE"));
+             
 
             CreateMap<LinkDetails, ApiGenericChild>()
              .ForMember(d => d.Url, s => s.Ignore())
@@ -40,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
         private static List<IDysacContentModel> ConstructJobCategories(IList<ApiGenericChild> z)
         {
             var listToReturn = new List<IDysacContentModel>();
-            listToReturn.AddRange(z.Select(x => new JobCategoryContentItemModel { Description = x.Description, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }));
+            listToReturn.AddRange(z.Select(x => new JobCategoryContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ContentType = x.ContentType, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI }));
 
             return listToReturn;
         }
@@ -51,9 +61,9 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
 
             foreach (var item in z)
             {
-                var question = new DysacShortQuestionContentItemModel { Traits = new List<IDysacContentModel>(), Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
+                var question = new DysacShortQuestionContentItemModel { Traits = new List<IDysacContentModel>(), Ordinal = item.Ordinal, ContentType = item.ContentType, Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId };
 
-                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTraitContentItemModel { ItemId = z.ItemId, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
+                question.Traits.AddRange(item.ContentItems.Select(z => new DysacTraitContentItemModel { ItemId = z.ItemId, Ordinal = item.Ordinal, ContentType = item.ContentType, Description = z.Description, Title = z.Title, Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems) }));
                 listOfQuestions.Add(question);
             }
 

@@ -5,29 +5,38 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Dfc.DiscoverSkillsAndCareers.Models;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 {
     public class SessionService : ISessionService
     {
-        private readonly ISessionStateService<DfcUserSession> sessionStateService;
+        private readonly ISessionStateService<UserSession> sessionStateService;
         private readonly IHttpContextAccessor accessor;
 
-        public SessionService(ISessionStateService<DfcUserSession> sessionServiceClient, IHttpContextAccessor accessor)
+        public SessionService(ISessionStateService<UserSession> sessionServiceClient, IHttpContextAccessor accessor)
         {
             this.sessionStateService = sessionServiceClient;
             this.accessor = accessor;
         }
 
-        public async Task CreateCookie(string sessionIdAndPartionKey)
+        public async Task SaveSession(UserSession session)
         {
-            var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
-            var dfcUserSession = new SessionStateModel<DfcUserSession> { State = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 } };
+            var currentSession = await GetCurrentSession().ConfigureAwait(false);
 
-            await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
+            if (currentSession != null)
+            {
+                currentSession.State = session;
+            }
+            else
+            {
+                currentSession = new SessionStateModel<UserSession> { Id = Guid.NewGuid(), State = session };
+            }
+
+            await sessionStateService.SaveAsync(currentSession).ConfigureAwait(false);
         }
 
-        public async Task<string> GetSessionId()
+        public async Task<SessionStateModel<UserSession>?> GetCurrentSession()
         {
             var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
             if (compositeSessionId.HasValue)
@@ -36,8 +45,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 
                 if (sessionStateModel != null)
                 {
-                    return sessionStateModel.State!.SessionId;
+                    return sessionStateModel;
                 }
+            }
+
+            return null;
+        }
+
+        public async Task CreateCookie(string sessionIdAndPartionKey)
+        {
+            var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
+            var dfcUserSession = new SessionStateModel<UserSession> { State = new UserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 } };
+
+            await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
+        }
+
+        public async Task<string> GetSessionId()
+        {
+            var session = await GetCurrentSession().ConfigureAwait(false);
+
+            if (session != null && session.State!.SessionId != null)
+            {
+                return session.State!.SessionId;
             }
 
             throw new InvalidOperationException("SessionId is null or empty");
@@ -45,15 +74,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 
         public async Task<bool> HasValidSession()
         {
-            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
-            if (compositeSessionId.HasValue)
-            {
-                var sessionStateModel = await sessionStateService.GetAsync(compositeSessionId.Value).ConfigureAwait(false);
+            var session = await GetCurrentSession().ConfigureAwait(false);
 
-                if (sessionStateModel != null)
-                {
-                    return true;
-                }
+            if (session != null)
+            {
+                return true;
             }
 
             return false;

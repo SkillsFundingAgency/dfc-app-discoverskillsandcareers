@@ -15,6 +15,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Impact { get; set; }
 
+        public int? Ordinal { get; set; }
+
+        public string? ContentType { get; set; }
+
         public string? Title { get; set; }
 
         public Uri? Url { get; set; }

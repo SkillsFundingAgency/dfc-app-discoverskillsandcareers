@@ -38,7 +38,7 @@ using System.Diagnostics.CodeAnalysis;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Sessionstate;
-using DFC.App.DiscoverSkillsCareers.Models.Session;
+using Dfc.DiscoverSkillsAndCareers.Models;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -102,7 +102,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
-            services.AddScoped<IAssessmentService, AssessmentService>();
+            services.AddScoped<IAssessmentService, NewAssessmentService>();
             services.AddScoped<IResultsService, ResultsService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
@@ -127,7 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
-            services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
+            services.AddSessionStateServices<UserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 

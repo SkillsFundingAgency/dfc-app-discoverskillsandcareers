@@ -88,6 +88,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
 
         public Guid? ItemId => throw new NotImplementedException();
 
+        public int? Ordinal { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public List<IDysacContentModel>? GetContentItems()
         {
             throw new NotImplementedException();

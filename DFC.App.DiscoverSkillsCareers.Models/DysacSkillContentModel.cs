@@ -22,6 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Title { get; set; }
 
+        public int? Ordinal { get; set; }
+
         public DateTime? LastCached { get; set; }
 
         [JsonIgnore]

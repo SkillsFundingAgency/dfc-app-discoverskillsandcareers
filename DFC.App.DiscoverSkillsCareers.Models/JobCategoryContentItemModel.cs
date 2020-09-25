@@ -22,6 +22,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public List<Guid>? AllContentItemIds => new List<Guid>();
 
+        public string ContentType { get; set; }
+
+        public int? Ordinal { get; set; }
+
         public List<IDysacContentModel>? GetContentItems()
         {
             return new List<IDysacContentModel>();

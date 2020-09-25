@@ -27,6 +27,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
+        public int? Ordinal { get; set; }
+        public string ContentType { get; set; }
+
         public List<IDysacContentModel>? GetContentItems()
         {
             return JobCategories;

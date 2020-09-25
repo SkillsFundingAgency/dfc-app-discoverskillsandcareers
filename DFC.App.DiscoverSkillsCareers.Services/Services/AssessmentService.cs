@@ -113,7 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var assessment = await assessmentApiService.GetAssessment(sessionId).ConfigureAwait(false);
             if (assessment != null)
             {
-                sessionService.CreateCookie(assessment.SessionId);
+                await sessionService.CreateCookie(assessment.SessionId).ConfigureAwait(false);
                 result = true;
             }
 

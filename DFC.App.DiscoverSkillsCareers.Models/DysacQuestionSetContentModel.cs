@@ -32,6 +32,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public DateTime? LastCached { get; set; }
 
+        public int? Ordinal { get; set; }
+
         public List<IDysacContentModel>? GetContentItems()
         {
             return ShortQuestions!.ToList();
