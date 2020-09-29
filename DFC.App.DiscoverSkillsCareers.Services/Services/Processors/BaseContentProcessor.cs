@@ -50,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return isValid;
         }
 
-        public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
+        public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, IBaseContentItemModel apiItem)
             where TModel : class, IDocumentModel, IDysacContentModel
         {
             var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(parentId).ConfigureAwait(false);

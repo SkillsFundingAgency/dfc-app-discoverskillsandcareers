@@ -1,42 +1,26 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Sessionstate;
-using Dfc.Session.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dfc.DiscoverSkillsAndCareers.Models;
+using Dfc.Session.Models;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 {
     public class SessionService : ISessionService
     {
-        private readonly ISessionStateService<UserSession> sessionStateService;
+        private readonly ISessionStateService<DfcUserSession> sessionStateService;
         private readonly IHttpContextAccessor accessor;
 
-        public SessionService(ISessionStateService<UserSession> sessionServiceClient, IHttpContextAccessor accessor)
+        public SessionService(ISessionStateService<DfcUserSession> sessionServiceClient, IHttpContextAccessor accessor)
         {
             this.sessionStateService = sessionServiceClient;
             this.accessor = accessor;
         }
 
-        public async Task SaveSession(UserSession session)
-        {
-            var currentSession = await GetCurrentSession().ConfigureAwait(false);
-
-            if (currentSession != null)
-            {
-                currentSession.State = session;
-            }
-            else
-            {
-                currentSession = new SessionStateModel<UserSession> { Id = Guid.NewGuid(), State = session };
-            }
-
-            await sessionStateService.SaveAsync(currentSession).ConfigureAwait(false);
-        }
-
-        public async Task<SessionStateModel<UserSession>?> GetCurrentSession()
+        private async Task<SessionStateModel<DfcUserSession>?> GetCurrentSession()
         {
             var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
             if (compositeSessionId.HasValue)
@@ -55,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         public async Task CreateCookie(string sessionIdAndPartionKey)
         {
             var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
-            var dfcUserSession = new SessionStateModel<UserSession> { State = new UserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 } };
+            var dfcUserSession = new SessionStateModel<DfcUserSession> { State = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 } };
 
             await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
         }

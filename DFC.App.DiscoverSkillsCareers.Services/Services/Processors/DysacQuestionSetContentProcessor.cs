@@ -34,13 +34,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
         {
-            var questionModel = await cmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(url).ConfigureAwait(false);
+            var questionModel = await cmsApiService.GetItemAsync<ApiQuestionSet>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<DysacQuestionSetContentModel>(questionModel);
 
             return await ProcessContent(contentId, contentPageModel).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, ApiGenericChild apiItem)
+        public async Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, IBaseContentItemModel apiItem)
         {
             return await ProcessContentItem<DysacQuestionSetContentModel>(contentId, contentItemId, apiItem).ConfigureAwait(false);
         }

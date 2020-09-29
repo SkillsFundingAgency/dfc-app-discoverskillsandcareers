@@ -19,11 +19,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
              where TModel : class, IDysacContentModel;
 
         Task<HttpStatusCode> ProcessContentAsync<TModel, TDestModel>(TModel sourceType, TDestModel destType, Uri url, Guid contentId)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDysacContentModel;
 
-        Task<HttpStatusCode> ProcessContentItemAsync<TModel>(TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
-             where TModel : class, IDysacContentModel;
+        Task<HttpStatusCode> ProcessContentItemAsync<TSource, TModel>(TSource sourceType, TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
+               where TModel : class, IDysacContentModel
+               where TSource : class, IBaseContentItemModel;
 
         Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType);
     }

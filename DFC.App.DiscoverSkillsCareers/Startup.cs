@@ -127,7 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
-            services.AddSessionStateServices<UserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
+            services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 

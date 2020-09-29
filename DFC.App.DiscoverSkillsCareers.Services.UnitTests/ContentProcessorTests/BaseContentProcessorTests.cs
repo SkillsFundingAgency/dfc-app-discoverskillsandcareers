@@ -53,9 +53,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeDocumentServiceFactory.GetDocumentService<DysacSkillContentModel>()).Returns(FakeDysacSkillDocumentService);
             A.CallTo(() => FakeDocumentServiceFactory.GetDocumentService<DysacTraitContentModel>()).Returns(FakeDysacTraitDocumentService);
 
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(apiQuestionSetModel);
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(A<Uri>.Ignored)).Returns(BuildApiTraitModel());
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiSkill, ApiGenericChild>(A<Uri>.Ignored)).Returns(BuildApiSkillModel());
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(apiQuestionSetModel);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiTrait>(A<Uri>.Ignored)).Returns(BuildApiTraitModel());
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiSkill>(A<Uri>.Ignored)).Returns(BuildApiSkillModel());
         }
 
         private DysacTraitContentModel BuildTraitModel()

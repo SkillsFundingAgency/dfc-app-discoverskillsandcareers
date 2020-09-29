@@ -42,92 +42,96 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<GetAssessmentResponse> GetAssessment()
         {
-            var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
+            //var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
 
-            if (session == null || session.State!.Questions == null)
-            {
-                throw new InvalidOperationException($"Session state returned null for user session");
-            }
+            //if (session == null || session.State!.Questions == null)
+            //{
+            //    throw new InvalidOperationException($"Session state returned null for user session");
+            //}
 
-            var question = QuestionHelpers.GetNextQuestion(session.State.Questions);
+            //var question = QuestionHelpers.GetNextQuestion(session.State.Questions);
 
-            if (question == null)
-            {
-                throw new InvalidOperationException($"Next question for assessment {session.State.SessionId} is null");
-            }
+            //if (question == null)
+            //{
+            //    throw new InvalidOperationException($"Next question for assessment {session.State.SessionId} is null");
+            //}
 
-            var response = new GetAssessmentResponse()
-            {
-                CurrentFilterAssessmentCode = session.State.FilteredAssessmentState?.CurrentFilterAssessmentCode,
-                NextQuestionNumber = QuestionHelpers.GetNextQuestionNumber(session.State.Questions),
-                QuestionId = question!.Id.ToString(),
-                QuestionText = question!.Text,
-                TraitCode = question.TraitCode,
-                QuestionNumber = question.Ordinal.Value,
-                SessionId = session.State.PrimaryKey,
-                PercentComplete = QuestionHelpers.GetPercentComplete(session.State.Questions),
-                ReloadCode = session.State.UserSessionId,
-                MaxQuestionsCount = session.State.Questions.Count(),
-                RecordedAnswersCount = session.State.RecordedAnswers.Count(),
-                StartedDt = session.State.StartedDt,
-                IsFilterAssessment = session.State.IsFilterAssessment,
-                JobCategorySafeUrl = (session.State.CurrentState as FilteredAssessmentState)?.JobFamilyNameUrlSafe
-            };
+            //var response = new GetAssessmentResponse()
+            //{
+            //    CurrentFilterAssessmentCode = session.State.FilteredAssessmentState?.CurrentFilterAssessmentCode,
+            //    NextQuestionNumber = QuestionHelpers.GetNextQuestionNumber(session.State.Questions),
+            //    QuestionId = question!.Id.ToString(),
+            //    QuestionText = question!.Text,
+            //    TraitCode = question.TraitCode,
+            //    QuestionNumber = question.Ordinal.Value,
+            //    SessionId = session.State.PrimaryKey,
+            //    PercentComplete = QuestionHelpers.GetPercentComplete(session.State.Questions),
+            //    ReloadCode = session.State.UserSessionId,
+            //    MaxQuestionsCount = session.State.Questions.Count(),
+            //    RecordedAnswersCount = session.State.RecordedAnswers.Count(),
+            //    StartedDt = session.State.StartedDt,
+            //    IsFilterAssessment = session.State.IsFilterAssessment,
+            //    JobCategorySafeUrl = (session.State.CurrentState as FilteredAssessmentState)?.JobFamilyNameUrlSafe
+            //};
 
-            return response;
+            //return response;
+
+            return new GetAssessmentResponse();
         }
 
         public async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
+            //var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
 
-            if (session == null)
-            {
-                throw new InvalidOperationException($"Session state returned null for user session");
-            }
+            //if (session == null)
+            //{
+            //    throw new InvalidOperationException($"Session state returned null for user session");
+            //}
 
-            var question = session.State!.Questions.FirstOrDefault(x => x.Ordinal == questionNumber);
+            //var question = session.State!.Questions.FirstOrDefault(x => x.Ordinal == questionNumber);
 
-            if (question == null)
-            {
-                throw new InvalidOperationException($"Question {questionNumber} not found for session {session.Id}");
-            }
+            //if (question == null)
+            //{
+            //    throw new InvalidOperationException($"Question {questionNumber} not found for session {session.Id}");
+            //}
 
-            // Create mapper for this
-            return mapper.Map<GetQuestionResponse>(question);
+            //// Create mapper for this
+            //return mapper.Map<GetQuestionResponse>(question);
+
+            return new GetQuestionResponse();
         }
 
         public async Task<bool> NewSession(string assessmentType)
         {
-            // Get the current question set version for this assesssment type and title (supplied by CMS - configured in appsettings)
-            var currentQuestionSetInfo = await questionSetDocumentService.GetAsync(x => x.Type == assessmentType).ConfigureAwait(false);
+            //// Get the current question set version for this assesssment type and title (supplied by CMS - configured in appsettings)
+            //var currentQuestionSetInfo = await questionSetDocumentService.GetAsync(x => x.Type == assessmentType).ConfigureAwait(false);
 
-            if (currentQuestionSetInfo == null)
-            {
-                log.LogInformation($"Unable to load latest question set {assessmentType}");
-                return false;
-            }
+            //if (currentQuestionSetInfo == null)
+            //{
+            //    log.LogInformation($"Unable to load latest question set {assessmentType}");
+            //    return false;
+            //}
 
-            // Create a new user session
-            string sessionId = SessionIdHelper.GenerateSessionId("ncs");
-            string partitionKey = PartitionKeyGenerator.UserSession(sessionId);
+            //// Create a new user session
+            //string sessionId = SessionIdHelper.GenerateSessionId("ncs");
+            //string partitionKey = PartitionKeyGenerator.UserSession(sessionId);
 
-            var userSession = new UserSession()
-            {
-                PartitionKey = partitionKey,
-                UserSessionId = sessionId,
-                //Todo, get from somewhere else
-                Salt = "ncs",
-                StartedDt = DateTime.Now,
-                LanguageCode = "en",
-                AssessmentState = new AssessmentState("todo", currentQuestionSetInfo.FirstOrDefault().ShortQuestions.Count),
-                AssessmentType = currentQuestionSetInfo.FirstOrDefault().Type.ToLower(),
-                Questions = currentQuestionSetInfo.FirstOrDefault().ShortQuestions.OrderBy(x => x.Ordinal).Select(x => mapper.Map<ShortQuestion>(x))
-            };
+            //var userSession = new UserSession()
+            //{
+            //    PartitionKey = partitionKey,
+            //    UserSessionId = sessionId,
+            //    //Todo, get from somewhere else
+            //    Salt = "ncs",
+            //    StartedDt = DateTime.Now,
+            //    LanguageCode = "en",
+            //    AssessmentState = new AssessmentState("todo", currentQuestionSetInfo.FirstOrDefault().ShortQuestions.Count),
+            //    AssessmentType = currentQuestionSetInfo.FirstOrDefault().Type.ToLower(),
+            //    Questions = currentQuestionSetInfo.FirstOrDefault().ShortQuestions.OrderBy(x => x.Ordinal).Select(x => mapper.Map<ShortQuestion>(x))
+            //};
 
-            await sessionService.SaveSession(userSession).ConfigureAwait(false);
+            //await sessionService.SaveSession(userSession).ConfigureAwait(false);
 
-            log.LogInformation($"Finished creating new assessment {userSession.UserSessionId}");
+            //log.LogInformation($"Finished creating new assessment {userSession.UserSessionId}");
 
             return true;
         }

@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using Dfc.DiscoverSkillsAndCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
@@ -23,19 +24,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IEventMessageService eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IContentTypeMappingService contentTypeMappingService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
             IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
-            IContentCacheService contentCacheService)
+            IContentCacheService contentCacheService,
+            IContentTypeMappingService contentTypeMappingService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.eventMessageService = eventMessageService;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
+            this.contentTypeMappingService = contentTypeMappingService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -43,6 +47,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             try
             {
                 logger.LogInformation("Reload cache started");
+
+                contentTypeMappingService.AddMapping("PersonalityShortQuestion", new ApiShortQuestion());
+                contentTypeMappingService.AddMapping("PersonalityTrait", new ApiTrait());
+                contentTypeMappingService.AddMapping("JobCategory", new ApiJobCategory());
+                contentTypeMappingService.AddMapping("PersonalitySkill", new ApiSkill());
 
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
@@ -68,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             logger.LogInformation("Process summary list started");
@@ -89,7 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
@@ -98,7 +107,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<TModel, ApiGenericChild>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
@@ -229,7 +238,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
-           where TModel : class, IBaseContentItemModel<ApiGenericChild>
+           where TModel : class, IBaseContentItemModel
            where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);

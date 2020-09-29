@@ -1,6 +1,4 @@
-﻿using Dfc.DiscoverSkillsAndCareers.Models;
-using DFC.Compui.Sessionstate;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
@@ -12,8 +10,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         public Task<bool> HasValidSession();
 
-        Task<SessionStateModel<UserSession>?> GetCurrentSession();
+        //Task<SessionStateModel<UserSession>?> GetCurrentSession();
 
-        Task SaveSession(UserSession session);
+        //Task SaveSession(UserSession session);
     }
 }

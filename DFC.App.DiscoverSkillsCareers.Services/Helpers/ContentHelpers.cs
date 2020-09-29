@@ -66,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             throw new InvalidOperationException($"{contentType} not supported in {nameof(ContentHelpers)}");
         }
 
-        public static IBaseContentItemModel<ApiGenericChild> GetApiTypeFromContentType(string contentType)
+        public static IBaseContentItemModel GetApiTypeFromContentType(string contentType)
         {
             if (string.IsNullOrEmpty(contentType))
             {
