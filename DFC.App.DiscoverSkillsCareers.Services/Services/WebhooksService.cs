@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Enums;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
