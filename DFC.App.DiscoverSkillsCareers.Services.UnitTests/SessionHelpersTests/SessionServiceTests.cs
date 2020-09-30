@@ -16,13 +16,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
     public class SessionServiceTests
     {
-        private readonly ISessionStateService<UserSession> fakeStateService;
+        private readonly ISessionStateService<DfcUserSession> fakeStateService;
         private readonly IHttpContextAccessor fakeContextAccessor;
         private readonly SessionService sessionService;
 
         public SessionServiceTests()
         {
-            fakeStateService = A.Fake<ISessionStateService<UserSession>>();
+            fakeStateService = A.Fake<ISessionStateService<DfcUserSession>>();
             fakeContextAccessor = A.Fake<IHttpContextAccessor>();
             sessionService = new SessionService(fakeStateService, fakeContextAccessor);
         }
@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             await sessionService.CreateCookie("p1-s1");
 
-            A.CallTo(() => fakeStateService.SaveAsync(A<SessionStateModel<UserSession>>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeStateService.SaveAsync(A<SessionStateModel<DfcUserSession>>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var sessionId = Guid.NewGuid();
             A.CallTo(() => fakeContextAccessor.HttpContext.Request.Headers).Returns(new HeaderDictionary(new Dictionary<string, StringValues>(new List<KeyValuePair<string, StringValues>>() { new KeyValuePair<string, StringValues>("x-dfc-composite-sessionid", new StringValues(sessionId.ToString())) })));
-            A.CallTo(() => fakeStateService.GetAsync(A<Guid>.Ignored)).Returns(new SessionStateModel<UserSession> { State = new UserSession { SessionId = sessionId.ToString() } });
+            A.CallTo(() => fakeStateService.GetAsync(A<Guid>.Ignored)).Returns(new SessionStateModel<DfcUserSession> { State = new DfcUserSession { SessionId = sessionId.ToString() } });
 
             var result = await sessionService.GetSessionId().ConfigureAwait(false);
 
@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [Fact]
         public async void GetSessionIdShouldThrowExceptionWhenInvalid()
         {
-            SessionStateModel<UserSession>? session = null;
+            SessionStateModel<DfcUserSession>? session = null;
 
             A.CallTo(() => fakeStateService.GetAsync(A<Guid>.Ignored)).Returns(session);
 
@@ -64,7 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [InlineData("", false)]
         public async void HasValidSession(string sessionId, bool isValidSession)
         {
-            A.CallTo(() => fakeStateService.GetAsync(A<Guid>.Ignored)).Returns(new SessionStateModel<UserSession> { State = new UserSession { SessionId = sessionId } });
+            A.CallTo(() => fakeStateService.GetAsync(A<Guid>.Ignored)).Returns(new SessionStateModel<DfcUserSession> { State = new DfcUserSession { SessionId = sessionId } });
             A.CallTo(() => fakeContextAccessor.HttpContext.Request.Headers).Returns(new HeaderDictionary(new Dictionary<string, StringValues>(new List<KeyValuePair<string, StringValues>>() { new KeyValuePair<string, StringValues>("x-dfc-composite-sessionid", new StringValues(sessionId.ToString())) })));
 
             var result = await sessionService.HasValidSession().ConfigureAwait(false);

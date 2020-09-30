@@ -46,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).Returns(fakePagesSummaryItemModels);
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(expectedValidDysacQuestionSetContentModel);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.Created);
@@ -54,13 +54,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
@@ -81,21 +81,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).Returns(fakePagesSummaryItemModels);
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(expectedValidDysacQuestionSetContentModel);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(3, Times.Exactly);
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(4, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
@@ -117,15 +117,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).Returns(fakePagesSummaryItemModels);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(3, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(4, Times.Exactly);
             A.CallTo(() => fakeContentCacheService.Clear()).MustNotHaveHappened();
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
@@ -143,18 +143,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var expectedValidApiQuestionSet = BuildValidApiQuestionSet();
             var expectedValidDysacQuestionSetContentModel = BuildValidDysacQuestionSetContentModel();
 
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(expectedValidDysacQuestionSetContentModel);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
@@ -170,18 +170,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var expectedValidApiQuestionSet = BuildValidApiQuestionSet();
             var expectedValidDysacQuestionSetContentModel = BuildValidDysacQuestionSetContentModel();
 
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).Returns(expectedValidDysacQuestionSetContentModel);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
@@ -196,15 +196,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var expectedValidPagesSummaryItemModel = BuildValidSummaryModel();
             var expectedValidApiQuestionSet = BuildValidApiQuestionSet();
 
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
@@ -224,7 +224,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.DeleteStaleCacheEntriesAsync<DysacQuestionSetContentModel>(fakePagesSummaryItemModels, cancellationToken).ConfigureAwait(false);
@@ -246,7 +246,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.DeleteStaleCacheEntriesAsync<DysacQuestionSetContentModel>(fakePagesSummaryItemModels, cancellationToken).ConfigureAwait(false);
@@ -266,7 +266,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeDysacQuestionSetContentModels, cancellationToken).ConfigureAwait(false);
@@ -285,7 +285,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeDysacQuestionSetContentModels, cancellationToken).ConfigureAwait(false);
@@ -302,7 +302,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var cancellationToken = new CancellationToken(true);
             var fakeDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeDysacQuestionSetContentModels, cancellationToken).ConfigureAwait(false);
@@ -316,7 +316,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public void CacheReloadServiceTryValidateModelForValidAndInvalid(DysacQuestionSetContentModel DysacQuestionSetContentModel, bool expectedResult)
         {
             // arrange
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>());
 
             // act
             var result = cacheReloadService.TryValidateModel(DysacQuestionSetContentModel);
@@ -365,9 +365,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                             }),
                     },
                 },
-                ContentItems = new List<ApiGenericChild>
+                ContentItems = new List<IBaseContentItemModel>
                 {
-                    new ApiGenericChild { Ordinal = 1, Title = "Test Child" },
+                    new ApiShortQuestion { Ordinal = 1, Title = "Test Child" },
                 }
             };
 

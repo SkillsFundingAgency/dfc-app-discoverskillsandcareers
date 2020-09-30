@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using FakeItEasy;
 using System;
@@ -23,10 +24,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var service = BuildWebhooksService();
 
             // Act
-            var result = await service.ProcessContentItemAsync(new DysacQuestionSetContentModel(), new Uri("http://somewhere.com/someplace"), ContentItemIdForCreate, new List<ContentCacheResult>() { new ContentCacheResult() { ContentType = DysacConstants.ContentTypePersonalityQuestionSet, ParentContentId = Guid.NewGuid() } }).ConfigureAwait(false);
+            var result = await service.ProcessContentItemAsync(new ApiQuestionSet(), new DysacQuestionSetContentModel(), new Uri("http://somewhere.com/someplace"), ContentItemIdForCreate, new List<ContentCacheResult>() { new ContentCacheResult() { ContentType = DysacConstants.ContentTypePersonalityQuestionSet, ParentContentId = Guid.NewGuid() } }).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -38,15 +39,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var service = BuildWebhooksService();
-            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(HttpStatusCode.NotFound);
+            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).Returns(HttpStatusCode.NotFound);
 
             // Assert
 
             // Act
-            var result = await service.ProcessContentItemAsync(new DysacQuestionSetContentModel(), new Uri("http://somewhere.com/someplace"), Guid.NewGuid(), new List<ContentCacheResult>()).ConfigureAwait(false);
+            var result = await service.ProcessContentItemAsync(new ApiQuestionSet(), new DysacQuestionSetContentModel(), new Uri("http://somewhere.com/someplace"), Guid.NewGuid(), new List<ContentCacheResult>()).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResponse, result);
         }

@@ -101,15 +101,14 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
-            services.AddScoped<IAssessmentService, NewAssessmentService>();
+            services.AddScoped<IAssessmentService, AssessmentService>();
             services.AddScoped<IResultsService, ResultsService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
-            services.AddTransient<ICacheReloadService, CacheReloadService>();
-            services.AddSingleton<IContentCacheService, ContentCacheService>();
+            services.AddTransient<ICacheReloadService, CacheReloadService>();;
             services.AddTransient<IEventMessageService, EventMessageService>();
 
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:Dysac").Get<CosmosDbConnection>();

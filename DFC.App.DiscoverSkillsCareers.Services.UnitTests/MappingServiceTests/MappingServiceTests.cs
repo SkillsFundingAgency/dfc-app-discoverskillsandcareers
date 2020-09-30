@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var mappingService = new MappingService(A.Fake<IMapper>());
 
             //Act
-            var result = mappingService.Map(new DysacShortQuestionContentItemModel(), new ApiGenericChild());
+            var result = mappingService.Map(new DysacShortQuestionContentItemModel(), new ApiShortQuestion());
 
             //Assert
 
@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var mappingService = new MappingService(A.Fake<IMapper>());
 
             //Act
-            var result = mappingService.Map(new DysacTraitContentModel(), new ApiGenericChild());
+            var result = mappingService.Map(new DysacTraitContentModel(), new ApiTrait());
 
             //Assert
             Assert.Equal(nameof(DysacTraitContentModel), result!.GetType().BaseType!.Name);
@@ -47,7 +47,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var mappingService = new MappingService(A.Fake<IMapper>());
 
             //Act
-            var result = mappingService.Map(new DysacSkillContentModel(), new ApiGenericChild());
+            var result = mappingService.Map(new DysacSkillContentModel(), new ApiSkill());
 
             //Assert
             Assert.Equal(nameof(DysacSkillContentModel), result!.GetType().BaseType!.Name);
@@ -60,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
             var mappingService = new MappingService(A.Fake<IMapper>());
 
             //Act
-            var result = mappingService.Map(new JobCategoryContentItemModel(), new ApiGenericChild());
+            var result = mappingService.Map(new JobCategoryContentItemModel(), new ApiJobCategory());
 
             //Assert
             Assert.Equal(nameof(JobCategoryContentItemModel), result!.GetType().BaseType!.Name);
@@ -74,7 +74,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.MappingServiceTests
 
             //Act
             //Assert
-            Assert.Throws<InvalidOperationException>(() => mappingService.Map(new NonImplementedClassForTesting(), new ApiGenericChild()));
+            Assert.Throws<InvalidOperationException>(() => mappingService.Map(new NonImplementedClassForTesting(), new ApiSkill()));
         }
     }
 
