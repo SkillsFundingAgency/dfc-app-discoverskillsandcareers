@@ -1,12 +1,27 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Framework;
+using DFC.App.DiscoverSkillsCareers.HostedServices;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
+using DFC.Compui.Cosmos;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Telemetry;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
+using DFC.Content.Pkg.Netcore.Extensions;
+using DFC.Content.Pkg.Netcore.Services;
+using DFC.Logger.AppInsights.Contracts;
+using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
 using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
@@ -20,18 +35,22 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using DFC.Logger.AppInsights.Contracts;
-using DFC.App.DiscoverSkillsCareers.Framework;
-using DFC.Logger.AppInsights.Extensions;
+using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
+using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
+using DFC.Compui.Sessionstate;
+using DFC.App.DiscoverSkillsCareers.Models.Session;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         private IConfiguration Configuration { get; }
@@ -89,12 +108,43 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+            services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddTransient<ICacheReloadService, CacheReloadService>();
+            services.AddSingleton<IContentCacheService, ContentCacheService>();
+            services.AddTransient<IEventMessageService, EventMessageService>();
+
+            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:Dysac").Get<CosmosDbConnection>();
+            services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+            services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+            services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+
+            services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
+            services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IMappingService, MappingService>();
+
+            services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
+
+            var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
+            services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
+
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
+
+            const string AppSettingsPolicies = "Policies";
+            var policyOptions = Configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             AddPolicies(policyRegistry);
+
+            services.AddPolicies(policyRegistry, "content", policyOptions);
+            services.AddHostedServiceTelemetryWrapper();
+            services.AddSubscriptionBackgroundService(Configuration);
+            services.AddHostedService<CacheReloadBackgroundService>();
+
+            services.AddApiServices(Configuration, policyRegistry);
 
             services.AddHttpClient<IResultsApiService, ResultsApiService>(
                 httpClient =>
