@@ -7,15 +7,13 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.Models.API
 {
     [ExcludeFromCodeCoverage]
-    public class ApiSkill : BaseContentItemModel, IBaseContentItemModel
+    public class ApiPersonalityFilteringQuestion : BaseContentItemModel, IBaseContentItemModel
     {
         [JsonProperty("skos__prefLabel")]
         public string? Title { get; set; }
 
-        public string? Description { get; set; }
+        public string? Text { get; set; }
 
         public new IList<IBaseContentItemModel> ContentItems { get; set; } = new List<IBaseContentItemModel>();
-
-        public int? Ordinal { get; set; }
     }
 }

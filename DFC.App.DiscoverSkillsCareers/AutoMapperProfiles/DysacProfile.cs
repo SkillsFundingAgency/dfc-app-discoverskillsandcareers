@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Dfc.DiscoverSkillsAndCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -38,6 +38,22 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
              .ForMember(d => d.Text, s => s.MapFrom(a => a.Title))
              .ForMember(d => d.IsNegative, s => s.MapFrom(a => a.Impact.ToUpperInvariant() == "POSITIVE"));
+
+            CreateMap<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>()
+              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+              .ForMember(d => d.Text, s => s.MapFrom(a => a.Title))
+              .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.ContentItems)));
+
+        }
+
+        private List<IDysacContentModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
+        {
+            var listToReturn = new List<IDysacContentModel>();
+            var castSkills = contentItems.Select(x => (ApiSkill)x);
+
+            listToReturn.AddRange(castSkills.Select(x => new DysacSkillContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url }));
+
+            return listToReturn;
         }
 
         private static List<IDysacContentModel> ConstructJobCategories(IList<IBaseContentItemModel> z)

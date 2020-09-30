@@ -1,5 +1,4 @@
-﻿using Dfc.DiscoverSkillsAndCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
@@ -48,14 +47,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
-                contentTypeMappingService.AddMapping("PersonalityShortQuestion", new ApiShortQuestion());
-                contentTypeMappingService.AddMapping("PersonalityTrait", new ApiTrait());
-                contentTypeMappingService.AddMapping("JobCategory", new ApiJobCategory());
-                contentTypeMappingService.AddMapping("PersonalitySkill", new ApiSkill());
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, new ApiShortQuestion());
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, new ApiTrait());
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, new ApiJobCategory());
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalitySkill, new ApiSkill());
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, new ApiPersonalityFilteringQuestion());
 
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
@@ -141,7 +142,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 {
                     logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
 
-                    result = await eventMessageService.CreateAsync<TDestModel>(destinationModel).ConfigureAwait(false);
+                    result = await eventMessageService.CreateAsync(destinationModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
