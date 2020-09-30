@@ -9,9 +9,5 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         public Task CreateCookie(string sessionIdAndPartionKey);
 
         public Task<bool> HasValidSession();
-
-        //Task<SessionStateModel<UserSession>?> GetCurrentSession();
-
-        //Task SaveSession(UserSession session);
     }
 }
