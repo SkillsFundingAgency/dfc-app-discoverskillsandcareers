@@ -47,16 +47,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, new ApiShortQuestion());
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, new ApiTrait());
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, new ApiJobCategory());
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalitySkill, new ApiSkill());
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, new ApiPersonalityFilteringQuestion());
+                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
+                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
+                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory));
+                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalitySkill, typeof(ApiSkill));
+                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
 
-                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }

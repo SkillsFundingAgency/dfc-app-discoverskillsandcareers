@@ -3,7 +3,6 @@ using DFC.Compui.Sessionstate;
 using Dfc.Session.Models;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
@@ -19,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
             this.accessor = accessor;
         }
 
-        private async Task<SessionStateModel<DfcUserSession>?> GetCurrentSession()
+        public async Task<SessionStateModel<DfcUserSession>?> GetCurrentSession()
         {
             var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
             if (compositeSessionId.HasValue)
@@ -35,10 +34,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
             return null;
         }
 
-        public async Task CreateCookie(string sessionIdAndPartionKey)
+        public async Task CreateCookie(string sessionId)
         {
-            var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
-            var dfcUserSession = new SessionStateModel<DfcUserSession> { State = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 } };
+            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
+
+            var dfcUserSession = new SessionStateModel<DfcUserSession> { Id = compositeSessionId!.Value, State = new DfcUserSession() { Salt = "ncs", SessionId = sessionId } };
 
             await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
         }
@@ -65,18 +65,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
             }
 
             return false;
-        }
-
-        private static Tuple<string, string> GetSessionAndPartitionKey(string value)
-        {
-            var result = new Tuple<string, string>(string.Empty, string.Empty);
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                var segments = value.Split("-", StringSplitOptions.RemoveEmptyEntries);
-                result = new Tuple<string, string>(segments.ElementAtOrDefault(0), segments.ElementAtOrDefault(1));
-            }
-
-            return result;
         }
     }
 }

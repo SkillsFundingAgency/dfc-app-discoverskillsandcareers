@@ -32,9 +32,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<bool> NewSession(string assessmentType)
         {
             var newSessionResponse = await assessmentApiService.NewSession(assessmentType).ConfigureAwait(false);
+
             if (newSessionResponse != null)
             {
-                sessionService.CreateCookie(newSessionResponse.SessionId);
+                await sessionService.CreateCookie(newSessionResponse.SessionId).ConfigureAwait(false);
             }
 
             return newSessionResponse != null;
@@ -42,8 +43,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var getQuestionResponse = await assessmentApiService.GetQuestion(sessionId, assessmentType, questionNumber).ConfigureAwait(false);
+            var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
+
+            if (session == null)
+            {
+                throw new InvalidOperationException("Session is null");
+            }
+
+            var getQuestionResponse = await assessmentApiService.GetQuestion(session.State.SessionId, assessmentType, questionNumber).ConfigureAwait(false);
             return getQuestionResponse;
         }
 

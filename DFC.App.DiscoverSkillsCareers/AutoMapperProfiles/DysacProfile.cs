@@ -36,8 +36,8 @@ namespace DFC.App.DiscoverSkillsCareers.AutoMapperProfiles
 
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
-             .ForMember(d => d.Text, s => s.MapFrom(a => a.Title))
-             .ForMember(d => d.IsNegative, s => s.MapFrom(a => a.Impact.ToUpperInvariant() == "POSITIVE"));
+             .ForMember(d => d.QuestionText, s => s.MapFrom(a => a.Title))
+             .ForMember(d => d.IsNegative, s => s.MapFrom(a => a.Impact.ToUpperInvariant() != "POSITIVE"));
 
             CreateMap<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>()
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))

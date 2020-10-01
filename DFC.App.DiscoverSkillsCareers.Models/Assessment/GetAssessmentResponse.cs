@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public int RecordedAnswersCount { get; set; }
 
-        public Answer? RecordedAnswer { get; set; }
+        public QuestionAnswer? RecordedAnswer { get; set; }
 
         public int MaxQuestionsCount { get; set; }
 

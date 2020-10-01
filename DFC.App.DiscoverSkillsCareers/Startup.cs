@@ -111,11 +111,14 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<ICacheReloadService, CacheReloadService>();;
             services.AddTransient<IEventMessageService, EventMessageService>();
 
-            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:Dysac").Get<CosmosDbConnection>();
+            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+
+            var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+            services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment());
 
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();
@@ -154,14 +157,16 @@ namespace DFC.App.DiscoverSkillsCareers
                 }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
                 .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
 
-            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
-                    httpClient.Timeout = dysacClientOptions.Timeout;
-                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
+            services.AddTransient<IAssessmentApiService, FakeAssessmentApiService>();
+
+            //services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(
+            //    httpClient =>
+            //    {
+            //        httpClient.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
+            //        httpClient.Timeout = dysacClientOptions.Timeout;
+            //        httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
+            //    }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
+            //    .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
 
             var jobProfileOverViewClientOptions = Configuration.GetSection("JobProfileOverViewClientOptions").Get<JobProfileOverViewClientOptions>();
 

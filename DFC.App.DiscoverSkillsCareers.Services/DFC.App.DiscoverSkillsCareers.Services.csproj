@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="DFC.Compui.Sessionstate" Version="1.0.11" />
-    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.61" />
     <PackageReference Include="Dfc.Session" Version="0.3.5" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
       <PrivateAssets>all</PrivateAssets>
@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\dfc-content-pkg-netcore\dfc-content-pkg-netcore\dfc-content-pkg-netcore.csproj" />
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Models\DFC.App.DiscoverSkillsCareers.Models.csproj" />
   </ItemGroup>
 

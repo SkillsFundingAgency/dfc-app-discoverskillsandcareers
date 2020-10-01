@@ -15,7 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public string TraitCode { get; set; }
 
-        public Answer SelectedOption { get; set; }
+        public QuestionAnswer SelectedOption { get; set; }
 
         public DateTime AnsweredDt { get; set; }
 

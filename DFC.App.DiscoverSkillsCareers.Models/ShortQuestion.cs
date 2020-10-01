@@ -6,16 +6,14 @@ namespace DFC.App.DiscoverSkillsCareers.Models
     {
         public Guid? Id { get; set; }
 
-        public string? Text { get; set; }
+        public string? QuestionText { get; set; }
 
         public bool IsComplete { get; set; }
 
         public bool IsNegative { get; set; }
 
-        public string? Answer { get; set; }
-
         public int? Ordinal { get; set; }
 
-        public string? TraitCode { get; set; }
+        public QuestionAnswer? Answer { get; set; }
     }
 }

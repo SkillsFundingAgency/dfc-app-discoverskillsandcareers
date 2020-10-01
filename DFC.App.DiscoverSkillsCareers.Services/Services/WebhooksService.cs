@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return HttpStatusCode.NoContent;
             }
 
-            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync(sourceType, url).ConfigureAwait(false);
+            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<TSource>(sourceType.GetType(), url).ConfigureAwait(false);
 
             if (apiDataContentItemModel == null)
             {
