@@ -7,6 +7,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
     {
         public string QuestionId { get; set; }
 
-        public string SelectedOption { get; set; }
+        public int SelectedOption { get; set; }
     }
 }

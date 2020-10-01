@@ -9,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber);
 
-        Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, string answer);
+        Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer);
 
         Task<GetAssessmentResponse> GetAssessment();
 

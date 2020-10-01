@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
@@ -26,16 +27,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<PostAnswerResponse> AnswerQuestion(string sessionId, PostAnswerRequest postAnswerRequest)
         {
-            await Task.Delay(0).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
-            return new PostAnswerResponse
+            if (assessments == null || !assessments.Any())
             {
-                IsComplete = false,
-                IsSuccess = true,
-                NextQuestionNumber = 1,
-                IsFilterAssessment = false,
-                JobCategorySafeUrl = "http://somewhere.com/aresource",
-            };
+                throw new InvalidOperationException($"Assesmment {sessionId} not found");
+            }
+
+            var assessment = assessments.FirstOrDefault();
+
+            var idAsInt = Convert.ToInt32(postAnswerRequest.QuestionId);
+
+            assessment.Questions.FirstOrDefault(x => x.Ordinal == idAsInt).Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)postAnswerRequest.SelectedOption };
+            
+            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+
+            return new PostAnswerResponse { IsSuccess = true, NextQuestionNumber = assessment.Questions.FirstOrDefault(x => x.Ordinal == idAsInt).Ordinal.Value + 1 };
         }
 
         public Task<FilterAssessmentResponse> FilterAssessment(string sessionId, string jobCategory)
@@ -45,6 +52,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetAssessmentResponse> GetAssessment(string sessionId)
         {
+            var assessments = assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId);
+
+            //Return the real next question number here
             await Task.Delay(0).ConfigureAwait(false);
 
             return new GetAssessmentResponse()

@@ -54,12 +54,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return getQuestionResponse;
         }
 
-        public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, string answer)
+        public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var questionSetResponse = await GetQuestion(assessmentType, questionNumberCounter).ConfigureAwait(false);
-            var questionIdFull = $"{questionSetResponse.QuestionSetVersion}-{realQuestionNumber}";
-            var post = new PostAnswerRequest() { QuestionId = questionIdFull, SelectedOption = answer };
+
+            var post = new PostAnswerRequest() { QuestionId = realQuestionNumber.ToString(), SelectedOption = answer };
             var answerQuestionResponse = await assessmentApiService.AnswerQuestion(sessionId, post).ConfigureAwait(false);
             return answerQuestionResponse;
         }
