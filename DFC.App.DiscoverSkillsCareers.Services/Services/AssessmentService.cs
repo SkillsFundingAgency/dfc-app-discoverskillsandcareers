@@ -81,7 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             var assessment = assessments.FirstOrDefault();
-            var question = assessment.Questions.FirstOrDefault(x => x.Ordinal == questionNumber);
+            var question = assessment.Questions.FirstOrDefault(x => (x.Ordinal.Value + 1) == questionNumber);
 
             if (question == null)
             {
@@ -89,6 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             var completed = (int)((assessment.Questions.Count(x => x.Answer != null) / (decimal)assessment.Questions.Count()) * 100M);
+            var currentQuestionNumber = question.Ordinal + 1;
 
             return new GetQuestionResponse
             {
@@ -101,10 +102,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 JobCategorySafeUrl = "http://somejobcategory.com",
                 MaxQuestionsCount = assessment.Questions.Count(),
                 PercentComplete = completed,
-                NextQuestionNumber = question.Ordinal + 1,
-                PreviousQuestionNumber = question.Ordinal - 1,
+                NextQuestionNumber = currentQuestionNumber + 1,
+                PreviousQuestionNumber = currentQuestionNumber - 1,
                 QuestionId = question.Id.Value.ToString(),
-                QuestionNumber = question.Ordinal.Value,
+                QuestionNumber = currentQuestionNumber.Value,
                 QuestionSetName = "short",
                 QuestionText = question.QuestionText,
                 StartedDt = DateTime.Now,
@@ -128,11 +129,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var idAsInt = Convert.ToInt32(realQuestionNumber);
 
-            assessment.Questions.FirstOrDefault(x => x.Ordinal == idAsInt).Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)answer };
+            assessment.Questions.FirstOrDefault(x => (x.Ordinal + 1) == idAsInt).Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)answer };
 
             await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
-            return new PostAnswerResponse { IsSuccess = true, NextQuestionNumber = assessment.Questions.FirstOrDefault(x => x.Ordinal == idAsInt).Ordinal.Value + 1 };
+            return new PostAnswerResponse { IsSuccess = true, NextQuestionNumber = realQuestionNumber + 1, IsComplete = assessment.Questions.All(x => x.Answer != null) };
         }
 
         public async Task<GetAssessmentResponse> GetAssessment()
@@ -150,23 +151,29 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var question = assessment.Questions.OrderBy(x => x.Ordinal).FirstOrDefault(z => z.Answer == null);
 
+            if (question == null)
+            {
+                question = assessment.Questions.OrderByDescending(x => x.Ordinal).FirstOrDefault();
+            }
+
             var completed = (int)((assessment.Questions.Count(x => x.Answer != null) / (decimal)assessment.Questions.Count()) * 100M);
 
-            //Return the real next question number here
+            var currentQuestionNumber = question.Ordinal + 1;
+
             return new GetAssessmentResponse
             {
                 QuestionSetVersion = "foo",
                 SessionId = sessionId,
                 CurrentFilterAssessmentCode = "bar",
-                CurrentQuestionNumber = question.Ordinal.Value,
+                CurrentQuestionNumber = currentQuestionNumber.Value + 1,
                 IsFilterAssessment = false,
                 JobCategorySafeUrl = "http://somejobcategory.com",
                 MaxQuestionsCount = assessment.Questions.Count(),
                 PercentComplete = completed,
-                NextQuestionNumber = question.Ordinal + 1,
-                PreviousQuestionNumber = question.Ordinal - 1,
+                NextQuestionNumber = currentQuestionNumber.Value + 1,
+                PreviousQuestionNumber = currentQuestionNumber.Value - 1,
                 QuestionId = question.Id.Value.ToString(),
-                QuestionNumber = question.Ordinal.Value,
+                QuestionNumber = currentQuestionNumber.Value,
                 QuestionSetName = "short",
                 QuestionText = question.QuestionText,
                 StartedDt = DateTime.Now,
