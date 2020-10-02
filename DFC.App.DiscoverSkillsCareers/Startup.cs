@@ -157,17 +157,6 @@ namespace DFC.App.DiscoverSkillsCareers
                 }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
                 .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
 
-            services.AddTransient<IAssessmentApiService, FakeAssessmentApiService>();
-
-            //services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(
-            //    httpClient =>
-            //    {
-            //        httpClient.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
-            //        httpClient.Timeout = dysacClientOptions.Timeout;
-            //        httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-            //    }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-            //    .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
-
             var jobProfileOverViewClientOptions = Configuration.GetSection("JobProfileOverViewClientOptions").Get<JobProfileOverViewClientOptions>();
 
             services.AddHttpClient<IJpOverviewApiService, JpOverviewApiService>(httpClient =>

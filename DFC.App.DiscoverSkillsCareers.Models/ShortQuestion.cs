@@ -8,8 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? QuestionText { get; set; }
 
-        public bool IsComplete { get; set; }
-
         public bool IsNegative { get; set; }
 
         public int? Ordinal { get; set; }

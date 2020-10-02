@@ -38,7 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         {
             var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
 
-            var dfcUserSession = new SessionStateModel<DfcUserSession> { Id = compositeSessionId!.Value, State = new DfcUserSession() { Salt = "ncs", SessionId = sessionId } };
+            var dfcUserSession = new SessionStateModel<DfcUserSession> { Id = compositeSessionId!.Value, State = new DfcUserSession() { Salt = "ncs", SessionId = sessionId, CreatedDate = DateTime.UtcNow } };
 
             await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
         }

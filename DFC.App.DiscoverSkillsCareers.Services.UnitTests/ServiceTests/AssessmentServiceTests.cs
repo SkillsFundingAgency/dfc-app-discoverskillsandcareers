@@ -15,7 +15,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly ILogger<AssessmentService> logger;
         private readonly NotifyOptions notifyOptions;
         private readonly IAssessmentService assessmentService;
-        private readonly IAssessmentApiService assessmentApiService;
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
         private readonly ISessionService sessionService;
 
@@ -23,7 +22,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             logger = A.Fake<ILogger<AssessmentService>>();
             notifyOptions = A.Fake<NotifyOptions>();
-            assessmentApiService = A.Fake<IAssessmentApiService>();
             sessionIdToCodeConverter = A.Fake<ISessionIdToCodeConverter>();
             sessionService = A.Fake<ISessionService>();
 
