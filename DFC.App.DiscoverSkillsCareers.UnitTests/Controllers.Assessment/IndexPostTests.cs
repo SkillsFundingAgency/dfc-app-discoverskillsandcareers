@@ -60,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task IfAnswerIsValidMovesToNextQuestion()
         {
-            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "short", Answer = "answer1" };
+            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "short", Answer = 3 };
             var currentQuestion = new GetQuestionResponse() { MaxQuestionsCount = 10, CurrentQuestionNumber = 3, NextQuestionNumber = 4 };
             var answerResponse = new PostAnswerResponse() { IsSuccess = true, NextQuestionNumber = 4 };
 
@@ -77,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenAllAnswersAreProvidedAssessmentIsCompleted()
         {
-            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1", Answer = "answer1" };
+            var answerRequest = new QuestionPostRequestViewModel() { QuestionNumber = 3, AssessmentType = "name1", Answer = 3 };
             var currentQuestion = new GetQuestionResponse();
             var answerResponse = new PostAnswerResponse() { IsSuccess = true, IsComplete = true };
 

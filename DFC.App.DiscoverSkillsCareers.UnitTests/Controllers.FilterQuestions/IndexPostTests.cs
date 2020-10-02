@@ -60,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
             var questionNumberCounter = 1;
-            var answer = "answer";
+            var answer = 3;
             var answerResponse = new PostAnswerResponse() { IsComplete = isComplete, IsSuccess = true };
             var viewModel = new FilterQuestionPostRequestViewModel()
             {
@@ -88,7 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.FilterQuestions
             var assessmentType = "short";
             var jobCategoryName = "sales";
             var questionNumberReal = 1;
-            var answer = "answer";
+            var answer = 3;
             var answerResponse = new PostAnswerResponse() { IsComplete = false, IsSuccess = false };
             var viewModel = new FilterQuestionPostRequestViewModel()
             {
