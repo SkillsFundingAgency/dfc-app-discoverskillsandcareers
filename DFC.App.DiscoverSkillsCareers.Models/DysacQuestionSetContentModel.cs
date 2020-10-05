@@ -21,8 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [Required]
         public override string? PartitionKey { get; set; } = "QuestionSet";
 
-        [JsonConverter(typeof(ConcreteTypeConverter<DysacShortQuestionContentItemModel>))]
-        public List<IDysacContentModel>? ShortQuestions { get; set; } = new List<IDysacContentModel>();
+        public List<DysacShortQuestionContentItemModel>? ShortQuestions { get; set; } = new List<DysacShortQuestionContentItemModel>();
 
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
@@ -36,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public List<IDysacContentModel>? GetContentItems()
         {
-            return ShortQuestions!.ToList();
+            return ShortQuestions!.Select(x => (IDysacContentModel)x).ToList();
         }
 
         public void RemoveContentItem(Guid contentItemId)

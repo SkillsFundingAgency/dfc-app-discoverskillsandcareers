@@ -13,6 +13,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService apiService;
+        private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly ILogService logService;
 
         public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
@@ -22,6 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.apiService = apiService;
+            this.assessmentCalculationService = assessmentCalculationService;
         }
 
         public async Task<IActionResult> Index()

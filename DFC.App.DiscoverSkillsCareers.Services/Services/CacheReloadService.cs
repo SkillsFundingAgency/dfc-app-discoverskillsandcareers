@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
@@ -24,6 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
         private readonly IContentTypeMappingService contentTypeMappingService;
+        private readonly IAssessmentCalculationService assessmentCalculationService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
@@ -47,11 +49,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
-                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
-                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
-                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory));
-                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalitySkill, typeof(ApiSkill));
-                //contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalitySkill, typeof(ApiSkill));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
 
                 //await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
                 //await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);

@@ -15,7 +15,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
         public string? Description { get; set; }
 
         public new IList<IBaseContentItemModel> ContentItems { get; set; } = new List<IBaseContentItemModel>();
+
         public string WebsiteURI { get; set; }
+
         public int? Ordinal { get; set; }
     }
 }

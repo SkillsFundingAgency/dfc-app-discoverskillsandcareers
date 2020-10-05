@@ -9,38 +9,36 @@ using System.Linq;
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacShortQuestionContentItemModel : IDysacContentModel
+    public class JobProfileContentItemModel : IDysacContentModel
     {
         public Guid? ItemId { get; set; }
 
-        public string? Impact { get; set; }
-
-        public int? Ordinal { get; set; }
+        public Uri? Url { get; set; }
 
         public string? Title { get; set; }
 
-        public Uri? Url { get; set; }
-
-        public List<DysacTraitContentItemModel> Traits { get; set; } = new List<DysacTraitContentItemModel>();
-
         public DateTime? LastCached { get; set; }
+
+        public List<DysacSkillContentItemModel> Skills { get; set; } = new List<DysacSkillContentItemModel>();
 
         public List<Guid>? AllContentItemIds => new List<Guid>();
 
+        public int? Ordinal { get; set; }
+
+        public string? JobProfileWebsiteUrl { get; set; }
+
         public List<IDysacContentModel>? GetContentItems()
         {
-            return Traits.Union(Traits.SelectMany(x => x.GetContentItems())).ToList();
+            return Skills.Select(x => (IDysacContentModel)x).ToList();
         }
 
         public void RemoveContentItem(Guid contentItemId)
         {
-            foreach (var trait in Traits.ToList())
+            foreach (var skill in Skills.ToList())
             {
-                trait.RemoveContentItem(contentItemId);
-
-                if (trait.ItemId == contentItemId)
+                if (skill.ItemId == contentItemId)
                 {
-                    Traits.Remove(trait);
+                    Skills!.Remove(skill);
                 }
             }
         }

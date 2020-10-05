@@ -21,8 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public DateTime? LastCached { get; set; }
 
-        [JsonConverter(typeof(ConcreteTypeConverter<JobCategoryContentItemModel>))]
-        public List<IDysacContentModel> JobCategories { get; set; } = new List<IDysacContentModel>();
+        public List<JobCategoryContentItemModel> JobCategories { get; set; } = new List<JobCategoryContentItemModel>();
 
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
@@ -31,7 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public List<IDysacContentModel>? GetContentItems()
         {
-            return JobCategories;
+            return JobCategories.Select(x => (IDysacContentModel)x).ToList();
         }
 
         public void RemoveContentItem(Guid contentItemId)

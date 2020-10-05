@@ -13,5 +13,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public int? Ordinal { get; set; }
 
         public QuestionAnswer? Answer { get; set; }
+
+        public string? Trait { get; set; }
     }
 }

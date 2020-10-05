@@ -1,7 +1,10 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,24 +17,42 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly IResultsApiService resultsApiService;
         private readonly IJpOverviewApiService jPOverviewAPIService;
         private readonly ISessionService sessionService;
+        private readonly IAssessmentCalculationService assessmentCalculationService;
+        private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
 
         public ResultsService(
             ILogger<ResultsService> logger,
             IResultsApiService resultsApiService,
             IJpOverviewApiService jPOverviewAPIService,
-            ISessionService sessionService)
+            ISessionService sessionService,
+            IAssessmentCalculationService assessmentCalculationService,
+            IDocumentService<DysacAssessment> assessmentDocumentService)
         {
             this.logger = logger;
             this.resultsApiService = resultsApiService;
             this.jPOverviewAPIService = jPOverviewAPIService;
             this.sessionService = sessionService;
+            this.assessmentCalculationService = assessmentCalculationService;
+            this.assessmentDocumentService = assessmentDocumentService;
         }
 
         public async Task<GetResultsResponse> GetResults()
         {
+            // What does this do?
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var results = await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
-            return AddInCategoryJobProfileCount(results);
+            var assessment = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+
+            if (assessment == null)
+            {
+                throw new InvalidOperationException($"Assessment {sessionId} is null");
+            }
+
+            await assessmentCalculationService.CalculateAssessment(assessment.FirstOrDefault()).ConfigureAwait(false);
+
+            //var results = await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
+            //return AddInCategoryJobProfileCount(results);
+
+            return new GetResultsResponse();
         }
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
