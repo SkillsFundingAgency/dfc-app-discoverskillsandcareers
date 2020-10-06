@@ -55,6 +55,15 @@
         },
         "cosmosDbKey": {
             "value": "not-a-real-key"
+        },
+        "CosmosDbResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "dysacAppDatabaseNeedsCreation": {
+            "value": true
+        },
+        "dysacAppDatabaseThroughput": {
+            "value": 2
         }
     }
 }

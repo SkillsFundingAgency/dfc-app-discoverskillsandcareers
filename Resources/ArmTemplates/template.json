@@ -78,6 +78,15 @@
         },
         "cosmosDbKey": {
             "type": "securestring"
+        },
+        "dysacAppDatabaseNeedsCreation": {
+            "type": "bool"
+        },
+        "dysacAppDatabaseThroughput": {
+            "type": "int"
+        },
+        "CosmosDbResourceGroup": {
+            "type": "string"
         }
     },
     "variables": {
@@ -94,6 +103,102 @@
         "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
     "resources": [
+        {
+            "name": "[variables('CosmosDbDatabaseName')]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'),'CosmosDb/cosmos-database.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "accountName": {
+                        "value": "[parameters('CosmosDbName')]"
+                    },
+                    "databaseName": {
+                        "value": "[variables('CosmosDbDatabaseName')]"
+                    },
+                    "useSharedRequestUnits": {
+                        "value": true
+                    },
+                    "offerThroughput": {
+                        "value": "[parameters('dysacAppDatabaseThroughput')]"
+                    },
+                    "databaseNeedsCreation": {
+                        "value": "[parameters('dysacAppDatabaseNeedsCreation')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[variables('dysacCollectionName')]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'CosmosDb/cosmos-collection.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "accountName": {
+                        "value": "[parameters('cosmosDbName')]"
+                    },
+                    "databaseName": {
+                        "value": "[variables('cosmosDbDatabaseName')]"
+                    },
+                    "collectionName": {
+                        "value": "[variables('dysacCollectionName')]"
+                    },
+                    "provisionRequestUnits": {
+                        "value": false
+                    },
+                    "partitionKey": {
+                        "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('CosmosDbDatabaseName')]"
+            ]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[variables('sessionStateCollectionName')]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'CosmosDb/cosmos-collection.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "accountName": {
+                        "value": "[parameters('cosmosDbName')]"
+                    },
+                    "databaseName": {
+                        "value": "[variables('cosmosDbDatabaseName')]"
+                    },
+                    "collectionName": {
+                        "value": "[variables('sessionStateCollectionName')]"
+                    },
+                    "provisionRequestUnits": {
+                        "value": false
+                    },
+                    "partitionKey": {
+                        "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('CosmosDbDatabaseName')]"
+            ]
+        },
         {
             "apiVersion": "2017-05-10",
             "name": "[variables('appServiceAppInsightsName')]",

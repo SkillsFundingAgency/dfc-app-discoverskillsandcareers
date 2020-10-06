@@ -67,6 +67,15 @@
         },
         "cosmosDbKey": {
             "value": "__appSharedCosmosPrimaryKey__"
+        },
+        "CosmosDbResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "dysacAppDatabaseNeedsCreation": {
+            "value": __CosmosDbDatabaseDoesntExist__
+        },
+        "dysacAppDatabaseThroughput": {
+            "value": __dysacAppDatabaseThroughput__
         }
     }
 }
