@@ -63,7 +63,7 @@
             "value": "__DysacUrl__"
         },
         "cosmosDbName": {
-            "value": "__cosmosDbName__"
+            "value": "__appSharedCosmosDBName__"
         },
         "cosmosDbKey": {
             "value": "__appSharedCosmosPrimaryKey__"
