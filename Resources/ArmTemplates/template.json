@@ -98,7 +98,8 @@
         "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
         "cosmosDbCollectionPartitionKey": "/PartitionKey",
         "cosmosDbDatabaseName": "dfc-app-dysac",
-        "dysacCollectionName": "content",
+        "dysacContentCollectionName": "content",
+        "dysacAssessmentCollectionName": "assessment",
         "sessionStateCollectionName": "session-state",
         "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
@@ -135,7 +136,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('dysacCollectionName')]",
+            "name": "[variables('dysacContentCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -152,7 +153,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('dysacCollectionName')]"
+                        "value": "[variables('dysacContentCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -186,6 +187,39 @@
                     },
                     "collectionName": {
                         "value": "[variables('sessionStateCollectionName')]"
+                    },
+                    "provisionRequestUnits": {
+                        "value": false
+                    },
+                    "partitionKey": {
+                        "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('CosmosDbDatabaseName')]"
+            ]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[variables('dysacAssessmentCollectionName')]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'CosmosDb/cosmos-collection.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "accountName": {
+                        "value": "[parameters('cosmosDbName')]"
+                    },
+                    "databaseName": {
+                        "value": "[variables('cosmosDbDatabaseName')]"
+                    },
+                    "collectionName": {
+                        "value": "[variables('dysacAssessmentCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -338,19 +372,19 @@
                             {
                                 "name": "Policies__HttpCircuitBreaker__DurationOfBreak",
                                 "value": "00:01:00"
-                            },                            
+                            },
                             {
                                 "name": "Policies__HttpCircuitBreaker__ExceptionsAllowedBeforeBreaking",
                                 "value": 3
-                            },                            
+                            },
                             {
                                 "name": "Policies__HttpRetry__BackoffPower",
                                 "value": 2
-                            },                            
+                            },
                             {
                                 "name": "Policies__HttpRetry__Count",
                                 "value": 3
-                            },                            
+                            },
                             {
                                 "name": "Notify__EmailTemplateId",
                                 "value": "[parameters('NotifyEmailTemplateId')]"
@@ -420,44 +454,64 @@
                                 "value": "/content/personalityquestionset/"
                             },
                             {
-                                "name": "Configuration__CosmosDbConnections__Dysac__AccessKey",
-                               "value": "[parameters('cosmosDbKey')]"
+                                "name": "Configuration__CosmosDbConnections__DysacContent__AccessKey",
+                                "value": "[parameters('cosmosDbKey')]"
                             },
                             {
-                                "name": "Configuration__CosmosDbConnections__Dysac__EndpointUrl",
-                               "value": "[variables('cosmosDbEndpoint')]"
+                                "name": "Configuration__CosmosDbConnections__DysacContent__EndpointUrl",
+                                "value": "[variables('cosmosDbEndpoint')]"
                             },
                             {
-                                "name": "Configuration__CosmosDbConnections__Dysac__DatabaseId",
-                               "value": "[variables('cosmosDbDatabaseName')]"
+                                "name": "Configuration__CosmosDbConnections__DysacContent__DatabaseId",
+                                "value": "[variables('cosmosDbDatabaseName')]"
                             },
                             {
-                                "name": "Configuration__CosmosDbConnections__Dysac__CollectionId",
-                               "value": "[variables('dysacCollectionName')]"
+                                "name": "Configuration__CosmosDbConnections__DysacContent__CollectionId",
+                                "value": "[variables('dysacContentCollectionName')]"
                             },
                             {
-                                "name": "Configuration__CosmosDbConnections__Dysac__PartitionKey",
-                               "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                                "name": "Configuration__CosmosDbConnections__DysacContent__PartitionKey",
+                                "value": "[variables('cosmosDbCollectionPartitionKey')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__AccessKey",
-                               "value": "[parameters('cosmosDbKey')]"
+                                "value": "[parameters('cosmosDbKey')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__EndpointUrl",
-                               "value": "[variables('cosmosDbEndpoint')]"
+                                "value": "[variables('cosmosDbEndpoint')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__DatabaseId",
-                               "value": "[variables('cosmosDbDatabaseName')]"
+                                "value": "[variables('cosmosDbDatabaseName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__CollectionId",
-                               "value": "[variables('sessionStateCollectionName')]"
+                                "value": "[variables('sessionStateCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__PartitionKey",
-                               "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                                "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__DysacAssessment__AccessKey",
+                                "value": "[parameters('cosmosDbKey')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__DysacAssessment__EndpointUrl",
+                                "value": "[variables('cosmosDbEndpoint')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__DysacAssessment__DatabaseId",
+                                "value": "[variables('cosmosDbDatabaseName')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__DysacAssessment__CollectionId",
+                                "value": "[variables('dysacAssessmentCollectionName')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__DysacAssessment__PartitionKey",
+                                "value": "[variables('cosmosDbCollectionPartitionKey')]"
                             },
                             {
                                 "name": "CmsApiClientOptions__Timeout",
@@ -480,87 +534,87 @@
             ]
         },
         {
-          "apiVersion": "2019-05-01",
-          "name": "[concat(variables('appServiceAppInsightsName'), '-metric-exceptions')]",
-          "type": "Microsoft.Resources/deployments",
-          "dependsOn": [
-              "[variables('appServiceAppInsightsName')]"
-          ],
-          "properties": {
-              "mode": "Incremental",
-              "templateLink": {
-                  "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/metric-alerts.json')]",
-                  "contentVersion": "1.0.0.0"
-              },
-              "parameters": {
-                  "enabled": {
-                      "value": "[parameters('enableAlerts')]"
-                  },
-                  "alertName": {
-                      "value": "[concat(variables('appServiceAppInsightsName'), '-metric-exceptions')]"
-                  },
-                  "alertSeverity": {
-                      "value": 3
-                  },
-                  "metricName": {
-                      "value": "exceptions/count"
-                  },
-                  "operator": {
-                      "value": "GreaterThan"
-                  },
-                  "threshold": {
-                      "value": "0"
-                  },
-                  "aggregation": {
-                      "value": "Count"
-                  },
-                  "windowSize": {
-                      "value": "PT5M"
-                  },
-                  "evaluationFrequency": {
-                      "value": "PT1M"
-                  },
-                  "actionGroupName": {
-                      "value": "[variables('ActionGroupName')]"
-                  },
-                  "actionGroupResourceGroup": {
-                      "value": "[parameters('appSharedResourceGroup')]"
-                  },
-                  "resourceId": {
-                      "value": "[resourceId('Microsoft.Insights/Components', variables('appServiceAppInsightsName'))]"
-                  }
-              }
-          }
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('appServiceAppInsightsName'), '-metric-exceptions')]",
+            "type": "Microsoft.Resources/deployments",
+            "dependsOn": [
+                "[variables('appServiceAppInsightsName')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/metric-alerts.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "enabled": {
+                        "value": "[parameters('enableAlerts')]"
+                    },
+                    "alertName": {
+                        "value": "[concat(variables('appServiceAppInsightsName'), '-metric-exceptions')]"
+                    },
+                    "alertSeverity": {
+                        "value": 3
+                    },
+                    "metricName": {
+                        "value": "exceptions/count"
+                    },
+                    "operator": {
+                        "value": "GreaterThan"
+                    },
+                    "threshold": {
+                        "value": "0"
+                    },
+                    "aggregation": {
+                        "value": "Count"
+                    },
+                    "windowSize": {
+                        "value": "PT5M"
+                    },
+                    "evaluationFrequency": {
+                        "value": "PT1M"
+                    },
+                    "actionGroupName": {
+                        "value": "[variables('ActionGroupName')]"
+                    },
+                    "actionGroupResourceGroup": {
+                        "value": "[parameters('appSharedResourceGroup')]"
+                    },
+                    "resourceId": {
+                        "value": "[resourceId('Microsoft.Insights/Components', variables('appServiceAppInsightsName'))]"
+                    }
+                }
+            }
         },
         {
-          "apiVersion": "2019-05-01",
-          "name": "[concat(variables('appServiceAppInsightsName'), '-failure-anomaly-v2')]",
-          "type": "Microsoft.Resources/deployments",
-          "dependsOn": [
-              "[variables('appServiceAppInsightsName')]"
-          ],
-          "properties": {
-              "mode": "Incremental",
-              "templateLink": {
-                  "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/failure-anomaly-rule.json')]",
-                  "contentVersion": "1.0.0.0"
-              },
-              "parameters": {
-                  "alertName": {
-                      "value": "[concat(variables('appServiceAppInsightsName'), '-failure-anomaly-v2')]"
-                  },
-                  "enabled": {
-                      "value": "[parameters('enableAlerts')]"
-                  },
-                  "resourceId": {
-                      "value": "[resourceId('Microsoft.Insights/Components', variables('appServiceAppInsightsName'))]"
-                  },
-                  "actionGroupId": {
-                      "value": "[resourceId(parameters('appSharedResourceGroup'), 'microsoft.insights/actionGroups', variables('ActionGroupName'))]"
-                  }
-              }
-          }
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('appServiceAppInsightsName'), '-failure-anomaly-v2')]",
+            "type": "Microsoft.Resources/deployments",
+            "dependsOn": [
+                "[variables('appServiceAppInsightsName')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/failure-anomaly-rule.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "alertName": {
+                        "value": "[concat(variables('appServiceAppInsightsName'), '-failure-anomaly-v2')]"
+                    },
+                    "enabled": {
+                        "value": "[parameters('enableAlerts')]"
+                    },
+                    "resourceId": {
+                        "value": "[resourceId('Microsoft.Insights/Components', variables('appServiceAppInsightsName'))]"
+                    },
+                    "actionGroupId": {
+                        "value": "[resourceId(parameters('appSharedResourceGroup'), 'microsoft.insights/actionGroups', variables('ActionGroupName'))]"
+                    }
+                }
+            }
         }
     ],
-        "outputs": {}
-    }
+    "outputs": {}
+}
