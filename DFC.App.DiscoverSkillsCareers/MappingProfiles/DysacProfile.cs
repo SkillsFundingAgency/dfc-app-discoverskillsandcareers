@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using System;
@@ -38,11 +39,14 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiJobProfile, JobProfileContentItemModel>();
 
+            CreateMap<JobProfileContentItemModel, JobProfileResult>()
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.Title));
+
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
              .ForMember(d => d.QuestionText, s => s.MapFrom(a => a.Title))
              .ForMember(d => d.IsNegative, s => s.MapFrom(a => a.Impact.ToUpperInvariant() != "POSITIVE"))
-             .ForMember(d => d.Trait, s => s.MapFrom(a => a.Title.ToUpperInvariant()));
+             .ForMember(d => d.Trait, s => s.MapFrom(a => a.Traits.FirstOrDefault().Title.ToUpperInvariant()));
 
             CreateMap<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>()
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))

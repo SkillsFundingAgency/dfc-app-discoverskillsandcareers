@@ -1,8 +1,10 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,48 +15,47 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
     public class AssessmentCalculationService : IAssessmentCalculationService
     {
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
-        private readonly IDocumentService<DysacQuestionSetContentModel> questionDocumentService;
+        private readonly IMapper mapper;
+
+        private static readonly Dictionary<Answer, int> AnswerMappings = new Dictionary<Answer, int>()
+        {
+            { Answer.StronglyDisagree, -2 },
+            { Answer.Disagree, -1 },
+            { Answer.Neutral, 0 },
+            { Answer.Agree, 1 },
+            { Answer.StronglyAgree, 2 },
+        };
 
         public AssessmentCalculationService(
             IDocumentService<DysacTraitContentModel> traitDocumentService,
-            IDocumentService<DysacQuestionSetContentModel> questionSetDocumentService)
+            IMapper mapper)
         {
             this.traitDocumentService = traitDocumentService;
-            this.questionDocumentService = questionSetDocumentService;
+            this.mapper = mapper;
         }
 
-        public async Task CalculateAssessment(DysacAssessment assessment)
+        public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
         {
-            await RunShortAssessment(assessment).ConfigureAwait(false);
-            //PrepareFilterAssessmentState(questionSet.QuestionSetVersion, assessment, jobFamilies, questions);
-
+            var result = await RunShortAssessmentCalculation(assessment).ConfigureAwait(false);
+            return result;
         }
 
-        //public void PrepareFilterAssessmentState(string questionSetVersion, UserSession userSession, JobCategory[] jobFamilies,
-        //    Question[] questions)
-        //{
-        //    if (userSession.ResultData != null)
-        //    {
-        //        foreach (var jobCategory in userSession.ResultData.JobCategories)
-        //        {
-        //            var jobFamily = jobFamilies.First(jf => jf.Code.EqualsIgnoreCase(jobCategory.JobCategoryCode));
-        //            userSession.FilteredAssessmentState =
-        //                userSession.FilteredAssessmentState ?? new FilteredAssessmentState();
-        //            userSession.FilteredAssessmentState.CreateOrResetCategoryState(questionSetVersion, questions,
-        //                jobFamily);
-        //        }
-        //    }
-        //}
-
-        public async Task RunShortAssessment(DysacAssessment assessment)
+        public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment)
         {
+            if (assessment == null)
+            {
+                throw new ArgumentNullException(nameof(assessment));
+            }
+
+            var allTraits = await traitDocumentService.GetAllAsync().ConfigureAwait(false);
+
             // User traits
             var userTraits = assessment.Questions
                 .Select(x => new
                 {
                     x.Trait,
-                    Score = !x.IsNegative ? (int)x.Answer!.Value
-                        : (int)x.Answer!.Value * -1,
+                    Score = !x.IsNegative ? AnswerMappings[x.Answer!.Value!]
+                        : AnswerMappings[x.Answer!.Value!] * -1,
                 })
                 .GroupBy(x => x.Trait)
                 .Select(g =>
@@ -63,12 +64,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     {
                         TraitCode = g.Key!,
                         TotalScore = g.Sum(x => x.Score),
+                        Text = allTraits.FirstOrDefault(x => x.Title == g.Key!).Description,
                     };
                 })
+                .Where(x => x.TotalScore > 0)
                 .OrderByDescending(x => x.TotalScore)
                 .ToList();
 
-            var jobCategoryRelevance = await CalculateJobFamilyRelevance(userTraits);
+            var jobCategoryRelevance = await CalculateJobFamilyRelevance(userTraits, allTraits).ConfigureAwait(false);
 
             var jobCategories =
                     jobCategoryRelevance
@@ -76,22 +79,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         .Take(10)
                         .ToArray();
 
+            var resultData = new ResultData()
+            {
+                Traits = userTraits.Where(x => x.TotalScore > 0).ToArray(),
+                JobCategories = jobCategories.ToList(),
+                TraitScores = userTraits,
+                TraitText = userTraits.Select(x => x.Text)
+            };
 
-            //var resultData = new ResultData()
-            //{
-            //    Traits = userTraits.Where(x => x.TotalScore > 0).ToArray(),
-            //    JobCategories = jobCategories,
-            //    TraitScores = userTraits.ToArray()
-            //};
+            assessment.ShortQuestionResult = resultData;
 
-            //userSession.ResultData = resultData;
+            return assessment;
         }
 
-        public async Task<IEnumerable<JobCategoryResult>> CalculateJobFamilyRelevance(IEnumerable<TraitResult> userTraits)
+        public async Task<IEnumerable<JobCategoryResult>> CalculateJobFamilyRelevance(IEnumerable<TraitResult> userTraits, IEnumerable<DysacTraitContentModel> allTraits)
         {
             var results = new List<JobCategoryResult>();
 
-            var allTraits = await traitDocumentService.GetAllAsync();
             var topTraits = userTraits.OrderByDescending(x => x.TotalScore).Take(10);
 
             foreach (var trait in topTraits)
@@ -108,15 +112,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 results.AddRange(applicableTrait.JobCategories.Select(z =>
                 new JobCategoryResult()
                 {
-                    JobCategoryName = z.Title,
-                    JobCategoryText = null,
-                    Url = z.Url.ToString(),
-                    TraitsTotal = allTraits.Count(x => x.JobCategories.Any(y => y.ItemId == z.ItemId)),
-                    TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == z.ItemId)).Select(p => p.Title!.ToUpperInvariant()),
-                    //Doesn't appear to be used in the internal workings out
+                    JobFamilyName = z.Title,
+                    JobFamilyText = null,
+                    JobFamilyUrl = z.Url.ToString(),
+                    TraitsTotal = trait.TotalScore,
+                    TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == z.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }),
                     NormalizedTotal = trait.TotalScore,
-                    Total = allTraits.Count(x => x.JobCategories.Any(y => y.ItemId == z.ItemId)),
+                    Total = trait.TotalScore,
                     TotalQuestions = traitQuestions.Count(),
+                    NumberOfMatchedJobProfile = z.JobProfiles.Count,
+                    JobProfiles = z.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                 }));
             }
 

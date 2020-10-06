@@ -44,6 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
+            //Todo, reload last filter category
             var lastFilterCategory = resultsResponse.JobCategories
                                                   .Where(x => x.FilterAssessment != null)
                                                   .OrderByDescending(x => x.FilterAssessment.CreatedDt)

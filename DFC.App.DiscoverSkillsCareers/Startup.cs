@@ -128,6 +128,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
+            services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
+
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
             services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
 

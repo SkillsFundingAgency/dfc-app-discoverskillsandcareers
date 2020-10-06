@@ -41,5 +41,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public int NumberOfMatchedJobProfile { get; set; }
 
         public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
+        public IEnumerable<JobProfileResult> JobProfiles { get; set; }
     }
 }

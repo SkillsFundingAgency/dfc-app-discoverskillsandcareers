@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
@@ -14,8 +13,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
     public class ResultsService : IResultsService
     {
         private readonly ILogger<ResultsService> logger;
-        private readonly IResultsApiService resultsApiService;
-        private readonly IJpOverviewApiService jPOverviewAPIService;
         private readonly ISessionService sessionService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
@@ -29,8 +26,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             IDocumentService<DysacAssessment> assessmentDocumentService)
         {
             this.logger = logger;
-            this.resultsApiService = resultsApiService;
-            this.jPOverviewAPIService = jPOverviewAPIService;
+            //this.resultsApiService = resultsApiService;
+            //this.jPOverviewAPIService = jPOverviewAPIService;
             this.sessionService = sessionService;
             this.assessmentCalculationService = assessmentCalculationService;
             this.assessmentDocumentService = assessmentDocumentService;
@@ -40,40 +37,48 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             // What does this do?
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var assessment = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
-            if (assessment == null)
+            if (assessments == null || !assessments.Any())
             {
                 throw new InvalidOperationException($"Assessment {sessionId} is null");
             }
 
-            await assessmentCalculationService.CalculateAssessment(assessment.FirstOrDefault()).ConfigureAwait(false);
+            var assessment = assessments.FirstOrDefault();
 
-            //var results = await resultsApiService.GetResults(sessionId, AssessmentTypeName.ShortAssessment).ConfigureAwait(false);
-            //return AddInCategoryJobProfileCount(results);
+            if (assessment.ShortQuestionResult != null)
+            {
+                //Return here, already calculated
+            }
 
-            return new GetResultsResponse();
+            var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
+            await assessmentDocumentService.UpsertAsync(assessmentCalculationResponse).ConfigureAwait(false);
+
+            return new GetResultsResponse { JobCategories = assessmentCalculationResponse.ShortQuestionResult.JobCategories, JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult.JobCategories.Count(), JobProfiles = assessmentCalculationResponse.ShortQuestionResult.JobProfiles, Traits = assessmentCalculationResponse.ShortQuestionResult.TraitText, SessionId = assessment.AssessmentCode, AssessmentType = "short" };
         }
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
         {
-            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory).ConfigureAwait(false);
+            //var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+            //var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory).ConfigureAwait(false);
 
-            foreach (var category in resultsResponse.JobCategories)
-            {
-                var selectedJobprofiles = resultsResponse.JobProfiles.Where(p => p.JobCategory == category.JobFamilyName).Select(p => p.UrlName);
+            //foreach (var category in resultsResponse.JobCategories)
+            //{
+            //    var selectedJobprofiles = resultsResponse.JobProfiles.Where(p => p.JobCategory == category.JobFamilyName).Select(p => p.UrlName);
 
-                if (selectedJobprofiles.Any())
-                {
-                    logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
-                    category.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
-                    logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
-                }
-            }
+            //    if (selectedJobprofiles.Any())
+            //    {
+            //        logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
+            //        category.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
+            //        logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
+            //    }
+            //}
 
-            resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
-            return resultsResponse;
+            //resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
+            //return resultsResponse;
+
+            await Task.Delay(0);
+            return new GetResultsResponse();
         }
 
         private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)
@@ -88,16 +93,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             return categories;
-        }
-
-        private GetResultsResponse AddInCategoryJobProfileCount(GetResultsResponse resultsResponse)
-        {
-            foreach (var c in resultsResponse.JobCategories)
-            {
-                c.NumberOfMatchedJobProfile = resultsResponse.JobProfiles.Count(p => p.JobCategory == c.JobFamilyUrl);
-            }
-
-            return resultsResponse;
         }
     }
 }

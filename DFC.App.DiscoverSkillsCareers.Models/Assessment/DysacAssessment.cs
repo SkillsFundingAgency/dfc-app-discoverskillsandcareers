@@ -10,5 +10,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
         public IEnumerable<ShortQuestion> Questions { get; set; }
 
         public string? AssessmentCode { get; set; }
+        public ResultData ShortQuestionResult { get; set; }
     }
 }
