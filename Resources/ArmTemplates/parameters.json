@@ -32,12 +32,6 @@
         "aspSize": {
             "value": "__aspSize__"
         },
-        "sharedAppServicePlanName": {
-            "value": "__sharedAppServicePlanName__"
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "value": "__appSharedResourceGroup__"
-        },
         "JobProfileOverViewUrl": {
             "value": "__JobProfileOverView__"
         },
