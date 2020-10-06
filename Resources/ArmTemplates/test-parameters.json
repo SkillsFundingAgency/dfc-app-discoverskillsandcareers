@@ -52,6 +52,9 @@
         },
         "enableAlerts": {
             "value": false
+        },
+        "DysacUrl": {
+            "value": "https://dummydysac.com"
         }
     }
 }

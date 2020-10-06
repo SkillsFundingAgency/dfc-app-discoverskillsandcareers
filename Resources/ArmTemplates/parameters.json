@@ -58,6 +58,9 @@
         },
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
+        },
+        "DysacUrl": {
+            "value": "__DysacUrl__"
         }
     }
 }

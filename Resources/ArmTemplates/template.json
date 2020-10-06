@@ -40,14 +40,6 @@
         "aspTier": {
             "type": "string"
         },
-        "sharedAppServicePlanName": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "type": "string",
-            "defaultValue": ""
-        },
         "JobProfileOverViewUrl": {
             "type": "string"
         },
@@ -70,6 +62,12 @@
             "type": "bool",
             "metadata": {
                 "description": "Enable or disable alerting"
+            }
+        },
+        "DysacUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URL for Dysac"
             }
         }
     },
@@ -253,7 +251,56 @@
                             {
                                 "name": "SessionConfig__Salt",
                                 "value": "ncs"
-                            }
+                            },
+                            {
+                                "name": "SubscriptionSettings__Endpoint",
+                                "value": "[concat(parameters('DysacUrl'), '/api/webhook/ReceiveEvents')]"
+                            },
+                            {
+                                "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
+                                "value": ""
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
+                                "value": "published"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__1",
+                                "value": "unpublished"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__2",
+                                "value": "deleted"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Property",
+                                "value": "subject"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Type",
+                                "value": "StringContains"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__0",
+                                "value": "/content/personalityskill/"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__1",
+                                "value": "/content/personalitytrait/"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__2",
+                                "value": "/content/personalityshortquestion/"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__3",
+                                "value": "/content/jobcategory/"
+                            },
+                            {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__4",
+                                "value": "/content/personalityquestionset/"
+                            },
+
                         ]
                     }
                 }
