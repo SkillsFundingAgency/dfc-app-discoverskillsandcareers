@@ -80,6 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
+            resultsByCategoryModel.AssessmentType = "filter";
 
             this.logService.LogInformation($"{nameof(this.Roles)} generated the model and ready to pass to the view");
 

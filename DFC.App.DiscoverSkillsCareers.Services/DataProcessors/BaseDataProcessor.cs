@@ -14,13 +14,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
         {
             if (value != null && !string.IsNullOrWhiteSpace(value.QuestionId))
             {
-                value.QuestionSetName = value.QuestionId.Split("-", StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-
                 var lastDashIndex = value.QuestionId.LastIndexOf("-");
                 if (lastDashIndex != -1)
                 {
-                    value.QuestionSetVersion = value.QuestionId.Substring(0, lastDashIndex);
-
                     value.CurrentQuestionNumber = int.Parse(value.QuestionId.Substring(lastDashIndex + 1));
 
                     value.NextQuestionNumber = value.CurrentQuestionNumber + 1;

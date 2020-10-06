@@ -34,8 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         }
 
         public async Task<GetResultsResponse> GetResults()
-        {
-            // What does this do?
+        {   
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
@@ -59,26 +58,33 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
         {
-            //var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            //var resultsResponse = await resultsApiService.GetResults(sessionId, jobCategory).ConfigureAwait(false);
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
-            //foreach (var category in resultsResponse.JobCategories)
-            //{
-            //    var selectedJobprofiles = resultsResponse.JobProfiles.Where(p => p.JobCategory == category.JobFamilyName).Select(p => p.UrlName);
+            if (assessments == null || !assessments.Any())
+            {
+                throw new InvalidOperationException($"Assessment {sessionId} is null");
+            }
 
-            //    if (selectedJobprofiles.Any())
-            //    {
-            //        logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
-            //        category.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
-            //        logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
-            //    }
-            //}
+            var assessment = assessments.FirstOrDefault();
+
+            foreach (var category in assessment.ShortQuestionResult.JobCategories)
+            {
+                //var selectedJobprofiles = resultsResponse.JobProfiles.Where(p => p.JobCategory == category.JobFamilyName).Select(p => p.UrlName);
+
+                //if (selectedJobprofiles.Any())
+                //{
+                //    logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
+                //    category.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
+                //    logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
+                //}
+            }
 
             //resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
             //return resultsResponse;
 
-            await Task.Delay(0);
-            return new GetResultsResponse();
+            //await Task.Delay(0);
+            return new GetResultsResponse() { JobCategories = assessment.ShortQuestionResult.JobCategories };
         }
 
         private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)

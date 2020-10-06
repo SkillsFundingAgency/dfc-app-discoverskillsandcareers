@@ -114,12 +114,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 {
                     JobFamilyName = z.Title,
                     JobFamilyText = null,
-                    JobFamilyUrl = z.Url.ToString(),
+                    JobFamilyUrl = z.WebsiteURI!.Substring(z.WebsiteURI.LastIndexOf("/") + 1, z.WebsiteURI.Length - z.WebsiteURI.LastIndexOf("/") - 1).ToString(),
                     TraitsTotal = trait.TotalScore,
                     TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == z.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }),
                     NormalizedTotal = trait.TotalScore,
                     Total = trait.TotalScore,
-                    TotalQuestions = traitQuestions.Count(),
+                    TotalQuestions = z.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title)).Distinct().Count(),
                     NumberOfMatchedJobProfile = z.JobProfiles.Count,
                     JobProfiles = z.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                 }));

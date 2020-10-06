@@ -1,4 +1,5 @@
 ﻿using DFC.Compui.Cosmos.Contracts;
+using System;
 using System.Collections.Generic;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
@@ -11,5 +12,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public string? AssessmentCode { get; set; }
         public ResultData ShortQuestionResult { get; set; }
+        public DateTime StartedAt { get; set; }
     }
 }

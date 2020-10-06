@@ -50,6 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = new DysacAssessment()
             {
+                StartedAt = DateTime.UtcNow,
                 Id = assessmentId,
                 Questions = questionSet.FirstOrDefault().ShortQuestions.OrderBy(z => z.Ordinal).Select(x => mapper.Map<ShortQuestion>(x)),
                 AssessmentCode = assessmentCode,
@@ -151,33 +152,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var question = assessment.Questions.OrderBy(x => x.Ordinal).FirstOrDefault(z => z.Answer == null);
 
-            if (question == null)
-            {
-                question = assessment.Questions.OrderByDescending(x => x.Ordinal).FirstOrDefault();
-            }
-
             var completed = (int)((assessment.Questions.Count(x => x.Answer != null) / (decimal)assessment.Questions.Count()) * 100M);
 
-            var currentQuestionNumber = question.Ordinal + 1;
+            var currentQuestionNumber = question != null ? question.Ordinal + 1 : 0;
 
             return new GetAssessmentResponse
             {
-                QuestionSetVersion = "foo",
                 SessionId = sessionId,
-                CurrentFilterAssessmentCode = "bar",
-                CurrentQuestionNumber = currentQuestionNumber.Value + 1,
-                IsFilterAssessment = false,
-                JobCategorySafeUrl = "http://somejobcategory.com",
+                CurrentFilterAssessmentCode = string.Empty,
+                CurrentQuestionNumber = currentQuestionNumber!.Value + 1,
+                IsFilterAssessment = assessment.Questions.All(x => x != null) && assessment.ShortQuestionResult != null,
+                JobCategorySafeUrl =  string.Empty,
                 MaxQuestionsCount = assessment.Questions.Count(),
                 PercentComplete = completed,
                 NextQuestionNumber = currentQuestionNumber.Value + 1,
                 PreviousQuestionNumber = currentQuestionNumber.Value - 1,
-                QuestionId = question.Id.Value.ToString(),
+                QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,
                 QuestionNumber = currentQuestionNumber.Value,
-                QuestionSetName = "short",
-                QuestionText = question.QuestionText,
-                StartedDt = DateTime.Now,
-                TraitCode = "LEADER",
+                QuestionText = question != null ? question.QuestionText! : string.Empty,
+                StartedDt = assessment.StartedAt,
                 RecordedAnswersCount = assessment.Questions.Count(x => x.Answer != null),
             };
         }
