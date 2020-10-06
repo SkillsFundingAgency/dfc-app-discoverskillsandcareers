@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             questionSetDocumentService = A.Fake<IDocumentService<DysacQuestionSetContentModel>>();
             mapper = A.Fake<IMapper>();
 
-            assessmentService = new AssessmentService(logger, notifyOptions, sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, mapper);
+            assessmentService = new AssessmentService(logger, notifyOptions, sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>(), mapper);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var sessionId = "session1";
             var assessmentType = "at1";
-            var questionResponse = new GetQuestionResponse() { QuestionNumber = 1, QuestionSetVersion = $"{assessmentType}-v1" };
+            var questionResponse = new GetQuestionResponse() { QuestionNumber = 1 };
             var answerRequest = new PostAnswerRequest() { QuestionId = $"{assessmentType}-v1-1", SelectedOption = 2 };
             var answerResponse = A.Fake<PostAnswerResponse>();
 

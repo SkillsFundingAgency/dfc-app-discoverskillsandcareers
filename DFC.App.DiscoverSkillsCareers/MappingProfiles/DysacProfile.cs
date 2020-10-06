@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>()
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
-              .ForMember(d => d.Text, s => s.MapFrom(a => a.Title))
+              .ForMember(d => d.Text, s => s.MapFrom(a => a.Text))
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.ContentItems)));
         }
 

@@ -24,5 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<bool> ReloadUsingReferenceCode(string referenceCode);
 
         Task<bool> ReloadUsingSessionId(string sessionId);
+
+        Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string assessment, int questionNumber);
     }
 }

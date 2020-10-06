@@ -118,7 +118,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
                 Id = ContentIdForUpdate,
                 Etag = Guid.NewGuid().ToString(),
                 Url = new Uri("https://localhost"),
-                ShortQuestions = new List<IDysacContentModel>
+                ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {
                     BuildValidContentItemModel(ContentItemIdForCreate),
                     BuildValidContentItemModel(ContentItemIdForUpdate, contentType),

@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
                 ItemId = TraitId,
                 Description = "A trait description",
                 Title = "A trait",
-                JobCategories = new List<IDysacContentModel>
+                JobCategories = new List<JobCategoryContentItemModel>
                 {
                     new JobCategoryContentItemModel
                     {
@@ -136,7 +136,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
                 ItemId = QuestionSetId,
                 Type = "Short",
                 Url = new Uri("http://somewhere.com/somelocation/aresource"),
-                ShortQuestions = new List<IDysacContentModel>
+                ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {
                     new DysacShortQuestionContentItemModel
                     {
@@ -144,7 +144,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
                         Title = "A Question",
                         ItemId = QuestionSetItemId,
                         Url = new Uri("http://somewhere.com/somewhereelse/aresource"),
-                        Traits = new List<IDysacContentModel>
+                        Traits = new List<DysacTraitContentItemModel>
                         {
                             new DysacTraitContentItemModel
                             {
