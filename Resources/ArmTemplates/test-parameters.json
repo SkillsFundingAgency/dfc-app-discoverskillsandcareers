@@ -17,12 +17,6 @@
         "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"
         },
-        "sharedAppServicePlanName": {
-            "value": "dfc-dev-app-shared-asp"
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "value": "dfc-dev-app-sharedresources-rg"
-        },
         "JobProfileOverViewUrl": {
             "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
         },
