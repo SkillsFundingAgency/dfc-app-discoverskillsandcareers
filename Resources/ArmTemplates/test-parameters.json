@@ -49,6 +49,12 @@
         },
         "DysacUrl": {
             "value": "https://dummydysac.com"
+        },
+        "cosmosDbName": {
+            "value": "cosmosDBName"
+        },
+        "cosmosDbKey": {
+            "value": "not-a-real-key"
         }
     }
 }

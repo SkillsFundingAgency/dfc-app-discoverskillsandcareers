@@ -69,6 +69,15 @@
             "metadata": {
                 "description": "The base URL for Dysac"
             }
+        },
+        "cosmosDbName": {
+            "type": "string",
+            "metadata": {
+                "description": "cosmos db account"
+            }
+        },
+        "cosmosDbKey": {
+            "type": "securestring"
         }
     },
     "variables": {
@@ -77,7 +86,12 @@
         "appServicePlanResourceGroup": "[concat(parameters('resourcePrefix'),'-rg')]",
         "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
         "webAppName": "[concat(parameters('resourcePrefix'), '-as')]",
-        "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]"
+        "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
+        "cosmosDbCollectionPartitionKey": "/PartitionKey",
+        "cosmosDbDatabaseName": "dfc-app-dysac",
+        "dysacCollectionName": "content",
+        "sessionStateCollectionName": "session-state",
+        "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
     "resources": [
         {
@@ -300,7 +314,58 @@
                                 "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__4",
                                 "value": "/content/personalityquestionset/"
                             },
-
+                            {
+                                "name": "Configuration__CosmosDbConnections__Dysac__AccessKey",
+                               "value": "[parameters('cosmosDbKey')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__Dysac__EndpointUrl",
+                               "value": "[variables('cosmosDbEndpoint')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__Dysac__DatabaseId",
+                               "value": "[variables('cosmosDbDatabaseName')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__Dysac__CollectionId",
+                               "value": "[variables('dysacCollectionName')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__Dysac__PartitionKey",
+                               "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__SessionState__AccessKey",
+                               "value": "[parameters('cosmosDbKey')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__SessionState__EndpointUrl",
+                               "value": "[variables('cosmosDbEndpoint')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__SessionState__DatabaseId",
+                               "value": "[variables('cosmosDbDatabaseName')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__SessionState__CollectionId",
+                               "value": "[variables('sessionStateCollectionName')]"
+                            },
+                            {
+                                "name": "Configuration__CosmosDbConnections__SessionState__PartitionKey",
+                               "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                            },
+                            {
+                                "name": "CmsApiClientOptions__Timeout",
+                                "value": "00:00:30"
+                            },
+                            {
+                                "name": "CmsApiClientOptions__BaseAddress",
+                                "value": "Content API Base address per environment"
+                            },
+                            {
+                                "name": "CmsApiClientOptions__SummaryEndpoint",
+                                "value": "/api/execute"
+                            }
                         ]
                     }
                 }
