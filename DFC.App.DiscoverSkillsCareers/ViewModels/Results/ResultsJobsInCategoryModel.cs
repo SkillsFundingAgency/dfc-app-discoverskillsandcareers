@@ -20,6 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int AnswerMoreQuestions { get; set; }
 
-        public IEnumerable<ResultJobProfileOverViewModel> JobProfiles { get; set; }
+        public List<ResultJobProfileOverViewModel> JobProfiles { get; set; }
     }
 }

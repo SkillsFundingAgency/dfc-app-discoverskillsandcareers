@@ -42,7 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             logService.LogInformation("Assessment is not null");
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(string.Empty).ConfigureAwait(false);
 
             //Todo, reload last filter category
             //var lastFilterCategory = resultsResponse.JobCategories
@@ -79,6 +79,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
+
+            // TODO - baked in here for now, needs Job Category View
+            resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
+
+            foreach (var jobCategory in resultsResponse.JobCategories)
+            {
+                foreach (var jobProfile in jobCategory.JobProfiles)
+                {
+                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).JobProfiles.Add(new ResultJobProfileOverViewModel { Cname = "a-jp", OverViewHTML = $"<h1>Job Profile: {jobProfile.Title} </h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK });
+                }
+            }
+
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
 
@@ -97,7 +109,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(id).ConfigureAwait(false);
 
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
 

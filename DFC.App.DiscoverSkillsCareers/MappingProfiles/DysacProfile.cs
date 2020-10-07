@@ -41,7 +41,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<ApiJobProfile, JobProfileContentItemModel>();
 
             CreateMap<JobProfileContentItemModel, JobProfileResult>()
-                .ForMember(d => d.Title, s => s.MapFrom(a => a.Title));
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
+                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => z.Title)));
+
 
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))

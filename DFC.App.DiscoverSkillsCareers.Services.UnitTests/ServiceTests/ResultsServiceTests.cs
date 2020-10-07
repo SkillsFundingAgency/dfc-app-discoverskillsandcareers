@@ -56,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
 
             //Act
-            var results = await resultsService.GetResults();
+            var results = await resultsService.GetResults(string.Empty);
 
             //Assert
             A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).MustHaveHappenedOnceExactly();
