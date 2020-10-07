@@ -64,6 +64,9 @@
         },
         "dysacAppDatabaseThroughput": {
             "value": 2
+        },
+        "SubscriptionApiEndpointUrl": {
+            "value": "not-a-real-url"
         }
     }
 }

@@ -87,6 +87,9 @@
         },
         "CosmosDbResourceGroup": {
             "type": "string"
+        },
+        "SubscriptionApiEndpointUrl": {
+            "type": "string"
         }
     },
     "variables": {
@@ -411,7 +414,7 @@
                             },
                             {
                                 "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
-                                "value": ""
+                                "value": "[parameters('SubscriptionApiEndpointUrl')]"
                             },
                             {
                                 "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
@@ -519,7 +522,7 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__BaseAddress",
-                                "value": "Content API Base address per environment"
+                                "value": "[concat(parameters('ApimRoot'),'/content/getcontent')]"
                             },
                             {
                                 "name": "CmsApiClientOptions__SummaryEndpoint",
