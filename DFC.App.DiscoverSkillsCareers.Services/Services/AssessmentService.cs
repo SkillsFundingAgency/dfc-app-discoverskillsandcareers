@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Core.Extensions;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
@@ -132,6 +133,54 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return new PostAnswerResponse { IsSuccess = true, NextQuestionNumber = realQuestionNumber + 1, IsComplete = assessment.Questions.All(x => x.Answer != null) };
         }
 
+        public async Task<PostAnswerResponse> AnswerFilterQuestion(string jobCategory, int realQuestionNumber, int questionNumberCounter, int answer)
+        {
+            var assessment = await GetCurrentAssessment().ConfigureAwait(false);
+
+            if (assessment.FilteredAssessment == null)
+            {
+                throw new InvalidOperationException($"Filtered Assessment for {assessment.AssessmentCode} not found");
+            }
+
+            var answeredQuestion = assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.Ordinal == realQuestionNumber);
+
+            if (answeredQuestion == null)
+            {
+                throw new InvalidOperationException($"Question number {realQuestionNumber} not found in filtered assessment {jobCategory}-{assessment.AssessmentCode}");
+            }
+
+            answeredQuestion.Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)answer };
+
+            // TODO: Check result status codes
+            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+
+            var answeredTraits = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
+            var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).QuestionSkills.Select(x => x.Key);
+            //bool completed = jobCategoryRequiredTraits.Any(x => !answeredTraits.Contains(x));
+
+            bool completed = true;
+
+            foreach (var trait in jobCategoryRequiredTraits)
+            {
+                if (!answeredTraits.Contains(trait))
+                {
+                    completed = false;
+                }
+            }
+
+            if (completed)
+            {
+                return new PostAnswerResponse { IsSuccess = true, IsComplete = completed };
+            }
+            else
+            {
+                var unasnweredQuestionTraits = jobCategoryRequiredTraits.Where(x => !answeredTraits.Contains(x));
+                var nextQuestion = assessment.FilteredAssessment.Questions.Where(x => unasnweredQuestionTraits.Contains(x.TraitCode)).OrderBy(z => z.Ordinal).FirstOrDefault();
+
+                return new PostAnswerResponse { IsSuccess = true, IsFilterAssessment = true, IsComplete = false, NextQuestionNumber = nextQuestion.Ordinal.Value };
+            }
+        }
+
         public async Task<GetAssessmentResponse> GetAssessment()
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
@@ -178,21 +227,34 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
-            var filterQuestionsToLoad = assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory).TraitQuestions;
 
-            var filterQuestions = await dysacFilteringQuestionService.GetAsync(x => x.PartitionKey == "FilteringQuestion" && filterQuestionsToLoad.Contains(x.Title)).ConfigureAwait(false);
-
-
-            int questionNumber = 0;
-            foreach (var question in filterQuestions!)
+            if (assessment.FilteredAssessment == null)
             {
-                question.Ordinal = questionNumber;
-                questionNumber++;
+                if (assessment.FilteredAssessment == null)
+                {
+                    assessment.FilteredAssessment = new FilteredAssessment();
+                }
+
+                var filterQuestions = await dysacFilteringQuestionService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+
+                int questionNumber = 0;
+                foreach (var question in filterQuestions!)
+                {
+                    question.Ordinal = questionNumber;
+                    questionNumber++;
+                }
+
+                assessment.FilteredAssessment.Questions = filterQuestions.Select(x => new FilteredAssessmentQuestion { QuestionText = x.Text, Id = x.Id, Ordinal = x.Ordinal, TraitCode = x.Skills.FirstOrDefault().Title });
+
+                foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories)
+                {
+                    var applicableQuestions = assessment.FilteredAssessment.Questions.Select(x => new { Code = x.TraitCode, Ordinal = x.Ordinal });
+
+                    assessment.FilteredAssessment.JobCategoryAssessments.Add(new JobCategoryAssessment { JobCategory = jobCat.JobFamilyNameUrl, QuestionSkills = applicableQuestions.Where(x => jobCat.SkillQuestions.Contains(x.Code)).ToDictionary(x => x.Code, x => x.Ordinal.Value) });
+                }
+
+                await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
             }
-
-            assessment.FilteredAssessments.Add(new FilteredAssessment { JobCategory = jobCategory, AssessmentFilteredQuestions = filterQuestions.Select(x => new FilteredAssessmentQuestion { QuestionText = x.Text, Id = x.Id, Ordinal = x.Ordinal }).ToList() });
-
-            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
             return new FilterAssessmentResponse()
             {
@@ -246,29 +308,47 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
 
-            var filteredAssessment = assessment.FilteredAssessments.FirstOrDefault(x => x.JobCategory == assessmentType);
+            if (assessment.FilteredAssessment == null)
+            {
+                throw new InvalidOperationException($"Filtered Assessment for Session {sessionId} not found");
+            }
 
-            var question = filteredAssessment.AssessmentFilteredQuestions.FirstOrDefault(x => x.Ordinal + 1 == questionNumber);
+            var jobCategoryAssessment = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == assessmentType);
+            var answeredQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
+            var unansweredQuestions = jobCategoryAssessment.QuestionSkills.Where(x => !answeredQuestions.Contains(x.Key));
 
-            var completed = (int)((filteredAssessment.AssessmentFilteredQuestions.Count(x => x.Answer != null) / (decimal)filteredAssessment.AssessmentFilteredQuestions.Count()) * 100M);
+            if (unansweredQuestions.Count() == 0)
+            {
+                return new GetQuestionResponse
+                {
+                    SessionId = sessionId,
+                    IsComplete = true,
+                };
+            }
+
+            var nextQuestionCode = unansweredQuestions.OrderBy(x => x.Value).FirstOrDefault().Key;
+
+            var question = assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.TraitCode == nextQuestionCode);
+
+            //var completed = (int)((filteredAssessment.AssessmentFilteredQuestions.Count(x => x.Answer != null) / (decimal)filteredAssessment.AssessmentFilteredQuestions.Count()) * 100M);
 
             return new GetQuestionResponse
             {
                 SessionId = sessionId,
                 IsComplete = false,
-                CurrentQuestionNumber = questionNumber,
-                IsFilterAssessment = false,
+                CurrentQuestionNumber = question.Ordinal.Value,
+                IsFilterAssessment = true,
                 JobCategorySafeUrl = "http://somejobcategory.com",
-                MaxQuestionsCount = assessment.Questions.Count(),
-                PercentComplete = completed,
+                //MaxQuestionsCount = filteredAssessment.AssessmentFilteredQuestions.Count(),
+                //PercentComplete = completed,
                 NextQuestionNumber = questionNumber + 1,
                 PreviousQuestionNumber = questionNumber - 1,
                 QuestionId = question.Id.Value.ToString(),
                 QuestionNumber = questionNumber,
                 QuestionText = question.QuestionText,
                 StartedDt = DateTime.Now,
-                TraitCode = "LEADER",
-                RecordedAnswersCount = assessment.Questions.Count(x => x.Answer != null),
+                TraitCode = question.TraitCode,
+                //RecordedAnswersCount = assessment.FilteredAssessment!.Answers.Count(x => x != null),
             };
         }
     }

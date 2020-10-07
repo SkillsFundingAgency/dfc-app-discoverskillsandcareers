@@ -1,11 +1,16 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
-    public class FilteredAssessment
+    public class JobCategoryAssessment
     {
-        public string JobCategory { get; set; }
-        public List<FilteredAssessmentQuestion> AssessmentFilteredQuestions { get; set; }
+        public JobCategoryAssessment()
+        {
+            QuestionSkills = new Dictionary<string, int>();
+        }
+
+        public string? JobCategory { get; set; }
+
+        public Dictionary<string, int> QuestionSkills { get; set; }
     }
 }

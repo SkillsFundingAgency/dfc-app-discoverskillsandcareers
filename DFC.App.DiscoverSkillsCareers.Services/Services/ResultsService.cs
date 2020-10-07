@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         }
 
         public async Task<GetResultsResponse> GetResults()
-        {   
+        {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
@@ -45,6 +45,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = assessments.FirstOrDefault();
 
+            switch (assessment.AssessmentState)
+            {
+                case Core.Enums.AssessmentState.Short:
+                    return await ProcessShortAssessment(assessment).ConfigureAwait(false);
+                case Core.Enums.AssessmentState.Filtered:
+                    return await ProcessFilteredAssessment(assessment).ConfigureAwait(false);
+                //return await ProcessShortAssessment(assessment).ConfigureAwait(false);
+                default:
+                    throw new InvalidOperationException($"State {assessment.AssessmentState} is not valid");
+            }
+        }
+
+        private async Task<GetResultsResponse> ProcessShortAssessment(DysacAssessment assessment)
+        {
             if (assessment.ShortQuestionResult != null)
             {
                 //Return here, already calculated
@@ -54,6 +68,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             await assessmentDocumentService.UpsertAsync(assessmentCalculationResponse).ConfigureAwait(false);
 
             return new GetResultsResponse { JobCategories = assessmentCalculationResponse.ShortQuestionResult.JobCategories, JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult.JobCategories.Count(), JobProfiles = assessmentCalculationResponse.ShortQuestionResult.JobProfiles, Traits = assessmentCalculationResponse.ShortQuestionResult.TraitText, SessionId = assessment.AssessmentCode, AssessmentType = "short" };
+        }
+
+        private async Task<GetResultsResponse> ProcessFilteredAssessment(DysacAssessment assessment)
+        {
+            var answeredQuestions = assessment.FilteredAssessment.Questions.Where(z => z.Answer != null).Select(x => x.TraitCode).ToList();
+
+            foreach (var jobCategory in assessment.FilteredAssessment.JobCategoryAssessments)
+            {
+                var remainingJobCategoryQuestionsCount = jobCategory.QuestionSkills.Count(x => !answeredQuestions.Contains(x.Key));
+                assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
+            }
+
+            await assessmentDocumentService.UpsertAsync(assessment);
+
+
+            return new GetResultsResponse { JobCategories = assessment.ShortQuestionResult.JobCategories, JobFamilyCount = assessment.ShortQuestionResult.JobCategories.Count(), JobProfiles = assessment.ShortQuestionResult.JobProfiles, Traits = assessment.ShortQuestionResult.TraitText, SessionId = assessment.AssessmentCode, AssessmentType = "filtered" };
+
         }
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategory)
@@ -87,18 +118,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return new GetResultsResponse() { JobCategories = assessment.ShortQuestionResult.JobCategories };
         }
 
-        private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)
-        {
-            foreach (var c in categories)
-            {
-                c.DisplayOrder = c.FilterAssessment?.SuggestedJobProfiles.Count();
-                if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
-                {
-                    c.DisplayOrder = 9999;
-                }
-            }
+        //private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)
+        //{
+        //    foreach (var c in categories)
+        //    //{
+        //    //    c.DisplayOrder = c.FilterAssessment?.SuggestedJobProfiles.Count();
+        //    //    if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
+        //    //    {
+        //    //        c.DisplayOrder = 9999;
+        //    //    }
+        //    //}
 
-            return categories;
-        }
+        //    return categories;
+        //}
     }
 }

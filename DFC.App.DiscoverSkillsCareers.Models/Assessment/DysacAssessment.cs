@@ -1,4 +1,6 @@
-﻿using DFC.Compui.Cosmos.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.Compui.Cosmos.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -6,11 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 {
     public class DysacAssessment : DocumentModel
     {
-        public DysacAssessment()
-        {
-            this.FilteredAssessments = new List<FilteredAssessment>();
-        }
-
         public override string? PartitionKey { get; set; } = "/Assessment";
 
         public IEnumerable<ShortQuestion> Questions { get; set; }
@@ -21,6 +18,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public DateTime StartedAt { get; set; }
 
-        public List<FilteredAssessment> FilteredAssessments { get; set; }
+        public FilteredAssessment? FilteredAssessment { get; set; }
+
+        [JsonIgnore]
+        //public AssessmentState AssessmentState => FilteredAssessment == null || !FilteredAssessment.IsComplete ? AssessmentState.Short : AssessmentState.Filtered;
+        public AssessmentState AssessmentState => FilteredAssessment == null ? AssessmentState.Short : AssessmentState.Filtered;
     }
 }

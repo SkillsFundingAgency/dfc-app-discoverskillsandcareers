@@ -6,6 +6,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
     public class QuestionAnswer
     {
         public Answer Value { get; set; }
+
         public DateTime? AnsweredAt { get; set; }
     }
 }

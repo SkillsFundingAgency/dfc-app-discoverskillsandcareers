@@ -25,6 +25,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<bool> ReloadUsingSessionId(string sessionId);
 
-        Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string assessment, int questionNumber);
+        Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string assessmentType, int questionNumber);
+
+        Task<PostAnswerResponse> AnswerFilterQuestion(string jobCategory, int realQuestionNumber, int questionNumberCounter, int answer);
     }
 }

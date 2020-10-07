@@ -9,7 +9,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public JobCategoryResult()
         {
             TraitValues = new List<TraitValue>();
-            FilterAssessment = new FilterAssessmentResult();
         }
 
         public string JobFamilyCode { get; set; }
@@ -26,9 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public decimal NormalizedTotal { get; set; }
 
-        public IEnumerable<TraitValue> TraitValues { get; set; }
-
-        public FilterAssessmentResult FilterAssessment { get; set; }
+        public List<TraitValue> TraitValues { get; set; }
 
         public int TotalQuestions { get; set; }
 
@@ -44,6 +41,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public IEnumerable<JobProfileResult> JobProfiles { get; set; }
 
-        public IEnumerable<string?> TraitQuestions { get; set; }
+        public IEnumerable<string?> SkillQuestions { get; set; }
     }
 }
