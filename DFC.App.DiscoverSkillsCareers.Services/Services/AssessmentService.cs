@@ -52,7 +52,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             {
                 StartedAt = DateTime.UtcNow,
                 Id = assessmentId,
-                Questions = questionSet.FirstOrDefault().ShortQuestions.OrderBy(z => z.Ordinal).Select(x => mapper.Map<ShortQuestion>(x)),
+                Questions = questionSet != null && questionSet.Any() ? questionSet.FirstOrDefault().ShortQuestions.OrderBy(z => z.Ordinal).Select(x => mapper.Map<ShortQuestion>(x)) : new List<ShortQuestion>(),
                 AssessmentCode = assessmentCode,
             };
 
@@ -98,7 +98,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 IsComplete = false,
                 CurrentQuestionNumber = questionNumber,
                 IsFilterAssessment = false,
-                JobCategorySafeUrl = "http://somejobcategory.com",
                 MaxQuestionsCount = assessment.Questions.Count(),
                 PercentComplete = completed,
                 NextQuestionNumber = currentQuestionNumber + 1,
@@ -155,8 +154,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
             var answeredTraits = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
+            assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).LastAnswer = DateTime.UtcNow;
+
             var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).QuestionSkills.Select(x => x.Key);
-            //bool completed = jobCategoryRequiredTraits.Any(x => !answeredTraits.Contains(x));
 
             bool completed = true;
 
@@ -247,11 +247,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 assessment.FilteredAssessment.Questions = filterQuestions.Select(x => new FilteredAssessmentQuestion { QuestionText = x.Text, Id = x.Id, Ordinal = x.Ordinal, TraitCode = x.Skills.FirstOrDefault().Title });
 
-                foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories)
+                foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories!)
                 {
-                    var applicableQuestions = assessment.FilteredAssessment.Questions.Select(x => new { Code = x.TraitCode, Ordinal = x.Ordinal });
+                    var applicableQuestions = assessment.FilteredAssessment.Questions.Select(x => new { Code = x.TraitCode, x.Ordinal });
 
-                    assessment.FilteredAssessment.JobCategoryAssessments.Add(new JobCategoryAssessment { JobCategory = jobCat.JobFamilyNameUrl, QuestionSkills = applicableQuestions.Where(x => jobCat.SkillQuestions.Contains(x.Code)).ToDictionary(x => x.Code, x => x.Ordinal.Value) });
+                    assessment.FilteredAssessment.JobCategoryAssessments.Add(new JobCategoryAssessment { JobCategory = jobCat.JobFamilyNameUrl, QuestionSkills = applicableQuestions.Where(x => jobCat.SkillQuestions != null && jobCat.SkillQuestions.Contains(x.Code)).ToDictionary(x => x.Code!, x => x.Ordinal!.Value) });
                 }
 
                 await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);

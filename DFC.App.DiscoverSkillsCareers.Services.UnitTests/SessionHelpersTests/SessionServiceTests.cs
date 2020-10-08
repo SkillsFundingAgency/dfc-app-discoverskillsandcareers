@@ -26,14 +26,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task CreateCookie()
-        {
-            await sessionService.CreateCookie("p1-s1");
-
-            A.CallTo(() => fakeStateService.SaveAsync(A<SessionStateModel<DfcUserSession>>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async void GetSessionId()
         {
             var sessionId = Guid.NewGuid();

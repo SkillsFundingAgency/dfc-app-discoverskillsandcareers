@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
@@ -12,5 +13,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public string? JobCategory { get; set; }
 
         public Dictionary<string, int> QuestionSkills { get; set; }
+        public DateTime LastAnswer { get; set; }
     }
 }

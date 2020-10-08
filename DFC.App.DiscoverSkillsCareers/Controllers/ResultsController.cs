@@ -42,17 +42,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             logService.LogInformation("Assessment is not null");
 
-            var resultsResponse = await resultsService.GetResults(string.Empty).ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
-            //Todo, reload last filter category
-            //var lastFilterCategory = resultsResponse.JobCategories
-            //                                      .Where(x => x.FilterAssessment != null)
-            //                                      .OrderByDescending(x => x.FilterAssessment.CreatedDt)
-            //                                      .FirstOrDefault();
-            //if (lastFilterCategory != null)
-            //{
-            //    return RedirectTo($"results/roles/{lastFilterCategory.JobFamilyNameUrl}");
-            //}
+            var lastFilterCategory = resultsResponse.LastAssessmentCategory;
+
+            if (lastFilterCategory != null)
+            {
+                return RedirectTo($"results/roles/{lastFilterCategory}");
+            }
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
             {
@@ -106,7 +103,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var resultsResponse = await resultsService.GetResults(id).ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
 

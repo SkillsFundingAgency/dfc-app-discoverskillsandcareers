@@ -12,6 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public IEnumerable<TraitResult>? TraitScores { get; set; }
 
         public IEnumerable<JobProfileResult>? JobProfiles { get; set; }
-        public IEnumerable<string?> TraitText { get; set; }
+
+        public IEnumerable<string>? TraitText { get; set; }
     }
 }

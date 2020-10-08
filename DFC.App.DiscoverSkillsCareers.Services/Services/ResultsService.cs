@@ -2,10 +2,8 @@
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,28 +11,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
     public class ResultsService : IResultsService
     {
-        private readonly ILogger<ResultsService> logger;
         private readonly ISessionService sessionService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
 
         public ResultsService(
-            ILogger<ResultsService> logger,
-            IResultsApiService resultsApiService,
-            IJpOverviewApiService jPOverviewAPIService,
             ISessionService sessionService,
             IAssessmentCalculationService assessmentCalculationService,
             IDocumentService<DysacAssessment> assessmentDocumentService)
         {
-            this.logger = logger;
-            //this.resultsApiService = resultsApiService;
-            //this.jPOverviewAPIService = jPOverviewAPIService;
             this.sessionService = sessionService;
             this.assessmentCalculationService = assessmentCalculationService;
             this.assessmentDocumentService = assessmentDocumentService;
         }
 
-        public async Task<GetResultsResponse> GetResults(string categoryId)
+        public async Task<GetResultsResponse> GetResults()
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
@@ -46,16 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = assessments.FirstOrDefault();
 
-            switch (assessment.AssessmentState)
-            {
-                case Core.Enums.AssessmentState.Short:
-                    return await ProcessShortAssessment(assessment).ConfigureAwait(false);
-                case Core.Enums.AssessmentState.Filtered:
-                    return await ProcessFilteredAssessment(assessment, categoryId).ConfigureAwait(false);
-                //return await ProcessShortAssessment(assessment).ConfigureAwait(false);
-                default:
-                    throw new InvalidOperationException($"State {assessment.AssessmentState} is not valid");
-            }
+            return await ProcessAssessment(assessment).ConfigureAwait(false);
         }
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategoryName)
@@ -126,37 +108,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         }
 
 
-        private async Task<GetResultsResponse> ProcessShortAssessment(DysacAssessment assessment)
+        private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment)
         {
-            if (assessment.ShortQuestionResult != null)
+            var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
+
+            if (assessmentCalculationResponse == null)
             {
-                //Return here, already calculated
+                throw new InvalidOperationException($"Assessment Caluclation Response is null for {assessment.AssessmentCode}");
             }
 
-            var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
             await assessmentDocumentService.UpsertAsync(assessmentCalculationResponse).ConfigureAwait(false);
 
-            return new GetResultsResponse { JobCategories = assessmentCalculationResponse.ShortQuestionResult.JobCategories, JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult.JobCategories.Count(), JobProfiles = assessmentCalculationResponse.ShortQuestionResult.JobProfiles, Traits = assessmentCalculationResponse.ShortQuestionResult.TraitText, SessionId = assessment.AssessmentCode, AssessmentType = "short" };
+            return new GetResultsResponse { LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments.OrderByDescending(x => x.LastAnswer).FirstOrDefault()?.JobCategory!, JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!, JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories.Count(), JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles, Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!, SessionId = assessment.AssessmentCode!, AssessmentType = "short" };
         }
-
-        private async Task<GetResultsResponse> ProcessFilteredAssessment(DysacAssessment assessment, string jobCategoryName)
-        {
-            if (assessment == null)
-            {
-                throw new ArgumentNullException(nameof(assessment));
-            }
-
-            var listOfJobProfiles = new List<JobProfileResult>();
-
-            if (!string.IsNullOrEmpty(jobCategoryName))
-            {
-
-            }
-
-            return new GetResultsResponse { JobCategories = assessment.ShortQuestionResult.JobCategories!, JobFamilyCount = assessment.ShortQuestionResult.JobCategories.Count(), JobProfiles = listOfJobProfiles, Traits = assessment.ShortQuestionResult.TraitText!, SessionId = assessment.AssessmentCode!, AssessmentType = "filtered" };
-
-        }
-
 
         //private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)
         //{

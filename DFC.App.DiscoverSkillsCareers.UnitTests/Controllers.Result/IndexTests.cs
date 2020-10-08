@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         public async Task WhenHasPreviousCompleteCategoryRedirectsToRoles()
         {
             var category = "testcategory";
-            var assessmentResponse = new GetAssessmentResponse() { IsFilterAssessment = true,  MaxQuestionsCount = 2, RecordedAnswersCount = 2,  };
+            var assessmentResponse = new GetAssessmentResponse() { IsFilterAssessment = true, MaxQuestionsCount = 2, RecordedAnswersCount = 2, };
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
@@ -82,7 +82,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 
         private IEnumerable<JobCategoryResult> GetJobCategories(string category)
         {
-            yield return new JobCategoryResult() { JobFamilyName = category,   FilterAssessment = new FilterAssessmentResult() { CreatedDt = DateTime.Now } };
+            yield return new JobCategoryResult() { JobFamilyName = category };
         }
     }
 }

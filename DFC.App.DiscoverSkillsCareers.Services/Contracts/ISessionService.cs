@@ -12,6 +12,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         public Task<bool> HasValidSession();
 
-        public Task<SessionStateModel<DfcUserSession>>? GetCurrentSession();
+        public Task<SessionStateModel<DfcUserSession>?> GetCurrentSession();
     }
 }

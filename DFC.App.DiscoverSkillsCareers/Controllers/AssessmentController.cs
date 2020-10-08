@@ -392,7 +392,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
                 else
                 {
-                    return RedirectTo($"assessment/{assessment.CurrentQuestionNumber}");
+                    return RedirectTo($"assessment/short/{assessment.CurrentQuestionNumber}");
                 }
             }
         }
