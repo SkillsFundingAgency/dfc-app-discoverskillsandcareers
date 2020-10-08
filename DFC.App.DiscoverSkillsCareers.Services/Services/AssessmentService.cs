@@ -209,6 +209,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 QuestionText = question != null ? question.QuestionText! : string.Empty,
                 StartedDt = assessment.StartedAt,
                 RecordedAnswersCount = assessment.Questions.Count(x => x.Answer != null),
+                ReferenceCode = sessionId
             };
         }
 
