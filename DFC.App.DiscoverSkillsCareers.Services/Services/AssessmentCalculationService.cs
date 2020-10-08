@@ -14,9 +14,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
     public class AssessmentCalculationService : IAssessmentCalculationService
     {
-        private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
-        private readonly IMapper mapper;
-
         private static readonly Dictionary<Answer, int> AnswerMappings = new Dictionary<Answer, int>()
         {
             { Answer.StronglyDisagree, -2 },
@@ -25,6 +22,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             { Answer.Agree, 1 },
             { Answer.StronglyAgree, 2 },
         };
+
+        private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
+        private readonly IMapper mapper;
 
         public AssessmentCalculationService(
             IDocumentService<DysacTraitContentModel> traitDocumentService,
@@ -49,6 +49,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var allTraits = await traitDocumentService.GetAllAsync().ConfigureAwait(false);
 
+            if (allTraits == null)
+            {
+                throw new InvalidOperationException("No traits retrieved from document service");
+            }
+
             // User traits
             var userTraits = assessment.Questions
                 .Select(x => new
@@ -64,14 +69,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     {
                         TraitCode = g.Key!,
                         TotalScore = g.Sum(x => x.Score),
-                        Text = allTraits.FirstOrDefault(x => x.Title == g.Key!).Description,
+                        Text = allTraits.FirstOrDefault(x => x.Title == g.Key!).Description!,
                     };
                 })
                 .Where(x => x.TotalScore > 0)
                 .OrderByDescending(x => x.TotalScore)
                 .ToList();
 
-            var jobCategoryRelevance = await CalculateJobFamilyRelevance(userTraits, allTraits).ConfigureAwait(false);
+            var jobCategoryRelevance = CalculateJobFamilyRelevance(userTraits, allTraits);
 
             var jobCategories =
                     jobCategoryRelevance
@@ -84,7 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 Traits = userTraits.Where(x => x.TotalScore > 0).ToArray(),
                 JobCategories = jobCategories.ToList(),
                 TraitScores = userTraits,
-                TraitText = userTraits.Select(x => x.Text)
+                TraitText = userTraits.Select(x => x.Text),
             };
 
             assessment.ShortQuestionResult = resultData;
@@ -92,10 +97,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return assessment;
         }
 
-        public async Task<IEnumerable<JobCategoryResult>> CalculateJobFamilyRelevance(IEnumerable<TraitResult> userTraits, IEnumerable<DysacTraitContentModel> allTraits)
+        public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(IEnumerable<TraitResult> userTraits, IEnumerable<DysacTraitContentModel> allTraits)
         {
-            await Task.Delay(0);
-
             var results = new List<JobCategoryResult>();
 
             var topTraits = userTraits.OrderByDescending(x => x.TotalScore).Take(10);
@@ -115,8 +118,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     {
                         results.Add(new JobCategoryResult()
                         {
-                            JobFamilyName = jc.Title,
-                            JobFamilyText = null,
+                            JobFamilyName = jc.Title!,
                             JobFamilyUrl = jc.WebsiteURI!.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
                             TraitsTotal = trait.TotalScore,
                             SkillQuestions = jc.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title)).Distinct(),
@@ -124,7 +126,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                             NormalizedTotal = trait.TotalScore,
                             Total = trait.TotalScore,
                             TotalQuestions = jc.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title)).Distinct().Count(),
-                            //NumberOfMatchedJobProfile = jc.JobProfiles.Count,
                             JobProfiles = jc.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                         });
                     }
@@ -135,4 +136,3 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
     }
 }
-
