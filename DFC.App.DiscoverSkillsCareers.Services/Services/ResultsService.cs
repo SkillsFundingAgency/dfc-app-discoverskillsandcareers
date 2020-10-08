@@ -5,6 +5,7 @@ using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -83,7 +84,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var selectedJobCategory = assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategoryName);
 
-            var listOfJobProfiles = selectedJobCategory.JobProfiles.Where(y => y.SkillCodes != null && y.SkillCodes.All(z => answeredPositiveQuestions.Contains(z))).ToList();
+            var listOfJobProfiles = new List<JobProfileResult>();
+
+            foreach (var jobProfile in selectedJobCategory.JobProfiles.Where(x => x.SkillCodes != null))
+            {
+                bool canAddJobProfile = true;
+
+                foreach (var skill in jobProfile.SkillCodes)
+                {
+                    if (!answeredPositiveQuestions.Contains(skill))
+                    {
+                        canAddJobProfile = false;
+                    }
+                }
+
+                if (canAddJobProfile)
+                {
+                    listOfJobProfiles.Add(jobProfile);
+                }
+            }
 
             assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategoryName).JobProfiles = listOfJobProfiles;
 

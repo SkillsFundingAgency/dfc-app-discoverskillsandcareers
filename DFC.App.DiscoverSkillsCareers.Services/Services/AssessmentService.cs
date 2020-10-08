@@ -314,19 +314,39 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             var jobCategoryAssessment = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == assessmentType);
+            var categoryQuestions = jobCategoryAssessment.QuestionSkills.OrderBy(x => x.Value).ToList();
             var answeredQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
-            var unansweredQuestions = jobCategoryAssessment.QuestionSkills.Where(x => !answeredQuestions.Contains(x.Key));
 
-            if (unansweredQuestions.Count() == 0)
+            var nextQuestionCode = categoryQuestions.Where(x => !answeredQuestions.Contains(x.Key)).OrderBy(z => z.Value).FirstOrDefault().Key;
+
+            if (questionNumber == 1)
             {
-                return new GetQuestionResponse
+                if (categoryQuestions.All(x => answeredQuestions.Contains(x.Key)))
                 {
-                    SessionId = sessionId,
-                    IsComplete = true,
-                };
+                    // Make sure we reset the questions associated to this assessment in case it's a re-answer
+                    var jobCategoryAssessmentQuestions = jobCategoryAssessment.QuestionSkills.Select(x => x.Key);
+
+                    foreach (var jobCategoryQuestion in jobCategoryAssessmentQuestions)
+                    {
+                        assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.TraitCode == jobCategoryQuestion).Answer = null;
+                    }
+
+                    nextQuestionCode = categoryQuestions[questionNumber - 1].Key;
+
+                    await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+                }
             }
 
-            var nextQuestionCode = unansweredQuestions.OrderBy(x => x.Value).FirstOrDefault().Key;
+            //if (unansweredQuestions.Count() == 0 && questionNumber != 1)
+            //{
+            //    return new GetQuestionResponse
+            //    {
+            //        SessionId = sessionId,
+            //        IsComplete = true,
+            //    };
+            //}
+
+            //var nextQuestionCode = unansweredQuestions.OrderBy(x => x.Value).FirstOrDefault().Key;
 
             var question = assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.TraitCode == nextQuestionCode);
 

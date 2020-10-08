@@ -85,10 +85,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                foreach (var jobProfile in jobCategory.JobProfiles)
-                {
-                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).JobProfiles.Add(new ResultJobProfileOverViewModel { Cname = "a-jp", OverViewHTML = $"<h1>Job Profile: {jobProfile.Title} </h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK });
-                }
+                resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobCategory.JobProfiles.Select(x => new ResultJobProfileOverViewModel { Cname = "bla", OverViewHTML = $"<h1>{x.Title}</h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
             }
 
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
