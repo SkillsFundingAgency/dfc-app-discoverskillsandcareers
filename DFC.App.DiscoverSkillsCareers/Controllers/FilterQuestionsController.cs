@@ -73,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerFilterQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse == null)
             {
@@ -126,7 +126,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
         public IActionResult BodyTopComplete()
         {
-             return View("BodyTopEmpty");
+            return View("BodyTopEmpty");
         }
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)

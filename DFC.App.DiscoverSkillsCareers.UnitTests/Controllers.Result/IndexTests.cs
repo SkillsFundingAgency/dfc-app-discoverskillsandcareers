@@ -55,7 +55,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category) };
+            var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category), LastAssessmentCategory = category };
 
             A.CallTo(() => resultsService.GetResults()).Returns(resultsResponse);
 

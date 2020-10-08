@@ -82,7 +82,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobCategory.JobProfiles.Select(x => new ResultJobProfileOverViewModel { Cname = "bla", OverViewHTML = $"<h1>{x.Title}</h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                if (jobCategory.JobProfiles.Any())
+                {
+                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobCategory.JobProfiles.Select(x => new ResultJobProfileOverViewModel { Cname = "bla", OverViewHTML = $"<h1>{x.Title}</h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                }
             }
 
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
