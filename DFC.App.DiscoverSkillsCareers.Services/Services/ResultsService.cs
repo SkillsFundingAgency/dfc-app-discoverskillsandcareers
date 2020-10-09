@@ -61,33 +61,34 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var answeredPositiveQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
 
-            var selectedJobCategory = assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategoryName);
-
-            var listOfJobProfiles = new List<JobProfileResult>();
-
-            foreach (var jobProfile in selectedJobCategory.JobProfiles.Where(x => x.SkillCodes != null))
+            foreach (var category in assessment.ShortQuestionResult.JobCategories)
             {
-                bool canAddJobProfile = true;
+                var listOfJobProfiles = new List<JobProfileResult>();
 
-                foreach (var skill in jobProfile.SkillCodes!)
+                foreach (var jobProfile in category.JobProfiles.Where(x => x.SkillCodes != null))
                 {
-                    if (!answeredPositiveQuestions.Contains(skill))
+                    bool canAddJobProfile = true;
+
+                    foreach (var skill in jobProfile.SkillCodes!)
                     {
-                        canAddJobProfile = false;
+                        if (!answeredPositiveQuestions.Contains(skill))
+                        {
+                            canAddJobProfile = false;
+                        }
+                    }
+
+                    if (canAddJobProfile)
+                    {
+                        listOfJobProfiles.Add(jobProfile);
                     }
                 }
 
-                if (canAddJobProfile)
-                {
-                    listOfJobProfiles.Add(jobProfile);
-                }
+                assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == category.JobFamilyNameUrl).JobProfiles = listOfJobProfiles;
             }
 
-            assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategoryName).JobProfiles = listOfJobProfiles;
+            var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!, jobCategoryName);
 
-            // resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
-
-            return new GetResultsResponse() { JobCategories = assessment.ShortQuestionResult.JobCategories };
+            return new GetResultsResponse() { JobCategories = jobCategories };
         }
 
         private async Task UpdateJobCategoryCounts(DysacAssessment assessment)
@@ -121,18 +122,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return new GetResultsResponse { LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments.OrderByDescending(x => x.LastAnswer).FirstOrDefault()?.JobCategory!, JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!, JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories.Count(), JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles, Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!, SessionId = assessment.AssessmentCode!, AssessmentType = "short" };
         }
 
-        //private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)
-        //{
-        //    foreach (var c in categories)
-        //    //{
-        //    //    c.DisplayOrder = c.FilterAssessment?.SuggestedJobProfiles.Count();
-        //    //    if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
-        //    //    {
-        //    //        c.DisplayOrder = 9999;
-        //    //    }
-        //    //}
+        private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)
+        {
+            int order = categories.Count();
+            foreach (var c in categories.OrderByDescending(x => x.JobProfiles.Count()))
+            {
+                c.DisplayOrder = order;
+                if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
+                {
+                    c.DisplayOrder = 9999;
+                }
 
-        //    return categories;
-        //}
+                order--;
+            }
+
+            return categories;
+        }
     }
 }
