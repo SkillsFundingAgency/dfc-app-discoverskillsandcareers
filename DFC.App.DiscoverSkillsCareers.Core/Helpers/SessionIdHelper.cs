@@ -1,11 +1,14 @@
 ﻿using HashidsNet;
 using System;
+using System.IO;
 
 namespace DFC.App.DiscoverSkillsCareers.Core.Helpers
 {
     public static class SessionIdHelper
     {
         private const string Alphabet = "acefghjkmnrstwxyz23456789";
+        private static readonly object SyncLock = new object();
+        private static int counter = 10;
 
         public static string GenerateSessionId(string salt, DateTime date)
         {
@@ -17,8 +20,9 @@ namespace DFC.App.DiscoverSkillsCareers.Core.Helpers
             var decode = Decode(salt, code);
             if (digits.ToString() != decode)
             {
-                throw new Exception("Invalid decode");
+                throw new InvalidDataException("Invalid decode");
             }
+
             return code;
         }
 
@@ -32,33 +36,44 @@ namespace DFC.App.DiscoverSkillsCareers.Core.Helpers
             {
                 return decode[0].ToString();
             }
+
             return null;
         }
 
         public static string GetYearMonth(string datetimeStamp)
         {
+            if (datetimeStamp == null)
+            {
+                throw new ArgumentNullException(nameof(datetimeStamp));
+            }
+
             int yearDigit;
+
             if (int.TryParse(datetimeStamp.Substring(0, 1), out yearDigit))
             {
                 int year = yearDigit + 2018;
                 int month;
+
                 if (int.TryParse(datetimeStamp.Substring(1, 2), out month))
                 {
                     return new DateTime(year, month, 1).ToString("yyyyMM");
                 }
             }
+
             return null;
         }
 
-        private static int _counter = 10;
-        private static readonly object _syncLock = new object();
         public static int Counter()
         {
-            lock (_syncLock)
+            lock (SyncLock)
             {
-                if (_counter >= 99) _counter = 0;
-                _counter++;
-                return _counter;
+                if (counter >= 99)
+                {
+                    counter = 0;
+                }
+
+                counter++;
+                return counter;
             }
         }
     }

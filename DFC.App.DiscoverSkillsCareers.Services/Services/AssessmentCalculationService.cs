@@ -89,7 +89,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 Traits = userTraits.Where(x => x.TotalScore > 0).ToArray(),
                 JobCategories = jobCategories.ToList(),
                 TraitScores = userTraits,
-                TraitText = userTraits.Select(x => x.Text),
+                TraitText = userTraits?.Select(x => x.Text!),
             };
 
             assessment.ShortQuestionResult = resultData;
@@ -121,7 +121,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                             JobFamilyName = jc.Title!,
                             JobFamilyUrl = jc.WebsiteURI!.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
                             TraitsTotal = trait.TotalScore,
-                            SkillQuestions = jc.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title)).Distinct(),
+                            SkillQuestions = jc.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title!)).Distinct(),
                             TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == jc.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
                             NormalizedTotal = trait.TotalScore,
                             Total = trait.TotalScore,

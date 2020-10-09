@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public List<IDysacContentModel>? GetContentItems()
         {
-            return JobCategories.Select(x => (IDysacContentModel)x).ToList(); ;
+            return JobCategories.Select(x => (IDysacContentModel)x).ToList();
         }
 
         public void RemoveContentItem(Guid contentItemId)

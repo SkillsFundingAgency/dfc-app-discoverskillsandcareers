@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
+﻿using DFC.Content.Pkg.Netcore.Data.Contracts;
 using System;
 using System.Net;
 using System.Threading.Tasks;

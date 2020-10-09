@@ -3,10 +3,8 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -212,11 +210,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress)
         {
+            await Task.Delay(0).ConfigureAwait(false);
             throw new NotImplementedException();
         }
 
         public async Task<SendSmsResponse> SendSms(string domain, string mobile)
         {
+            await Task.Delay(0).ConfigureAwait(false);
             throw new NotImplementedException();
         }
 

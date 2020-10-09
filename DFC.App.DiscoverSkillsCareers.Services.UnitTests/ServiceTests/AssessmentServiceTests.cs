@@ -40,7 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             mapper = A.Fake<IMapper>();
             filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
 
-            assessmentService = new AssessmentService(logger, notifyOptions, sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, filteringQuestionDocumentService, mapper);
+            assessmentService = new AssessmentService(sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, filteringQuestionDocumentService, mapper);
         }
 
         [Fact]

@@ -1,16 +1,10 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Common;
-using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
-using Microsoft.Extensions.Configuration;
+﻿using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
-using System.Net.Mime;
 
 namespace DFC.App.DiscoverSkillsCareers.Extensions
 {

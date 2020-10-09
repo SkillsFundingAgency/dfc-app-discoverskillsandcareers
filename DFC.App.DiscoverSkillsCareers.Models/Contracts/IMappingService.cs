@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
+﻿using DFC.Content.Pkg.Netcore.Data.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 {

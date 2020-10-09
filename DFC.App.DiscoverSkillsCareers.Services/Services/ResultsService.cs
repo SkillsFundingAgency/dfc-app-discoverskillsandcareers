@@ -93,7 +93,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return new GetResultsResponse() { JobCategories = assessment.ShortQuestionResult.JobCategories };
         }
 
-
         private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment)
         {
             var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
