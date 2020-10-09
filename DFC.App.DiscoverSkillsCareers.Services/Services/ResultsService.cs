@@ -52,15 +52,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var assessment = assessments.FirstOrDefault();
 
-            var answeredQuestions = assessment.FilteredAssessment!.Questions.Where(z => z.Answer != null).Select(x => x.TraitCode).ToList();
-
-            foreach (var jobCategory in assessment.FilteredAssessment.JobCategoryAssessments)
+            if (assessment.FilteredAssessment == null || assessment.ShortQuestionResult == null)
             {
-                var remainingJobCategoryQuestionsCount = jobCategory.QuestionSkills.Count(x => !answeredQuestions.Contains(x.Key));
-                assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
+                throw new InvalidOperationException($"Assessment not in the correct state for results. Short State: {assessment.ShortQuestionResult}, Filtered State: {assessment.FilteredAssessment}, Assessment: {assessment.AssessmentCode}");
             }
 
-            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+            await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
 
             var answeredPositiveQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
 
@@ -72,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             {
                 bool canAddJobProfile = true;
 
-                foreach (var skill in jobProfile.SkillCodes)
+                foreach (var skill in jobProfile.SkillCodes!)
                 {
                     if (!answeredPositiveQuestions.Contains(skill))
                     {
@@ -91,6 +88,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             // resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
 
             return new GetResultsResponse() { JobCategories = assessment.ShortQuestionResult.JobCategories };
+        }
+
+        private async Task UpdateJobCategoryCounts(DysacAssessment assessment)
+        {
+            var answeredQuestions = assessment.FilteredAssessment!.Questions.Where(z => z.Answer != null).Select(x => x.TraitCode).ToList();
+
+            foreach (var jobCategory in assessment.FilteredAssessment.JobCategoryAssessments)
+            {
+                var remainingJobCategoryQuestionsCount = jobCategory.QuestionSkills.Count(x => !answeredQuestions.Contains(x.Key));
+
+                if (assessment.ShortQuestionResult != null)
+                {
+                    assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
+                }
+            }
+
+            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
         }
 
         private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment)

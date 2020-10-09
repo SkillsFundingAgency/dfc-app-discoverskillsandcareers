@@ -6,6 +6,11 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class ResultsJobsInCategoryModel
     {
+        public ResultsJobsInCategoryModel()
+        {
+            JobProfiles = new List<ResultJobProfileOverViewModel>();
+        }
+
         public string CategoryUrl { get; set; }
 
         public string CategoryTitle { get; set; }

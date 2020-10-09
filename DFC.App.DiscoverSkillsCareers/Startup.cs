@@ -147,24 +147,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHostedService<CacheReloadBackgroundService>();
 
             services.AddApiServices(Configuration, policyRegistry);
-
-            services.AddHttpClient<IResultsApiService, ResultsApiService>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = dysacClientOptions.ResultsApiBaseAddress;
-                    httpClient.Timeout = dysacClientOptions.Timeout;
-                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
-
-            var jobProfileOverViewClientOptions = Configuration.GetSection("JobProfileOverViewClientOptions").Get<JobProfileOverViewClientOptions>();
-
-            services.AddHttpClient<IJpOverviewApiService, JpOverviewApiService>(httpClient =>
-            {
-                httpClient.Timeout = jobProfileOverViewClientOptions.Timeout;
-                httpClient.BaseAddress = jobProfileOverViewClientOptions.BaseAddress;
-            }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-            .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
