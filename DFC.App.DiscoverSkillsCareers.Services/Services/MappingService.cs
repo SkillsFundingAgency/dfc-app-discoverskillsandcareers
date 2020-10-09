@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using System;

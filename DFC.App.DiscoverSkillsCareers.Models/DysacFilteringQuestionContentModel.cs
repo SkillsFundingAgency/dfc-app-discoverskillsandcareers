@@ -1,11 +1,9 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Models.Converters;
 using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace DFC.App.DiscoverSkillsCareers.Models

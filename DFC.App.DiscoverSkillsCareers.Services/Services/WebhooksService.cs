@@ -71,6 +71,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
              where TModel : class, IDysacContentModel
              where TSource : class, IBaseContentItemModel
         {
+            if (sourceType == null)
+            {
+                throw new ArgumentNullException(nameof(sourceType));
+            }
+
             if (contentCacheStatuses == null || !contentCacheStatuses.Any())
             {
                 return HttpStatusCode.NoContent;

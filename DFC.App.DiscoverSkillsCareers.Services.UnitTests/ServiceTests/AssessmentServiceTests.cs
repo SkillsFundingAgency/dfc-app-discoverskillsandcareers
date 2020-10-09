@@ -216,7 +216,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public void CheckWhetherAReferenceCodeExists()
         {
             var refCode = "dshh88228";
-            GetAssessmentResponse asssessmentResponse = null;
 
             var response = assessmentService.ReferenceCodeExists(refCode);
 

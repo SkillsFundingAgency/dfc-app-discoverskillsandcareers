@@ -12,8 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
-        private readonly IAssessmentService apiService;
-        private readonly IAssessmentCalculationService assessmentCalculationService;
+        private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
 
         public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
@@ -22,8 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
-            this.apiService = apiService;
-            this.assessmentCalculationService = assessmentCalculationService;
+            this.assessmentService = apiService;
         }
 
         public async Task<IActionResult> Index()
@@ -33,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (assessmentResponse == null)
             {
                 logService.LogInformation("Assesment is null");
@@ -68,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");

@@ -18,11 +18,9 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Sessionstate;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
-using DFC.Content.Pkg.Netcore.Services;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
@@ -98,6 +96,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
             services.AddAutoMapper(typeof(Startup));
+            services.AddApplicationInsightsTelemetry();
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
@@ -108,7 +107,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
-            services.AddTransient<ICacheReloadService, CacheReloadService>();;
+            services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
 
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();

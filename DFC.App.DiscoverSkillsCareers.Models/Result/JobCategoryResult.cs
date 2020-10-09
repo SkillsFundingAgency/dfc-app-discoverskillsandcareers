@@ -9,15 +9,18 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public JobCategoryResult()
         {
             TraitValues = new List<TraitValue>();
+            JobProfilesOverviews = new List<JobProfileOverView>();
+            JobProfiles = new List<JobProfileResult>();
+            SkillQuestions = new List<string>();
         }
 
-        public string JobFamilyCode { get; set; }
+        public string? JobFamilyCode { get; set; }
 
-        public string JobFamilyName { get; set; }
+        public string? JobFamilyName { get; set; }
 
-        public string JobFamilyText { get; set; }
+        public string? JobFamilyText { get; set; }
 
-        public string JobFamilyUrl { get; set; }
+        public string? JobFamilyUrl { get; set; }
 
         public int TraitsTotal { get; set; }
 
@@ -31,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public bool ResultsShown { get; set; }
 
-        public string JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
+        public string? JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
 
         public int? DisplayOrder { get; set; }
 
@@ -41,6 +44,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public IEnumerable<JobProfileResult> JobProfiles { get; set; }
 
-        public IEnumerable<string?> SkillQuestions { get; set; }
+        public IEnumerable<string> SkillQuestions { get; set; }
     }
 }

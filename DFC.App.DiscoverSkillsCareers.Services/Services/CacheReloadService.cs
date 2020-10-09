@@ -2,7 +2,6 @@
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
@@ -25,7 +24,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
         private readonly IContentTypeMappingService contentTypeMappingService;
-        private readonly IAssessmentCalculationService assessmentCalculationService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,

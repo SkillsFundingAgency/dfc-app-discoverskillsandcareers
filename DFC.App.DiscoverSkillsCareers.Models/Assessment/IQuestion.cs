@@ -2,7 +2,7 @@
 {
     public interface IQuestion
     {
-        string QuestionId { get; set; }
+        string? QuestionId { get; set; }
 
         int CurrentQuestionNumber { get; set; }
 

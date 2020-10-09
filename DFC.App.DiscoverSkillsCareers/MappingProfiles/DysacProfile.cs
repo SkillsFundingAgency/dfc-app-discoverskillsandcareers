@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
@@ -43,7 +41,6 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<JobProfileContentItemModel, JobProfileResult>()
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
                 .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => z.Title)));
-
 
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))

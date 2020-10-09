@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.Compui.Cosmos.Contracts;
+﻿using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using System.Collections.Generic;

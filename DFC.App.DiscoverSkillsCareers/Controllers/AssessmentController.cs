@@ -19,8 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
-        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, 
-            ISessionService sessionService, NotifyOptions notifyOptions)
+        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, ISessionService sessionService, NotifyOptions notifyOptions)
             : base(sessionService)
         {
             this.logService = logService;
@@ -130,11 +129,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> New(string assessmentType)
         {
-            // Create session
-            // Get Question Set by Type (short)
-            // Add questions to session
-            // Return to UI
-
             this.logService.LogInformation($"{nameof(this.New)} started");
 
             if (string.IsNullOrEmpty(assessmentType))
@@ -353,10 +347,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            // Get current session
-            // Get question by number
-            // Map and return to UI
-
             return await assessmentService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
         }
 

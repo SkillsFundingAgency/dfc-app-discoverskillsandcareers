@@ -8,6 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Common
     {
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
 
-        public Uri BaseAddress { get; set; }
+        public Uri? BaseAddress { get; set; }
     }
 }

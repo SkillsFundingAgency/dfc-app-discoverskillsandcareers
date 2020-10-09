@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Models.Converters;
 using DFC.Compui.Cosmos.Contracts;
 using Newtonsoft.Json;
 using System;

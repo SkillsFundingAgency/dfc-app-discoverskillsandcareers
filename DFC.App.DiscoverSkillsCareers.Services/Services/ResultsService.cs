@@ -88,22 +88,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategoryName).JobProfiles = listOfJobProfiles;
 
-            //foreach (var category in assessment.ShortQuestionResult.JobCategories)
-            //{
-            //    //var selectedJobprofiles = resultsResponse.JobProfiles.Where(p => p.JobCategory == category.JobFamilyName).Select(p => p.UrlName);
+            // resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
 
-            //    //if (selectedJobprofiles.Any())
-            //    //{
-            //    //    logger.LogInformation($"Getting Overview for {selectedJobprofiles.Count()} profiles for category {category.JobFamilyName}");
-            //    //    category.JobProfilesOverviews = await jPOverviewAPIService.GetOverviewsForProfilesAsync(selectedJobprofiles).ConfigureAwait(false);
-            //    //    logger.LogInformation($"Got Overview for {category.JobProfilesOverviews?.Count()} profiles for category {category.JobFamilyName}");
-            //    //}
-            //}
-
-            //resultsResponse.JobCategories = OrderResults(resultsResponse.JobCategories, jobCategory);
-            //return resultsResponse;
-
-            //await Task.Delay(0);
             return new GetResultsResponse() { JobCategories = assessment.ShortQuestionResult.JobCategories };
         }
 

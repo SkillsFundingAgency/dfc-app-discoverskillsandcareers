@@ -11,9 +11,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
             JobCategories = new List<JobCategoryResult>();
             JobProfiles = new List<JobProfileResult>();
             WhatYouToldUs = new List<string>();
+            Traits = new List<string>();
         }
 
-        public string SessionId { get; set; }
+        public string? SessionId { get; set; }
 
         public IEnumerable<JobCategoryResult>? JobCategories { get; set; }
 
@@ -23,12 +24,12 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public int JobFamilyMoreCount { get; set; }
 
-        public string AssessmentType { get; set; }
+        public string? AssessmentType { get; set; }
 
         public IEnumerable<JobProfileResult>? JobProfiles { get; set; }
 
         public IEnumerable<string> WhatYouToldUs { get; set; }
 
-        public string LastAssessmentCategory { get; set; }
+        public string? LastAssessmentCategory { get; set; }
     }
 }

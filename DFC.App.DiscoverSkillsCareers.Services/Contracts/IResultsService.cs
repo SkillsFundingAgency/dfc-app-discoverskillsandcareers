@@ -7,6 +7,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     {
         Task<GetResultsResponse> GetResults();
 
-        Task<GetResultsResponse> GetResultsByCategory(string jobCategory);
+        Task<GetResultsResponse> GetResultsByCategory(string jobCategoryName);
     }
 }

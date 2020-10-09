@@ -1,6 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using System;
-using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.DataProcessors
 {

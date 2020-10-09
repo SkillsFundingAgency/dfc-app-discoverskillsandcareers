@@ -21,7 +21,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
         public FilteredAssessment? FilteredAssessment { get; set; }
 
         [JsonIgnore]
-        //public AssessmentState AssessmentState => FilteredAssessment == null || !FilteredAssessment.IsComplete ? AssessmentState.Short : AssessmentState.Filtered;
         public AssessmentState AssessmentState => FilteredAssessment == null ? AssessmentState.Short : AssessmentState.Filtered;
     }
 }
