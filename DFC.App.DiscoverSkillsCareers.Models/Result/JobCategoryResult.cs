@@ -9,16 +9,18 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public JobCategoryResult()
         {
             TraitValues = new List<TraitValue>();
-            FilterAssessment = new FilterAssessmentResult();
+            JobProfilesOverviews = new List<JobProfileOverView>();
+            JobProfiles = new List<JobProfileResult>();
+            SkillQuestions = new List<string>();
         }
 
-        public string JobFamilyCode { get; set; }
+        public string? JobFamilyCode { get; set; }
 
-        public string JobFamilyName { get; set; }
+        public string? JobFamilyName { get; set; }
 
-        public string JobFamilyText { get; set; }
+        public string? JobFamilyText { get; set; }
 
-        public string JobFamilyUrl { get; set; }
+        public string? JobFamilyUrl { get; set; }
 
         public int TraitsTotal { get; set; }
 
@@ -26,20 +28,22 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public decimal NormalizedTotal { get; set; }
 
-        public IEnumerable<TraitValue> TraitValues { get; set; }
-
-        public FilterAssessmentResult FilterAssessment { get; set; }
+        public List<TraitValue> TraitValues { get; set; }
 
         public int TotalQuestions { get; set; }
 
         public bool ResultsShown { get; set; }
 
-        public string JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
+        public string? JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
 
         public int? DisplayOrder { get; set; }
 
         public int NumberOfMatchedJobProfile { get; set; }
 
         public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
+
+        public IEnumerable<JobProfileResult> JobProfiles { get; set; }
+
+        public IEnumerable<string> SkillQuestions { get; set; }
     }
 }

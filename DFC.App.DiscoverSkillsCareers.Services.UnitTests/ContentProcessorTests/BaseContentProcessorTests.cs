@@ -53,9 +53,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeDocumentServiceFactory.GetDocumentService<DysacSkillContentModel>()).Returns(FakeDysacSkillDocumentService);
             A.CallTo(() => FakeDocumentServiceFactory.GetDocumentService<DysacTraitContentModel>()).Returns(FakeDysacTraitDocumentService);
 
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiQuestionSet, ApiGenericChild>(A<Uri>.Ignored)).Returns(apiQuestionSetModel);
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiTrait, ApiGenericChild>(A<Uri>.Ignored)).Returns(BuildApiTraitModel());
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiSkill, ApiGenericChild>(A<Uri>.Ignored)).Returns(BuildApiSkillModel());
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(apiQuestionSetModel);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiTrait>(A<Uri>.Ignored)).Returns(BuildApiTraitModel());
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<ApiSkill>(A<Uri>.Ignored)).Returns(BuildApiSkillModel());
         }
 
         private DysacTraitContentModel BuildTraitModel()
@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
                 ItemId = TraitId,
                 Description = "A trait description",
                 Title = "A trait",
-                JobCategories = new List<IDysacContentModel>
+                JobCategories = new List<JobCategoryContentItemModel>
                 {
                     new JobCategoryContentItemModel
                     {
@@ -136,7 +136,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
                 ItemId = QuestionSetId,
                 Type = "Short",
                 Url = new Uri("http://somewhere.com/somelocation/aresource"),
-                ShortQuestions = new List<IDysacContentModel>
+                ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {
                     new DysacShortQuestionContentItemModel
                     {
@@ -144,7 +144,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
                         Title = "A Question",
                         ItemId = QuestionSetItemId,
                         Url = new Uri("http://somewhere.com/somewhereelse/aresource"),
-                        Traits = new List<IDysacContentModel>
+                        Traits = new List<DysacTraitContentItemModel>
                         {
                             new DysacTraitContentItemModel
                             {

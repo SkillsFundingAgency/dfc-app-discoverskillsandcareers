@@ -131,12 +131,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentHelperTests
                 new DysacShortQuestionContentItemModel
                 {
                     ItemId = Guid.NewGuid(),
-                    Traits = new List<IDysacContentModel>
+                    Traits = new List<DysacTraitContentItemModel>
                     {
                         new DysacTraitContentItemModel
                         {
                             ItemId = contentId ?? Guid.NewGuid(),
-                            JobCategories = new List<IDysacContentModel>
+                            JobCategories = new List<JobCategoryContentItemModel>
                             {
                                 new JobCategoryContentItemModel
                                 {

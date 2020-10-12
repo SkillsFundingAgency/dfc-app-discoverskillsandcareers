@@ -87,7 +87,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
                             }),
                     },
                 },
-                ContentItems = new List<ApiGenericChild>
+                ContentItems = new List<IBaseContentItemModel>
                 {
                     BuildValidPagesApiContentItemDataModel(),
                 },
@@ -97,9 +97,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             return model;
         }
 
-        protected static ApiGenericChild BuildValidPagesApiContentItemDataModel()
+        protected static ApiShortQuestion BuildValidPagesApiContentItemDataModel()
         {
-            var model = new ApiGenericChild
+            var model = new ApiShortQuestion
             {
                 Ordinal = 1,
                 Title = "A Short question",
@@ -118,7 +118,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
                 Id = ContentIdForUpdate,
                 Etag = Guid.NewGuid().ToString(),
                 Url = new Uri("https://localhost"),
-                ShortQuestions = new List<IDysacContentModel>
+                ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {
                     BuildValidContentItemModel(ContentItemIdForCreate),
                     BuildValidContentItemModel(ContentItemIdForUpdate, contentType),
@@ -156,21 +156,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[0].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
-            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
 
             FakeContentProcessors[1] = A.Fake<IContentProcessor>();
             A.CallTo(() => FakeContentProcessors[1].Type).Returns(nameof(DysacTraitContentModel));
             A.CallTo(() => FakeContentProcessors[1].DeleteContentAsync(A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[1].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[1].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
-            A.CallTo(() => FakeContentProcessors[1].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeContentProcessors[1].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
 
             FakeContentProcessors[2] = A.Fake<IContentProcessor>();
             A.CallTo(() => FakeContentProcessors[2].Type).Returns(nameof(DysacSkillContentModel));
             A.CallTo(() => FakeContentProcessors[2].DeleteContentAsync(A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[2].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
             A.CallTo(() => FakeContentProcessors[2].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
-            A.CallTo(() => FakeContentProcessors[2].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
+            A.CallTo(() => FakeContentProcessors[2].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).Returns(System.Net.HttpStatusCode.OK);
         }
     }
 }

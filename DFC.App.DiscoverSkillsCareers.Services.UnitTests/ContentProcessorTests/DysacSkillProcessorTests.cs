@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Act
             //Assert
-            await Assert.ThrowsAsync<NotImplementedException>(async () => await processor.ProcessContentItem(Guid.NewGuid(), Guid.NewGuid(), new ApiGenericChild()).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<NotImplementedException>(async () => await processor.ProcessContentItem(Guid.NewGuid(), Guid.NewGuid(), new ApiSkill()).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact]

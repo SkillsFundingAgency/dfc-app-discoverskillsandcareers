@@ -7,5 +7,7 @@
         public const string ContentTypePersonalitySkill = "PersonalitySkill";
         public const string ContentTypePersonalityShortQuestion = "PersonalityShortQuestion";
         public const string ContentTypeJobCategory = "JobCategory";
+        public const string ContentTypePersonalityFilteringQuestion = "PersonalityFilteringQuestion";
+        public const string ContentTypeJobProfile = "JobProfile";
     }
 }

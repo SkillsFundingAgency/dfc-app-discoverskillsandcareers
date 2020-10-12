@@ -63,10 +63,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 return new JobCategoryContentItemModel();
             }
 
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityShortQuestion.ToUpperInvariant())
+            {
+                return new DysacShortQuestionContentItemModel();
+            }
+
             throw new InvalidOperationException($"{contentType} not supported in {nameof(ContentHelpers)}");
         }
 
-        public static IBaseContentItemModel<ApiGenericChild> GetApiTypeFromContentType(string contentType)
+        public static IBaseContentItemModel GetApiTypeFromContentType(string contentType)
         {
             if (string.IsNullOrEmpty(contentType))
             {
@@ -91,6 +96,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeJobCategory.ToUpperInvariant())
             {
                 return new ApiJobCategory();
+            }
+
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityShortQuestion.ToUpperInvariant())
+            {
+                return new ApiShortQuestion();
             }
 
             throw new InvalidOperationException($"{contentType} not supported in {nameof(ContentHelpers)}");

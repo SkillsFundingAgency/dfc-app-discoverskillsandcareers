@@ -20,7 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
                 .ConfigureLogging((webHostBuilderContext, loggingBuilder) =>
                 {
                     // This filter is for app insights only

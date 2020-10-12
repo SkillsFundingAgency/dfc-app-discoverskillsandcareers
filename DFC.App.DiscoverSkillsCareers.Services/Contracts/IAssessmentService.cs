@@ -9,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber);
 
-        Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, string answer);
+        Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer);
 
         Task<GetAssessmentResponse> GetAssessment();
 
@@ -24,5 +24,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<bool> ReloadUsingReferenceCode(string referenceCode);
 
         Task<bool> ReloadUsingSessionId(string sessionId);
+
+        Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string assessmentType, int questionNumber);
+
+        Task<PostAnswerResponse> AnswerFilterQuestion(string jobCategory, int realQuestionNumber, int questionNumberCounter, int answer);
     }
 }

@@ -2,7 +2,6 @@
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Logger.AppInsights.Contracts;
@@ -51,11 +50,11 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         public async Task WhenHasPreviousCompleteCategoryRedirectsToRoles()
         {
             var category = "testcategory";
-            var assessmentResponse = new GetAssessmentResponse() { IsFilterAssessment = true,  MaxQuestionsCount = 2, RecordedAnswersCount = 2,  };
+            var assessmentResponse = new GetAssessmentResponse() { IsFilterAssessment = true, MaxQuestionsCount = 2, RecordedAnswersCount = 2, };
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category) };
+            var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category), LastAssessmentCategory = category };
 
             A.CallTo(() => resultsService.GetResults()).Returns(resultsResponse);
 
@@ -82,7 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 
         private IEnumerable<JobCategoryResult> GetJobCategories(string category)
         {
-            yield return new JobCategoryResult() { JobFamilyName = category,   FilterAssessment = new FilterAssessmentResult() { CreatedDt = DateTime.Now } };
+            yield return new JobCategoryResult() { JobFamilyName = category };
         }
     }
 }

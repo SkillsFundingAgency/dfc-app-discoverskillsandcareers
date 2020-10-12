@@ -6,10 +6,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace DFC.App.DiscoverSkillsCareers.Models.API
 {
     [ExcludeFromCodeCoverage]
-    public class ApiQuestionSet : BaseContentItemModel, IBaseContentItemModel<ApiGenericChild>
+    public class ApiQuestionSet : BaseContentItemModel, IBaseContentItemModel
     {
         public string? Type { get; set; }
 
-        public new IList<ApiGenericChild> ContentItems { get; set; } = new List<ApiGenericChild>();
+        public new IList<IBaseContentItemModel> ContentItems { get; set; } = new List<IBaseContentItemModel>();
     }
 }

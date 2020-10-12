@@ -266,15 +266,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var model = new DysacQuestionSetContentModel
             {
-                ShortQuestions = new List<IDysacContentModel>
+                ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {
                     new DysacShortQuestionContentItemModel
                     {
                         Title = "A short question",
                         Impact = "Positive",
-                        Traits = new List<IDysacContentModel>
+                        Traits = new List<DysacTraitContentItemModel>
                         {
-                            new DysacTraitContentModel
+                            new DysacTraitContentItemModel
                             {
                                 Title = "A trait",
                                 Url = new Uri("http://somewhere.com/aplace/aresource"),

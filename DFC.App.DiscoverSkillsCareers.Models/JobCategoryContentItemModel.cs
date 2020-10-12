@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
@@ -22,14 +23,24 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public List<Guid>? AllContentItemIds => new List<Guid>();
 
+        public int? Ordinal { get; set; }
+
+        public List<JobProfileContentItemModel> JobProfiles { get; set; } = new List<JobProfileContentItemModel>();
+
         public List<IDysacContentModel>? GetContentItems()
         {
-            return new List<IDysacContentModel>();
+            return JobProfiles!.Select(x => (IDysacContentModel)x).ToList();
         }
 
         public void RemoveContentItem(Guid contentItemId)
         {
-            throw new NotSupportedException("Job Categories have no children");
+            foreach (var jp in JobProfiles.ToList())
+            {
+                if (jp.ItemId == contentItemId)
+                {
+                    JobProfiles!.Remove(jp);
+                }
+            }
         }
     }
 }

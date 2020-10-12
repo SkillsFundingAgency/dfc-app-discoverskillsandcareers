@@ -20,17 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.DataProcessorTests
             Assert.Equal(expectedNextQuestionNumber, data.NextQuestionNumber);
         }
 
-        [Fact]
-        public void CanGetQuestionSetDetails()
-        {
-            var data = CreateGetQuestionResponse(1);
-            var dataProcessor = new GetQuestionResponseDataProcessor();
-            dataProcessor.Processor(data);
-
-            Assert.Equal("short", data.QuestionSetName);
-            Assert.Equal("short-201901-23", data.QuestionSetVersion);
-        }
-
         private GetQuestionResponse CreateGetQuestionResponse(int currentQuestionNumber)
         {
             var result = new GetQuestionResponse();

@@ -11,15 +11,16 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
+using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Sessionstate;
+using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
-using DFC.Content.Pkg.Netcore.Services;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
@@ -35,10 +36,6 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
-using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
-using DFC.Compui.Sessionstate;
-using DFC.App.DiscoverSkillsCareers.Models.Session;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -99,6 +96,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
             services.AddAutoMapper(typeof(Startup));
+            services.AddApplicationInsightsTelemetry();
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
@@ -110,13 +108,16 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddTransient<ICacheReloadService, CacheReloadService>();
-            services.AddSingleton<IContentCacheService, ContentCacheService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
 
-            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:Dysac").Get<CosmosDbConnection>();
+            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+            services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+
+            var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+            services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment());
 
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();
@@ -126,13 +127,14 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
+            services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
+
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
             services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
-            var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
             var policyRegistry = services.AddPolicyRegistry();
 
             const string AppSettingsPolicies = "Policies";
@@ -145,33 +147,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHostedService<CacheReloadBackgroundService>();
 
             services.AddApiServices(Configuration, policyRegistry);
-
-            services.AddHttpClient<IResultsApiService, ResultsApiService>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = dysacClientOptions.ResultsApiBaseAddress;
-                    httpClient.Timeout = dysacClientOptions.Timeout;
-                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
-
-            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
-                    httpClient.Timeout = dysacClientOptions.Timeout;
-                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
-
-            var jobProfileOverViewClientOptions = Configuration.GetSection("JobProfileOverViewClientOptions").Get<JobProfileOverViewClientOptions>();
-
-            services.AddHttpClient<IJpOverviewApiService, JpOverviewApiService>(httpClient =>
-            {
-                httpClient.Timeout = jobProfileOverViewClientOptions.Timeout;
-                httpClient.BaseAddress = jobProfileOverViewClientOptions.BaseAddress;
-            }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-            .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)

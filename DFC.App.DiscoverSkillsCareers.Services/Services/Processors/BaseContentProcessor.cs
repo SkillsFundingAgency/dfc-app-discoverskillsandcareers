@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Compui.Cosmos.Contracts;
@@ -50,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return isValid;
         }
 
-        public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, ApiGenericChild apiItem)
+        public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, IBaseContentItemModel apiItem)
             where TModel : class, IDocumentModel, IDysacContentModel
         {
             var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(parentId).ConfigureAwait(false);

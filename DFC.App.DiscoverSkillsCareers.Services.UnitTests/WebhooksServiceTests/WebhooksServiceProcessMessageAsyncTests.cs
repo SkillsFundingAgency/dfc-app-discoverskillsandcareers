@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Enums;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using FakeItEasy;
@@ -46,7 +47,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var result = await service.ProcessMessageAsync(Models.Enums.WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForCreate, "http://somewhere.com/somewherelese/resource1", DysacConstants.ContentTypePersonalityQuestionSet).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<ApiGenericChild>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].ProcessContentItem(A<Guid>.Ignored, A<Guid>.Ignored, A<IBaseContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }

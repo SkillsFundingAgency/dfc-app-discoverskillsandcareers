@@ -7,7 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataAnnotations
     {
         public override bool IsValid(object value)
         {
-            string email = value?.ToString();
+            string? email = value?.ToString();
             email = email?.Trim();
 
             if (!string.IsNullOrWhiteSpace(email))

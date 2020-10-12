@@ -15,17 +15,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class AssessmentController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
-        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, 
-            ISessionService sessionService, NotifyOptions notifyOptions)
+        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, ISessionService sessionService, NotifyOptions notifyOptions)
             : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
-            this.apiService = apiService;
+            this.assessmentService = apiService;
             this.notifyOptions = notifyOptions;
         }
 
@@ -52,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessment = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (assessment == null)
             {
                 return BadRequest();
@@ -106,7 +105,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(result);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await assessmentService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse.IsSuccess)
             {
@@ -137,7 +136,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            await apiService.NewSession(assessmentType).ConfigureAwait(false);
+            await assessmentService.NewSession(assessmentType).ConfigureAwait(false);
 
             this.logService.LogInformation($"{nameof(this.New)} generated the model and ready to pass to the view");
 
@@ -234,7 +233,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(viewReponse);
             }
 
-            var emailResponse = await apiService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
+            var emailResponse = await assessmentService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
             if (emailResponse.IsSuccess)
             {
                 if (TempData != null)
@@ -290,7 +289,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     TempData.Add(key, request.Telephone);
                 }
 
-                await apiService.SendSms(GetDomainUrl(), request.Telephone).ConfigureAwait(false);
+                await assessmentService.SendSms(GetDomainUrl(), request.Telephone).ConfigureAwait(false);
 
                 return RedirectTo("assessment/referencesent");
             }
@@ -309,7 +308,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("head/reload")]
         public async Task<IActionResult> Reload(string sessionId)
         {
-            var reloadResponseSuccess = await apiService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
+            var reloadResponseSuccess = await assessmentService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
             if (reloadResponseSuccess)
             {
                 this.logService.LogInformation($"{nameof(this.Reload)} generated the model and ready to pass to the view");
@@ -348,13 +347,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var question = await apiService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
-            return question;
+            return await assessmentService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var getAssessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
             return getAssessmentResponse;
         }
 
@@ -384,7 +382,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
                 else
                 {
-                    return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.CurrentQuestionNumber}");
+                    return RedirectTo($"assessment/short/{assessment.CurrentQuestionNumber}");
                 }
             }
         }

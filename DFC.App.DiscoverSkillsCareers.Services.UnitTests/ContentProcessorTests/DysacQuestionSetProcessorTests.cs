@@ -64,7 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var processor = new DysacQuestionSetContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
 
             //Act
-            var result = await processor.ProcessContentItem(QuestionSetId, QuestionSetItemId, new ApiGenericChild());
+            var result = await processor.ProcessContentItem(QuestionSetId, QuestionSetItemId, new ApiShortQuestion());
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened();

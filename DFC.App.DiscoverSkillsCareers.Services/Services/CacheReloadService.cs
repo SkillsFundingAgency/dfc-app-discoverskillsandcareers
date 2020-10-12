@@ -23,19 +23,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IEventMessageService eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IContentTypeMappingService contentTypeMappingService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
             IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
-            IContentCacheService contentCacheService)
+            IContentCacheService contentCacheService,
+            IContentTypeMappingService contentTypeMappingService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.eventMessageService = eventMessageService;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
+            this.contentTypeMappingService = contentTypeMappingService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -44,9 +47,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation("Reload cache started");
 
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalitySkill, typeof(ApiSkill));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
+
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
@@ -68,7 +79,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task ProcessSummaryListAsync<TModel, TDestModel>(string contentType, IList<ApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             logger.LogInformation("Process summary list started");
@@ -89,7 +100,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
@@ -98,7 +109,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<TModel, ApiGenericChild>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
@@ -132,7 +143,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 {
                     logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
 
-                    result = await eventMessageService.CreateAsync<TDestModel>(destinationModel).ConfigureAwait(false);
+                    result = await eventMessageService.CreateAsync(destinationModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
@@ -229,7 +240,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
-           where TModel : class, IBaseContentItemModel<ApiGenericChild>
+           where TModel : class, IBaseContentItemModel
            where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);

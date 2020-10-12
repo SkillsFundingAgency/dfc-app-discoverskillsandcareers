@@ -12,7 +12,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
 
         public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
-            this.apiService = apiService;
+            this.assessmentService = apiService;
         }
 
         public async Task<IActionResult> Index()
@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (assessmentResponse == null)
             {
                 logService.LogInformation("Assesment is null");
@@ -42,13 +42,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
-            var lastFilterCategory = resultsResponse.JobCategories
-                                                  .Where(x => x.FilterAssessment != null)
-                                                  .OrderByDescending(x => x.FilterAssessment.CreatedDt)
-                                                  .FirstOrDefault();
+            var lastFilterCategory = resultsResponse.LastAssessmentCategory;
+
             if (lastFilterCategory != null)
             {
-                return RedirectTo($"results/roles/{lastFilterCategory.JobFamilyNameUrl}");
+                return RedirectTo($"results/roles/{lastFilterCategory}");
             }
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
@@ -68,7 +66,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var assessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
+            var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
                 return RedirectTo("assessment/return");
@@ -76,7 +74,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
+
+            // TODO - baked in here for now, needs Job Category View
+            resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
+
+            foreach (var jobCategory in resultsResponse.JobCategories)
+            {
+                if (jobCategory.JobProfiles.Any())
+                {
+                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobCategory.JobProfiles.Select(x => new ResultJobProfileOverViewModel { Cname = "bla", OverViewHTML = $"<h1>{x.Title}</h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                }
+            }
+
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
+            resultsByCategoryModel.AssessmentType = "filter";
 
             this.logService.LogInformation($"{nameof(this.Roles)} generated the model and ready to pass to the view");
 

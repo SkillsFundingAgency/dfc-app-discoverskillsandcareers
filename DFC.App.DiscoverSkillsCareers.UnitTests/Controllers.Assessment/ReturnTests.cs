@@ -88,7 +88,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             {
                 MaxQuestionsCount = 4,
                 RecordedAnswersCount = 2,
-                QuestionSetName = "short",
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);

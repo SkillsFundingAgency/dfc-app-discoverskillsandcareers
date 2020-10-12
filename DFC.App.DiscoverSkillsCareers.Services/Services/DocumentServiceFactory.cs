@@ -12,12 +12,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
         private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
         private readonly IDocumentService<DysacSkillContentModel> dysacSkillDocumentService;
+        private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
 
-        public DocumentServiceFactory(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTraitContentModel> dysacTraitDocumentService, IDocumentService<DysacSkillContentModel> dysacSkillDocumentService)
+        public DocumentServiceFactory(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTraitContentModel> dysacTraitDocumentService, IDocumentService<DysacSkillContentModel> dysacSkillDocumentService, IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService)
         {
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.dysacTraitDocumentService = dysacTraitDocumentService;
             this.dysacSkillDocumentService = dysacSkillDocumentService;
+            this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
         }
 
         public IDocumentService<TModel> GetDocumentService<TModel>()
@@ -36,6 +38,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             if (typeof(TModel) == typeof(DysacSkillContentModel))
             {
                 return (IDocumentService<TModel>)dysacSkillDocumentService;
+            }
+
+            if (typeof(TModel) == typeof(DysacFilteringQuestionContentModel))
+            {
+                return (IDocumentService<TModel>)dysacFilteringQuestionDocumentService;
             }
 
             throw new InvalidOperationException($"No document service for {typeof(TModel)} found");

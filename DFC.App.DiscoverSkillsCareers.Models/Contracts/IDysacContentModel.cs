@@ -13,6 +13,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
 
         Guid? ItemId { get; }
 
+        int? Ordinal { get; set; }
+
         List<IDysacContentModel>? GetContentItems();
 
         void RemoveContentItem(Guid contentItemId);

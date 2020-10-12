@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.API;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Enums;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
@@ -61,22 +60,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         }
 
         public async Task<HttpStatusCode> ProcessContentAsync<TModel, TDestModel>(TModel sourceType, TDestModel destType, Uri url, Guid contentId)
-            where TModel : class, IBaseContentItemModel<ApiGenericChild>
+            where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDysacContentModel
         {
             var contentProcessor = contentProcessors.FirstOrDefault(x => x.Type == destType.GetType().Name);
             return await contentProcessor.ProcessContent(url, contentId).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> ProcessContentItemAsync<TModel>(TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
+        public async Task<HttpStatusCode> ProcessContentItemAsync<TSource, TModel>(TSource sourceType, TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
+             where TSource : class, IBaseContentItemModel
         {
+            if (sourceType == null)
+            {
+                throw new ArgumentNullException(nameof(sourceType));
+            }
+
             if (contentCacheStatuses == null || !contentCacheStatuses.Any())
             {
                 return HttpStatusCode.NoContent;
             }
 
-            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<ApiGenericChild>(url).ConfigureAwait(false);
+            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<TSource>(sourceType.GetType(), url).ConfigureAwait(false);
 
             if (apiDataContentItemModel == null)
             {
@@ -131,7 +136,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return contentProcessors.FirstOrDefault(x => x.Type.ToUpperInvariant() == ContentHelpers.GetDsyacTypeFromContentType(contentType).GetType().Name.ToUpperInvariant());
         }
 
-        private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(Guid contentId, string apiEndpoint, Guid eventId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType, IBaseContentItemModel<ApiGenericChild> sourceType)
+        private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(Guid contentId, string apiEndpoint, Guid eventId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType, IBaseContentItemModel sourceType)
         {
             if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
             {
@@ -142,7 +147,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (parentContentItems.Any())
             {
-                await ProcessContentItemAsync(destinationType, url, contentId, parentContentItems.Where(x => x.Result == ContentCacheStatus.ContentItem)).ConfigureAwait(false);
+                await ProcessContentItemAsync(sourceType, destinationType, url, contentId, parentContentItems.Where(x => x.Result == ContentCacheStatus.ContentItem)).ConfigureAwait(false);
             }
 
             if (contentItemCacheStatus.Any(z => z.Result == ContentCacheStatus.Content))

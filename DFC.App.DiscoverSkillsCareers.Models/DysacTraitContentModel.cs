@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Models.Converters;
 using DFC.Compui.Cosmos.Contracts;
 using Newtonsoft.Json;
 using System;
@@ -24,17 +23,18 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Title { get; set; }
 
+        public int? Ordinal { get; set; }
+
         public DateTime? LastCached { get; set; }
 
-        [JsonConverter(typeof(ConcreteTypeConverter<JobCategoryContentItemModel>))]
-        public List<IDysacContentModel> JobCategories { get; set; } = new List<IDysacContentModel>();
+        public List<JobCategoryContentItemModel> JobCategories { get; set; } = new List<JobCategoryContentItemModel>();
 
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
         public List<IDysacContentModel>? GetContentItems()
         {
-            return JobCategories;
+            return JobCategories.Select(x => (IDysacContentModel)x).ToList();
         }
 
         public void RemoveContentItem(Guid contentItemId)

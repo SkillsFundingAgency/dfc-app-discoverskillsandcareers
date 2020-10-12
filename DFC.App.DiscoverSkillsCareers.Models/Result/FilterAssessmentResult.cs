@@ -14,11 +14,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
             WhatYouToldUs = new List<string>();
         }
 
-        public string JobFamilyName { get; set; }
+        public string? JobFamilyName { get; set; }
 
         public DateTime CreatedDt { get; set; }
-
-        public string QuestionSetVersion { get; set; }
 
         public int RecordedAnswerCount { get; set; }
 

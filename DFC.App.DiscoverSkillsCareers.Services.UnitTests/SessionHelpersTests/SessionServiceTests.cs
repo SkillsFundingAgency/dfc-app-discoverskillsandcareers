@@ -1,5 +1,4 @@
-﻿using Dfc.Session;
-using Dfc.Session.Models;
+﻿using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using DFC.Compui.Sessionstate;
 using FakeItEasy;
@@ -24,14 +23,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             fakeStateService = A.Fake<ISessionStateService<DfcUserSession>>();
             fakeContextAccessor = A.Fake<IHttpContextAccessor>();
             sessionService = new SessionService(fakeStateService, fakeContextAccessor);
-        }
-
-        [Fact]
-        public async Task CreateCookie()
-        {
-            await sessionService.CreateCookie("p1-s1");
-
-            A.CallTo(() => fakeStateService.SaveAsync(A<SessionStateModel<DfcUserSession>>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

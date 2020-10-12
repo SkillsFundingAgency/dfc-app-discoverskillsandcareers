@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using System;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
@@ -15,7 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.mapper = mapper;
         }
 
-        public IDysacContentModel Map<TDestination>(TDestination destination, ApiGenericChild child)
+        public IDysacContentModel Map<TDestination>(TDestination destination, IBaseContentItemModel child)
             where TDestination : class, IDysacContentModel
         {
             if (destination == null)

@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
 
             //Act
-            var result = await processor.ProcessContentItem(TraitId, TraitItemId, new ApiGenericChild());
+            var result = await processor.ProcessContentItem(TraitId, TraitItemId, new ApiTrait());
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacTraitContentModel>.Ignored)).MustHaveHappened();
