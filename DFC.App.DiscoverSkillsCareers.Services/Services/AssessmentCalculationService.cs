@@ -84,12 +84,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         .Take(10)
                         .ToArray();
 
+            var limitedTraits = LimitTraits(userTraits.Where(x => x.TotalScore > 0).ToArray());
+
             var resultData = new ResultData()
             {
-                Traits = userTraits.Where(x => x.TotalScore > 0).ToArray(),
+                Traits = limitedTraits,
                 JobCategories = jobCategories.ToList(),
                 TraitScores = userTraits,
-                TraitText = userTraits?.Select(x => x.Text!),
+                TraitText = limitedTraits.Select(x => x.Text!),
             };
 
             assessment.ShortQuestionResult = resultData;
@@ -133,6 +135,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return results.OrderByDescending(t => t.Total).Take(10);
+        }
+
+        private IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
+        {
+            int traitsTake = (traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore) ? 4 : 3;
+            return traitResult.Take(traitsTake);
         }
     }
 }
