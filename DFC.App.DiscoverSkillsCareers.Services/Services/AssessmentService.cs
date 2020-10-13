@@ -95,8 +95,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 IsFilterAssessment = false,
                 MaxQuestionsCount = assessment.Questions.Count(),
                 PercentComplete = completed,
-                NextQuestionNumber = currentQuestionNumber + 1,
-                PreviousQuestionNumber = currentQuestionNumber - 1,
+                NextQuestionNumber = questionNumber + 1,
+                PreviousQuestionNumber = questionNumber - 1,
                 QuestionId = question.Id!.Value.ToString(),
                 QuestionNumber = currentQuestionNumber.Value,
                 QuestionText = question.QuestionText!,
@@ -184,23 +184,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var question = assessment.Questions.OrderBy(x => x.Ordinal).FirstOrDefault(z => z.Answer == null);
 
-            var completed = (int)((assessment.Questions.Count(x => x.Answer != null) / (decimal)assessment.Questions.Count()) * 100M);
-
-            var currentQuestionNumber = question != null ? question.Ordinal + 1 : 0;
+            var questionNumber = question != null ? question.Ordinal!.Value : 0;
 
             return new GetAssessmentResponse
             {
                 SessionId = sessionId,
                 CurrentFilterAssessmentCode = string.Empty,
-                CurrentQuestionNumber = currentQuestionNumber!.Value + 1,
-                IsFilterAssessment = assessment.Questions.All(x => x != null) && assessment.ShortQuestionResult != null,
+                CurrentQuestionNumber = questionNumber + 1,
+                IsFilterAssessment = assessment.Questions.All(x => x != null) && assessment.ShortQuestionResult != null && assessment.FilteredAssessment != null,
                 JobCategorySafeUrl = string.Empty,
                 MaxQuestionsCount = assessment.Questions.Count(),
-                PercentComplete = completed,
-                NextQuestionNumber = currentQuestionNumber.Value + 1,
-                PreviousQuestionNumber = currentQuestionNumber.Value - 1,
                 QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,
-                QuestionNumber = currentQuestionNumber.Value,
+                QuestionNumber = questionNumber + 1,
                 QuestionText = question != null ? question.QuestionText! : string.Empty,
                 StartedDt = assessment.StartedAt,
                 RecordedAnswersCount = assessment.Questions.Count(x => x.Answer != null),
@@ -319,7 +314,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<bool> ReloadUsingSessionId(string sessionId)
         {
-            throw new NotImplementedException();
+            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+
+            if (assessments == null || !assessments.Any())
+            {
+                return false;
+            }
+
+            await sessionService.CreateCookie(sessionId).ConfigureAwait(false);
+
+            return true;
         }
 
         public bool ReferenceCodeExists(string referenceCode)
