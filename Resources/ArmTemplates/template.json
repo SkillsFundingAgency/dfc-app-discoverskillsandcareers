@@ -430,31 +430,31 @@
                                 "value": "deleted"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Property",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Property",
                                 "value": "subject"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Type",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Type",
                                 "value": "StringContains"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__0",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__0",
                                 "value": "/content/personalityskill/"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__1",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__1",
                                 "value": "/content/personalitytrait/"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__2",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__2",
                                 "value": "/content/personalityshortquestion/"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__3",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__3",
                                 "value": "/content/jobcategory/"
                             },
                             {
-                                "name": "SubscriptionSettings__Filter__AdvancedFilters__Values__4",
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__4",
                                 "value": "/content/personalityquestionset/"
                             },
                             {

@@ -20,6 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly IDocumentService<DysacQuestionSetContentModel> questionSetDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionService;
         private readonly IMapper mapper;
+        private readonly INotificationService notificationService;
 
         public AssessmentService(
             ISessionIdToCodeConverter sessionIdToCodeConverter,
@@ -27,7 +28,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             IDocumentService<DysacAssessment> assessmentDocumentService,
             IDocumentService<DysacQuestionSetContentModel> questionSetDocumentService,
             IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionService,
-            IMapper mapper)
+            IMapper mapper,
+            INotificationService notificationService)
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
@@ -35,6 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             this.questionSetDocumentService = questionSetDocumentService;
             this.dysacFilteringQuestionService = dysacFilteringQuestionService;
             this.mapper = mapper;
+            this.notificationService = notificationService;
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -205,14 +208,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<SendEmailResponse> SendEmail(string domain, string emailAddress)
         {
-            await Task.Delay(0).ConfigureAwait(false);
-            throw new NotImplementedException();
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+
+            return notificationService.SendEmail(domain, emailAddress, sessionId);
         }
 
         public async Task<SendSmsResponse> SendSms(string domain, string mobile)
         {
-            await Task.Delay(0).ConfigureAwait(false);
-            throw new NotImplementedException();
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+
+            return notificationService.SendSms(domain, mobile, sessionId);
         }
 
         public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)

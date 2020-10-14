@@ -6,6 +6,7 @@ using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Enums;
 using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,6 +43,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             var contentItemCacheStatus = contentCacheService.GetContentCacheStatus(contentId);
+
+            logger.LogInformation($"Content Item Cache Status Id:{contentId} Statuses:{JsonConvert.SerializeObject(contentItemCacheStatus)}");
 
             var destinationType = ContentHelpers.GetDsyacTypeFromContentType(contentType);
             var sourceType = ContentHelpers.GetApiTypeFromContentType(contentType);
