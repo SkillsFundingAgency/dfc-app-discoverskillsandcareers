@@ -50,6 +50,13 @@ stages:
       - msbuild
       - visualstudio
     steps:
+    - task: DotNetCoreCLI@2
+      displayName: dotnet restore
+      inputs:
+        command: 'restore'
+        feedsToUse: 'config'
+        nugetConfigPath: ${{ variables.SolutionBaseName }}\${{ variables.SolutionBaseName }}.Services\NuGet.config
+
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName)
