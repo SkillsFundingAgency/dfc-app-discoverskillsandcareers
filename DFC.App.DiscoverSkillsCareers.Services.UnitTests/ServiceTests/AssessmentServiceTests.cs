@@ -27,6 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
         private readonly IDocumentService<DysacQuestionSetContentModel> questionSetDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService;
+        private readonly INotificationService notificationService;
         private readonly IMapper mapper;
 
         public AssessmentServiceTests()
@@ -39,8 +40,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             questionSetDocumentService = A.Fake<IDocumentService<DysacQuestionSetContentModel>>();
             mapper = A.Fake<IMapper>();
             filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
+            notificationService = A.Fake<INotificationService>();
 
-            assessmentService = new AssessmentService(sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, filteringQuestionDocumentService, mapper, A.Fake<INotificationService>());
+            assessmentService = new AssessmentService(sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, filteringQuestionDocumentService, mapper, notificationService);
         }
 
         [Fact]
@@ -220,6 +222,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var response = assessmentService.ReferenceCodeExists(refCode);
 
             Assert.True(response);
+        }
+
+        [Fact]
+        public void AssessmentServiceSendSmsSendsSms()
+        {
+            // Arrange
+            // Act
+            assessmentService.SendSms("adomain.com", "07867564333");
+
+            // Assert
+            A.CallTo(() => notificationService.SendSms(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void AssessmentServiceSendEmailSendsEmail()
+        {
+            // Arrange
+            // Act
+            assessmentService.SendEmail("adomain.com", "atest@gmail.com");
+
+            // Assert
+            A.CallTo(() => notificationService.SendEmail(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }
 }
