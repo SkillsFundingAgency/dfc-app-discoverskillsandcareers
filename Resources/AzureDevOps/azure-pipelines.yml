@@ -54,9 +54,9 @@ stages:
       displayName: dotnet restore
       inputs:
         command: 'restore'
-        projects: '${{ variables.SolutionBaseName }}\DFC.App.DiscoverSkillsCareers.csproj'
+        projects: '${{ variables.SolutionBaseName }}.csproj'
         feedsToUse: 'config'
-        nugetConfigPath: ${{ variables.SolutionBaseName }}.Services\NuGet.config
+        nugetConfigPath: ${{ variables.SolutionBaseName }}\NuGet.config
 
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
       parameters:
