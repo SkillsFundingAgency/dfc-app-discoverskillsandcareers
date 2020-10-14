@@ -54,7 +54,7 @@ stages:
       displayName: dotnet restore
       inputs:
         command: 'restore'
-        projects: '${{ variables.SolutionBaseName }}.Services\DFC.App.DiscoverSkillsCareers.Services.csproj'
+        projects: '${{ variables.SolutionBaseName }}\DFC.App.DiscoverSkillsCareers.csproj'
         feedsToUse: 'config'
         nugetConfigPath: ${{ variables.SolutionBaseName }}.Services\NuGet.config
 
