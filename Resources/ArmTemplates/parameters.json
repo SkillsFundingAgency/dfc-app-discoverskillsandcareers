@@ -38,6 +38,9 @@
         "CdnUrl": {
             "value": "__CdnUrl__"
         },
+        "NotifyApiKey": {
+            "value": "__NotifyApiKey__"
+        },
         "NotifyEmailTemplateId": {
             "value": "__NotifyEmailTemplateId__"
         },
