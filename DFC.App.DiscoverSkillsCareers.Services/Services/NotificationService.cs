@@ -18,13 +18,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.notifyOptions = notifyOptions;
         }
 
-        public static Dictionary<string, dynamic> GetPersonalisation(string domain, string sessionId) => new Dictionary<string, dynamic>
-            {
-                { "session_id", sessionId },
-                { "assessment_date",DateTime.Now.ToString("dd MM yyyy") },
-                { "reload_url",  $"{domain}/reload?sessionId={sessionId}" },
-            };
-
         public SendEmailResponse SendEmail(string domain, string emailAddress, string sessionId)
         {
             var personalisation = GetPersonalisation(domain, sessionId);
@@ -40,5 +33,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             return new SendSmsResponse { IsSuccess = true };
         }
+
+        private Dictionary<string, dynamic> GetPersonalisation(string domain, string sessionId) => new Dictionary<string, dynamic>
+            {
+                { "session_id", sessionId },
+                { "assessment_date",DateTime.Now.ToString("dd MM yyyy") },
+                { "reload_url",  $"{domain}/reload?sessionId={sessionId}" },
+            };
+
     }
 }
