@@ -16,12 +16,16 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
     {
         private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
         private readonly IDocumentService<DysacAssessment> dysacAssessmentDocumentService;
-        private IEnumerable<JobCategoryContentItemModel> jobCategories = new List<JobCategoryContentItemModel>();
+        private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
 
-        public MigrationService(IDocumentService<DysacTraitContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacAssessment> dysacAssessmentDocumentService)
+        private IEnumerable<JobCategoryContentItemModel> jobCategories = new List<JobCategoryContentItemModel>();
+        private IEnumerable<DysacFilteringQuestionContentModel> filteringQuestions = new List<DysacFilteringQuestionContentModel>();
+
+        public MigrationService(IDocumentService<DysacTraitContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacAssessment> dysacAssessmentDocumentService, IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService)
         {
             this.dysacTraitDocumentService = dysacQuestionSetDocumentService;
             this.dysacAssessmentDocumentService = dysacAssessmentDocumentService;
+            this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
         }
 
         public async Task Start()
@@ -29,6 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var source = File.ReadAllText("TestData/exampleLegacyData.json");
 
             await LoadJobCategoriesAndProfiles();
+            await LoadFilteringQuestions();
 
             dynamic d = JsonConvert.DeserializeObject<dynamic>(source);
 
@@ -51,7 +56,44 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             assessment.Questions = ConvertToQuestions(d["assessmentState"]["recordedAnswers"]);
             assessment.ShortQuestionResult = ConvertToShortQuestionResult(d["resultData"]);
 
-            await dysacAssessmentDocumentService.UpsertAsync(assessment);
+            if (d["filteredAssessmentState"] != null)
+            {
+                assessment.FilteredAssessment = ConvertToFilteredAssessment(d["filteredAssessmentState"]);
+            }
+
+            var result = await dysacAssessmentDocumentService.UpsertAsync(assessment);
+        }
+
+        private async Task LoadFilteringQuestions()
+        {
+            var allFilteringQuestions = await dysacFilteringQuestionDocumentService.GetAsync(x => x.PartitionKey == "FilteringQuestion");
+            filteringQuestions = allFilteringQuestions.ToList();
+        }
+
+        private FilteredAssessment ConvertToFilteredAssessment(dynamic dynamic)
+        {
+            var filteredAssessment = new FilteredAssessment();
+            filteredAssessment.Questions = AddFilterQuestions(dynamic["jobCategories"]);
+
+            return filteredAssessment;
+
+        }
+
+        private IEnumerable<FilteredAssessmentQuestion> AddFilterQuestions(dynamic dynamic)
+        {
+            List<string> skillQuestions = new List<string>();
+
+            foreach(var jobCategory in dynamic)
+            {
+                var questions = jobCategory["questions"];
+
+                foreach(var question in questions)
+                {
+                    skillQuestions.Add(question["Skill"]);
+                }
+            }
+
+            return new List<FilteredAssessmentQuestion>();
         }
 
         private async Task LoadJobCategoriesAndProfiles()

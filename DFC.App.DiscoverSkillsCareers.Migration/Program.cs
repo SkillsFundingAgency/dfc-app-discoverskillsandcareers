@@ -24,13 +24,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
    .Build();
 
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
+            var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
 
             //setup our DI
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
                 // Change this
                 .AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, true)
-                .AddDocumentServices<DysacAssessment>(cosmosDbConnectionContent, true)
+                .AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, true)
+                .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true)
                 .BuildServiceProvider();
 
             var logger = serviceProvider.GetService<ILoggerFactory>()
@@ -40,8 +42,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             //do the actual work here
             var questionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacTraitContentModel>>();
             var assessmentDocumentService = serviceProvider.GetService<IDocumentService<DysacAssessment>>();
+            var filteringQuestionDocumentService = serviceProvider.GetService<IDocumentService<DysacFilteringQuestionContentModel>>();
 
-            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService);
+            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService);
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
         }
