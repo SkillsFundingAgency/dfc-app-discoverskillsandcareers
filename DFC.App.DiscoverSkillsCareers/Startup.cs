@@ -36,6 +36,8 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Notify.Interfaces;
+using Notify.Client;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -110,6 +112,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
             services.AddTransient<INotificationService, NotificationService>();
+
+            services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
 
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
