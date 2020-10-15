@@ -1,7 +1,9 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.Migration.Contacts
+﻿using System.Threading.Tasks;
+
+namespace DFC.App.DiscoverSkillsCareers.Migration.Contacts
 {
     public interface IMigrationService
     {
-        void Start();
+        Task Start();
     }
 }

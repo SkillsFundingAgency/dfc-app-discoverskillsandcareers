@@ -7,29 +7,60 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 {
     public class MigrationService : IMigrationService
     {
-        private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
+        private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
+        private readonly IDocumentService<DysacAssessment> dysacAssessmentDocumentService;
+        private IEnumerable<JobCategoryContentItemModel> jobCategories = new List<JobCategoryContentItemModel>();
 
-        public MigrationService(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService)
+        public MigrationService(IDocumentService<DysacTraitContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacAssessment> dysacAssessmentDocumentService)
         {
-            this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
+            this.dysacTraitDocumentService = dysacQuestionSetDocumentService;
+            this.dysacAssessmentDocumentService = dysacAssessmentDocumentService;
         }
 
-        public void Start()
+        public async Task Start()
         {
             var source = File.ReadAllText("TestData/exampleLegacyData.json");
+
+            await LoadJobCategoriesAndProfiles();
 
             dynamic d = JsonConvert.DeserializeObject<dynamic>(source);
 
             var assessment = new DysacAssessment();
-            assessment.AssessmentCode = d["id"];
+
+            string assessmentCode = d["id"];
+            var assessments = await dysacAssessmentDocumentService.GetAsync(x => x.AssessmentCode == assessmentCode);
+
+            if (assessments != null && assessments.Any())
+            {
+                assessment = assessments.FirstOrDefault();
+            }
+            else
+            {
+                assessment.Id = Guid.NewGuid();
+            }
+
+            assessment.AssessmentCode = assessmentCode;
 
             assessment.Questions = ConvertToQuestions(d["assessmentState"]["recordedAnswers"]);
             assessment.ShortQuestionResult = ConvertToShortQuestionResult(d["resultData"]);
+
+            await dysacAssessmentDocumentService.UpsertAsync(assessment);
+        }
+
+        private async Task LoadJobCategoriesAndProfiles()
+        {
+            var allTraits = await dysacTraitDocumentService.GetAsync(x => x.PartitionKey == "Trait");
+
+            var allJobCategories = allTraits.SelectMany(x => x.JobCategories).GroupBy(z => z.WebsiteURI).Select(y => y.FirstOrDefault());
+
+            jobCategories = allJobCategories;
         }
 
         private ResultData ConvertToShortQuestionResult(dynamic dynamic)
@@ -53,6 +84,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 //Get the job profile and the skills
                 JobCategoryResult categoryToAdd = JsonConvert.DeserializeObject<JobCategoryResult>(JsonConvert.SerializeObject(jobCategory));
                 categoryToAdd.JobProfiles = GetJobProfilesAndSkills(categoryToAdd.JobFamilyNameUrl);
+                categoryToAdd.SkillQuestions = categoryToAdd.JobProfiles.SelectMany(x => x.SkillCodes).GroupBy(z => z).Select(y => y.FirstOrDefault());
+                categoryToAdd.Total = categoryToAdd.SkillQuestions.Count();
                 jobCategoryList.Add(categoryToAdd);
             }
 
@@ -61,7 +94,16 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         private IEnumerable<JobProfileResult> GetJobProfilesAndSkills(string jobFamilyNameUrl)
         {
-            return new List<JobProfileResult>();
+            var resultsToReturn = new List<JobProfileResult>();
+
+            var category = jobCategories.FirstOrDefault(x => x.WebsiteURI.Contains(jobFamilyNameUrl));
+
+            foreach (var profile in category.JobProfiles)
+            {
+                resultsToReturn.Add(new JobProfileResult { Title = profile.Title, SkillCodes = profile.Skills.Select(x => x.Title).ToList() });
+            }
+
+            return resultsToReturn;
         }
 
         private static void BuildTraits(dynamic dynamic, ResultData resultData)
