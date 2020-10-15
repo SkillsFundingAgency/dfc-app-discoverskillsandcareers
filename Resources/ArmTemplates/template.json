@@ -46,6 +46,9 @@
         "CdnUrl": {
             "type": "string"
         },
+        "NotifyApiKey": {
+            "type": "securestring"
+        },
         "NotifyEmailTemplateId": {
             "type": "string"
         },
@@ -392,6 +395,10 @@
                             {
                                 "name": "Notify__EmailTemplateId",
                                 "value": "[parameters('NotifyEmailTemplateId')]"
+                            },
+                            {
+                                "name": "Notify__ApiKey",
+                                "value": "[parameters('NotifyApiKey')]"
                             },
                             {
                                 "name": "Notify__SmsTemplateId",
