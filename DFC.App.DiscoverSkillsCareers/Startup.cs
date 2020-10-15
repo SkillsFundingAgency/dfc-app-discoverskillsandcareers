@@ -109,6 +109,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
+            services.AddTransient<INotificationService, NotificationService>();
 
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
