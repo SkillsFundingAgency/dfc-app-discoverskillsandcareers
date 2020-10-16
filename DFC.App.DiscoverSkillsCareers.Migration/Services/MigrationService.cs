@@ -76,12 +76,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var filteredAssessment = new FilteredAssessment();
             filteredAssessment.JobCategoryAssessments = AddJobCategoryAssessments(dynamic["jobCategories"], resultData.JobCategories.Select(x => new KeyValuePair<string, string>(x.JobFamilyName, x.JobFamilyNameUrl)).ToDictionary(x => x.Key, x => x.Value));
             filteredAssessment.Questions = AddFilterQuestions(filteredAssessment.JobCategoryAssessments);
-            filteredAssessment.Questions = AddFilterAnswers(dynamic["recordedAnswers"], filteredAssessment.Questions);
+            AddFilterAnswers(dynamic["recordedAnswers"], filteredAssessment.Questions);
 
             return filteredAssessment;
         }
 
-        private IEnumerable<FilteredAssessmentQuestion> AddFilterAnswers(dynamic p, IEnumerable<FilteredAssessmentQuestion> questions)
+        private void AddFilterAnswers(dynamic p, IEnumerable<FilteredAssessmentQuestion> questions)
         {
             foreach (var answer in p)
             {
@@ -91,8 +91,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 questions.FirstOrDefault(x => x.TraitCode.ToUpperInvariant() == answerTraitAsString.ToUpperInvariant()).Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
             }
-
-            return new List<FilteredAssessmentQuestion>();
         }
 
         private IEnumerable<FilteredAssessmentQuestion> AddFilterQuestions(IEnumerable<JobCategoryAssessment> jobCategoryAssessments)

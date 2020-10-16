@@ -101,7 +101,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 if (assessment.ShortQuestionResult != null)
                 {
-                    assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
+                    if (assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory) != null)
+                    {
+                        assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
+                    }
                 }
             }
 
