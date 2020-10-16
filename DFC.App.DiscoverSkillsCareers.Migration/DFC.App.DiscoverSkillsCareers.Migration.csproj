@@ -8,6 +8,7 @@
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="TestData\ExampleLegacyData.json" />
+    <None Remove="TestData\ExampleLegacyData2.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Models\DFC.App.DiscoverSkillsCareers.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\ExampleLegacyData2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

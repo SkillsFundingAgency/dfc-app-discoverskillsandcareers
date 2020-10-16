@@ -128,7 +128,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             foreach (var c in categories.OrderByDescending(x => x.JobProfiles.Count()))
             {
                 c.DisplayOrder = order;
-                if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
+                if (!string.IsNullOrEmpty(selectedCategory) && c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
                 {
                     c.DisplayOrder = 9999;
                 }

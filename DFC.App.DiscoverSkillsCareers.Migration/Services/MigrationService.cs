@@ -30,7 +30,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         public async Task Start()
         {
-            var source = File.ReadAllText("TestData/exampleLegacyData.json");
+            //var source = File.ReadAllText("TestData/exampleLegacyData.json");
+            var source = File.ReadAllText("TestData/exampleLegacyData2.json");
 
             await LoadJobCategoriesAndProfiles();
             await LoadFilteringQuestions();
@@ -58,7 +59,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
             if (d["filteredAssessmentState"] != null)
             {
-                assessment.FilteredAssessment = ConvertToFilteredAssessment(d["filteredAssessmentState"]);
+                assessment.FilteredAssessment = ConvertToFilteredAssessment(d["filteredAssessmentState"], assessment.ShortQuestionResult!);
             }
 
             var result = await dysacAssessmentDocumentService.UpsertAsync(assessment);
@@ -70,30 +71,86 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             filteringQuestions = allFilteringQuestions.ToList();
         }
 
-        private FilteredAssessment ConvertToFilteredAssessment(dynamic dynamic)
+        private FilteredAssessment ConvertToFilteredAssessment(dynamic dynamic, ResultData resultData)
         {
             var filteredAssessment = new FilteredAssessment();
-            filteredAssessment.Questions = AddFilterQuestions(dynamic["jobCategories"]);
+            filteredAssessment.JobCategoryAssessments = AddJobCategoryAssessments(dynamic["jobCategories"], resultData.JobCategories.Select(x => new KeyValuePair<string, string>(x.JobFamilyName, x.JobFamilyNameUrl)).ToDictionary(x => x.Key, x => x.Value));
+            filteredAssessment.Questions = AddFilterQuestions(filteredAssessment.JobCategoryAssessments);
+            filteredAssessment.Questions = AddFilterAnswers(dynamic["recordedAnswers"], filteredAssessment.Questions);
 
             return filteredAssessment;
-
         }
 
-        private IEnumerable<FilteredAssessmentQuestion> AddFilterQuestions(dynamic dynamic)
+        private IEnumerable<FilteredAssessmentQuestion> AddFilterAnswers(dynamic p, IEnumerable<FilteredAssessmentQuestion> questions)
         {
-            List<string> skillQuestions = new List<string>();
-
-            foreach(var jobCategory in dynamic)
+            foreach (var answer in p)
             {
-                var questions = jobCategory["questions"];
+                var answerTraitAsString = (string)answer["traitCode"].Value;
+                var answeredDate = (DateTime)answer["answeredDt"].Value;
+                var selectedAnswer = answer["selectedOption"];
 
-                foreach(var question in questions)
-                {
-                    skillQuestions.Add(question["Skill"]);
-                }
+                questions.FirstOrDefault(x => x.TraitCode.ToUpperInvariant() == answerTraitAsString.ToUpperInvariant()).Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
             }
 
             return new List<FilteredAssessmentQuestion>();
+        }
+
+        private IEnumerable<FilteredAssessmentQuestion> AddFilterQuestions(IEnumerable<JobCategoryAssessment> jobCategoryAssessments)
+        {
+            // This may change aftet the ONet ranking task.
+            // At the moment it asks a unique set of questions to determine suitability
+            var groupedQuestions = jobCategoryAssessments.SelectMany(x => x.QuestionSkills).GroupBy(x => x.Key);
+            var distinctGroupedQuestions = groupedQuestions.Select(z => z.FirstOrDefault());
+
+            var filteredAssessmentQuestions = new List<FilteredAssessmentQuestion>();
+
+            int questionIndex = 0;
+            // Using foreach to assign question once only
+            foreach (var question in distinctGroupedQuestions)
+            {
+                var filterQuestion = filteringQuestions.FirstOrDefault(x => x.Title.ToUpperInvariant() == question.Key.ToUpperInvariant());
+
+                if (filterQuestion == null)
+                {
+                    throw new InvalidOperationException($"Filter question {question.Key} not found in Stax Filter Question Repository");
+                }
+
+                filteredAssessmentQuestions.Add(new FilteredAssessmentQuestion { Id = filterQuestion.Id, Ordinal = questionIndex, QuestionText = filterQuestion.Text, TraitCode = question.Key });
+                questionIndex++;
+            }
+
+            return filteredAssessmentQuestions;
+        }
+
+        private IEnumerable<JobCategoryAssessment> AddJobCategoryAssessments(dynamic dynamic, Dictionary<string, string> jobCategoryMappings)
+        {
+            List<JobCategoryAssessment> jobCategoryAssessments = new List<JobCategoryAssessment>();
+
+            foreach (var jobCategory in dynamic)
+            {
+                var jobCategoryAssessment = new JobCategoryAssessment();
+                var questions = jobCategory["questions"];
+
+                foreach (var question in questions)
+                {
+                    var jobCategoryName = (string)jobCategory["jobCategoryName"];
+                    jobCategoryAssessment.JobCategory = jobCategoryMappings[jobCategoryName];
+
+                    string skill = question["Skill"].Value;
+                    var skillQuestion = filteringQuestions.FirstOrDefault(x => x.Title.ToUpperInvariant() == skill.ToUpperInvariant());
+
+                    if (skillQuestion == null)
+                    {
+                        throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
+                    }
+
+                    jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion.Skills.FirstOrDefault().Ordinal.Value);
+
+                    jobCategoryAssessments.Add(jobCategoryAssessment);
+                }
+            }
+
+            return jobCategoryAssessments;
         }
 
         private async Task LoadJobCategoriesAndProfiles()
@@ -140,9 +197,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
             var category = jobCategories.FirstOrDefault(x => x.WebsiteURI.Contains(jobFamilyNameUrl));
 
-            foreach (var profile in category.JobProfiles)
+            //Old DYSAC, "Computing, Technology and Digital" is one category, needs sorting.
+            if (category != null)
             {
-                resultsToReturn.Add(new JobProfileResult { Title = profile.Title, SkillCodes = profile.Skills.Select(x => x.Title).ToList() });
+                foreach (var profile in category.JobProfiles)
+                {
+                    resultsToReturn.Add(new JobProfileResult { Title = profile.Title, SkillCodes = profile.Skills.Select(x => x.Title).ToList() });
+                }
             }
 
             return resultsToReturn;
