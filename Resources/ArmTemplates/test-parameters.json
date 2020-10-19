@@ -23,6 +23,9 @@
         "CdnUrl": {
             "value": "https://foo.cdn.nationalcareers.service.uk"
         },
+        "NotifyApiKey": {
+            "value": "not-a-real-key"
+        },
         "NotifyEmailTemplateId": {
             "value": "12345678-ABCD-0123456789ABCDEF-3D417"
         },
