@@ -42,4 +42,8 @@
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers\DFC.App.DiscoverSkillsCareers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ServiceAPITests\" />
+  </ItemGroup>
+
 </Project>

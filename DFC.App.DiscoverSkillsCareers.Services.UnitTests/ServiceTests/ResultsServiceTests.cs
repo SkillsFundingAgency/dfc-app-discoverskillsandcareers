@@ -6,10 +6,8 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,19 +16,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
     public class ResultsServiceTests
     {
-        private readonly IResultsApiService resultsApiService;
-        private readonly IJpOverviewApiService jPOverviewAPIService;
-        private readonly ISessionService sessionService;
         private readonly IResultsService resultsService;
+        private readonly ISessionService sessionService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly string sessionId;
 
         public ResultsServiceTests()
         {
-            resultsApiService = A.Fake<IResultsApiService>();
             sessionService = A.Fake<ISessionService>();
-            jPOverviewAPIService = A.Fake<IJpOverviewApiService>();
             assessmentDocumentService = A.Fake<IDocumentService<DysacAssessment>>();
             assessmentCalculationService = A.Fake<IAssessmentCalculationService>();
             resultsService = new ResultsService(sessionService, assessmentCalculationService, assessmentDocumentService);
@@ -40,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetResults()
+        public async Task ResultsServiceGetResultsReturnsResults()
         {
             //Arrange
             A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
@@ -59,7 +53,33 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             };
             resultsResponse.JobCategories = categories;
 
-            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
+            //Act
+            var results = await resultsService.GetResults();
+
+            //Assert
+            A.CallTo(() => assessmentCalculationService.ProcessAssessment(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
+            results.SessionId.Should().Be(sessionId);
+        }
+
+        [Fact]
+        public async Task ResultsServiceGetResultsByCategoryReturnsResults()
+        {
+            //Arrange
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
+
+            var category = "ACategory";
+            var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
+            List<JobProfileResult> profiles = new List<JobProfileResult>
+            {
+                    new JobProfileResult() { UrlName = category, JobCategory = category }
+            };
+            resultsResponse.JobProfiles = profiles;
+
+            List<JobCategoryResult> categories = new List<JobCategoryResult>
+             {
+                    new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl = category }
+            };
+            resultsResponse.JobCategories = categories;
 
             //Act
             var results = await resultsService.GetResults();
@@ -96,7 +116,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         //    }
 
         //    A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
-            
+
         //    //Act
         //    var results = await resultsService.GetResultsByCategory(category);
 
