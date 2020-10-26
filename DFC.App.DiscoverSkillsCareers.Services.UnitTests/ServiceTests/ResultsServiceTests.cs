@@ -1,8 +1,10 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using FluentAssertions;
@@ -65,7 +67,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public async Task ResultsServiceGetResultsByCategoryReturnsResults()
         {
             //Arrange
-            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
+            var assessment = AssessmentHelpers.GetAssessment();
+            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "delivery and storage" } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, JobProfiles = new List<JobProfileResult>(), TraitText = new List<string>() { "you'd be good working in place a", "you might do well in place b", "you're really a at b" } };
+            assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.StronglyAgree } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int>() { { "Self Control", 0 } } } } };
+
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
 
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
@@ -82,11 +88,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             resultsResponse.JobCategories = categories;
 
             //Act
-            var results = await resultsService.GetResults();
+            var results = await resultsService.GetResultsByCategory(category);
 
             //Assert
-            A.CallTo(() => assessmentCalculationService.ProcessAssessment(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
-            results.SessionId.Should().Be(sessionId);
+            A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
+            Assert.Single(results.JobCategories);
         }
 
         //[Theory]

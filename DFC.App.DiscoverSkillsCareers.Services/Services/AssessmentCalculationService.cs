@@ -90,7 +90,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 Traits = limitedTraits,
                 JobCategories = jobCategories.ToList(),
-                TraitScores = userTraits,
                 TraitText = limitedTraits.Select(x => x.Text!),
             };
 
