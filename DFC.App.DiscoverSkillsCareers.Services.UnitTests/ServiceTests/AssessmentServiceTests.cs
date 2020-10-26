@@ -100,6 +100,31 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
         }
 
+        [Fact]
+        public async Task AnswerFilterQuestionReturnsNextQuestion()
+        {
+            var sessionId = "session1";
+            var jobCategory = "delivery-and-storage";
+            var questionResponse = new GetQuestionResponse() { QuestionNumber = 1 };
+            var answerRequest = new PostAnswerRequest() { QuestionId = $"{jobCategory}-v1-1", SelectedOption = 2 };
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control" }, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
+
+            };
+
+            answerResponse.IsSuccess = true;
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+
+
+            var response = await assessmentService.AnswerFilterQuestion(jobCategory, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
+            Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
+        }
+
         //[Fact]
         //public async Task GetAssessmentCallsGetAssessmentForCurrentSession()
         //{
