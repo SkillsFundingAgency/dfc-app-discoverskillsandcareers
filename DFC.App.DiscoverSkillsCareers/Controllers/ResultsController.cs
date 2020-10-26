@@ -76,7 +76,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
 
             // TODO - baked in here for now, needs Job Category View
-            resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
+            if (!string.IsNullOrEmpty(id))
+            {
+                resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
+            }
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
