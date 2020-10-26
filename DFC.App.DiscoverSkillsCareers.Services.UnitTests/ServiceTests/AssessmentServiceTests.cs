@@ -125,6 +125,34 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
         }
 
+        [Fact]
+        public async Task GetFilteredAssessmentQuestion()
+        {
+            var sessionId = "session1";
+            var jobCategory = "delivery-and-storage";
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
+
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
+
+            };
+
+            answerResponse.IsSuccess = true;
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+
+
+            var response = await assessmentService.GetFilteredAssessmentQuestion(jobCategory, 1);
+
+            Assert.Equal(response.QuestionText, expectedFilterQuestion.QuestionText);
+            Assert.Equal(response.CurrentQuestionNumber, expectedFilterQuestion.Ordinal);
+            Assert.Equal(response.TraitCode, expectedFilterQuestion.TraitCode);
+        }
+
         //[Fact]
         //public async Task GetAssessmentCallsGetAssessmentForCurrentSession()
         //{

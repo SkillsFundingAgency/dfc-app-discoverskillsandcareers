@@ -261,7 +261,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             };
         }
 
-        public async Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string assessmentType, int questionNumber)
+        public async Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string jobCategory, int questionNumber)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
@@ -272,7 +272,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 throw new InvalidOperationException($"Filtered Assessment for Session {sessionId} not found");
             }
 
-            var jobCategoryAssessment = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == assessmentType);
+            var jobCategoryAssessment = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory);
             var categoryQuestions = jobCategoryAssessment.QuestionSkills.OrderBy(x => x.Value).ToList();
             var answeredQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
 
