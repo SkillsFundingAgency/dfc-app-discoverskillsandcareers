@@ -61,6 +61,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var answeredPositiveQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
 
+            if (assessment.ShortQuestionResult.JobCategories == null)
+            {
+                throw new InvalidOperationException($"No Job Categories present in assessment Short Question Result: {assessment.AssessmentCode}");
+            }
+
             foreach (var category in assessment.ShortQuestionResult.JobCategories)
             {
                 var listOfJobProfiles = new List<JobProfileResult>();
