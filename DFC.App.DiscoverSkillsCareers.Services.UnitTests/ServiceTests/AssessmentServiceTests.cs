@@ -159,10 +159,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var sessionId = "session1";
             var answerResponse = A.Fake<PostAnswerResponse>();
             var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
+            var shortQuestion1 = new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() };
+            var shortQuestion2 = new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() };
 
             var assessment = new DysacAssessment
             {
-                Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } },
+                Questions = new List<ShortQuestion>() { shortQuestion1, shortQuestion2 },
                 FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
 
             };
@@ -176,7 +178,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var response = await assessmentService.GetAssessment();
 
             Assert.Equal(sessionId, response.SessionId);
-            Assert.Equal(expectedFilterQuestion.Id, response.QuestionId);
+            Assert.Equal(shortQuestion1.Id.ToString(), response.QuestionId);
         }
 
         //[Fact]
