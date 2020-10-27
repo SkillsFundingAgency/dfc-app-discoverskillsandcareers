@@ -152,6 +152,10 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHostedService<CacheReloadBackgroundService>();
 
             services.AddApiServices(Configuration, policyRegistry);
+
+            services
+             .AddPolicies(policyRegistry, nameof(JobProfileApiClientOptions), policyOptions)
+             .AddHttpClient<IContentProcessor, JobProfileOverviewContentProcessor, JobProfileApiClientOptions>(Configuration, nameof(JobProfileApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
