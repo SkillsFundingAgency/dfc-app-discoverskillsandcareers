@@ -1,5 +1,8 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DFC.App.DiscoverSkillsCareers.Models
 {
+    [ExcludeFromCodeCoverage]
     public class TraitResult
     {
         public string? TraitCode { get; set; }

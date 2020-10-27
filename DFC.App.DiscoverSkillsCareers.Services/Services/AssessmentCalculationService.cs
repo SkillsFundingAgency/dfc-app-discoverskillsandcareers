@@ -90,7 +90,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 Traits = limitedTraits,
                 JobCategories = jobCategories.ToList(),
-                TraitScores = userTraits,
                 TraitText = limitedTraits.Select(x => x.Text!),
             };
 
@@ -137,7 +136,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return results.OrderByDescending(t => t.Total).Take(10);
         }
 
-        private IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
+        private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
         {
             int traitsTake = (traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore) ? 4 : 3;
             return traitResult.Take(traitsTake);

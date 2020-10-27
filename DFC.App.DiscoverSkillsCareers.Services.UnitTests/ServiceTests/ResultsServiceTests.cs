@@ -1,15 +1,15 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,19 +18,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
     public class ResultsServiceTests
     {
-        private readonly IResultsApiService resultsApiService;
-        private readonly IJpOverviewApiService jPOverviewAPIService;
-        private readonly ISessionService sessionService;
         private readonly IResultsService resultsService;
+        private readonly ISessionService sessionService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly string sessionId;
 
         public ResultsServiceTests()
         {
-            resultsApiService = A.Fake<IResultsApiService>();
             sessionService = A.Fake<ISessionService>();
-            jPOverviewAPIService = A.Fake<IJpOverviewApiService>();
             assessmentDocumentService = A.Fake<IDocumentService<DysacAssessment>>();
             assessmentCalculationService = A.Fake<IAssessmentCalculationService>();
             resultsService = new ResultsService(sessionService, assessmentCalculationService, assessmentDocumentService);
@@ -40,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetResults()
+        public async Task ResultsServiceGetResultsReturnsResults()
         {
             //Arrange
             A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
@@ -59,8 +55,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             };
             resultsResponse.JobCategories = categories;
 
-            A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
-
             //Act
             var results = await resultsService.GetResults();
 
@@ -69,41 +63,36 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             results.SessionId.Should().Be(sessionId);
         }
 
-        //[Theory]
-        //[InlineData(false, 0)]
-        //[InlineData(true, 1)]
-        //public async Task GetResultsByCategory(bool hasMatchedProfile, int expectedNumberOfcalls)
-        //{
-        //    //Arrange
-        //    A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
+        [Fact]
+        public async Task ResultsServiceGetResultsByCategoryReturnsResults()
+        {
+            //Arrange
+            var assessment = AssessmentHelpers.GetAssessment();
+            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "delivery and storage", JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, JobProfiles = new List<JobProfileResult>(), TraitText = new List<string>() { "you'd be good working in place a", "you might do well in place b", "you're really a at b" } };
+            assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int>() { { "Self Control", 0 } } } } };
 
-        //    var category = "ACategory";
-        //    var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
 
-        //    if (hasMatchedProfile)
-        //    {
-        //        List<JobProfileResult> profiles = new List<JobProfileResult>
-        //        {
-        //            new JobProfileResult() { UrlName = "Cname1", JobCategory = category }
-        //        };
-        //        resultsResponse.JobProfiles = profiles;
+            var category = "ACategory";
+            var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
+            List<JobProfileResult> profiles = new List<JobProfileResult>
+            {
+                    new JobProfileResult() { UrlName = category, JobCategory = category }
+            };
+            resultsResponse.JobProfiles = profiles;
 
-        //        List<JobCategoryResult> categories = new List<JobCategoryResult>
-        //        {
-        //            new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl = category }
-        //        };
-        //        resultsResponse.JobCategories = categories;
-        //    }
+            List<JobCategoryResult> categories = new List<JobCategoryResult>
+             {
+                    new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl = category }
+            };
+            resultsResponse.JobCategories = categories;
 
-        //    A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
-            
-        //    //Act
-        //    var results = await resultsService.GetResultsByCategory(category);
+            //Act
+            var results = await resultsService.GetResultsByCategory(category);
 
-        //    //Assert
-        //    A.CallTo(() => resultsApiService.GetResults(sessionId, category)).MustHaveHappenedOnceExactly();
-        //    results.SessionId.Should().Be(sessionId);
-        //}
-
+            //Assert
+            A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
+            Assert.Single(results.JobCategories);
+        }
     }
 }

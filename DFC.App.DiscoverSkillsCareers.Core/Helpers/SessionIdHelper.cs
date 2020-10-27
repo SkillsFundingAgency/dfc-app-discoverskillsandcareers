@@ -40,29 +40,6 @@ namespace DFC.App.DiscoverSkillsCareers.Core.Helpers
             return null;
         }
 
-        public static string GetYearMonth(string datetimeStamp)
-        {
-            if (datetimeStamp == null)
-            {
-                throw new ArgumentNullException(nameof(datetimeStamp));
-            }
-
-            int yearDigit;
-
-            if (int.TryParse(datetimeStamp.Substring(0, 1), out yearDigit))
-            {
-                int year = yearDigit + 2018;
-                int month;
-
-                if (int.TryParse(datetimeStamp.Substring(1, 2), out month))
-                {
-                    return new DateTime(year, month, 1).ToString("yyyyMM");
-                }
-            }
-
-            return null;
-        }
-
         public static int Counter()
         {
             lock (SyncLock)
