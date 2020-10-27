@@ -3,9 +3,11 @@ using DFC.Compui.Cosmos.Contracts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 {
+    [ExcludeFromCodeCoverage]
     public class DysacAssessment : DocumentModel
     {
         public DysacAssessment()
