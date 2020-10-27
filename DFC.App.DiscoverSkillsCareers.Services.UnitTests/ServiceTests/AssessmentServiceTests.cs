@@ -184,7 +184,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         [Fact]
         public async Task AssessmentServiceReloadUsingReferenceCodeReloadsAssessment()
         {
-            var sessionId = "session1";
+            var sessionId = "xE2356Fght3556cv";
             var answerResponse = A.Fake<PostAnswerResponse>();
             var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
             var shortQuestion1 = new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() };
@@ -206,7 +206,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task AssessmentServiceReloadUsingReferenceCodeReloadsAssessment()
+        public async Task AssessmentServiceReloadUsingSessionIdReloadsAssessment()
         {
             var sessionId = "session1";
             var answerResponse = A.Fake<PostAnswerResponse>();
