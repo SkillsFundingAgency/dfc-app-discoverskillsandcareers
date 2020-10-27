@@ -15,6 +15,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public Uri? Url { get; set; }
 
+        public string? Title { get; set; }
+
         public string? Html { get; set; }
 
         public List<Guid>? AllContentItemIds => throw new NotImplementedException();

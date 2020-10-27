@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
@@ -23,6 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly string testCategory;
         private readonly ILogService logService;
+        private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
 
         public HeroBannerTests()
         {
@@ -32,8 +34,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             testCategory = "testCategory";
             logService = A.Fake<ILogService>();
+            jobProfileOverviewDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService);
         }
 
         [Fact]

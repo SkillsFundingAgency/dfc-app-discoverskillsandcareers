@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,15 +16,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
+        private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
         private readonly ILogService logService;
 
-        public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService)
+        public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService, IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService)
             : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = apiService;
+            this.jobProfileOverviewDocumentService = jobProfileOverviewDocumentService;
         }
 
         public async Task<IActionResult> Index()
@@ -85,7 +90,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (jobCategory.JobProfiles.Any())
                 {
-                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobCategory.JobProfiles.Select(x => new ResultJobProfileOverViewModel { Cname = "bla", OverViewHTML = $"<h1>{x.Title}</h1>", ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                    var jobProfileTitles = jobCategory.JobProfiles.Select(z => z.Title.ToUpperInvariant());
+                    var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title.ToUpperInvariant())).ConfigureAwait(false);
+
+                    if (jobProfileOverviews == null)
+                    {
+                        throw new InvalidOperationException($"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
+                    }
+
+                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
                 }
             }
 
