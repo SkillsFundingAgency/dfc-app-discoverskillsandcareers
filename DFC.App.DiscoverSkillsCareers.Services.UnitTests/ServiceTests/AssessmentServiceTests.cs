@@ -194,7 +194,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             {
                 Questions = new List<ShortQuestion>() { shortQuestion1, shortQuestion2 },
                 FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
-
             };
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);

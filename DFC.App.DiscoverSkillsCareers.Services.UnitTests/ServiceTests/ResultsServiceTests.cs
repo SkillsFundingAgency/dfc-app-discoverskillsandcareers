@@ -94,42 +94,5 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Single(results.JobCategories);
         }
-
-        //[Theory]
-        //[InlineData(false, 0)]
-        //[InlineData(true, 1)]
-        //public async Task GetResultsByCategory(bool hasMatchedProfile, int expectedNumberOfcalls)
-        //{
-        //    //Arrange
-        //    A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
-
-        //    var category = "ACategory";
-        //    var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
-
-        //    if (hasMatchedProfile)
-        //    {
-        //        List<JobProfileResult> profiles = new List<JobProfileResult>
-        //        {
-        //            new JobProfileResult() { UrlName = "Cname1", JobCategory = category }
-        //        };
-        //        resultsResponse.JobProfiles = profiles;
-
-        //        List<JobCategoryResult> categories = new List<JobCategoryResult>
-        //        {
-        //            new JobCategoryResult() { JobFamilyName = category, JobFamilyUrl = category }
-        //        };
-        //        resultsResponse.JobCategories = categories;
-        //    }
-
-        //    A.CallTo(() => resultsApiService.GetResults(sessionId, A<string>.Ignored)).Returns(resultsResponse);
-
-        //    //Act
-        //    var results = await resultsService.GetResultsByCategory(category);
-
-        //    //Assert
-        //    A.CallTo(() => resultsApiService.GetResults(sessionId, category)).MustHaveHappenedOnceExactly();
-        //    results.SessionId.Should().Be(sessionId);
-        //}
-
     }
 }
