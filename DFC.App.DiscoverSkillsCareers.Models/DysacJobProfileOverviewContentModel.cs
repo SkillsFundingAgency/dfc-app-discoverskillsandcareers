@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.Compui.Cosmos.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,6 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Html { get; set; }
 
+        [JsonIgnore]
         public List<Guid>? AllContentItemIds => throw new NotImplementedException();
 
         public DateTime? LastCached { get; set; }

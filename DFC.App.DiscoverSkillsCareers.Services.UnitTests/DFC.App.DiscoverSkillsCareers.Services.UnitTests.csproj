@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="FakeHttpHandlers\" />
     <Folder Include="ServiceAPITests\" />
   </ItemGroup>
 
