@@ -4,7 +4,6 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
@@ -30,7 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(HttpStatusCode.BadRequest);
         }
 
         public async Task<HttpStatusCode> ProcessContent(Uri url, Guid contentId)
@@ -65,7 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, IBaseContentItemModel apiItem)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(HttpStatusCode.BadRequest);
         }
     }
 }
