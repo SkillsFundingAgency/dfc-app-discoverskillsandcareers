@@ -10,7 +10,9 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -36,7 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
-            testCategory = "testCategory";
+            testCategory = "testcategory";
             logService = A.Fake<ILogService>();
             jobProfileOverviewDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
             controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService);
@@ -73,9 +75,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
 
+            A.CallTo(() => jobProfileOverviewDocumentService.GetAsync(A<Expression<Func<DysacJobProfileOverviewContentModel, bool>>>.Ignored)).Returns(new List<DysacJobProfileOverviewContentModel>() { new DysacJobProfileOverviewContentModel { Html = "<h1>Chemist</h1>", Title = "Chemist" } });
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
-            A.CallTo(() => resultsService.GetResultsByCategory(A<string>.Ignored)).Returns(new GetResultsResponse { JobCategories = new List<JobCategoryResult> { new JobCategoryResult { JobFamilyName = "testCategory", JobFamilyUrl = "testCategory", JobProfiles = new List<JobProfileResult>() } } });
+            A.CallTo(() => resultsService.GetResultsByCategory(A<string>.Ignored)).Returns(new GetResultsResponse { JobCategories = new List<JobCategoryResult> { new JobCategoryResult { JobFamilyName = "testcategory", JobFamilyUrl = "testcategory", JobProfiles = new List<JobProfileResult>() { new JobProfileResult { Title = "Chemist" } } } } });
 
             var actionResponse = await controller.Roles(testCategory).ConfigureAwait(false);
 

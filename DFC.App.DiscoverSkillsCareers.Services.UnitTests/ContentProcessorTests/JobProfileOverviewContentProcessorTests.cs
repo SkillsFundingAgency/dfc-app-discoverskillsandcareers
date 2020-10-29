@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         }
 
         [Fact]
-        public async Task JobProfileOverviewProcessorProcessContentItemAsyncCreateReturnsOk()
+        public async Task JobProfileOverviewProcessorProcessContentItemAsyncCreateReturnsBadRequest()
         {
             //Arrange
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
@@ -86,8 +86,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
 
             //Act
+            var result = await processor.ProcessContentItem(Guid.NewGuid(), Guid.NewGuid(), new ApiJobProfileOverview()).ConfigureAwait(false);
+
             //Assert
-            await Assert.ThrowsAsync<NotImplementedException>(async () => await processor.ProcessContentItem(Guid.NewGuid(), Guid.NewGuid(), new ApiJobProfileOverview()).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(HttpStatusCode.BadRequest, result);
         }
 
         [Fact]
