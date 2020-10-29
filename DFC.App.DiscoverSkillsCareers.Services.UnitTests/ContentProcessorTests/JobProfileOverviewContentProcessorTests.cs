@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.UnitTests.FakeHttpHandlers;
 using DFC.Compui.Cosmos.Contracts;
@@ -17,32 +18,36 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
     public class JobProfileOverviewContentProcessorTests : BaseContentProcessorTests
     {
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> fakeDocumentService;
+        private readonly IJobProfileOverviewApiService fakeJobProfileApiOverviewService;
 
         public JobProfileOverviewContentProcessorTests()
         {
             fakeDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
+            fakeJobProfileApiOverviewService = A.Fake<IJobProfileOverviewApiService>();
         }
 
         [Fact]
         public async Task JobProfileOverviewProcessorProcessContentAsyncNonExistingReturnsSuccess()
         {
+            DysacJobProfileOverviewContentModel? apiModel = null;
+
+            //Arrange
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
             var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(JsonConvert.SerializeObject(new DysacJobProfileOverviewContentModel { Html = "<h1>A Job Profile</h1>", Id = Guid.NewGuid(), Title = "A Test Job Profile Overview" })) };
-            DysacJobProfileOverviewContentModel? apiModel = null;
 
-            //Arrange
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
             A.CallTo(() => fakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(apiModel);
             A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).Returns(HttpStatusCode.OK);
-            var processor = new JobProfileOverviewContentProcessor(httpClient, fakeDocumentService);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
 
             //Assert
             A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeJobProfileApiOverviewService.GetOverview(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(HttpStatusCode.OK, result);
         }
 
@@ -59,13 +64,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
             A.CallTo(() => fakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(apiModel);
             A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).Returns(HttpStatusCode.OK);
-            var processor = new JobProfileOverviewContentProcessor(httpClient, fakeDocumentService);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
 
             //Assert
             A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeJobProfileApiOverviewService.GetOverview(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(HttpStatusCode.OK, result);
         }
 
@@ -77,7 +83,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
 
-            var processor = new JobProfileOverviewContentProcessor(httpClient, fakeDocumentService);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
 
             //Act
             //Assert
@@ -90,7 +96,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            var processor = new JobProfileOverviewContentProcessor(A.Fake<HttpClient>(), fakeDocumentService);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
             A.CallTo(() => fakeDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(true);
 
             //Act

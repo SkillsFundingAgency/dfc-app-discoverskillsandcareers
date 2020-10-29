@@ -11,12 +11,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 {
     public class JobProfileOverviewContentProcessor : IContentProcessor
     {
-        private readonly HttpClient httpClient;
+        private readonly IJobProfileOverviewApiService jobProfileOverviewApiService;
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileDocumentService;
 
-        public JobProfileOverviewContentProcessor(HttpClient httpClient, IDocumentService<DysacJobProfileOverviewContentModel> jobProfileDocumentService)
+        public JobProfileOverviewContentProcessor(IJobProfileOverviewApiService jobProfileOverviewApiService, IDocumentService<DysacJobProfileOverviewContentModel> jobProfileDocumentService)
         {
-            this.httpClient = httpClient;
+            this.jobProfileOverviewApiService = jobProfileOverviewApiService;
             this.jobProfileDocumentService = jobProfileDocumentService;
         }
 
@@ -40,13 +40,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
                 throw new ArgumentNullException(nameof(url));
             }
 
-            
+            var jobProfile = await jobProfileOverviewApiService.GetOverview(url).ConfigureAwait(false);
 
             var existingJobProfile = await jobProfileDocumentService.GetByIdAsync(contentId).ConfigureAwait(false);
 
             if (existingJobProfile != null)
             {
-                existingJobProfile.Html = jobProfileContent;
+                existingJobProfile.Html = jobProfile.Html;
                 existingJobProfile.LastCached = DateTime.UtcNow;
                 var result = await jobProfileDocumentService.UpsertAsync(existingJobProfile).ConfigureAwait(false);
                 return result;
@@ -56,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             {
                 Id = contentId,
                 LastCached = DateTime.UtcNow,
-                Html = jobProfileContent,
+                Html = jobProfile.Html,
             };
 
             var resut = await jobProfileDocumentService.UpsertAsync(jobProfileOverview).ConfigureAwait(false);

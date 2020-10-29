@@ -132,6 +132,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
+            services.AddTransient<IJobProfileOverviewApiService, JobProfileOverviewApiService>();
+
             services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
 
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
@@ -154,8 +156,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddApiServices(Configuration, policyRegistry);
 
             services
-             .AddPolicies(policyRegistry, nameof(JobProfileApiClientOptions), policyOptions)
-             .AddHttpClient<IContentProcessor, JobProfileOverviewContentProcessor, JobProfileApiClientOptions>(Configuration, nameof(JobProfileApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+             .AddPolicies(policyRegistry, nameof(JobProfileOverviewServiceOptions), policyOptions)
+             .AddHttpClient<IJobProfileOverviewApiService, JobProfileOverviewApiService, JobProfileOverviewServiceOptions>(Configuration, nameof(JobProfileOverviewServiceOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)

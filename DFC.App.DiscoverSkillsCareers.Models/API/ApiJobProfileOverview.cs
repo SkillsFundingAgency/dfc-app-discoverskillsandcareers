@@ -22,6 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
 
         public string? ContentType { get; set; }
 
+        public string? Html { get; set; }
+
         public Uri? Url { get; set; }
     }
 }
