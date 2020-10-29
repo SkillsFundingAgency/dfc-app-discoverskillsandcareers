@@ -23,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         public string? Html { get; set; }
 
         [JsonIgnore]
-        public List<Guid>? AllContentItemIds => throw new NotImplementedException();
+        public List<Guid>? AllContentItemIds => new List<Guid>();
 
         public DateTime? LastCached { get; set; }
 
