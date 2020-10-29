@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var jobProfileContent = await jobProfileResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (jobProfileContent == null)
+            if (!jobProfileResponse.IsSuccessStatusCode || string.IsNullOrEmpty(jobProfileContent))
             {
                 throw new InvalidOperationException($"Job Profile Overview response for {url} returned null content");
             }
@@ -53,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var jobProfileContent = await jobProfileResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (jobProfileContent == null)
+            if (!jobProfileResponse.IsSuccessStatusCode || string.IsNullOrEmpty(jobProfileContent))
             {
                 throw new InvalidOperationException($"Job Profile Overview response for {canonicalName} returned null content");
             }
