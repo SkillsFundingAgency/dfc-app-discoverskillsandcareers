@@ -4,6 +4,5 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 {
     public class JobProfileOverviewServiceOptions : ClientOptionsModel
     {
-        public string BaseAddress { get; set; }
     }
 }

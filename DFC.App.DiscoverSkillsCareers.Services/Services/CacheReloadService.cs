@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
 
-                await LoadJobProfileOverviews();
+                await LoadJobProfileOverviews().ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
