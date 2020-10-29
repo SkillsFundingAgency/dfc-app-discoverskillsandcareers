@@ -2,14 +2,21 @@
 using DFC.Content.Pkg.Netcore.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.API
 {
+    [ExcludeFromCodeCoverage]
     public class ApiJobProfileOverview : IBaseContentItemModel
     {
-        public ContentLinksModel? ContentLinks { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ApiJobProfileOverview()
+        {
+            ContentItems = new List<IBaseContentItemModel>();
+        }
 
-        public IList<IBaseContentItemModel> ContentItems { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ContentLinksModel? ContentLinks { get; set; }
+
+        public IList<IBaseContentItemModel> ContentItems { get; set; }
 
         public Guid? ItemId { get; set; }
 

@@ -40,14 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
                 throw new ArgumentNullException(nameof(url));
             }
 
-            var jobProfileResponse = await httpClient.GetAsync(url!.ToString()).ConfigureAwait(false);
-
-            var jobProfileContent = await jobProfileResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            if (jobProfileContent == null)
-            {
-                throw new InvalidOperationException($"Job Profile Overview response for {url} returned null content");
-            }
+            
 
             var existingJobProfile = await jobProfileDocumentService.GetByIdAsync(contentId).ConfigureAwait(false);
 
