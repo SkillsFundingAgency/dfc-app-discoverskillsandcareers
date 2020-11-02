@@ -279,6 +279,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (overviews.Any())
             {
+                logger.LogInformation($"Retrieved {overviews.Count} from Job Profiles API");
                 await DeleteExistingJobProfileOverviews().ConfigureAwait(false);
             }
 
