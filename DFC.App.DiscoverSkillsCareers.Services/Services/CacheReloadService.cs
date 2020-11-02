@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
@@ -24,6 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
         private readonly IContentTypeMappingService contentTypeMappingService;
+        private readonly IJobProfileOverviewApiService jobProfileOverviewApiService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
@@ -31,7 +33,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IEventMessageService eventMessageService,
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService,
-            IContentTypeMappingService contentTypeMappingService)
+            IContentTypeMappingService contentTypeMappingService,
+            IJobProfileOverviewApiService jobProfileOverviewApiService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -39,6 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
             this.contentTypeMappingService = contentTypeMappingService;
+            this.jobProfileOverviewApiService = jobProfileOverviewApiService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -58,6 +62,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
+
+                await LoadJobProfileOverviews().ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
@@ -260,6 +266,42 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 if (stoppingToken.IsCancellationRequested)
                 {
                     logger.LogWarning($"Reload cache cancelled for {contentType}");
+                }
+            }
+        }
+
+        private async Task LoadJobProfileOverviews()
+        {
+            var allTraits = await eventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>().ConfigureAwait(false);
+            var allJobProfiles = allTraits.SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles)).Select(z => z.JobProfileWebsiteUrl);
+
+            var overviews = await jobProfileOverviewApiService.GetOverviews(allJobProfiles.Where(x => x != null).Select(y => y!.ToString()).ToList()).ConfigureAwait(false);
+
+            if (overviews.Any())
+            {
+                logger.LogInformation($"Retrieved {overviews.Count} from Job Profiles API");
+                await DeleteExistingJobProfileOverviews().ConfigureAwait(false);
+            }
+
+            var mappedProfileOverviews = overviews.Select(x => mapper.Map<DysacJobProfileOverviewContentModel>(x));
+
+            foreach (var mappedOverview in mappedProfileOverviews)
+            {
+                await eventMessageService.CreateAsync(mappedOverview).ConfigureAwait(false);
+            }
+        }
+
+        private async Task DeleteExistingJobProfileOverviews()
+        {
+            var jobProfiles = await eventMessageService.GetAllCachedItemsAsync<DysacJobProfileOverviewContentModel>().ConfigureAwait(false);
+
+            if (jobProfiles != null && jobProfiles.Any())
+            {
+                logger.LogInformation($"Deleting {jobProfiles.Count()} Job Profile Overviews");
+
+                foreach (var profile in jobProfiles)
+                {
+                    await eventMessageService.DeleteAsync<DysacJobProfileOverviewContentModel>(profile.Id).ConfigureAwait(false);
                 }
             }
         }
