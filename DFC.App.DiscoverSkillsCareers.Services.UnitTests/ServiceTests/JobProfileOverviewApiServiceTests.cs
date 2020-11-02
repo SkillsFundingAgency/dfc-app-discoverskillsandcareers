@@ -103,7 +103,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
 
-            var serviceToTest = new JobProfileOverviewApiService(httpClient, new Models.JobProfileOverviewServiceOptions { BaseAddress = new Uri("http://somehwere.com/aresource") });
+            var serviceToTest = new JobProfileOverviewApiService(httpClient, new JobProfileOverviewServiceOptions { BaseAddress = new Uri("http://somehwere.com/aresource") });
 
             // Act
             var result = await serviceToTest.GetOverviews(new List<string> { "a-job-profile-1", "a-job-profile-2", "a-job-profile-3" });
