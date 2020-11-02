@@ -54,7 +54,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (!jobProfileResponse.IsSuccessStatusCode || string.IsNullOrEmpty(jobProfileContent))
             {
-                //throw new InvalidOperationException($"Job Profile Overview response for {canonicalName} returned null content");
                 return new ApiJobProfileOverview();
             }
 

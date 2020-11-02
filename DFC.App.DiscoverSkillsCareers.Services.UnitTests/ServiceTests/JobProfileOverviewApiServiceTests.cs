@@ -1,4 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.UnitTests.FakeHttpHandlers;
 using FakeItEasy;
@@ -21,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
-            var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(JsonConvert.SerializeObject(new DysacJobProfileOverviewContentModel { Html = "<h1>A Job Profile</h1>", Id = Guid.NewGuid(), Title = "A Test Job Profile Overview" })) };
+            var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent("<h1>A Job Profile</h1>") };
 
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
 
@@ -72,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task JobProfileOverviewApiServiceGetOverviewsNullUriThrowsInvalidOperationException()
+        public async Task JobProfileOverviewApiServiceGetOverviewsNullUriReturnsEmptyApiObject()
         {
             //Arrange
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
@@ -85,8 +86,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var serviceToTest = new JobProfileOverviewApiService(httpClient, new JobProfileOverviewServiceOptions { BaseAddress = new Uri("http://somehwere.com/aresource") });
 
             // Act
+            var result = await serviceToTest.GetOverviews(new List<string> { "a-job-profile-1", "a-job-profile-2", "a-job-profile-3" }).ConfigureAwait(false);
+
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await serviceToTest.GetOverviews(new List<string> { "a-job-profile-1", "a-job-profile-2", "a-job-profile-3" }).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(3, result.Count);
         }
 
         [Fact]
