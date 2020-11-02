@@ -58,10 +58,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
 
-                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
-                await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
+                //await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
 
                 await LoadJobProfileOverviews().ConfigureAwait(false);
 
@@ -276,11 +276,32 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var allJobProfiles = allTraits.SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles)).Select(z => z.JobProfileWebsiteUrl);
 
             var overviews = await jobProfileOverviewApiService.GetOverviews(allJobProfiles.Where(x => x != null).Select(y => y!.ToString()).ToList()).ConfigureAwait(false);
+
+            if (overviews.Any())
+            {
+                await DeleteExistingJobProfileOverviews().ConfigureAwait(false);
+            }
+
             var mappedProfileOverviews = overviews.Select(x => mapper.Map<DysacJobProfileOverviewContentModel>(x));
 
             foreach (var mappedOverview in mappedProfileOverviews)
             {
                 await eventMessageService.CreateAsync(mappedOverview).ConfigureAwait(false);
+            }
+        }
+
+        private async Task DeleteExistingJobProfileOverviews()
+        {
+            var jobProfiles = await eventMessageService.GetAllCachedItemsAsync<DysacJobProfileOverviewContentModel>().ConfigureAwait(false);
+
+            if (jobProfiles != null && jobProfiles.Any())
+            {
+                logger.LogInformation($"Deleting {jobProfiles.Count()} Job Profile Overviews");
+
+                foreach (var profile in jobProfiles)
+                {
+                    await eventMessageService.DeleteAsync<DysacJobProfileOverviewContentModel>(profile.Id).ConfigureAwait(false);
+                }
             }
         }
     }

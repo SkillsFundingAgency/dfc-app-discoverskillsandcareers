@@ -109,6 +109,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddSingleton(Configuration.GetSection(nameof(JobProfileOverviewServiceOptions)).Get<JobProfileOverviewServiceOptions>() ?? new JobProfileOverviewServiceOptions());
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
             services.AddTransient<INotificationService, NotificationService>();
@@ -120,6 +121,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+            services.AddDocumentServices<DysacJobProfileOverviewContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
 
             var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment());

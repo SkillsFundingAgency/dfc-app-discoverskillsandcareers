@@ -1,7 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new InvalidOperationException($"Job Profile Overview response for {url} returned null content");
             }
 
-            return JsonConvert.DeserializeObject<ApiJobProfileOverview>(jobProfileContent);
+            return new ApiJobProfileOverview { CanonicalName = url.Segments.LastOrDefault().Trim('/'), Html = jobProfileContent };
         }
 
         public async Task<List<ApiJobProfileOverview>> GetOverviews(List<string> jobProfileCanonicalNames)
@@ -55,10 +54,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (!jobProfileResponse.IsSuccessStatusCode || string.IsNullOrEmpty(jobProfileContent))
             {
-                throw new InvalidOperationException($"Job Profile Overview response for {canonicalName} returned null content");
+                //throw new InvalidOperationException($"Job Profile Overview response for {canonicalName} returned null content");
+                return new ApiJobProfileOverview();
             }
 
-            return JsonConvert.DeserializeObject<ApiJobProfileOverview>(jobProfileContent);
+            return new ApiJobProfileOverview { CanonicalName = canonicalName, Html = jobProfileContent };
         }
     }
 }

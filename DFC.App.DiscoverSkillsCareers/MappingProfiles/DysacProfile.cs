@@ -52,6 +52,11 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
               .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
               .ForMember(d => d.Text, s => s.MapFrom(a => a.Text))
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.ContentItems)));
+
+            CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
+            .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("-", " ")))
+            .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
+            .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
         }
 
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)

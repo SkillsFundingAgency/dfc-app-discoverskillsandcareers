@@ -90,8 +90,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (jobCategory.JobProfiles.Any())
                 {
-                    var jobProfileTitles = jobCategory.JobProfiles.Select(z => z.Title.ToUpperInvariant());
-                    var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title.ToUpperInvariant())).ConfigureAwait(false);
+                    var jobProfileTitles = jobCategory.JobProfiles.Select(z => z.Title.ToLowerInvariant());
+                    var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title)).ConfigureAwait(false);
 
                     if (jobProfileOverviews == null)
                     {
