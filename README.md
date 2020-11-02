@@ -21,6 +21,7 @@ Clone the project and open the solution in Visual Studio 2019.
 |Comp UI App Registry | Running the application | 
 |Comp UI Shell | Running the application |
 |Content API | Load DYSaC data into cache from Service Taxonomy |
+|Job Profiles API | Load Job Profile Overview for Results screen |
 
 ## Local Config Files
 
