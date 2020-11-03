@@ -281,7 +281,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             logger.LogInformation($"Retrieving {allJobProfiles.Count()} Job Profiles from Job Profiles API");
 
-            var overviews = await jobProfileOverviewApiService.GetOverviews(allJobProfiles.Where(x => x != null).Select(y => y!.ToString()).ToList()).ConfigureAwait(false);
+            var jobProfiles = allJobProfiles.Where(x => x != null).Select(y => y!.ToString().ToLowerInvariant()).Distinct().ToList();
+
+            var overviews = await jobProfileOverviewApiService.GetOverviews(jobProfiles).ConfigureAwait(false);
 
             logger.LogInformation($"Retrieved {overviews.Count} Job Profiles from Job Profiles API");
 
