@@ -41,8 +41,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<List<ApiJobProfileOverview>> GetOverviews(List<string> jobProfileCanonicalNames)
         {
-            var getTasks = jobProfileCanonicalNames.Select(x => Get(x));
-            var results = await Task.WhenAll(getTasks).ConfigureAwait(false);
+            if (jobProfileCanonicalNames == null || !jobProfileCanonicalNames.Any())
+            {
+                return new List<ApiJobProfileOverview>();
+            }
+
+            List<ApiJobProfileOverview> results = new List<ApiJobProfileOverview>();
+
+            foreach (var profile in jobProfileCanonicalNames)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+                var result = await Get(profile).ConfigureAwait(false);
+                results.Add(result);
+            }
+
             return results.ToList();
         }
 
