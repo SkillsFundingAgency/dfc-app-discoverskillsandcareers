@@ -54,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (!jobProfileResponse.IsSuccessStatusCode || string.IsNullOrEmpty(jobProfileContent))
             {
-                return new ApiJobProfileOverview();
+                return new ApiJobProfileOverview() { CanonicalName = canonicalName };
             }
 
             return new ApiJobProfileOverview { CanonicalName = canonicalName, Html = jobProfileContent };
