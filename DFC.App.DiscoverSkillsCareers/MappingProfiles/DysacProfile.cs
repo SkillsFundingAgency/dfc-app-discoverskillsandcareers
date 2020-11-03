@@ -56,6 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
             .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("-", " ")))
             .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
+            .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
             .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
         }
 
