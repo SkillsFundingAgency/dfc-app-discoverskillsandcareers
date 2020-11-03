@@ -465,6 +465,10 @@
                                 "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__4",
                                 "value": "/content/personalityquestionset/"
                             },
+							 {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__4",
+                                "value": "dfc-app-jobprofiles"
+                            },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacContent__AccessKey",
                                 "value": "[parameters('cosmosDbKey')]"
