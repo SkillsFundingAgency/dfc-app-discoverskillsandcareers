@@ -58,10 +58,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
 
+                logger.LogInformation("Reloading Content Types from Service Taxonomy");
+
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypePersonalitySkill, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
+
+                logger.LogInformation("Reloading Job Profile Overviews from Job Profiles API");
 
                 await LoadJobProfileOverviews().ConfigureAwait(false);
 
@@ -275,11 +279,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var allTraits = await eventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>().ConfigureAwait(false);
             var allJobProfiles = allTraits.SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles)).Select(z => z.JobProfileWebsiteUrl);
 
+            logger.LogInformation($"Retrieving {allJobProfiles.Count()} Job Profiles from Job Profiles API");
+
             var overviews = await jobProfileOverviewApiService.GetOverviews(allJobProfiles.Where(x => x != null).Select(y => y!.ToString()).ToList()).ConfigureAwait(false);
+
+            logger.LogInformation($"Retrieved {overviews.Count} Job Profiles from Job Profiles API");
 
             if (overviews.Any())
             {
-                logger.LogInformation($"Retrieved {overviews.Count} from Job Profiles API");
                 await DeleteExistingJobProfileOverviews().ConfigureAwait(false);
             }
 

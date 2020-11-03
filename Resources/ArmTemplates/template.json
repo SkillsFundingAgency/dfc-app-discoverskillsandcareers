@@ -535,7 +535,7 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__SummaryEndpoint",
-                                "value": "api/execute"
+                                "value": "api/execute/"
                             },
                             {
                                 "name": "JobProfileOverviewServiceOptions__BaseAddress",
