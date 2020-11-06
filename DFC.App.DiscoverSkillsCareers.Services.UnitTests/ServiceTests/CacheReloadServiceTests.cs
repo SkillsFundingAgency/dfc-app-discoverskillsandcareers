@@ -351,11 +351,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
                 ContentLinks = new ContentLinksModel(new JObject())
                 {
-                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                    ContentLinks = new List<KeyValuePair<string, List<ILinkDetails>>>()
                     {
-                        new KeyValuePair<string, List<LinkDetails>>(
+                        new KeyValuePair<string, List<ILinkDetails>>(
                             "test",
-                            new List<LinkDetails>
+                            new List<ILinkDetails>
                             {
                                 new LinkDetails
                                 {

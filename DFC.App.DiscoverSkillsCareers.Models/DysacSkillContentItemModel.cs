@@ -24,6 +24,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
+        public decimal? ONetRank { get; set; }
+
         public List<IDysacContentModel>? GetContentItems()
         {
             return new List<IDysacContentModel>();
