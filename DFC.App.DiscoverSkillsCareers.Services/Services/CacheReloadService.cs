@@ -61,9 +61,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 logger.LogInformation("Reloading Content Types from Service Taxonomy");
 
-                //await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
-                //await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
-                //await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypeONetSkill, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+                await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypeONetSkill, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
 
                 logger.LogInformation("Reloading Job Profile Overviews from Job Profiles API");
