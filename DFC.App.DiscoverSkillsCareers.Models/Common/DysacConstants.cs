@@ -4,10 +4,11 @@
     {
         public const string ContentTypePersonalityQuestionSet = "PersonalityQuestionSet";
         public const string ContentTypePersonalityTrait = "PersonalityTrait";
-        public const string ContentTypePersonalitySkill = "PersonalitySkill";
+        public const string ContentTypeONetSkill = "ONetSkill";
         public const string ContentTypePersonalityShortQuestion = "PersonalityShortQuestion";
         public const string ContentTypeJobCategory = "JobCategory";
         public const string ContentTypePersonalityFilteringQuestion = "PersonalityFilteringQuestion";
         public const string ContentTypeJobProfile = "JobProfile";
+        public const string ContentTypeONetOccupationalCode = "ONetOccupationalCode";
     }
 }

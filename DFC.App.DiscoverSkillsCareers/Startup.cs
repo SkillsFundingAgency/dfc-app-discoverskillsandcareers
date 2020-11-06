@@ -156,6 +156,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHostedService<CacheReloadBackgroundService>();
 
             services.AddApiServices(Configuration, policyRegistry);
+            services.AddLinkDetailsConverter(new CustomLinkDetailConverter());
 
             services
              .AddPolicies(policyRegistry, nameof(JobProfileOverviewServiceOptions), policyOptions)

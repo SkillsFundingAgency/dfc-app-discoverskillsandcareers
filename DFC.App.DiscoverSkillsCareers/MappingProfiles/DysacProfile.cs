@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
@@ -16,12 +17,13 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
     {
         public DysacProfile()
         {
-            CreateMap<LinkDetails, DysacShortQuestionContentItemModel>();
-            CreateMap<LinkDetails, ApiShortQuestion>();
-            CreateMap<LinkDetails, ApiTrait>();
-            CreateMap<LinkDetails, ApiSkill>();
-            CreateMap<LinkDetails, ApiJobCategory>();
-            CreateMap<LinkDetails, ApiJobProfile>();
+            CreateMap<CustomLinkDetails, DysacShortQuestionContentItemModel>();
+            CreateMap<CustomLinkDetails, ApiShortQuestion>();
+            CreateMap<CustomLinkDetails, ApiTrait>();
+            CreateMap<CustomLinkDetails, ApiSkill>();
+            CreateMap<CustomLinkDetails, ApiJobCategory>();
+            CreateMap<CustomLinkDetails, ApiJobProfile>();
+            CreateMap<CustomLinkDetails, ApiONetOccupationalCode>();
 
             CreateMap<ApiQuestionSet, DysacQuestionSetContentModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
@@ -63,9 +65,11 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
         {
             var listToReturn = new List<DysacSkillContentItemModel>();
-            var castSkills = contentItems.Select(x => (ApiSkill)x);
 
-            listToReturn.AddRange(castSkills.Select(x => new DysacSkillContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, LastCached = DateTime.UtcNow }));
+            var oNetSkills = contentItems.Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill).Select(x => (ApiSkill)x);
+            var oNetOccupationCodes = contentItems.Where(x => x.ContentType == DysacConstants.ContentTypeONetOccupationalCode).Select(x => (ApiONetOccupationalCode)x).SelectMany(y => y.ContentItems.Select(z => (ApiSkill)z));
+
+            listToReturn.AddRange(oNetSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel { Description = x.Description, ONetRank = x.ONetRank, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, LastCached = DateTime.UtcNow }));
 
             return listToReturn;
         }

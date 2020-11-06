@@ -23,7 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.78" />
+    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.85" />
     <PackageReference Include="FakeItEasy" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
