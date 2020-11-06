@@ -1,9 +1,11 @@
 ﻿using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
+    [ExcludeFromCodeCoverage]
     public class CustomLinkDetailConverter : JsonConverter
     {
         public override bool CanWrite => false;
