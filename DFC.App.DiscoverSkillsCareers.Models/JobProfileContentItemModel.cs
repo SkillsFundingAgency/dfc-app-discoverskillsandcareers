@@ -1,4 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -39,6 +40,13 @@ namespace DFC.App.DiscoverSkillsCareers.Models
                     Skills!.Remove(skill);
                 }
             }
+        }
+
+        public IEnumerable<DysacSkillContentItemModel> SkillsToCompare(HashSet<string> skillsToRemove)
+        {
+            return Skills
+                .Where(o => !skillsToRemove.Contains(o.Title!))
+                .Take(8);
         }
     }
 }
