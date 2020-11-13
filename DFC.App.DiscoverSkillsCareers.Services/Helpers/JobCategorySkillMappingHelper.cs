@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             var profilesBySkill =
                 profiles
                     .SelectMany(y => y.SkillsToCompare(prominentSkills).Select(s => new { Profile = y, Skill = s }))
-                    .GroupBy(s => s.Skill).ToArray();
+                    .GroupBy(s => s.Skill.Title).ToArray();
 
             var profileSkillAttributes = profilesBySkill.Select(s =>
             {
@@ -61,7 +61,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
                 return new SkillAttribute
                 {
-                    ONetAttribute = s.Key.Title,
+                    ONetAttribute = s.Key,
                     CompositeRank = Convert.ToDouble(onetRank + (profilePercentage / 20.0m)),
                     ONetRank = Convert.ToDouble(onetRank),
                     NcsRank = ncsRank,
