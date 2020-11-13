@@ -26,6 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IContentCacheService contentCacheService;
         private readonly IContentTypeMappingService contentTypeMappingService;
         private readonly IJobProfileOverviewApiService jobProfileOverviewApiService;
+        private readonly IApiCacheService apiCacheService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
@@ -34,7 +35,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService,
             IContentTypeMappingService contentTypeMappingService,
-            IJobProfileOverviewApiService jobProfileOverviewApiService)
+            IJobProfileOverviewApiService jobProfileOverviewApiService,
+            IApiCacheService apiCacheService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -43,6 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.contentCacheService = contentCacheService;
             this.contentTypeMappingService = contentTypeMappingService;
             this.jobProfileOverviewApiService = jobProfileOverviewApiService;
+            this.apiCacheService = apiCacheService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -57,14 +60,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetSkill, typeof(ApiSkill));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetOccupationalCode, typeof(ApiONetOccupationalCode));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
 
                 logger.LogInformation("Reloading Content Types from Service Taxonomy");
 
+                apiCacheService.StartCache();
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
+                
+                // Don't map job profiles into question sets
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
+
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiSkill, DysacSkillContentModel>(DysacConstants.ContentTypeONetSkill, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
+                apiCacheService.StopCache();
 
                 logger.LogInformation("Reloading Job Profile Overviews from Job Profiles API");
 

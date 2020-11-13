@@ -80,7 +80,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
 
-            // TODO - baked in here for now, needs Job Category View
             if (!string.IsNullOrEmpty(id))
             {
                 resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
@@ -95,10 +94,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                     if (jobProfileOverviews == null)
                     {
-                        throw new InvalidOperationException($"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
+                        logService.LogError($"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
                     }
-
-                    resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                    else
+                    {
+                        resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                    }
                 }
             }
 
