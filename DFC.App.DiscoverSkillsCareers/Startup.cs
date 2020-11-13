@@ -108,7 +108,9 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
+            services.AddSingleton(Configuration.GetSection(nameof(DysacOptions)).Get<DysacOptions>() ?? new DysacOptions());
             services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddSingleton(Configuration.GetSection(nameof(JobProfileOverviewServiceOptions)).Get<JobProfileOverviewServiceOptions>() ?? new JobProfileOverviewServiceOptions());
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
             services.AddTransient<INotificationService, NotificationService>();
@@ -120,6 +122,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
             services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+            services.AddDocumentServices<DysacJobProfileOverviewContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
 
             var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment());
@@ -131,6 +134,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
             services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
+
+            services.AddTransient<IJobProfileOverviewApiService, JobProfileOverviewApiService>();
 
             services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
 
@@ -152,6 +157,11 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHostedService<CacheReloadBackgroundService>();
 
             services.AddApiServices(Configuration, policyRegistry);
+            services.AddLinkDetailsConverter(new CustomLinkDetailConverter());
+
+            services
+             .AddPolicies(policyRegistry, nameof(JobProfileOverviewServiceOptions), policyOptions)
+             .AddHttpClient<IJobProfileOverviewApiService, JobProfileOverviewApiService, JobProfileOverviewServiceOptions>(Configuration, nameof(JobProfileOverviewServiceOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)

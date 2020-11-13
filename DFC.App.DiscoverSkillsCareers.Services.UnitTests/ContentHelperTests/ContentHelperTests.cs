@@ -18,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentHelperTests
         [Theory]
         [InlineData(DysacConstants.ContentTypePersonalityQuestionSet, typeof(DysacQuestionSetContentModel))]
         [InlineData(DysacConstants.ContentTypePersonalityTrait, typeof(DysacTraitContentModel))]
-        [InlineData(DysacConstants.ContentTypePersonalitySkill, typeof(DysacSkillContentModel))]
+        [InlineData(DysacConstants.ContentTypeONetSkill, typeof(DysacSkillContentModel))]
         [InlineData(DysacConstants.ContentTypeJobCategory, typeof(JobCategoryContentItemModel))]
         public void ContentHelpersGetDysacTypeFromContentTypeReturnsTrue(string contentType, Type type)
         {
@@ -42,7 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentHelperTests
         [Theory]
         [InlineData(DysacConstants.ContentTypePersonalityQuestionSet, typeof(ApiQuestionSet))]
         [InlineData(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait))]
-        [InlineData(DysacConstants.ContentTypePersonalitySkill, typeof(ApiSkill))]
+        [InlineData(DysacConstants.ContentTypeONetSkill, typeof(ApiSkill))]
         [InlineData(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory))]
         public void ContentHelpersGetApiTypeFromContentTypeReturnsTrue(string contentType, Type type)
         {

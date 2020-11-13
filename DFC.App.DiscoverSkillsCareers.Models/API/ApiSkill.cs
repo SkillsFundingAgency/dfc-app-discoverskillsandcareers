@@ -13,5 +13,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
         public new IList<IBaseContentItemModel> ContentItems { get; set; } = new List<IBaseContentItemModel>();
 
         public int? Ordinal { get; set; }
+
+        public decimal? ONetRank { get; set; }
     }
 }

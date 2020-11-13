@@ -100,44 +100,133 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
         }
 
-        //[Fact]
-        //public async Task GetAssessmentCallsGetAssessmentForCurrentSession()
-        //{
-        //    var sessionId = "session1";
-        //    var assessmentResponse = new GetAssessmentResponse { SessionId = sessionId };
-        //    A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+        [Fact]
+        public async Task AnswerFilterQuestionReturnsNextQuestion()
+        {
+            var sessionId = "session1";
+            var jobCategory = "delivery-and-storage";
+            var questionResponse = new GetQuestionResponse() { QuestionNumber = 1 };
+            var answerRequest = new PostAnswerRequest() { QuestionId = $"{jobCategory}-v1-1", SelectedOption = 2 };
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control" }, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
 
-        //    var response = await assessmentService.GetAssessment();
+            };
 
-        //    Assert.Equal(sessionId, response.SessionId);
-        //}
+            answerResponse.IsSuccess = true;
 
-        //[Fact]
-        //public async Task SendEmailCallsGetSendEmailForCurrentSession()
-        //{
-        //    var sessionId = "session1";
-        //    var domain = "https://localhost";
-        //    var emailAddress = "email@rmail.com";
-        //    var sendEmailResponse = new SendEmailResponse() { IsSuccess = true };
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
 
-        //    A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
 
-        //    var response = await assessmentService.SendEmail(domain, emailAddress);
-        //}
+            var response = await assessmentService.AnswerFilterQuestion(jobCategory, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
+            Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
+        }
 
-        //[Fact]
-        //public async Task SendSmsCallsGetSendSmsForCurrentSession()
-        //{
-        //    var sessionId = "session1";
-        //    var domain = "https://localhost";
-        //    var mobile = "0700123456";
-        //    var sendSmsResponse = new SendSmsResponse() { IsSuccess = true };
+        [Fact]
+        public async Task GetFilteredAssessmentQuestionReturnsQuestion()
+        {
+            var sessionId = "session1";
+            var jobCategory = "delivery-and-storage";
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
 
-        //    A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
 
-        //    var response = await assessmentService.SendSms(domain, mobile);
-        //    Assert.True(response.IsSuccess);
-        //}
+            };
+
+            answerResponse.IsSuccess = true;
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+
+
+            var response = await assessmentService.GetFilteredAssessmentQuestion(jobCategory, 1);
+
+            Assert.Equal(expectedFilterQuestion.QuestionText, response.QuestionText);
+            Assert.Equal(expectedFilterQuestion.Ordinal, response.CurrentQuestionNumber);
+            Assert.Equal(expectedFilterQuestion.TraitCode, response.TraitCode);
+        }
+
+        [Fact]
+        public async Task GetAssessmentReturnsAssessment()
+        {
+            var sessionId = "session1";
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
+            var shortQuestion1 = new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() };
+            var shortQuestion2 = new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() };
+
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { shortQuestion1, shortQuestion2 },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
+
+            };
+
+            answerResponse.IsSuccess = true;
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+
+
+            var response = await assessmentService.GetAssessment();
+
+            Assert.Equal(sessionId, response.SessionId);
+            Assert.Equal(shortQuestion1.Id.ToString(), response.QuestionId);
+        }
+
+        [Fact]
+        public async Task AssessmentServiceReloadUsingReferenceCodeReloadsAssessment()
+        {
+            var sessionId = "xE2356Fght3556cv";
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
+            var shortQuestion1 = new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() };
+            var shortQuestion2 = new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() };
+
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { shortQuestion1, shortQuestion2 },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
+            };
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+
+            var result = await assessmentService.ReloadUsingReferenceCode(sessionId);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AssessmentServiceReloadUsingSessionIdReloadsAssessment()
+        {
+            var sessionId = "session1";
+            var answerResponse = A.Fake<PostAnswerResponse>();
+            var expectedFilterQuestion = new FilteredAssessmentQuestion { Ordinal = 1, QuestionText = "A question?", TraitCode = "Self Control", Id = Guid.NewGuid() };
+            var shortQuestion1 = new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() };
+            var shortQuestion2 = new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() };
+
+            var assessment = new DysacAssessment
+            {
+                Questions = new List<ShortQuestion>() { shortQuestion1, shortQuestion2 },
+                FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { expectedFilterQuestion, new FilteredAssessmentQuestion { Ordinal = 2, QuestionText = "Another question?", TraitCode = "Motivation" } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }, LastAnswer = DateTime.Now } } }
+
+            };
+
+            A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+
+            var result = await assessmentService.ReloadUsingSessionId(sessionId);
+
+            Assert.True(result);
+        }
 
         [Fact]
         public async Task FilterAssessmentCallsFilterAssessmentForCurrentSession()
@@ -154,65 +243,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(sessionId, response.SessionId);
         }
-
-        //[Fact]
-        //public async Task ReloadUsingReferenceCodeCallsReloadForCurrentSession()
-        //{
-        //    var referenceCode = "code1";
-        //    var sessionIdForReferenceCode = "sessionId2";
-        //    var asssessmentResponse = new GetAssessmentResponse() { SessionId = sessionIdForReferenceCode };
-        //    A.CallTo(() => sessionIdToCodeConverter.GetSessionId(referenceCode)).Returns(sessionIdForReferenceCode);
-
-        //    var response = await assessmentService.ReloadUsingReferenceCode(referenceCode);
-
-        //    Assert.True(response);
-        //}
-
-        //[Fact]
-        //public async Task ReloadUsingReferenceCodeCallsCreateCookie()
-        //{
-        //    var referenceCode = "code1";
-        //    var sessionIdForReferenceCode = "p1-s1";
-        //    var asssessmentResponse = new GetAssessmentResponse() { SessionId = sessionIdForReferenceCode };
-        //    A.CallTo(() => sessionIdToCodeConverter.GetSessionId(referenceCode)).Returns(sessionIdForReferenceCode);
-
-        //    await assessmentService.ReloadUsingReferenceCode(referenceCode);
-
-        //    A.CallTo(() => sessionService.CreateCookie(sessionIdForReferenceCode)).MustHaveHappenedOnceExactly();
-        //}
-
-        //[Fact]
-        //public async Task ReloadUsingSessionIdCodeCallsCreateCookie()
-        //{
-        //    var sessionId = "sessionId1";
-        //    var asssessmentResponse = new GetAssessmentResponse() { SessionId = sessionId };
-
-        //    var response = await assessmentService.ReloadUsingSessionId(sessionId);
-
-        //    A.CallTo(() => sessionService.CreateCookie(sessionId)).MustHaveHappenedOnceExactly();
-        //}
-
-        //[Fact]
-        //public async Task ReloadUsingSessionIdThatDoesntExistReturnsFalse()
-        //{
-        //    var sessionId = "sessionId1";
-        //    GetAssessmentResponse asssessmentResponse = null;
-
-        //    var response = await assessmentService.ReloadUsingSessionId(sessionId);
-
-        //    Assert.False(response);
-        //    A.CallTo(() => sessionService.CreateCookie(sessionId)).MustNotHaveHappened();
-        //}
-
-        //[Theory]
-        //[InlineData("")]
-        //[InlineData(null)]
-        //public async Task ReloadUsingNullInvalidSessionIdReturnsFalse(string sessionId)
-        //{
-        //    GetAssessmentResponse asssessmentResponse = null;
-
-        //    await Assert.ThrowsAsync<ArgumentNullException>(async () => await assessmentService.ReloadUsingSessionId(sessionId).ConfigureAwait(false));
-        //}
 
         [Fact]
         public void CheckWhetherAReferenceCodeExists()

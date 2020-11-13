@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
+    [ExcludeFromCodeCoverage]
     public class JobProfileOverView
     {
         public string? Cname { get; set; }

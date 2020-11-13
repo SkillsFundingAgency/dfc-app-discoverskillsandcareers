@@ -40,5 +40,12 @@ namespace DFC.App.DiscoverSkillsCareers.Models
                 }
             }
         }
+
+        public IEnumerable<DysacSkillContentItemModel> SkillsToCompare(HashSet<string> skillsToRemove)
+        {
+            return Skills
+                .Where(o => !skillsToRemove.Contains(o.Title!))
+                .Take(8);
+        }
     }
 }

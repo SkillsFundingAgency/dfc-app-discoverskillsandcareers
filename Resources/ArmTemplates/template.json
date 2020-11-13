@@ -108,6 +108,7 @@
         "dysacAssessmentCollectionName": "assessment",
         "sessionStateCollectionName": "session-state",
         "dysacUrl": "[concat('https://dfc-',tolower(parameters('Environment')),'-api-cont-fa.azurewebsites.net/')]",
+        "jobProfUrl": "[concat('https://dfc-',tolower(parameters('Environment')),'-app-stax-jobprof-as.azurewebsites.net/profile/overview')]",
         "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
     "resources": [
@@ -464,6 +465,10 @@
                                 "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__4",
                                 "value": "/content/personalityquestionset/"
                             },
+							 {
+                                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__5",
+                                "value": "dfc-app-jobprofiles"
+                            },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacContent__AccessKey",
                                 "value": "[parameters('cosmosDbKey')]"
@@ -534,7 +539,11 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__SummaryEndpoint",
-                                "value": "/api/execute"
+                                "value": "api/execute/"
+                            },
+                            {
+                                "name": "JobProfileOverviewServiceOptions__BaseAddress",
+                                "value": "[variables('jobProfUrl')]"
                             }
                         ]
                     }

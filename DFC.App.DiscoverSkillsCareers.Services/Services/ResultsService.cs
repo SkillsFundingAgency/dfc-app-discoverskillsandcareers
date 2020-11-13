@@ -61,7 +61,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var answeredPositiveQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
 
-            foreach (var category in assessment.ShortQuestionResult.JobCategories)
+            foreach (var category in assessment.ShortQuestionResult.JobCategories!)
             {
                 var listOfJobProfiles = new List<JobProfileResult>();
 
@@ -101,10 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 if (assessment.ShortQuestionResult != null)
                 {
-                    if (assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory) != null)
-                    {
-                        assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
-                    }
+                    assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
                 }
             }
 
@@ -131,9 +128,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             foreach (var c in categories.OrderByDescending(x => x.JobProfiles.Count()))
             {
                 c.DisplayOrder = order;
-                if (!string.IsNullOrEmpty(selectedCategory) && c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
+                if (!string.IsNullOrEmpty(selectedCategory))
                 {
-                    c.DisplayOrder = 9999;
+                    if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
+                    {
+                        c.DisplayOrder = 9999;
+                    }
                 }
 
                 order--;

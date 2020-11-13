@@ -1,5 +1,5 @@
 # dfc-app-discoverskillsandcareers
-This project provides questions and records answers. It is designed to be used in connjunction with the Composite UI (Shell application). 
+This project provides questions and records answers. It is designed to be used in connjunction with the Composite UI (Shell application), Service Taxonomy and Job Profiles
 
 Details of the this app may be found here https://github.com/SkillsFundingAgency/dfc-app-discoverskillsandcareers
 
@@ -18,6 +18,10 @@ Clone the project and open the solution in Visual Studio 2019.
 |Item	|Purpose|
 |-------|-------|
 |Azure Cosmos DB | Document storage |
+|Comp UI App Registry | Running the application | 
+|Comp UI Shell | Running the application |
+|Content API | Load DYSaC data into cache from Service Taxonomy |
+|Job Profiles API | Load Job Profile Overview for Results screen |
 
 ## Local Config Files
 
