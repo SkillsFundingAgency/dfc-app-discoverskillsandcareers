@@ -27,6 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IContentTypeMappingService contentTypeMappingService;
         private readonly IJobProfileOverviewApiService jobProfileOverviewApiService;
         private readonly IApiCacheService apiCacheService;
+        private readonly DysacOptions dysacOptions;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
@@ -36,7 +37,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IContentCacheService contentCacheService,
             IContentTypeMappingService contentTypeMappingService,
             IJobProfileOverviewApiService jobProfileOverviewApiService,
-            IApiCacheService apiCacheService)
+            IApiCacheService apiCacheService,
+            DysacOptions dysacOptions)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -46,6 +48,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.contentTypeMappingService = contentTypeMappingService;
             this.jobProfileOverviewApiService = jobProfileOverviewApiService;
             this.apiCacheService = apiCacheService;
+            this.dysacOptions = dysacOptions;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -53,6 +56,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             try
             {
                 logger.LogInformation("Reload cache started");
+
+                if (dysacOptions.CacheReloadEnabled.HasValue && !dysacOptions.CacheReloadEnabled.Value)
+                {
+                    logger.LogInformation($"Cache reload is disabled by app setting {nameof(dysacOptions.CacheReloadEnabled)}");
+                    return;
+                }
 
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
