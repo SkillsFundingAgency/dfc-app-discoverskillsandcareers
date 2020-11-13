@@ -370,6 +370,10 @@
                                 "value": "[concat(parameters('ApimRoot'), 'assessments/api')]"
                             },
                             {
+                                "name": "DysacOptions__CacheReloadEnabled",
+                                "value": true
+                            },
+                            {
                                 "name": "ExternalLinkOptions__MatchSkillsResultsEndpoint",
                                 "value": "/matchskills/dysacResults"
                             },
