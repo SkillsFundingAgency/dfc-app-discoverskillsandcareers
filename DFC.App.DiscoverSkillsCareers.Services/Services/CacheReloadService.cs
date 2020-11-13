@@ -65,7 +65,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 apiCacheService.StartCache();
                 await ReloadContentType<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, stoppingToken).ConfigureAwait(false);
-                
+
                 // Don't map job profiles into question sets
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
 
