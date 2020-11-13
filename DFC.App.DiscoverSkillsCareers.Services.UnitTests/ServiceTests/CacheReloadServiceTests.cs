@@ -58,7 +58,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeJobProfileOverviewService.GetOverviews(A<List<string>>.Ignored)).Returns(new List<ApiJobProfileOverview>() { new ApiJobProfileOverview { CanonicalName = "A-Job-Profile" } });
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacJobProfileOverviewContentModel>()).Returns(new List<DysacJobProfileOverviewContentModel>() { new DysacJobProfileOverviewContentModel { Title = "A Job Profile" } });
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
@@ -95,7 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
@@ -124,7 +124,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).Returns(fakePagesSummaryItemModels);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
@@ -155,7 +155,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.NotFound);
              A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
@@ -182,7 +182,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
@@ -205,7 +205,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(expectedValidApiQuestionSet);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
@@ -231,7 +231,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.DeleteStaleCacheEntriesAsync<DysacQuestionSetContentModel>(fakePagesSummaryItemModels, cancellationToken).ConfigureAwait(false);
@@ -253,7 +253,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.DeleteStaleCacheEntriesAsync<DysacQuestionSetContentModel>(fakePagesSummaryItemModels, cancellationToken).ConfigureAwait(false);
@@ -273,7 +273,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeDysacQuestionSetContentModels, cancellationToken).ConfigureAwait(false);
@@ -292,7 +292,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeDysacQuestionSetContentModels, cancellationToken).ConfigureAwait(false);
@@ -309,7 +309,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var cancellationToken = new CancellationToken(true);
             var fakeDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeDysacQuestionSetContentModels, cancellationToken).ConfigureAwait(false);
@@ -323,7 +323,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public void CacheReloadServiceTryValidateModelForValidAndInvalid(DysacQuestionSetContentModel DysacQuestionSetContentModel, bool expectedResult)
         {
             // arrange
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>());
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });
 
             // act
             var result = cacheReloadService.TryValidateModel(DysacQuestionSetContentModel);
