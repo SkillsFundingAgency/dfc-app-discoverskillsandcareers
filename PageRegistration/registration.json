@@ -41,6 +41,9 @@
         "IsHealthy": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/herobanner"
       }
-    ]
+    ],
+    "JavaScriptNames": {
+      "/js/compui.min.js": null
+    }
   }
 ]
