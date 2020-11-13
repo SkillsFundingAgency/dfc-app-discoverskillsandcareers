@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Collections.Generic;
@@ -117,16 +118,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 {
                     if (!results.Any(x => x.JobFamilyName == jc.Title))
                     {
+                        var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(jc.JobProfiles.Where(z => z.Skills.Any()), new HashSet<string>(), 0.75);
+
                         results.Add(new JobCategoryResult()
                         {
                             JobFamilyName = jc.Title!,
                             JobFamilyUrl = jc.WebsiteURI!.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
                             TraitsTotal = trait.TotalScore,
-                            SkillQuestions = jc.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title!)).Distinct(),
+                            SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
                             TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == jc.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
                             NormalizedTotal = trait.TotalScore,
                             Total = trait.TotalScore,
-                            TotalQuestions = jc.JobProfiles.SelectMany(x => x.Skills.Select(y => y.Title)).Distinct().Count(),
+                            TotalQuestions = categorySkills.Count(),
                             JobProfiles = jc.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                         });
                     }
