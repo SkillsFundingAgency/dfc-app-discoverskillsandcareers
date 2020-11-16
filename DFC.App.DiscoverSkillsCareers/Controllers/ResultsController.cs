@@ -98,7 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     }
                     else
                     {
-                        resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == jobCategory.JobFamilyNameUrl).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
+                        resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl)).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
                     }
                 }
             }
