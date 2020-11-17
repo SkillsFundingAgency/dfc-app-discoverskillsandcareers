@@ -271,7 +271,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             foreach (var question in dynamic)
             {
                 var shortQuestion = new ShortQuestion();
-                shortQuestion.Id = Guid.NewGuid(); //Swap Out with actual question...?
+                shortQuestion.Id = Guid.NewGuid();
                 shortQuestion.QuestionText = question["questionText"];
                 shortQuestion.Ordinal = question["questionNumber"] - 1;
                 shortQuestion.IsNegative = question["isNegative"];
