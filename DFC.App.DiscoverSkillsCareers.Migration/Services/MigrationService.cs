@@ -7,10 +7,8 @@ using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
-using NHibernate.Mapping;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 count += response.Count;
 
                 itemsToProcess.AddRange(response);
-                break;
+
                 // Get the continuation so that we know when to stop.
                 continuation = response.ResponseContinuation;
             } while (!string.IsNullOrEmpty(continuation));
