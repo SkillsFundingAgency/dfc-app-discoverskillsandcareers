@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Migration.Contacts;
+using DFC.App.DiscoverSkillsCareers.Migration.Models;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
@@ -25,8 +26,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private IEnumerable<DysacFilteringQuestionContentModel> filteringQuestions = new List<DysacFilteringQuestionContentModel>();
         private IEnumerable<ShortQuestion> shortQuestions = new List<ShortQuestion>();
         private IMapper mapper;
+        private readonly MigrationOptions options;
 
-        public MigrationService(IDocumentService<DysacTraitContentModel> dysacTraitDocumentService, IDocumentService<DysacAssessment> dysacAssessmentDocumentService, IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService, IDocumentClient documentClient, IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IMapper mapper)
+        public MigrationService(IDocumentService<DysacTraitContentModel> dysacTraitDocumentService, IDocumentService<DysacAssessment> dysacAssessmentDocumentService, IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService, IDocumentClient documentClient, IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IMapper mapper, MigrationOptions options)
         {
             this.dysacTraitDocumentService = dysacTraitDocumentService;
             this.dysacAssessmentDocumentService = dysacAssessmentDocumentService;
@@ -34,37 +36,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.documentClient = documentClient;
             this.mapper = mapper;
+            this.options = options;
         }
 
         public async Task Start()
         {
-            shortQuestions = await LoadShortQuestions();
-            List<dynamic> itemsToProcess = new List<dynamic>();
-            int count = 0;
-            string continuation = string.Empty;
-            do
-            {
-                // Read the feed 10 items at a time until there are no more items to read
-                FeedResponse<dynamic> response = await documentClient.ReadDocumentFeedAsync(UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                                                                new FeedOptions
-                                                                {
-                                                                    MaxItemCount = 10,
-                                                                    RequestContinuation = continuation
-                                                                });
-
-                // Append the item count
-                count += response.Count;
-
-                itemsToProcess.AddRange(response);
-
-                // Get the continuation so that we know when to stop.
-                continuation = response.ResponseContinuation;
-            } while (!string.IsNullOrEmpty(continuation));
-
-            //var source = File.ReadAllText("TestData/exampleLegacyData2.json");
-
             await LoadJobCategoriesAndProfiles();
             await LoadFilteringQuestions();
+            shortQuestions = await LoadShortQuestions();
+            List<dynamic> itemsToProcess = await LoadLegacyDocuments();
 
             foreach (var item in itemsToProcess)
             {
@@ -95,6 +75,29 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 var result = await dysacAssessmentDocumentService.UpsertAsync(assessment);
             }
+        }
+
+        private async Task<List<dynamic>> LoadLegacyDocuments()
+        {
+            List<dynamic> itemsToProcess = new List<dynamic>();
+            int count = 0;
+            string continuation = string.Empty;
+            do
+            {
+                FeedResponse<dynamic> response = await documentClient.ReadDocumentFeedAsync(UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
+                                                                new FeedOptions
+                                                                {
+                                                                    MaxItemCount = options.ItemsPerCosmosBatch,
+                                                                    RequestContinuation = continuation
+                                                                });
+
+                count += response.Count;
+
+                itemsToProcess.AddRange(response);
+
+                continuation = response.ResponseContinuation;
+            } while (!string.IsNullOrEmpty(continuation));
+            return itemsToProcess;
         }
 
         private async Task LoadFilteringQuestions()

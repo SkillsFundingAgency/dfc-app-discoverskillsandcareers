@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Migration.Models;
 using DFC.App.DiscoverSkillsCareers.Migration.Services;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
@@ -38,6 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 .AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, true)
                 .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true)
                 .AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, true)
+                .AddSingleton(Configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ?? new MigrationOptions())
                 .AddSingleton<IDocumentClient>(new DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl, cosmosDbConnectionLegacyUserSessions.AccessKey))
                 .AddAutoMapper(typeof(Program))
                 .BuildServiceProvider();
@@ -53,8 +55,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var dysacQuestionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacQuestionSetContentModel>>();
             var userSessionDocumentService = serviceProvider.GetService<IDocumentClient>();
             var autoMapper = serviceProvider.GetService<IMapper>();
+            var migrationOptions = serviceProvider.GetService<MigrationOptions>();
 
-            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService, userSessionDocumentService, dysacQuestionSetDocumentService, autoMapper);
+            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService, userSessionDocumentService, dysacQuestionSetDocumentService, autoMapper, migrationOptions);
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
         }
