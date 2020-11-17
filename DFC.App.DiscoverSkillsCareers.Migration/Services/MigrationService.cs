@@ -130,15 +130,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         private IEnumerable<FilteredAssessmentQuestion> AddFilterQuestions(IEnumerable<JobCategoryAssessment> jobCategoryAssessments)
         {
-            // This may change aftet the ONet ranking task.
-            // At the moment it asks a unique set of questions to determine suitability
             var groupedQuestions = jobCategoryAssessments.SelectMany(x => x.QuestionSkills).GroupBy(x => x.Key);
             var distinctGroupedQuestions = groupedQuestions.Select(z => z.FirstOrDefault());
 
             var filteredAssessmentQuestions = new List<FilteredAssessmentQuestion>();
 
             int questionIndex = 0;
-            // Using foreach to assign question once only
             foreach (var question in distinctGroupedQuestions)
             {
                 var filterQuestion = filteringQuestions.FirstOrDefault(x => x.Title.ToUpperInvariant() == question.Key.ToUpperInvariant());
