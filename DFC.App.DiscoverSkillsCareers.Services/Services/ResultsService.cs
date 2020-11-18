@@ -99,7 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             {
                 var remainingJobCategoryQuestionsCount = jobCategory.QuestionSkills.Count(x => !answeredQuestions.Contains(x.Key));
 
-                if (assessment.ShortQuestionResult != null)
+                if (assessment.ShortQuestionResult != null && assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory) != null)
                 {
                     assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
                 }

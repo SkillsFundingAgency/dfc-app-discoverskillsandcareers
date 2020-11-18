@@ -4,7 +4,6 @@ using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
