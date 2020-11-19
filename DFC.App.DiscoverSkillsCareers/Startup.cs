@@ -38,6 +38,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Notify.Interfaces;
 using Notify.Client;
+using System.Reflection;
+using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -97,7 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(DysacProfile)), Assembly.GetAssembly(typeof(DefaultProfile)));
             services.AddApplicationInsightsTelemetry();
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
