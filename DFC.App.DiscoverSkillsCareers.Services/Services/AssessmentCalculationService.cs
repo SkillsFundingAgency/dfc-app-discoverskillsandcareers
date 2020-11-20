@@ -6,6 +6,8 @@ using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Compui.Cosmos.Contracts;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,13 +28,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
         private readonly IMapper mapper;
+        private readonly ILogger logger;
 
         public AssessmentCalculationService(
             IDocumentService<DysacTraitContentModel> traitDocumentService,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger logger)
         {
             this.traitDocumentService = traitDocumentService;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
@@ -105,6 +110,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var topTraits = userTraits.OrderByDescending(x => x.TotalScore).Take(10);
 
+            logger.LogInformation($"User Traits:{JsonConvert.SerializeObject(userTraits)}");
+            logger.LogInformation($"All Traits:{JsonConvert.SerializeObject(allTraits)}");
+            logger.LogInformation($"Top Traits:{JsonConvert.SerializeObject(topTraits)}");
+
             foreach (var trait in topTraits)
             {
                 var applicableTrait = allTraits.FirstOrDefault(x => x.Title == trait.TraitCode);
@@ -120,10 +129,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     {
                         var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(jc.JobProfiles.Where(z => z.Skills.Any()), new HashSet<string>(), 0.75);
 
+                        logger.LogInformation($"Job Cateogry:{JsonConvert.SerializeObject(jc)}");
+                        logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");
+
                         results.Add(new JobCategoryResult()
                         {
                             JobFamilyName = jc.Title!,
-                            JobFamilyUrl = jc.WebsiteURI!.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
+                            JobFamilyUrl = jc.WebsiteURI?.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
                             TraitsTotal = trait.TotalScore,
                             SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
                             TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == jc.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),

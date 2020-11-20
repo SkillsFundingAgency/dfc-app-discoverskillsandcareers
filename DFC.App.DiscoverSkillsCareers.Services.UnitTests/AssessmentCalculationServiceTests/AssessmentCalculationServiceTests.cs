@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -27,7 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper);
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper, A.Fake<ILogger>());
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
@@ -43,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenMultipleQuestionPositiveReturnsMultipleJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper);
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper, A.Fake<ILogger>());
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
             assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
@@ -61,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenAllNegativeReturnsNoJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper);
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper, A.Fake<ILogger>());
             var assessment = AssessmentHelpers.GetAssessment();
 
             // Act
