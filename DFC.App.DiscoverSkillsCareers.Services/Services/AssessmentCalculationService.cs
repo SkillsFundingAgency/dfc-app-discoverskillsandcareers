@@ -48,7 +48,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new ArgumentNullException(nameof(assessment));
             }
 
-            var allTraits = await traitDocumentService.GetAllAsync().ConfigureAwait(false);
+            var allTraits = await traitDocumentService.GetAllAsync("Trait").ConfigureAwait(false);
 
             if (allTraits == null)
             {
