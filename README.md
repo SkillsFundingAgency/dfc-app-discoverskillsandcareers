@@ -20,7 +20,7 @@ Clone the project and open the solution in Visual Studio 2019.
 |-------|-------|
 |Azure Cosmos DB | Document storage |
 |[Comp UI App Registry](https://github.com/SkillsFundingAgency/dfc-api-appRegistry) | Running the application | 
-|Comp UI Shell | Running the application |
+|[Comp UI Shell](https://github.com/SkillsFundingAgency/dfc-composite-shell) | Running the application |
 |Content API | Load DYSaC data into cache from Service Taxonomy |
 |Job Profiles API | Load Job Profile Overview for Results screen |
 
