@@ -1,6 +1,6 @@
 # dfc-app-discoverskillsandcareers
 
-This project provides questions and records answers. It is designed to be used in connjunction with the Composite UI (Shell application), Service Taxonomy and Job Profiles.
+This project provides questions and records answers. It is designed to be used in conjunction with the Composite UI (Shell application), Service Taxonomy and Job Profiles.
 
 Details of this app may be found on [github](https://github.com/SkillsFundingAgency/dfc-app-discoverskillsandcareers).
 
@@ -61,7 +61,3 @@ CSS, JS, images and fonts used in this site can found in the following repositor
 
 * Microsoft Visual Studio 2019
 * .Net Core 3.1
-
-## References
-
-Please refer to https://github.com/SkillsFundingAgency/dfc-digital for additional instructions on configuring individual components like Sitefinity and Cosmos.
