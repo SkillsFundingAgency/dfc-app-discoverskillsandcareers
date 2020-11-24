@@ -2,9 +2,9 @@
 
 This project provides questions and records answers. It is designed to be used in conjunction with the Composite UI (Shell application), Service Taxonomy and Job Profiles.
 
-Details of this app may be found on [github](https://github.com/SkillsFundingAgency/dfc-app-discoverskillsandcareers).
+Details of this app may be found on [github](https://github.com/SkillsFundingAgency/dfc-app-discoverskillsandcareers) and on [confluence](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2043019322/CUI+discover+your+skills+and+careers).
 
-Details of the Composite UI application may be found on [github](https://github.com/SkillsFundingAgency/dfc-composite-shell).
+Details of the Composite UI application may be found on [github](https://github.com/SkillsFundingAgency/dfc-composite-shell) and on [confluence](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/1878557026/CUI+app+development).
 
 ## Getting Started
 
