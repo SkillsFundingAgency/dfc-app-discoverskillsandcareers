@@ -1,9 +1,10 @@
 # dfc-app-discoverskillsandcareers
-This project provides questions and records answers. It is designed to be used in connjunction with the Composite UI (Shell application), Service Taxonomy and Job Profiles
 
-Details of the this app may be found here https://github.com/SkillsFundingAgency/dfc-app-discoverskillsandcareers
+This project provides questions and records answers. It is designed to be used in connjunction with the Composite UI (Shell application), Service Taxonomy and Job Profiles.
 
-Details of the Composite UI application may be found here https://github.com/SkillsFundingAgency/dfc-composite-shell
+Details of this app may be found on [github](https://github.com/SkillsFundingAgency/dfc-app-discoverskillsandcareers).
+
+Details of the Composite UI application may be found on [github](https://github.com/SkillsFundingAgency/dfc-composite-shell).
 
 ## Getting Started
 
