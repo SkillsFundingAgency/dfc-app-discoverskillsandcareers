@@ -28,16 +28,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
         private readonly IMapper mapper;
-        private readonly ILogger logger;
+        private readonly ILogger<AssessmentCalculationService> logger;
 
         public AssessmentCalculationService(
             IDocumentService<DysacTraitContentModel> traitDocumentService,
             IMapper mapper,
-            ILogger logger)
+            ILoggerFactory loggerFactory)
         {
             this.traitDocumentService = traitDocumentService;
             this.mapper = mapper;
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
@@ -53,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new ArgumentNullException(nameof(assessment));
             }
 
-            var allTraits = await traitDocumentService.GetAllAsync("Trait").ConfigureAwait(false);
+            var allTraits = await traitDocumentService.GetAsync(x => x.PartitionKey == "Trait").ConfigureAwait(false);
 
             if (allTraits == null)
             {
