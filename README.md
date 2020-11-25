@@ -41,8 +41,6 @@ By default, the appsettings include a local Azure Cosmos Emulator configuration 
 
 ### App Registration Document
 
-todo: what to do with this
-
 The app registration document you'll need is...
 
 ```
@@ -126,7 +124,7 @@ Before running the app, ensure that the CosmosDB emulator is running.
 
 ### Running locally without the shell
 
-This app is designed to be run from within the composite app. However running this app outside of the other apps will only show simple views of the data.
+This app is designed to be run from within the composite shell. You can run this app outside of the shell, and it will show simple views of the data.
 
 If [running locally without the shell](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2025029780/Running+Child+apps+locally+without+the+Shell), you'll have to [set a header](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2211217409/3rd+Party+tools+emulators+assets#Chrome-Extensions) for the [session](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2026733634/CUI+Session+state).
 
@@ -145,7 +143,7 @@ Once configured and the configuration files updated, it should be F5 to run and 
 
 To run the project, start the web application. Once running, browse to the main entrypoint which is the "https://localhost:44342/dysac". 
 
-This will list allow you start a new assessment or you can return to a existing assessment.
+This will allow you start a new assessment or you can return to a existing assessment.
 
 ## Deployments
 
