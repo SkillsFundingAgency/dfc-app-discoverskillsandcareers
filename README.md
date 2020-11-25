@@ -41,8 +41,6 @@ By default, the appsettings include a local Azure Cosmos Emulator configuration 
 
 ### App Registration Document
 
-todo: what to do with this
-
 The app registration document you'll need is...
 
 ```
@@ -122,13 +120,30 @@ The app registration document you'll need is...
 
 ## Running locally
 
-To run this product locally, you will need to configure the list of dependencies. Once configured and the configuration files updated, it should be F5 to run and debug locally. The application can be run using IIS Express or full IIS.
+Before running the app, ensure that the CosmosDB emulator is running.
 
-To run the project, start the web application. Once running, browse to the main entrypoint which is the "https://localhost:44342/dysac". 
+### Running locally without the shell
 
-This will list allow you start a new assessment or you can return to a existing assessment.
+This app is designed to be run from within the composite shell. You can run this app outside of the shell, and it will show simple views of the data.
 
-This app is designed to be run from within the composite app. However running this app outside of the other apps will only show simple views of the data.
+If [running locally without the shell](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2025029780/Running+Child+apps+locally+without+the+Shell), you'll have to [set a header](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2211217409/3rd+Party+tools+emulators+assets#Chrome-Extensions) for the [session](https://skillsfundingagency.atlassian.net/wiki/spaces/DFC/pages/2026733634/CUI+Session+state).
+
+### Running locally in the shell
+
+To run this product locally, you will need to configure and run the list of dependencies.
+
+Run the solutions in this order...
+
+dfc-api-appregistry
+dfc-composite-shell
+dfc-api-content
+dfc-app-discoverskillscareers
+
+Once configured and the configuration files updated, it should be F5 to run and debug locally. The application can be run using IIS Express or full IIS.
+
+To run the project, start the web application. Once running, browse to the main entrypoint which is the "https://localhost:44342/dysac".
+
+This will allow you start a new assessment or you can return to a existing assessment.
 
 ## Deployments
 
