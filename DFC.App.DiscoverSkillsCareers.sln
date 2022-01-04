@@ -16,7 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		README.md = README.md
 		stylecop.json = stylecop.json
 		UnitTests.CodeAnalysis.ruleset = UnitTests.CodeAnalysis.ruleset
-		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.DiscoverSkillsCareers.Services", "DFC.App.DiscoverSkillsCareers.Services\DFC.App.DiscoverSkillsCareers.Services.csproj", "{25316A04-98E1-47D7-9212-5E871B4EF655}"

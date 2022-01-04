@@ -40,6 +40,7 @@ using Notify.Interfaces;
 using Notify.Client;
 using System.Reflection;
 using DFC.App.DiscoverSkillsCareers.MappingProfiles;
+using Microsoft.Azure.Documents.Client;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -119,15 +120,16 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
 
+            var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
-            services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
-            services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
-            services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
-            services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
-            services.AddDocumentServices<DysacJobProfileOverviewContentModel>(cosmosDbConnectionContent, env.IsDevelopment());
+            services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddDocumentServices<DysacJobProfileOverviewContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
 
             var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
-            services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment());
+            services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment(), cosmosRetryOptions);
 
             services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
             services.AddTransient<IWebhooksService, WebhooksService>();

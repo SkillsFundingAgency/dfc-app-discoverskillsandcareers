@@ -30,13 +30,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
             var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
             var cosmosDbConnectionLegacyUserSessions = Configuration.GetSection("Configuration:CosmosDbConnections:LegacySessions").Get<CosmosDbConnection>();
+            var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
 
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
-                .AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, true)
-                .AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, true)
-                .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true)
-                .AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, true)
+                .AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
+                .AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, true, cosmosRetryOptions)
+                .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
+                .AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddSingleton(Configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ?? new MigrationOptions())
                 .AddSingleton<IDocumentClient>(new DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl, cosmosDbConnectionLegacyUserSessions.AccessKey))
                 .AddAutoMapper(typeof(Program))
