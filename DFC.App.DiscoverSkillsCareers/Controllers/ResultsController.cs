@@ -77,13 +77,27 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
+            logService.LogInformation("Assesment retrieved");
+
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
 
+            logService.LogInformation("Got results by category");
+
             if (!string.IsNullOrEmpty(id))
             {
-                resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
+                var category = resultsByCategoryModel?.JobsInCategory?.FirstOrDefault(x => x.CategoryUrl == id);
+
+                if (category == null)
+                {
+                    throw new ArgumentNullException(
+                        $"Category is null - found {resultsByCategoryModel?.JobsInCategory?.Count()} categories");
+                }
+
+                category.ShowThisCategory = true;
             }
+
+            logService.LogInformation($"Looping through catergories - {resultsResponse?.JobCategories} available");
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
@@ -102,6 +116,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     }
                 }
             }
+
+            logService.LogInformation("Finished loop");
 
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
