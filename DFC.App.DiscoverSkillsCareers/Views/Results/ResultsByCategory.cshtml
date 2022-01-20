@@ -20,7 +20,7 @@
                             {
                                 <p class="text-light"><span>No job roles were found that might be suited to you</span></p>
                             }
-                            <p><a asp-route="filterquestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change my answers</a></p>
+                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change my answers</a></p>
 
                             @if (jobCategory.ShowThisCategory)
                             {
@@ -47,7 +47,7 @@
                         else
                         {
                             <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
-                            <a asp-route="filterquestions" role="button" class="govuk-button app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Answer @jobCategory.AnswerMoreQuestions more question@{if (@jobCategory.AnswerMoreQuestions > 1)@("s")}</a>
+                            <a asp-route="filterQuestions" role="button" class="govuk-button app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Answer @jobCategory.AnswerMoreQuestions more question@{if (@jobCategory.AnswerMoreQuestions > 1)@("s")}</a>
                         }
                     </div>
                 </div>
