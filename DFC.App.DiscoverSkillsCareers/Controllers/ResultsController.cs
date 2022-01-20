@@ -90,31 +90,55 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                 if (category == null)
                 {
-                    throw new ArgumentNullException(
-                        $"Category is null - found {resultsByCategoryModel?.JobsInCategory?.Count()} categories");
+                    if (resultsByCategoryModel?.JobsInCategory != null)
+                    {
+                        var ids = string.Join(',', resultsByCategoryModel?.JobsInCategory.Select(x => x.CategoryUrl).ToArray());
+ 
+                        logService.LogError(
+                            $"Category is null - found {resultsByCategoryModel?.JobsInCategory?.Count()} categories. Received {ids}. None which were {id}");
+                    }
                 }
-
-                category.ShowThisCategory = true;
+                else
+                {
+                    category.ShowThisCategory = true;
+                }
             }
 
-            logService.LogInformation($"Looping through catergories - {resultsResponse?.JobCategories} available");
+            logService.LogInformation($"Looping through categories - {resultsResponse?.JobCategories} available");
+
+            if (resultsResponse?.JobCategories == null)
+            {
+                throw new Exception("Job categories is null");
+            }
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                if (jobCategory.JobProfiles.Any())
+                if (jobCategory?.JobProfiles.Any() != true)
                 {
-                    var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(x => x.FirstOrDefault()).Select(z => z.Title.ToLowerInvariant());
-                    var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title)).ConfigureAwait(false);
-
-                    if (jobProfileOverviews == null)
-                    {
-                        logService.LogError($"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
-                    }
-                    else
-                    {
-                        resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl)).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
-                    }
+                    continue;
                 }
+
+                var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(
+                    x => x.FirstOrDefault()).Select(z => z?.Title?.ToLowerInvariant());
+                var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
+                        x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title))
+                    .ConfigureAwait(false);
+
+                if (jobProfileOverviews == null)
+                {
+                    logService.LogError(
+                        $"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
+
+                    continue;
+                }
+
+                var category = resultsByCategoryModel.JobsInCategory.FirstOrDefault(x =>
+                    x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
+                category?.JobProfiles?.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel
+                {
+                    Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html,
+                    ReturnedStatusCode = System.Net.HttpStatusCode.OK
+                }));
             }
 
             logService.LogInformation("Finished loop");
