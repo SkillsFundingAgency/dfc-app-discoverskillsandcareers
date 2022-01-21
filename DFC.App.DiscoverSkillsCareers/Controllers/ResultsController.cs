@@ -104,7 +104,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
             }
 
-            logService.LogInformation($"Looping through categories - {resultsResponse?.JobCategories} available");
+            logService.LogInformation($"Looping through categories - {resultsResponse?.JobCategories?.Count()} available");
 
             if (resultsResponse?.JobCategories == null)
             {
@@ -115,6 +115,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (jobCategory?.JobProfiles.Any() != true)
                 {
+                    logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
                     continue;
                 }
 
@@ -136,7 +137,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
                 category?.JobProfiles?.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel
                 {
-                    Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html,
+                    Cname = x.Title.Replace(" ", "-"),
+                    OverViewHTML = x.Html,
                     ReturnedStatusCode = System.Net.HttpStatusCode.OK
                 }));
             }
@@ -146,7 +148,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
 
-            this.logService.LogInformation($"{nameof(this.Roles)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(Roles)} generated the model and ready to pass to the view");
 
             return View("ResultsByCategory", resultsByCategoryModel);
         }

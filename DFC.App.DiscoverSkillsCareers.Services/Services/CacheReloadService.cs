@@ -201,6 +201,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public async Task DeleteStaleCacheEntriesAsync<TDestModel>(IList<ApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
+            if (summaryList == null)
+            {
+                throw new Exception("Summary list is empty");
+            }
+
             logger.LogInformation("Delete stale cache items started");
 
             var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync<TDestModel>().ConfigureAwait(false);
@@ -271,24 +276,32 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
            where TModel : class, IBaseContentItemModel
            where TDestModel : class, IDocumentModel, IDysacContentModel
         {
-            var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
-            await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);
-
-            if (stoppingToken.IsCancellationRequested)
+            try
             {
-                logger.LogWarning($"Reload cache cancelled for {contentType}");
-
-                return;
-            }
-
-            if (summaryList != null && summaryList.Any())
-            {
-                await ProcessSummaryListAsync<TModel, TDestModel>(contentType, summaryList, stoppingToken).ConfigureAwait(false);
+                var summaryList = await GetSummaryListAsync(contentType).ConfigureAwait(false);
+                await DeleteStaleCacheEntriesAsync<TDestModel>(summaryList!, stoppingToken).ConfigureAwait(false);
 
                 if (stoppingToken.IsCancellationRequested)
                 {
                     logger.LogWarning($"Reload cache cancelled for {contentType}");
+
+                    return;
                 }
+
+                if (summaryList != null && summaryList.Any())
+                {
+                    await ProcessSummaryListAsync<TModel, TDestModel>(contentType, summaryList, stoppingToken)
+                        .ConfigureAwait(false);
+
+                    if (stoppingToken.IsCancellationRequested)
+                    {
+                        logger.LogWarning($"Reload cache cancelled for {contentType}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"An error occured while Reloading Content Type for {contentType}", ex);
             }
         }
 
