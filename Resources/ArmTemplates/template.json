@@ -73,6 +73,12 @@
                 "description": "The base URL for Dysac"
             }
         },
+        "DysacUrl2": {
+            "type": "string"
+        },
+        "jobProfUrl": {
+            "type": "string"
+        },
         "cosmosDbName": {
             "type": "string",
             "metadata": {
@@ -107,8 +113,6 @@
         "dysacContentCollectionName": "content",
         "dysacAssessmentCollectionName": "assessment",
         "sessionStateCollectionName": "session-state",
-        "dysacUrl": "[concat('https://dfc-',tolower(parameters('Environment')),'-api-cont-fa.azurewebsites.net/')]",
-        "jobProfUrl": "[concat('https://dfc-',tolower(parameters('Environment')),'-app-jobprofover-as.azurewebsites.net/segment')]",
         "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
     "resources": [
@@ -539,7 +543,7 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__BaseAddress",
-                                "value": "[variables('dysacUrl')]"
+                                "value": "[parameters('dysacUrl2')]"
                             },
                             {
                                 "name": "CmsApiClientOptions__SummaryEndpoint",
@@ -547,7 +551,7 @@
                             },
                             {
                                 "name": "JobProfileOverviewServiceOptions__BaseAddress",
-                                "value": "[variables('jobProfUrl')]"
+                                "value": "[parameters('jobProfUrl')]"
                             }
                         ]
                     }
