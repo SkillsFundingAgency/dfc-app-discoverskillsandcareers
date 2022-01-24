@@ -53,6 +53,12 @@
         "DysacUrl": {
             "value": "https://dummydysac.com"
         },
+        "DysacUrl2": {
+            "value": "https://dummydysac2.com"
+        },
+        "jobProfUrl": {
+            "value": "https://dummyjobprof.com"
+        },
         "cosmosDbName": {
             "value": "cosmosDBName"
         },

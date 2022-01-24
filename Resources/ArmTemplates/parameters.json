@@ -59,6 +59,12 @@
         "DysacUrl": {
             "value": "__DysacUrl__"
         },
+        "DysacUrl2": {
+            "value": "__DysacUrl2__"
+        },
+        "jobProfUrl": {
+            "value": "__jobProfUrl__"
+        },
         "cosmosDbName": {
             "value": "__appSharedCosmosDBName__"
         },
