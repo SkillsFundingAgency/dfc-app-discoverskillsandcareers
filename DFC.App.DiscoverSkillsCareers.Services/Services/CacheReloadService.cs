@@ -308,7 +308,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private async Task LoadJobProfileOverviews()
         {
             var allTraits = await eventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>().ConfigureAwait(false);
-            var allJobProfiles = allTraits.SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles)).Select(z => z.JobProfileWebsiteUrl);
+            var allJobProfiles = allTraits
+                .SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles))
+                .Select(z => z.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty));
 
             logger.LogInformation($"Retrieving {allJobProfiles.Count()} Job Profiles from Job Profiles API");
 
