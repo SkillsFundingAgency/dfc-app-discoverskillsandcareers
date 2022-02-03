@@ -97,11 +97,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<IList<ApiSummaryItemModel>?> GetSummaryListAsync(string contentType)
         {
-            logger.LogInformation("Get summary list");
+            logger.LogInformation("Get summary list - {ContentType}", contentType);
 
             var summaryList = await cmsApiService.GetSummaryAsync<ApiSummaryItemModel>(contentType).ConfigureAwait(false);
 
-            logger.LogInformation("Get summary list completed");
+            logger.LogInformation("Get summary list completed - {ContentType}", contentType);
 
             return summaryList;
         }
@@ -132,16 +132,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
+            var url = Combine(item.Url!.ToString(), "/true");
 
             try
             {
-                logger.LogInformation($"Get details for {item.Title} - {item.Url}");
+                logger.LogInformation($"Get details for {item.Title} - {url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(url).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
-                    logger.LogWarning($"No details returned from {item.Title} - {item.Url}");
+                    logger.LogWarning($"No details returned from {item.Title} - {url}");
 
                     return;
                 }
@@ -149,7 +150,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 if (stoppingToken.IsCancellationRequested)
                 {
                     logger.LogWarning("Process item get and save cancelled");
-
                     return;
                 }
 
@@ -158,33 +158,33 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 if (!TryValidateModel(destinationModel))
                 {
-                    logger.LogError($"Validation failure for {item.Title} - {item.Url}");
+                    logger.LogError($"Validation failure for {item.Title} - {url}");
 
                     return;
                 }
 
-                logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
+                logger.LogInformation($"Updating cache with {item.Title} - {url}");
 
                 var result = await eventMessageService.UpdateAsync(destinationModel).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.NotFound)
                 {
-                    logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
+                    logger.LogInformation($"Does not exist, creating cache with {item.Title} - {url}");
 
                     result = await eventMessageService.CreateAsync(destinationModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
-                        logger.LogInformation($"Created cache with {item.Title} - {item.Url}");
+                        logger.LogInformation($"Created cache with {item.Title} - {url}");
                     }
                     else
                     {
-                        logger.LogError($"Cache create error status {result} from {item.Title} - {item.Url}");
+                        logger.LogError($"Cache create error status {result} from {item.Title} - {url}");
                     }
                 }
                 else
                 {
-                    logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
+                    logger.LogInformation($"Updated cache with {item.Title} - {url}");
                 }
 
                 if (destinationModel.AllContentItemIds != null)
@@ -194,7 +194,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Error in get and save for {item.Title} - {item.Url}");
+                logger.LogError(ex, $"Error in get and save for {item.Title} - {url}");
             }
         }
 
@@ -270,6 +270,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return isValid;
+        }
+
+        private static Uri Combine(string uri1, string uri2)
+        {
+            uri1 = uri1.TrimEnd('/');
+            uri2 = uri2.TrimStart('/');
+
+            return new Uri($"{uri1}/{uri2}");
         }
 
         private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
