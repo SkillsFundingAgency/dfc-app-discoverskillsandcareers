@@ -138,7 +138,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation($"Get details for {item.Title} - {url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(url).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(url, true).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
