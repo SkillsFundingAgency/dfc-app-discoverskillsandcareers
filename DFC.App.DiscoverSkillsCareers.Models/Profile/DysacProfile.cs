@@ -77,7 +77,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static List<JobCategoryContentItemModel> ConstructJobCategories(IList<IBaseContentItemModel> z)
         {
             var listToReturn = new List<JobCategoryContentItemModel>();
-            var castJobCategories = z.Select(x => (ApiJobCategory)x);
+            var castJobCategories = z
+                .Select(x => x as ApiJobCategory)
+                .Where(x => x != null);
 
             listToReturn.AddRange(castJobCategories.Select(x => new JobCategoryContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI, JobProfiles = ConstructJobProfiles(x.ContentItems), LastCached = DateTime.UtcNow }));
 

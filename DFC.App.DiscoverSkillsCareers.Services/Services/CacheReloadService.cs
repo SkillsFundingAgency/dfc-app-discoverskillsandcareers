@@ -110,13 +110,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             where TModel : class, IBaseContentItemModel
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
-            logger.LogInformation("Process summary list started");
+            logger.LogInformation("Process summary list started - {ContentType}", contentType);
 
             foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.Title))
             {
                 if (stoppingToken.IsCancellationRequested)
                 {
-                    logger.LogWarning("Process summary list cancelled");
+                    logger.LogWarning("Process summary list cancelled - {ContentType}", contentType);
 
                     return;
                 }
@@ -124,7 +124,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await GetAndSaveItemAsync<TModel, TDestModel>(contentType, item, stoppingToken).ConfigureAwait(false);
             }
 
-            logger.LogInformation("Process summary list completed");
+            logger.LogInformation("Process summary list completed - {ContentType}", contentType);
         }
 
         public async Task GetAndSaveItemAsync<TModel, TDestModel>(string contentType, ApiSummaryItemModel item, CancellationToken stoppingToken)
