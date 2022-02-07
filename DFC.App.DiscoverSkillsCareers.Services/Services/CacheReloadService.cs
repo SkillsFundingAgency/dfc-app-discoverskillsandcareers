@@ -132,7 +132,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             where TDestModel : class, IDocumentModel, IDysacContentModel
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
-            var url = Combine(item.Url!.ToString(), "/true");
+            var url = Combine(item.Url!.ToString(), "true");
 
             try
             {
@@ -277,7 +277,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             uri1 = uri1.TrimEnd('/');
             uri2 = uri2.TrimStart('/');
 
-            return new Uri($"{uri1}/{uri2}");
+            return new Uri($"{uri1}/{uri2}", uri1.Contains("http", StringComparison.InvariantCultureIgnoreCase) ? UriKind.Absolute : UriKind.Relative);
         }
 
         private async Task ReloadContentType<TModel, TDestModel>(string contentType, CancellationToken stoppingToken)
