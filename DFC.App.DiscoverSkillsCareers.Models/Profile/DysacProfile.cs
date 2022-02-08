@@ -89,7 +89,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static List<JobProfileContentItemModel> ConstructJobProfiles(IList<IBaseContentItemModel> z)
         {
             var listToReturn = new List<JobProfileContentItemModel>();
-            var castJobProfiles = z.Select(x => (ApiJobProfile)x);
+            var castJobProfiles = z
+                .Select(x => x as ApiJobProfile)
+                .Where(x => x != null);
 
             listToReturn.AddRange(castJobProfiles.Select(x => new JobProfileContentItemModel { Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, JobProfileWebsiteUrl = x.JobProfileWebsiteUrl, Skills = ConstructSkills(x.ContentItems), LastCached = DateTime.UtcNow }));
 
@@ -99,7 +101,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private IEnumerable<DysacShortQuestionContentItemModel> Construct(IList<IBaseContentItemModel> z)
         {
             var listOfQuestions = new List<DysacShortQuestionContentItemModel>();
-            var castContentItems = z.Select(x => (ApiShortQuestion)x);
+            var castContentItems = z
+                .Select(x => x as ApiShortQuestion)
+                .Where(x => x != null);
 
             foreach (var item in castContentItems)
             {
