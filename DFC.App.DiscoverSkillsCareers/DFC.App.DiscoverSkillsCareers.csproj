@@ -26,7 +26,7 @@
     <PackageReference Include="DFC.Compui.Cosmos" Version="1.0.67" />
     <PackageReference Include="DFC.Compui.Subscriptions" Version="1.0.96" />
     <PackageReference Include="DFC.Compui.Telemetry" Version="1.0.31" />
-    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.89" />
+    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.93" />
     <PackageReference Include="DFC.Logger.AppInsights" Version="1.0.7" />
     <PackageReference Include="Dfc.Session" Version="0.3.5" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.1" />
