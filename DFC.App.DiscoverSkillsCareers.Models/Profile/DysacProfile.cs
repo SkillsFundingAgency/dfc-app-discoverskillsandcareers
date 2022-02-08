@@ -66,8 +66,18 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         {
             var listToReturn = new List<DysacSkillContentItemModel>();
 
-            var oNetSkills = contentItems.Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill).Select(x => (ApiSkill)x);
-            var oNetOccupationCodes = contentItems.Where(x => x.ContentType == DysacConstants.ContentTypeONetOccupationalCode).Select(x => (ApiONetOccupationalCode)x).SelectMany(y => y.ContentItems.Select(z => (ApiSkill)z));
+            var oNetSkills = contentItems
+                .Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill)
+                .Select(x => x as ApiSkill)
+                .Where(x => x != null);
+
+            var oNetOccupationCodes = contentItems
+                .Where(x => x.ContentType == DysacConstants.ContentTypeONetOccupationalCode)
+                .Select(x => x as ApiONetOccupationalCode)
+                .Where(x => x != null)
+                .SelectMany(y => y.ContentItems
+                    .Select(z => z as ApiSkill)
+                    .Where(z => z != null));
 
             listToReturn.AddRange(oNetSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel { Description = x.Description, ONetRank = x.ONetRank, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, LastCached = DateTime.UtcNow }));
 
@@ -109,7 +119,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             {
                 var question = new DysacShortQuestionContentItemModel { Traits = new List<DysacTraitContentItemModel>(), Ordinal = item.Ordinal, Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId, LastCached = DateTime.UtcNow };
 
-                var castItems = item.ContentItems.Select(x => (ApiTrait)x);
+                var castItems = item.ContentItems
+                    .Select(x => x as ApiTrait)
+                    .Where(x => x != null);
 
                 question.Traits.AddRange(castItems.Select(z => new DysacTraitContentItemModel { ItemId = z.ItemId, Ordinal = item.Ordinal, Description = z.Description, Title = z.Title.ToUpperInvariant(), Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems), LastCached = DateTime.UtcNow }));
                 listOfQuestions.Add(question);
