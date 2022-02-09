@@ -60,7 +60,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<ApiJobProfileOverview> Get(string canonicalName)
         {
-            var jobProfileResponse = await httpClient.GetAsync($"{jobProfileOverviewServiceOptions.BaseAddress}/{canonicalName}").ConfigureAwait(false);
+            var url = $"{jobProfileOverviewServiceOptions.BaseAddress}{canonicalName}";
+            var jobProfileResponse = await httpClient.GetAsync(url).ConfigureAwait(false);
 
             var jobProfileContent = await jobProfileResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
