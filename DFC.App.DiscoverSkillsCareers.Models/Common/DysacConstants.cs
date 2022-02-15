@@ -4,7 +4,7 @@
     {
         public const string ContentTypePersonalityQuestionSet = "PersonalityQuestionSet";
         public const string ContentTypePersonalityTrait = "PersonalityTrait";
-        public const string ContentTypeONetSkill = "SocSkillsMatrix";
+        public const string ContentTypeONetSkill = "SOCSkillsMatrix";
         public const string ContentTypePersonalityShortQuestion = "PersonalityShortQuestion";
         public const string ContentTypeJobCategory = "JobProfileCategory";
         public const string ContentTypePersonalityFilteringQuestion = "PersonalityFilteringQuestion";

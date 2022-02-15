@@ -59,7 +59,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
 
-            var answeredPositiveQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
+            var answeredPositiveQuestions = assessment.FilteredAssessment.Questions
+                .Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
 
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
             {
@@ -67,13 +68,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 foreach (var jobProfile in category.JobProfiles.Where(x => x.SkillCodes != null))
                 {
-                    bool canAddJobProfile = true;
+                    var canAddJobProfile = false;
 
                     foreach (var skill in jobProfile.SkillCodes!)
                     {
-                        if (!answeredPositiveQuestions.Contains(skill))
+                        var genericSkill = GetGenericSkillName(skill);
+
+                        if (answeredPositiveQuestions.Contains(genericSkill))
                         {
-                            canAddJobProfile = false;
+                            canAddJobProfile = true;
+                            break;
+
+                            // TODO - this logic is opposite to previous (any match shows profile - check if logic was right before)
                         }
                     }
 
@@ -83,12 +89,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     }
                 }
 
-                assessment.ShortQuestionResult.JobCategories.FirstOrDefault(x => x.JobFamilyNameUrl == category.JobFamilyNameUrl).JobProfiles = listOfJobProfiles;
+                assessment.ShortQuestionResult.JobCategories
+                    .FirstOrDefault(x => x.JobFamilyNameUrl == category.JobFamilyNameUrl).JobProfiles = listOfJobProfiles;
             }
 
             var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!, jobCategoryName);
 
-            return new GetResultsResponse() { JobCategories = jobCategories };
+            return new GetResultsResponse { JobCategories = jobCategories };
+        }
+
+        private static string? GetGenericSkillName(string? socSkillsMatrixName)
+        {
+            if (socSkillsMatrixName?.Contains("-") == false)
+            {
+                return socSkillsMatrixName;
+            }
+
+            return socSkillsMatrixName?[6..];
         }
 
         private async Task UpdateJobCategoryCounts(DysacAssessment assessment)

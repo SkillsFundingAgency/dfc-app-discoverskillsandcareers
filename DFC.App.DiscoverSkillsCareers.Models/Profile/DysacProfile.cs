@@ -20,6 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<CustomLinkDetails, ApiShortQuestion>();
             CreateMap<CustomLinkDetails, ApiTrait>();
             CreateMap<CustomLinkDetails, ApiSkill>();
+            CreateMap<CustomLinkDetails, ApiPersonalityFilteringQuestion>();
             CreateMap<CustomLinkDetails, ApiJobCategory>();
             CreateMap<CustomLinkDetails, ApiJobProfile>();
             CreateMap<CustomLinkDetails, ApiONetOccupationalCode>();
@@ -35,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .ForMember(d => d.Title, s => s.MapFrom(z => z.Title.ToUpperInvariant()));
 
             CreateMap<ApiSkill, DysacSkillContentModel>()
-              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
 
             CreateMap<ApiJobProfile, JobProfileContentItemModel>();
 
@@ -56,7 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
             .ForMember(d => d.Url, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty)))
-            .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty).Replace("-", " ")))
+            .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty).Replace("_", " ").Replace("-", " ").Replace("/", string.Empty)))
             .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
             .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
             .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));

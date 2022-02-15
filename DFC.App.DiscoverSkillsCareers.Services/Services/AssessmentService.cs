@@ -242,23 +242,57 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     questionNumber++;
                 }
 
-                assessment.FilteredAssessment.Questions = filterQuestions.Select(x => new FilteredAssessmentQuestion { QuestionText = x.Text, Id = x.Id, Ordinal = x.Ordinal, TraitCode = x.Skills.FirstOrDefault().Title });
+                assessment.FilteredAssessment.Questions = filterQuestions
+                    .Select(x => new FilteredAssessmentQuestion
+                    {
+                        QuestionText = x.Text,
+                        Id = x.Id,
+                        Ordinal = x.Ordinal,
+                        TraitCode = GetGenericSkillName(x.Skills.FirstOrDefault()?.Title),
+                    });
 
                 foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories!)
                 {
-                    var applicableQuestions = assessment.FilteredAssessment.Questions.Select(x => new { Code = x.TraitCode, x.Ordinal });
+                    var applicableQuestions = assessment.FilteredAssessment.Questions
+                        .Select(x => new
+                        {
+                            Code = x.TraitCode,
+                            x.Ordinal,
+                        });
 
-                    assessment.FilteredAssessment.JobCategoryAssessments.Add(new JobCategoryAssessment { JobCategory = jobCat.JobFamilyNameUrl, QuestionSkills = applicableQuestions.Where(x => jobCat.SkillQuestions != null && jobCat.SkillQuestions.Contains(x.Code)).ToDictionary(x => x.Code!, x => x.Ordinal!.Value) });
+                    var questionSkills = applicableQuestions
+                        .Where(applicableQuestion =>
+                            jobCat.SkillQuestions?
+                                .Any(skillQuestion => GetGenericSkillName(skillQuestion) == applicableQuestion.Code)
+                            == true)
+                        .ToDictionary(x => x.Code!, x => x.Ordinal!.Value);
+
+                    assessment.FilteredAssessment.JobCategoryAssessments.Add(
+                        new JobCategoryAssessment
+                        {
+                            JobCategory = jobCat.JobFamilyNameUrl,
+                            QuestionSkills = questionSkills,
+                        });
                 }
 
                 await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
             }
 
-            return new FilterAssessmentResponse()
+            return new FilterAssessmentResponse
             {
                 QuestionNumber = 1,
                 SessionId = sessionId,
             };
+        }
+
+        private static string? GetGenericSkillName(string? socSkillsMatrixName)
+        {
+            if (socSkillsMatrixName?.Contains("-") == false)
+            {
+                return socSkillsMatrixName;
+            }
+
+            return socSkillsMatrixName?[6..];
         }
 
         public async Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string jobCategory, int questionNumber)
@@ -288,12 +322,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.TraitCode == jobCategoryQuestion).Answer = null;
                 }
 
-                nextQuestionCode = categoryQuestions[questionNumber - 1].Key;
+                nextQuestionCode = categoryQuestions.Count >= questionNumber ? categoryQuestions[questionNumber - 1].Key : string.Empty;
 
                 await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
             }
 
             var question = assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.TraitCode == nextQuestionCode);
+
+            if (question == null)
+            {
+                throw new Exception($"Cannot find next question by trait ({nextQuestionCode})");
+            }
 
             return new GetQuestionResponse
             {

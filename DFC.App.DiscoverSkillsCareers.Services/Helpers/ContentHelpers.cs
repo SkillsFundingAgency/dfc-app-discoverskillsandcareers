@@ -68,6 +68,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 return new DysacShortQuestionContentItemModel();
             }
 
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityFilteringQuestion.ToUpperInvariant())
+            {
+                return new DysacFilteringQuestionContentModel();
+            }
+
             throw new InvalidOperationException($"{contentType} not supported in {nameof(ContentHelpers)}");
         }
 
@@ -101,6 +106,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityShortQuestion.ToUpperInvariant())
             {
                 return new ApiShortQuestion();
+            }
+
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypePersonalityFilteringQuestion.ToUpperInvariant())
+            {
+                return new ApiPersonalityFilteringQuestion();
             }
 
             throw new InvalidOperationException($"{contentType} not supported in {nameof(ContentHelpers)}");

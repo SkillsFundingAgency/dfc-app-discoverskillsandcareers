@@ -53,8 +53,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
             var profileSkillAttributes = profilesBySkill.Select(s =>
             {
-                var onetRank = s.Average(r => r.Skill.ONetRank!.Value);
-                var ncsRank = s.Average(r => 20 - r.Skill.Ordinal);
+                var onetRank = s.Average(r => r.Skill.ONetRank ?? 0);
+                var ncsRank = s.Average(r => 20 - (r.Skill.Ordinal ?? 0));
                 var profileCount = (double)s.Count();
                 var profilePercentage = Convert.ToDecimal(
                     (1.0 - ((totalProfileCount - profileCount) / totalProfileCount)) * 100.0);
