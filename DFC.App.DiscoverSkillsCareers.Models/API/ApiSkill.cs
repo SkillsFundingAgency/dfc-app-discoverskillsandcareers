@@ -2,6 +2,7 @@
 using DFC.Content.Pkg.Netcore.Data.Models;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.API
 {
@@ -14,6 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
 
         public int? Ordinal { get; set; }
 
+        [JsonProperty("ONetRank")]
         public decimal? ONetRank { get; set; }
     }
 }

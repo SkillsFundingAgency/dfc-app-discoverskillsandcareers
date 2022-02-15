@@ -20,6 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<CustomLinkDetails, ApiShortQuestion>();
             CreateMap<CustomLinkDetails, ApiTrait>();
             CreateMap<CustomLinkDetails, ApiSkill>();
+            CreateMap<CustomLinkDetails, ApiPersonalityFilteringQuestion>();
             CreateMap<CustomLinkDetails, ApiJobCategory>();
             CreateMap<CustomLinkDetails, ApiJobProfile>();
             CreateMap<CustomLinkDetails, ApiONetOccupationalCode>();
@@ -35,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .ForMember(d => d.Title, s => s.MapFrom(z => z.Title.ToUpperInvariant()));
 
             CreateMap<ApiSkill, DysacSkillContentModel>()
-              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
 
             CreateMap<ApiJobProfile, JobProfileContentItemModel>();
 
@@ -55,7 +56,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.ContentItems)));
 
             CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
-            .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("-", " ")))
+            .ForMember(d => d.Url, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty)))
+            .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty).Replace("_", " ").Replace("-", " ").Replace("/", string.Empty)))
             .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
             .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
             .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
@@ -65,8 +67,18 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         {
             var listToReturn = new List<DysacSkillContentItemModel>();
 
-            var oNetSkills = contentItems.Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill).Select(x => (ApiSkill)x);
-            var oNetOccupationCodes = contentItems.Where(x => x.ContentType == DysacConstants.ContentTypeONetOccupationalCode).Select(x => (ApiONetOccupationalCode)x).SelectMany(y => y.ContentItems.Select(z => (ApiSkill)z));
+            var oNetSkills = contentItems
+                .Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill)
+                .Select(x => x as ApiSkill)
+                .Where(x => x != null);
+
+            var oNetOccupationCodes = contentItems
+                .Where(x => x.ContentType == DysacConstants.ContentTypeONetOccupationalCode)
+                .Select(x => x as ApiONetOccupationalCode)
+                .Where(x => x != null)
+                .SelectMany(y => y.ContentItems
+                    .Select(z => z as ApiSkill)
+                    .Where(z => z != null));
 
             listToReturn.AddRange(oNetSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel { Description = x.Description, ONetRank = x.ONetRank, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, LastCached = DateTime.UtcNow }));
 
@@ -76,7 +88,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static List<JobCategoryContentItemModel> ConstructJobCategories(IList<IBaseContentItemModel> z)
         {
             var listToReturn = new List<JobCategoryContentItemModel>();
-            var castJobCategories = z.Select(x => (ApiJobCategory)x);
+            var castJobCategories = z
+                .Select(x => x as ApiJobCategory)
+                .Where(x => x != null);
 
             listToReturn.AddRange(castJobCategories.Select(x => new JobCategoryContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI, JobProfiles = ConstructJobProfiles(x.ContentItems), LastCached = DateTime.UtcNow }));
 
@@ -86,7 +100,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static List<JobProfileContentItemModel> ConstructJobProfiles(IList<IBaseContentItemModel> z)
         {
             var listToReturn = new List<JobProfileContentItemModel>();
-            var castJobProfiles = z.Select(x => (ApiJobProfile)x);
+            var castJobProfiles = z
+                .Select(x => x as ApiJobProfile)
+                .Where(x => x != null);
 
             listToReturn.AddRange(castJobProfiles.Select(x => new JobProfileContentItemModel { Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, JobProfileWebsiteUrl = x.JobProfileWebsiteUrl, Skills = ConstructSkills(x.ContentItems), LastCached = DateTime.UtcNow }));
 
@@ -96,13 +112,17 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private IEnumerable<DysacShortQuestionContentItemModel> Construct(IList<IBaseContentItemModel> z)
         {
             var listOfQuestions = new List<DysacShortQuestionContentItemModel>();
-            var castContentItems = z.Select(x => (ApiShortQuestion)x);
+            var castContentItems = z
+                .Select(x => x as ApiShortQuestion)
+                .Where(x => x != null);
 
             foreach (var item in castContentItems)
             {
                 var question = new DysacShortQuestionContentItemModel { Traits = new List<DysacTraitContentItemModel>(), Ordinal = item.Ordinal, Url = item.Url, Title = item.Title, Impact = item.Impact, ItemId = item.ItemId, LastCached = DateTime.UtcNow };
 
-                var castItems = item.ContentItems.Select(x => (ApiTrait)x);
+                var castItems = item.ContentItems
+                    .Select(x => x as ApiTrait)
+                    .Where(x => x != null);
 
                 question.Traits.AddRange(castItems.Select(z => new DysacTraitContentItemModel { ItemId = z.ItemId, Ordinal = item.Ordinal, Description = z.Description, Title = z.Title.ToUpperInvariant(), Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems), LastCached = DateTime.UtcNow }));
                 listOfQuestions.Add(question);

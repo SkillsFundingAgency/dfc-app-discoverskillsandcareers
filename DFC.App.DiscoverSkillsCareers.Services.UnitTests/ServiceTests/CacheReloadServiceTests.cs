@@ -64,7 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored, true)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
@@ -102,7 +102,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             // assert
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(4, Times.Exactly);
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored, true)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
@@ -161,7 +161,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored, true)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
@@ -188,7 +188,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored, true)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
@@ -211,7 +211,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             await cacheReloadService.GetAndSaveItemAsync<ApiQuestionSet, DysacQuestionSetContentModel>(DysacConstants.ContentTypePersonalityQuestionSet, expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored, true)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();

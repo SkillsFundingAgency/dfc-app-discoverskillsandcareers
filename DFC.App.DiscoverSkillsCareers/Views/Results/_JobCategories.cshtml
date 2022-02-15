@@ -12,9 +12,9 @@
                         {
                             <a role="button" class="govuk-button app-button" asp-controller="results" asp-action="roles" asp-route-id="@item.JobFamilyUrl" draggable="false">View results</a>
                         }
-                        else
+                        else if (item.TotalQuestions > 0)
                         {
-                            <a role="button" draggable="false" class="govuk-button app-button" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyUrl" asp-route-questionNumber="0">
+                            <a role="button" draggable="false" class="govuk-button app-button" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyNameUrl" asp-route-questionNumber="0">
                                 Answer @item.TotalQuestions more question@{if (item.TotalQuestions > 1)@("s")}
                                 <span class="govuk-visually-hidden"> for @item.JobFamilyName</span>
                             </a>

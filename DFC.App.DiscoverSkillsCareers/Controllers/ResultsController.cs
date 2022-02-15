@@ -77,36 +77,83 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
+            logService.LogInformation("Assesment retrieved");
+
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
 
+            logService.LogInformation("Got results by category");
+
             if (!string.IsNullOrEmpty(id))
             {
-                resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl == id).ShowThisCategory = true;
+                var category = resultsByCategoryModel?.JobsInCategory?.FirstOrDefault(x => x.CategoryUrl == id);
+
+                if (category == null)
+                {
+                    if (resultsByCategoryModel?.JobsInCategory != null)
+                    {
+                        var ids = string.Join(',', resultsByCategoryModel?.JobsInCategory.Select(x => x.CategoryUrl).ToArray());
+ 
+                        logService.LogError(
+                            $"Category is null - found {resultsByCategoryModel?.JobsInCategory?.Count()} categories. Received {ids}. None which were {id}");
+                    }
+                }
+                else
+                {
+                    category.ShowThisCategory = true;
+                }
+            }
+
+            logService.LogInformation($"Looping through categories - {resultsResponse?.JobCategories?.Count()} available");
+
+            if (resultsResponse?.JobCategories == null)
+            {
+                throw new Exception("Job categories is null");
+            }
+
+            if (resultsByCategoryModel == null)
+            {
+                throw new Exception("Results by category model is null");
             }
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                if (jobCategory.JobProfiles.Any())
+                if (jobCategory?.JobProfiles.Any() != true)
                 {
-                    var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(x => x.FirstOrDefault()).Select(z => z.Title.ToLowerInvariant());
-                    var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title)).ConfigureAwait(false);
-
-                    if (jobProfileOverviews == null)
-                    {
-                        logService.LogError($"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
-                    }
-                    else
-                    {
-                        resultsByCategoryModel.JobsInCategory.FirstOrDefault(x => x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl)).JobProfiles.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel { Cname = x.Title.Replace(" ", "-"), OverViewHTML = x.Html, ReturnedStatusCode = System.Net.HttpStatusCode.OK }));
-                    }
+                    logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
+                    continue;
                 }
+
+                var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(
+                    x => x.FirstOrDefault()).Select(z => z?.Title?.ToLowerInvariant());
+                var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
+                        x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title))
+                    .ConfigureAwait(false);
+
+                if (jobProfileOverviews == null)
+                {
+                    logService.LogError(
+                        $"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
+
+                    continue;
+                }
+
+                var category = resultsByCategoryModel.JobsInCategory.FirstOrDefault(x =>
+                    x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
+                category?.JobProfiles?.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel
+                {
+                    Cname = x.Title.Replace(" ", "-"),
+                    OverViewHTML = x.Html,
+                    ReturnedStatusCode = System.Net.HttpStatusCode.OK
+                }));
             }
+
+            logService.LogInformation("Finished loop");
 
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
 
-            this.logService.LogInformation($"{nameof(this.Roles)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(Roles)} generated the model and ready to pass to the view");
 
             return View("ResultsByCategory", resultsByCategoryModel);
         }
