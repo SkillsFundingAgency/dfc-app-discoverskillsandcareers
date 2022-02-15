@@ -111,6 +111,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 throw new Exception("Job categories is null");
             }
 
+            if (resultsByCategoryModel == null)
+            {
+                throw new Exception("Results by category model is null");
+            }
+
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
                 if (jobCategory?.JobProfiles.Any() != true)
