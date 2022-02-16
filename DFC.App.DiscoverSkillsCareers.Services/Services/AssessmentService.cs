@@ -108,6 +108,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             };
         }
 
+        public async Task UpdateQuestionNumber(int questionNumber)
+        {
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+
+            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+
+            if (assessments == null || !assessments.Any())
+            {
+                throw new InvalidOperationException($"Assesmment {sessionId} not found");
+            }
+
+            var assessment = assessments.FirstOrDefault();
+            var questions = assessment.Questions.ToList();
+
+            for (int idx = questionNumber - 1, len = questions.Count; idx < len; idx++)
+            {
+                questions[idx].Answer = null;
+            }
+
+            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+        }
+
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
