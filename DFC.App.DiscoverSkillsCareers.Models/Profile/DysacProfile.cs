@@ -36,13 +36,14 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .ForMember(d => d.Title, s => s.MapFrom(z => z.Title.ToUpperInvariant()));
 
             CreateMap<ApiSkill, DysacSkillContentModel>()
-                .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId));
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+                .ForMember(d => d.Title, s => s.MapFrom(a => GetGenericSkillName(a.Title)));
 
             CreateMap<ApiJobProfile, JobProfileContentItemModel>();
 
             CreateMap<JobProfileContentItemModel, JobProfileResult>()
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
-                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => z.Title)));
+                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => GetGenericSkillName(z.Title))));
 
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
@@ -63,6 +64,16 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
         }
 
+        private static string? GetGenericSkillName(string? socSkillsMatrixName)
+        {
+            if (socSkillsMatrixName?.IndexOf("-") != 5)
+            {
+                return socSkillsMatrixName;
+            }
+
+            return socSkillsMatrixName?[6..];
+        }
+
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
         {
             var listToReturn = new List<DysacSkillContentItemModel>();
@@ -80,7 +91,16 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     .Select(z => z as ApiSkill)
                     .Where(z => z != null));
 
-            listToReturn.AddRange(oNetSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel { Description = x.Description, ONetRank = x.ONetRank, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, LastCached = DateTime.UtcNow }));
+            listToReturn.AddRange(oNetSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel
+            {
+                Description = x.Description,
+                ONetRank = x.ONetRank,
+                Ordinal = x.Ordinal,
+                ItemId = x.ItemId,
+                Title = GetGenericSkillName(x.Title),
+                Url = x.Url,
+                LastCached = DateTime.UtcNow,
+            }));
 
             return listToReturn;
         }
