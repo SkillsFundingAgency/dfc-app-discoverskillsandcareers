@@ -270,7 +270,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                         QuestionText = x.Text,
                         Id = x.Id,
                         Ordinal = x.Ordinal,
-                        TraitCode = GetGenericSkillName(x.Skills.FirstOrDefault()?.Title),
+                        TraitCode = x.Skills.FirstOrDefault()?.Title,
                     });
 
                 foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories!)
@@ -285,7 +285,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     var questionSkills = applicableQuestions
                         .Where(applicableQuestion =>
                             jobCat.SkillQuestions?
-                                .Any(skillQuestion => GetGenericSkillName(skillQuestion) == applicableQuestion.Code)
+                                .Any(skillQuestion => skillQuestion == applicableQuestion.Code)
                             == true)
                         .ToDictionary(x => x.Code!, x => x.Ordinal!.Value);
 
@@ -305,16 +305,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 QuestionNumber = 1,
                 SessionId = sessionId,
             };
-        }
-
-        private static string? GetGenericSkillName(string? socSkillsMatrixName)
-        {
-            if (socSkillsMatrixName?.Contains("-") == false)
-            {
-                return socSkillsMatrixName;
-            }
-
-            return socSkillsMatrixName?[6..];
         }
 
         public async Task<GetQuestionResponse> GetFilteredAssessmentQuestion(string jobCategory, int questionNumber)

@@ -72,7 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                     foreach (var skill in jobProfile.SkillCodes!)
                     {
-                        var genericSkill = GetGenericSkillName(skill);
+                        var genericSkill = skill;
 
                         if (answeredPositiveQuestions.Contains(genericSkill))
                         {
@@ -96,16 +96,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!, jobCategoryName);
 
             return new GetResultsResponse { JobCategories = jobCategories };
-        }
-
-        private static string? GetGenericSkillName(string? socSkillsMatrixName)
-        {
-            if (socSkillsMatrixName?.Contains("-") == false)
-            {
-                return socSkillsMatrixName;
-            }
-
-            return socSkillsMatrixName?[6..];
         }
 
         private async Task UpdateJobCategoryCounts(DysacAssessment assessment)

@@ -318,11 +318,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var allTraits = await eventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>().ConfigureAwait(false);
             var allJobProfiles = allTraits
                 .SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles))
+                .ToList();
+
+            var allJobProfileUrls = allJobProfiles
+                .Where(z => z.JobProfileWebsiteUrl != null)
                 .Select(z => z.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty));
 
-            logger.LogInformation($"Retrieving {allJobProfiles.Count()} Job Profiles from Job Profiles API");
+            logger.LogInformation($"Retrieving {allJobProfileUrls.Count()} Job Profiles from Job Profiles API");
 
-            var jobProfiles = allJobProfiles.Where(x => x != null).Select(y => y!.ToString().ToLowerInvariant()).Distinct().ToList();
+            var jobProfiles = allJobProfileUrls.Where(x => x != null).Select(y => y!.ToString().ToLowerInvariant()).Distinct().ToList();
 
             var overviews = await jobProfileOverviewApiService.GetOverviews(jobProfiles).ConfigureAwait(false);
 
