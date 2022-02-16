@@ -72,6 +72,19 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
             }
 
+            var hasGoneBackAQuestion = (requestViewModel.QuestionNumber + 1) == assessment.CurrentQuestionNumber;
+
+            if (hasGoneBackAQuestion)
+            {
+                assessment.CurrentQuestionNumber = requestViewModel.QuestionNumber;
+
+                var completed = (int)(((assessment.CurrentQuestionNumber - 1) / (decimal)assessment.MaxQuestionsCount) * 100M);
+                assessment.PercentComplete = completed;
+                questionResponse.PercentComplete = assessment.PercentComplete;
+
+                await assessmentService.UpdateQuestionNumber(assessment.CurrentQuestionNumber).ConfigureAwait(false);
+            }
+
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
             this.logService.LogInformation($"{nameof(this.Index)} generated the model and ready to pass to the view");
 

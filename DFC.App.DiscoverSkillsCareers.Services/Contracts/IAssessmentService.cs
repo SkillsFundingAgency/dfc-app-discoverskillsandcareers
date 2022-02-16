@@ -13,6 +13,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<GetAssessmentResponse> GetAssessment();
 
+        Task UpdateQuestionNumber(int questionNumber);
+
         Task<SendEmailResponse> SendEmail(string domain, string emailAddress);
 
         Task<SendSmsResponse> SendSms(string domain, string mobile);
