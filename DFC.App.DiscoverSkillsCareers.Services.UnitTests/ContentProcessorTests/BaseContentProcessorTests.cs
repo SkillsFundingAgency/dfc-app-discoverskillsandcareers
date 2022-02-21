@@ -97,7 +97,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             return new ApiSkill
             {
                 Title = "A skill",
-                /*Description = "A skill description",*/
                 ItemId = Guid.NewGuid(),
                 Url = new Uri("http://somewhere.com/somewhereelse/aresource")
             };
