@@ -315,20 +315,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task LoadJobProfileOverviews()
         {
-            var allTraits = await eventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>().ConfigureAwait(false);
+            var allTraits = await eventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>()
+                .ConfigureAwait(false);
             var allJobProfiles = allTraits
                 .SelectMany(x => x.JobCategories.SelectMany(y => y.JobProfiles))
                 .ToList();
 
-            var allJobProfileUrls = allJobProfiles
+            var transformedJobProfiles = allJobProfiles
                 .Where(z => z.JobProfileWebsiteUrl != null)
-                .Select(z => z.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty));
+                .Select(z => new CanonicalNameWithTitle(
+                    z.Title,
+                    z.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty).ToLowerInvariant()
+                    ))
+                .Distinct()
+                .ToList();
 
-            logger.LogInformation($"Retrieving {allJobProfileUrls.Count()} Job Profiles from Job Profiles API");
+            logger.LogInformation($"Retrieving {transformedJobProfiles.Count()} Job Profiles from Job Profiles API");
 
-            var jobProfiles = allJobProfileUrls.Where(x => x != null).Select(y => y!.ToString().ToLowerInvariant()).Distinct().ToList();
-
-            var overviews = await jobProfileOverviewApiService.GetOverviews(jobProfiles).ConfigureAwait(false);
+            var overviews = await jobProfileOverviewApiService.GetOverviews(transformedJobProfiles).ConfigureAwait(false);
 
             logger.LogInformation($"Retrieved {overviews.Count} Job Profiles from Job Profiles API");
 
@@ -337,7 +341,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await DeleteExistingJobProfileOverviews().ConfigureAwait(false);
             }
 
-            var mappedProfileOverviews = overviews.Select(x => mapper.Map<DysacJobProfileOverviewContentModel>(x));
+            var mappedProfileOverviews = overviews
+                .Select(x => mapper.Map<DysacJobProfileOverviewContentModel>(x));
 
             foreach (var mappedOverview in mappedProfileOverviews)
             {

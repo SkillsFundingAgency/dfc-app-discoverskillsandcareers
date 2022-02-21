@@ -58,7 +58,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
             .ForMember(d => d.Url, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty)))
-            .ForMember(d => d.Title, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty).Replace("_", " ").Replace("-", " ").Replace("/", string.Empty)))
+            .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
             .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
             .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
             .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         {
             var listToReturn = new List<DysacSkillContentItemModel>();
 
-            var oNetSkills = contentItems
+            var apiSkills = contentItems
                 .Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill)
                 .Select(x => x as ApiSkill)
                 .Where(x => x != null);
@@ -91,10 +91,9 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     .Select(z => z as ApiSkill)
                     .Where(z => z != null));
 
-            listToReturn.AddRange(oNetSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel
+            listToReturn.AddRange(apiSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel
             {
-                Description = x.Description,
-                ONetRank = x.ONetRank,
+                ONetRank = !string.IsNullOrEmpty(x.ONetRank) ? decimal.Parse(x.ONetRank) : (decimal?)null,
                 Ordinal = x.Ordinal,
                 ItemId = x.ItemId,
                 Title = GetGenericSkillName(x.Title),
@@ -112,7 +111,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .Select(x => x as ApiJobCategory)
                 .Where(x => x != null);
 
-            listToReturn.AddRange(castJobCategories.Select(x => new JobCategoryContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI, JobProfiles = ConstructJobProfiles(x.ContentItems), LastCached = DateTime.UtcNow }));
+            listToReturn.AddRange(castJobCategories.Select(x =>
+                new JobCategoryContentItemModel { Description = x.Description, Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, WebsiteURI = x.WebsiteURI, JobProfiles = ConstructJobProfiles(x.ContentItems), LastCached = DateTime.UtcNow }));
 
             return listToReturn;
         }
@@ -124,7 +124,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .Select(x => x as ApiJobProfile)
                 .Where(x => x != null);
 
-            listToReturn.AddRange(castJobProfiles.Select(x => new JobProfileContentItemModel { Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, JobProfileWebsiteUrl = x.JobProfileWebsiteUrl, Skills = ConstructSkills(x.ContentItems), LastCached = DateTime.UtcNow }));
+            listToReturn.AddRange(castJobProfiles.Select(x =>
+                new JobProfileContentItemModel { Ordinal = x.Ordinal, ItemId = x.ItemId, Title = x.Title, Url = x.Url, JobProfileWebsiteUrl = x.JobProfileWebsiteUrl, Skills = ConstructSkills(x.ContentItems), LastCached = DateTime.UtcNow }));
 
             return listToReturn;
         }
@@ -144,7 +145,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     .Select(x => x as ApiTrait)
                     .Where(x => x != null);
 
-                question.Traits.AddRange(castItems.Select(z => new DysacTraitContentItemModel { ItemId = z.ItemId, Ordinal = item.Ordinal, Description = z.Description, Title = z.Title.ToUpperInvariant(), Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems), LastCached = DateTime.UtcNow }));
+                question.Traits.AddRange(castItems.Select(z =>
+                    new DysacTraitContentItemModel { ItemId = z.ItemId, Ordinal = item.Ordinal, Description = z.Description, Title = z.Title.ToUpperInvariant(), Url = z.Url, JobCategories = ConstructJobCategories(z.ContentItems), LastCached = DateTime.UtcNow }));
                 listOfQuestions.Add(question);
             }
 

@@ -127,7 +127,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(
                     x => x.FirstOrDefault()).Select(z => z?.Title?.ToLowerInvariant());
                 var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
-                        x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title))
+                        x => x.PartitionKey == "JobProfileOverview"
+                             && jobProfileTitles.Contains(x.Title.ToLower()))
                     .ConfigureAwait(false);
 
                 if (jobProfileOverviews == null)
@@ -143,7 +144,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 category?.JobProfiles?.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel
                 {
                     Cname = x.Title.Replace(" ", "-"),
-                    OverViewHTML = x.Html,
+                    OverViewHTML = x.Html ?? x.Title,
                     ReturnedStatusCode = System.Net.HttpStatusCode.OK
                 }));
             }

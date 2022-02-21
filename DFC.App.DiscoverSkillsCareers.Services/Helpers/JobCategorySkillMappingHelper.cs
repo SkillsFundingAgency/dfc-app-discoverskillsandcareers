@@ -42,13 +42,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
         public static IEnumerable<SkillAttribute> GetSkillAttributes(
             this IEnumerable<JobProfileContentItemModel> profiles,
             HashSet<string> prominentSkills,
-            double maxProfileDistributionPercentage)
+            double maxProfileDistributionPercentage,
+            List<string?> questionSkills)
         {
             var totalProfileCount = profiles.Count();
 
             var profilesBySkill =
                 profiles
-                    .SelectMany(y => y.SkillsToCompare(prominentSkills).Select(s => new { Profile = y, Skill = s }))
+                    .SelectMany(y =>
+                        y.SkillsToCompare(prominentSkills, questionSkills).Select(s => new { Profile = y, Skill = s }))
                     .GroupBy(s => s.Skill.Title).ToArray();
 
             var profileSkillAttributes = profilesBySkill.Select(s =>

@@ -39,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return new ApiJobProfileOverview { CanonicalName = url.Segments.LastOrDefault().Trim('/'), Html = jobProfileContent };
         }
 
-        public async Task<List<ApiJobProfileOverview>> GetOverviews(List<string> jobProfileCanonicalNames)
+        public async Task<List<ApiJobProfileOverview>> GetOverviews(List<CanonicalNameWithTitle> jobProfileCanonicalNames)
         {
             if (jobProfileCanonicalNames == null || !jobProfileCanonicalNames.Any())
             {
@@ -58,19 +58,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return results.ToList();
         }
 
-        private async Task<ApiJobProfileOverview> Get(string canonicalName)
+        private async Task<ApiJobProfileOverview> Get(CanonicalNameWithTitle details)
         {
-            var url = $"{jobProfileOverviewServiceOptions.BaseAddress}{canonicalName}";
+            var url = $"{jobProfileOverviewServiceOptions.BaseAddress}{details.CanonicalName}";
             var jobProfileResponse = await httpClient.GetAsync(url).ConfigureAwait(false);
 
             var jobProfileContent = await jobProfileResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!jobProfileResponse.IsSuccessStatusCode || string.IsNullOrEmpty(jobProfileContent))
             {
-                return new ApiJobProfileOverview { CanonicalName = canonicalName };
+                return new ApiJobProfileOverview { CanonicalName = details.CanonicalName, Title = details.Title, };
             }
 
-            return new ApiJobProfileOverview { CanonicalName = canonicalName, Html = jobProfileContent };
+            return new ApiJobProfileOverview { CanonicalName = details.CanonicalName, Html = jobProfileContent, Title = details.Title };
         }
     }
 }
