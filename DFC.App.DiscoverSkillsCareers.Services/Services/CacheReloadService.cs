@@ -327,7 +327,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     z.Title,
                     z.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty).ToLowerInvariant()
                     ))
-                .Distinct()
+                .GroupBy(x => x.Title)
+                .Select(x => x.First())
                 .ToList();
 
             logger.LogInformation($"Retrieving {transformedJobProfiles.Count()} Job Profiles from Job Profiles API");

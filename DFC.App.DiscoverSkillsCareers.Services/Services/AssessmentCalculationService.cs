@@ -89,22 +89,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(userTraits, allTraits, allFilteringQuestions);
 
-            var jobCategories =
-                    jobCategoryRelevance
-                        .OrderByDescending(x => x.Total)
-                        .Take(10)
-                        .ToArray();
+            var jobCategories = jobCategoryRelevance
+                .OrderByDescending(x => x.Total)
+                .ThenByDescending(x => x.SkillQuestions.Any())
+                .Take(10)
+                .ToArray();
 
             var limitedTraits = LimitTraits(userTraits.Where(x => x.TotalScore > 0).ToArray());
 
-            var resultData = new ResultData()
+            assessment.ShortQuestionResult = new ResultData
             {
                 Traits = limitedTraits,
                 JobCategories = jobCategories.ToList(),
                 TraitText = limitedTraits.Select(x => x.Text!),
             };
-
-            assessment.ShortQuestionResult = resultData;
 
             return assessment;
         }
@@ -140,34 +138,36 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 foreach (var jc in applicableTrait.JobCategories)
                 {
-                    if (!results.Any(x => x.JobFamilyName == jc.Title))
+                    if (results.Any(x => x.JobFamilyName == jc.Title))
                     {
-                        var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
-                            jc.JobProfiles.Where(z => z.Skills.Any()),
-                            new HashSet<string>(),
-                            0.75,
-                            questionSkills);
-
-                        logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(jc)}");
-                        logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");
-
-                        results.Add(new JobCategoryResult
-                        {
-                            JobFamilyName = jc.Title!,
-                            JobFamilyUrl = jc.WebsiteURI?.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
-                            TraitsTotal = trait.TotalScore,
-                            SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
-                            TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == jc.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
-                            NormalizedTotal = trait.TotalScore,
-                            Total = trait.TotalScore,
-                            TotalQuestions = categorySkills.Count(),
-                            JobProfiles = jc.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
-                        });
+                        continue;
                     }
+
+                    var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
+                        jc.JobProfiles.Where(z => z.Skills.Any()),
+                        new HashSet<string>(),
+                        0.75,
+                        questionSkills);
+
+                    logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(jc)}");
+                    logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");
+
+                    results.Add(new JobCategoryResult
+                    {
+                        JobFamilyName = jc.Title!,
+                        JobFamilyUrl = jc.WebsiteURI?.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
+                        TraitsTotal = trait.TotalScore,
+                        SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
+                        TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == jc.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
+                        NormalizedTotal = trait.TotalScore,
+                        Total = trait.TotalScore,
+                        TotalQuestions = categorySkills.Count(),
+                        JobProfiles = jc.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
+                    });
                 }
             }
 
-            return results.OrderByDescending(t => t.Total).Take(10);
+            return results.OrderByDescending(t => t.Total);
         }
 
         private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)

@@ -141,12 +141,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                 var category = resultsByCategoryModel.JobsInCategory.FirstOrDefault(x =>
                     x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
-                category?.JobProfiles?.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel
-                {
-                    Cname = x.Title.Replace(" ", "-"),
-                    OverViewHTML = x.Html ?? x.Title,
-                    ReturnedStatusCode = System.Net.HttpStatusCode.OK
-                }));
+
+                category?.JobProfiles?.AddRange(jobProfileOverviews
+                    .GroupBy(x => x.Title)
+                    .Select(x => x.First())
+                    .Select(x => new ResultJobProfileOverViewModel
+                    {
+                        Cname = x.Title.Replace(" ", "-"),
+                        OverViewHTML = x.Html ?? $"<a href='/job-profiles{x.Url}'>{x.Title}</a>",
+                        ReturnedStatusCode = System.Net.HttpStatusCode.OK
+                    }));
             }
 
             logService.LogInformation("Finished loop");
