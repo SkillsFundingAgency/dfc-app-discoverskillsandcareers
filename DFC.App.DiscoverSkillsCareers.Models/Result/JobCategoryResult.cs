@@ -18,8 +18,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public string? JobFamilyName { get; set; }
 
-        public string? JobFamilyText { get; set; }
-
         public string? JobFamilyUrl { get; set; }
 
         public int TraitsTotal { get; set; }
@@ -37,8 +35,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public string? JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
 
         public int? DisplayOrder { get; set; }
-
-        public int NumberOfMatchedJobProfile { get; set; }
 
         public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
 

@@ -86,7 +86,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var serviceToTest = new JobProfileOverviewApiService(httpClient, new JobProfileOverviewServiceOptions { BaseAddress = new Uri("http://somehwere.com/aresource") });
 
             // Act
-            var result = await serviceToTest.GetOverviews(new List<string> { "a-job-profile-1", "a-job-profile-2", "a-job-profile-3" }).ConfigureAwait(false);
+            var result = await serviceToTest.GetOverviews(new List<CanonicalNameWithTitle>
+                {
+                    new CanonicalNameWithTitle("a-job-profile-1", "a-job-profile-1"),
+                    new CanonicalNameWithTitle("a-job-profile-2", "a-job-profile-2"),
+                    new CanonicalNameWithTitle("a-job-profile-3", "a-job-profile-3")
+                 }).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(3, result.Count);
@@ -106,7 +111,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var serviceToTest = new JobProfileOverviewApiService(httpClient, new JobProfileOverviewServiceOptions { BaseAddress = new Uri("http://somehwere.com/aresource") });
 
             // Act
-            var result = await serviceToTest.GetOverviews(new List<string> { "a-job-profile-1", "a-job-profile-2", "a-job-profile-3" });
+            var result = await serviceToTest.GetOverviews(
+                new List<CanonicalNameWithTitle>
+                {
+                    new CanonicalNameWithTitle("a-job-profile-1", "a-job-profile-1"),
+                    new CanonicalNameWithTitle("a-job-profile-2", "a-job-profile-2"),
+                    new CanonicalNameWithTitle("a-job-profile-3", "a-job-profile-3")
+                });
 
             // Assert
             Assert.Equal(3, result.Count);

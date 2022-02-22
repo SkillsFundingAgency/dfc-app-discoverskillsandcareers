@@ -55,7 +55,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
-            A.CallTo(() => fakeJobProfileOverviewService.GetOverviews(A<List<string>>.Ignored)).Returns(new List<ApiJobProfileOverview>() { new ApiJobProfileOverview { CanonicalName = "A-Job-Profile" } });
+            A.CallTo(() => fakeJobProfileOverviewService.GetOverviews(A<List<CanonicalNameWithTitle>>.Ignored)).Returns(new List<ApiJobProfileOverview>() { new ApiJobProfileOverview { CanonicalName = "A-Job-Profile" } });
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacJobProfileOverviewContentModel>()).Returns(new List<DysacJobProfileOverviewContentModel>() { new DysacJobProfileOverviewContentModel { Title = "A Job Profile" } });
 
             var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, A.Fake<IContentTypeMappingService>(), fakeJobProfileOverviewService, A.Fake<IApiCacheService>(), new DysacOptions { CacheReloadEnabled = true });

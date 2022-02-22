@@ -26,6 +26,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
 
         public Uri? Url { get; set; }
 
+        public string Title { get; set; }
+
         public string? CanonicalName { get; set; }
     }
 }

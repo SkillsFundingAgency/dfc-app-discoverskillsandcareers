@@ -16,6 +16,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
     public class AssessmentCalculationServiceTests
     {
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService = A.Fake<IDocumentService<DysacTraitContentModel>>();
+        private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
         private readonly IMapper mapper = A.Fake<IMapper>();
 
         public AssessmentCalculationServiceTests()
@@ -28,7 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
@@ -44,7 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenMultipleQuestionPositiveReturnsMultipleJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
             assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
@@ -62,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenAllNegativeReturnsNoJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
             var assessment = AssessmentHelpers.GetAssessment();
 
             // Act

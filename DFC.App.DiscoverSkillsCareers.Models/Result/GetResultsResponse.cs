@@ -22,8 +22,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public int? JobFamilyCount { get; set; }
 
-        public int JobFamilyMoreCount { get; set; }
-
         public string? AssessmentType { get; set; }
 
         public IEnumerable<JobProfileResult>? JobProfiles { get; set; }

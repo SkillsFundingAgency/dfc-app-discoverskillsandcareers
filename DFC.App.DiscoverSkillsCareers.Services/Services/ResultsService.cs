@@ -90,7 +90,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 }
 
                 assessment.ShortQuestionResult.JobCategories
-                    .FirstOrDefault(x => x.JobFamilyNameUrl == category.JobFamilyNameUrl).JobProfiles = listOfJobProfiles;
+                    .First(x => x.JobFamilyNameUrl == category.JobFamilyNameUrl).JobProfiles = listOfJobProfiles;
             }
 
             var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!, jobCategoryName);
@@ -135,6 +135,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             foreach (var c in categories.OrderByDescending(x => x.JobProfiles.Count()))
             {
                 c.DisplayOrder = order;
+
                 if (!string.IsNullOrEmpty(selectedCategory))
                 {
                     if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))

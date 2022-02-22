@@ -127,7 +127,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(
                     x => x.FirstOrDefault()).Select(z => z?.Title?.ToLowerInvariant());
                 var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
-                        x => x.PartitionKey == "JobProfileOverview" && jobProfileTitles.Contains(x.Title))
+                        x => x.PartitionKey == "JobProfileOverview"
+                             && jobProfileTitles.Contains(x.Title.ToLower()))
                     .ConfigureAwait(false);
 
                 if (jobProfileOverviews == null)
@@ -140,12 +141,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                 var category = resultsByCategoryModel.JobsInCategory.FirstOrDefault(x =>
                     x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
-                category?.JobProfiles?.AddRange(jobProfileOverviews.Select(x => new ResultJobProfileOverViewModel
-                {
-                    Cname = x.Title.Replace(" ", "-"),
-                    OverViewHTML = x.Html,
-                    ReturnedStatusCode = System.Net.HttpStatusCode.OK
-                }));
+
+                category?.JobProfiles?.AddRange(jobProfileOverviews
+                    .GroupBy(x => x.Title)
+                    .Select(x => x.First())
+                    .Select(x => new ResultJobProfileOverViewModel
+                    {
+                        Cname = x.Title.Replace(" ", "-"),
+                        OverViewHTML = x.Html ?? $"<a href='/job-profiles{x.Url}'>{x.Title}</a>",
+                        ReturnedStatusCode = System.Net.HttpStatusCode.OK
+                    }));
             }
 
             logService.LogInformation("Finished loop");

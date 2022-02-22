@@ -15,7 +15,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> dysacJobProfileDocumentService;
 
-        public DocumentServiceFactory(IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService, IDocumentService<DysacTraitContentModel> dysacTraitDocumentService, IDocumentService<DysacSkillContentModel> dysacSkillDocumentService, IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService, IDocumentService<DysacJobProfileOverviewContentModel> dysacJobProfileDocumentService)
+        public DocumentServiceFactory(
+            IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
+            IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
+            IDocumentService<DysacSkillContentModel> dysacSkillDocumentService,
+            IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService,
+            IDocumentService<DysacJobProfileOverviewContentModel> dysacJobProfileDocumentService)
         {
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.dysacTraitDocumentService = dysacTraitDocumentService;
