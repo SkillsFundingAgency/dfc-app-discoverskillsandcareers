@@ -21,6 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IResultsService resultsService;
         private readonly ISessionService sessionService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
+        private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly string sessionId;
 
@@ -29,7 +30,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             sessionService = A.Fake<ISessionService>();
             assessmentDocumentService = A.Fake<IDocumentService<DysacAssessment>>();
             assessmentCalculationService = A.Fake<IAssessmentCalculationService>();
-            resultsService = new ResultsService(sessionService, assessmentCalculationService, assessmentDocumentService);
+            filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
+            
+            resultsService = new ResultsService(sessionService, assessmentCalculationService, assessmentDocumentService, filteringQuestionDocumentService);
 
             sessionId = "session1";
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
