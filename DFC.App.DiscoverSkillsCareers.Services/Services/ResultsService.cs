@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Models;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
@@ -14,15 +15,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly ISessionService sessionService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
+        private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService;
 
         public ResultsService(
             ISessionService sessionService,
             IAssessmentCalculationService assessmentCalculationService,
-            IDocumentService<DysacAssessment> assessmentDocumentService)
+            IDocumentService<DysacAssessment> assessmentDocumentService,
+            IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService)
         {
             this.sessionService = sessionService;
             this.assessmentCalculationService = assessmentCalculationService;
             this.assessmentDocumentService = assessmentDocumentService;
+            this.filteringQuestionDocumentService = filteringQuestionDocumentService;
         }
 
         public async Task<GetResultsResponse> GetResults()
@@ -62,24 +66,29 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var answeredPositiveQuestions = assessment.FilteredAssessment.Questions
                 .Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
 
+            var allFilteringQuestions = await filteringQuestionDocumentService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+            var questionSkills = allFilteringQuestions?
+                .SelectMany(x => x.Skills)
+                .Select(x => x.Title)
+                .GroupBy(x => x)
+                .Select(x => x.First())
+                .ToList();
+
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
             {
                 var listOfJobProfiles = new List<JobProfileResult>();
 
                 foreach (var jobProfile in category.JobProfiles.Where(x => x.SkillCodes != null))
                 {
-                    var canAddJobProfile = false;
+                    var canAddJobProfile = true;
+                    var relevantSkills = jobProfile.SkillCodes!.Where(skillCode => questionSkills.Contains(skillCode));
 
-                    foreach (var skill in jobProfile.SkillCodes!)
+                    foreach (var skill in relevantSkills)
                     {
-                        var genericSkill = skill;
-
-                        if (answeredPositiveQuestions.Contains(genericSkill))
+                        if (!answeredPositiveQuestions.Contains(skill))
                         {
-                            canAddJobProfile = true;
+                            canAddJobProfile = false;
                             break;
-
-                            // TODO - this logic is opposite to previous (any match shows profile - check if logic was right before)
                         }
                     }
 

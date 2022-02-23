@@ -74,11 +74,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             });
 
             return profileSkillAttributes.OrderByDescending(a => a.PercentageProfileWithSkill)
-                    .SkipWhile(a => a.PercentageProfileWithSkill < maxProfileDistributionPercentage)
-                    .TakeWhile(a => a.PercentageProfileWithSkill > (1 - maxProfileDistributionPercentage))
-                    .Take(5)
-                    .OrderByDescending(a => a.CompositeRank)
-                    .ToArray();
+                .SkipWhile(a => a.PercentageProfileWithSkill < maxProfileDistributionPercentage)
+                .TakeWhile(a => a.PercentageProfileWithSkill > (1 - maxProfileDistributionPercentage))
+                .Take(5) // TODO (in future) - do we want this? It means any profile that has more then 5 skills won't be matched first time - and some questions will never asked - consider raising the number further
+                .OrderByDescending(a => a.CompositeRank)
+                .ToArray();
         }
     }
 }
