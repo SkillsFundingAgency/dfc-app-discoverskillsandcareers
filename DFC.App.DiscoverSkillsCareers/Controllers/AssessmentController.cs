@@ -126,17 +126,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 {
                     return RedirectTo("assessment/complete");
                 }
-                else
-                {
-                    var assessmentTypeName = GetAssessmentTypeName(requestViewModel.AssessmentType);
-                    return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
-                }
+
+                var assessmentTypeName = GetAssessmentTypeName(requestViewModel.AssessmentType);
+                return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
             }
-            else
-            {
-                ModelState.AddModelError("Answer", "Failed to record answer");
-                return View(result);
-            }
+
+            ModelState.AddModelError("Answer", "Failed to record answer");
+            return View(result);
         }
 
         [HttpPost]
@@ -207,14 +203,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 return RedirectTo("assessment/email");
             }
-            else if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Reference)
+
+            if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Reference)
             {
                 return RedirectTo("assessment/reference");
             }
-            else
-            {
-                return View();
-            }
+
+            return View();
         }
 
         public async Task<IActionResult> Email()
@@ -242,8 +237,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
-                return View(viewReponse);
+                return View(new AssessmentEmailPostRequest { Email = request.Email });
             }
 
             var emailResponse = await assessmentService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
@@ -256,12 +250,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                 return RedirectTo("assessment/emailsent");
             }
-            else
-            {
-                ModelState.AddModelError("Email", "There was a problem sending email");
-                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
-                return View(viewReponse);
-            }
+
+            ModelState.AddModelError("Email", "There was a problem sending email");
+            return View(new AssessmentEmailPostRequest { Email = request.Email });
         }
 
         public IActionResult EmailSent()
@@ -302,7 +293,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     TempData.Add(key, request.Telephone);
                 }
 
-                await assessmentService.SendSms(GetDomainUrl(), request.Telephone).ConfigureAwait(false);
+                await assessmentService.SendSms(notifyOptions.ReturnUrl, request.Telephone).ConfigureAwait(false);
 
                 return RedirectTo("assessment/referencesent");
             }
@@ -328,15 +319,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                 return RedirectTo("assessment/return");
             }
-            else
-            {
-                return RedirectToRoot();
-            }
+
+            return RedirectToRoot();
         }
 
         private static string GetAssessmentTypeName(string value)
         {
             var result = string.Empty;
+
             if (Enum.TryParse<AssessmentItemType>(value, true, out var assessmentItemType))
             {
                 result = assessmentItemType.ToString().ToLower();
@@ -382,27 +372,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 {
                     return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
-                else
-                {
-                    return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.JobCategorySafeUrl}/{assessment.CurrentQuestionNumber}");
-                }
-            }
-            else
-            {
-                if (assessment.IsComplete)
-                {
-                    return RedirectTo("results");
-                }
-                else
-                {
-                    return RedirectTo($"assessment/short/{assessment.CurrentQuestionNumber}");
-                }
-            }
-        }
 
-        private string GetDomainUrl()
-        {
-            return $"https://{Request.Host.Value}/{RouteName.Prefix}/assessment";
+                return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.JobCategorySafeUrl}/{assessment.CurrentQuestionNumber}");
+            }
+
+            if (assessment.IsComplete)
+            {
+                return RedirectTo("results");
+            }
+
+            return RedirectTo($"assessment/short/{assessment.CurrentQuestionNumber}");
         }
     }
 }
