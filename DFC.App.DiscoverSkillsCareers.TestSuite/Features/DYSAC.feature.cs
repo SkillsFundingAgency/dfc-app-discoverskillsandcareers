@@ -120,7 +120,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 9
- testRunner.Then("The first question is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -163,7 +164,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 15
- testRunner.Then("The first question is displayed; I like to get involved in making things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 16
  testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -172,7 +174,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 18
- testRunner.Then("The next question is displayed; I like working with my hands or tools", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 19
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -184,7 +186,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 22
- testRunner.Then("The next question is displayed; I enjoy creative activities", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to take control of situations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 23
  testRunner.And("Percentage completion is 5%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -196,7 +198,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 26
- testRunner.Then("The next question is displayed; I like to try new things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I prefer to follow what other people are doing", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 27
  testRunner.And("Percentage completion is 7%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -208,7 +210,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 30
- testRunner.Then("The next question is displayed; I want to make things better for people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like taking responsibility for other people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 31
  testRunner.And("Percentage completion is 10%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -233,7 +235,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 38
- testRunner.Then("The next question is displayed; I like to take control of situations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to see things through to the end", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 39
  testRunner.And("Percentage completion is 15%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -245,7 +247,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 42
- testRunner.Then("The next question is displayed; I try to think differently to others", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I think I am a competitive person", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 43
  testRunner.And("Percentage completion is 17%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -269,8 +271,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 50
- testRunner.Then("The next question is displayed; I like to use my imagination to create new things" +
-                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I set myself goals in life", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 51
  testRunner.And("Percentage completion is 22%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -282,8 +283,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 54
- testRunner.Then("The next question is displayed; I am good at coming to an agreement with other pe" +
-                        "ople", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I am comfortable talking people around to my way " +
+                        "of thinking", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 55
  testRunner.And("Percentage completion is 25%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -295,7 +296,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 58
- testRunner.Then("The next question is displayed; I like to work out complicated things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I am good at coming to an agreement with other pe" +
+                        "ople", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 59
  testRunner.And("Percentage completion is 27%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -320,7 +322,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 66
- testRunner.Then("The next question is displayed; I like to see the results of the work I do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like meeting new people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 67
  testRunner.And("Percentage completion is 32%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -332,7 +334,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 70
- testRunner.Then("The next question is displayed; I will get involved if I think I can help", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I find it hard to understand other people\'s point" +
+                        " of view", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 71
  testRunner.And("Percentage completion is 35%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -344,7 +347,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 74
- testRunner.Then("The next question is displayed; I enjoy learning new things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to help other people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 75
  testRunner.And("Percentage completion is 37%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -356,7 +359,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 78
- testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I enjoy working with other people around me", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 79
  testRunner.And("Percentage completion is 40%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -368,7 +371,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 82
- testRunner.Then("The next question is displayed; I like doing things in a careful order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I want to make things better for people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 83
  testRunner.And("Percentage completion is 42%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -380,7 +383,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 86
- testRunner.Then("The next question is displayed; I enjoy working with other people around me", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I will get involved if I think I can help", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 87
  testRunner.And("Percentage completion is 45%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -392,7 +395,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 90
- testRunner.Then("The next question is displayed; I like working with facts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I am comfortable hearing other people\'s problems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 91
  testRunner.And("Percentage completion is 47%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -404,7 +407,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 94
- testRunner.Then("The next question is displayed; I enjoy coming up with new ways of doing things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to work out complicated things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 95
  testRunner.And("Percentage completion is 50%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -416,8 +419,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 98
- testRunner.Then("The next question is displayed; I am comfortable talking people around to my way " +
-                        "of thinking", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to get to the centre of the issue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 99
  testRunner.And("Percentage completion is 52%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -429,7 +431,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 102
- testRunner.Then("The next question is displayed; I plan my day so I can use my time best", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like working with facts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 103
  testRunner.And("Percentage completion is 55%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -441,7 +443,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 106
- testRunner.Then("The next question is displayed; I think I am a competitive person", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like working with numbers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 107
  testRunner.And("Percentage completion is 57%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -453,7 +455,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 110
- testRunner.Then("The next question is displayed; I like taking responsibility for other people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I enjoy learning new things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 111
  testRunner.And("Percentage completion is 60%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -465,7 +467,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 114
- testRunner.Then("The next question is displayed; I prefer to follow what other people are doing", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I enjoy coming up with new ways of doing things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 115
  testRunner.And("Percentage completion is 62%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -477,8 +479,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 118
- testRunner.Then("The next question is displayed; I enjoy planning a task more than actually doing " +
-                        "it", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I try to think differently to others", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 119
  testRunner.And("Percentage completion is 65%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -490,7 +491,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 122
- testRunner.Then("The next question is displayed; I like working with numbers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to use my imagination to create new things" +
+                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 123
  testRunner.And("Percentage completion is 67%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -502,7 +504,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 126
- testRunner.Then("The next question is displayed; I like to see things through to the end", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to try new things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 127
  testRunner.And("Percentage completion is 70%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -514,8 +516,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 130
- testRunner.Then("The next question is displayed; I feel restricted when I have to follow a routine" +
-                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I enjoy creative activities", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 131
  testRunner.And("Percentage completion is 72%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -527,8 +528,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 134
- testRunner.Then("The next question is displayed; I am comfortable telling people what they need to" +
-                        " do.", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to focus on details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 135
  testRunner.And("Percentage completion is 75%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -540,7 +540,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 138
- testRunner.Then("The next question is displayed; I like to help other people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I plan my day so I can use my time best", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 139
  testRunner.And("Percentage completion is 77%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -552,8 +552,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 142
- testRunner.Then("The next question is displayed; I find it hard to understand other people\'s point" +
-                        " of view", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like doing things in a careful order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 143
  testRunner.And("Percentage completion is 80%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -565,7 +564,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 146
- testRunner.Then("The next question is displayed; I set myself goals in life", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to follow rules and processes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 147
  testRunner.And("Percentage completion is 82%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -577,7 +576,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 150
- testRunner.Then("The next question is displayed; I like to follow rules and processes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I feel restricted when I have to follow a routine" +
+                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 151
  testRunner.And("Percentage completion is 85%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -589,7 +589,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 154
- testRunner.Then("The next question is displayed; I like to focus on details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to see the results of the work I do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 155
  testRunner.And("Percentage completion is 87%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -601,7 +601,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 158
- testRunner.Then("The next question is displayed; I like to get to the centre of the issue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like to get involved in making things", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 159
  testRunner.And("Percentage completion is 90%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -625,7 +625,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 166
- testRunner.Then("The next question is displayed; I like meeting new people", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I like working with my hands or tools", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 167
  testRunner.And("Percentage completion is 95%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -637,7 +637,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 170
- testRunner.Then("The next question is displayed; I am comfortable hearing other people\'s problems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I enjoy planning a task more than actually doing " +
+                        "it", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 171
  testRunner.And("Percentage completion is 97%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -695,7 +696,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 182
- testRunner.Then("The first question is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 183
  testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -704,7 +706,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 185
- testRunner.Then("The next question is displayed; I like working with my hands or tools", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 186
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -717,6 +719,152 @@ this.ScenarioInitialize(scenarioInfo);
 #line hidden
 #line 189
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Clicking browser back takes to the previous question and updates the percentage c" +
+            "ompletion")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "Clicking browser back takes to the previous question and updates the percentage c" +
+            "ompletion")]
+        [Xunit.TraitAttribute("Category", "DYSAC")]
+        public virtual void ClickingBrowserBackTakesToThePreviousQuestionAndUpdatesThePercentageCompletion()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "DYSAC"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Clicking browser back takes to the previous question and updates the percentage c" +
+                    "ompletion", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 192
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 193
+ testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 194
+ testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 195
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 196
+ testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 197
+ testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 198
+ testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 199
+ testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 200
+ testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 201
+ testRunner.When("I click Back to previous statement link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 202
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 203
+ testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Saving progress and selecting reference code to return to the assessment displays" +
+            " reference code")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "Saving progress and selecting reference code to return to the assessment displays" +
+            " reference code")]
+        [Xunit.TraitAttribute("Category", "DYSAC")]
+        public virtual void SavingProgressAndSelectingReferenceCodeToReturnToTheAssessmentDisplaysReferenceCode()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "DYSAC"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Saving progress and selecting reference code to return to the assessment displays" +
+                    " reference code", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 206
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 207
+ testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 208
+ testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 209
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 210
+ testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 211
+ testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 212
+ testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 213
+ testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 214
+ testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 215
+ testRunner.When("I save my progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 216
+ testRunner.And("I select reference code to return to the assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 217
+ testRunner.And("I click continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 218
+ testRunner.Then("The reference code is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

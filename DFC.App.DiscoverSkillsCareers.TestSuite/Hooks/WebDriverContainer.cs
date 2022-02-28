@@ -41,22 +41,5 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Hooks
             }
         }
 
-        //public Neo4JHelper GetGraphConnection(string key, string graphName, string graphUri, string userId, string password)
-        //{
-        //    if (graphConnections == null)
-        //    {
-        //        graphConnections = new Dictionary<string, Neo4JHelper>();
-        //    }
-        //    if (!graphConnections.ContainsKey(key))
-        //    {
-        //        Neo4JHelper newConn = new Neo4JHelper(graphName);
-        //        newConn.Connect(graphUri,
-        //                            userId,
-        //                            password);
-        //        graphConnections[key] = newConn;
-        //    }
-        //    graphConnections[key].Verify();
-        //    return graphConnections[key];
-        //}
     }
 }

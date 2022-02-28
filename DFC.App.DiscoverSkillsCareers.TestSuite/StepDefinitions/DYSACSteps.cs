@@ -78,6 +78,36 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             Assert.Equal(errorMessage, _dysacPage.GetChooseAnOptionError());
         }
 
+        [When(@"I click Back to previous statement link")]
+        public void WhenIClickBackToPreviousStatementLink()
+        {
+            _dysacPage.ClickPreviousStatement();
+        }
+
+        [When(@"I save my progress")]
+        public void WhenISaveMyProgress()
+        {
+            _dysacPage.ClickSaveProgress();
+        }
+
+        [When(@"I select reference code to return to the assessment")]
+        public void WhenSelectingReferenceCodeToReturnToTheAssessment()
+        {
+            _dysacPage.SelectReferenceCode();
+        }
+
+        [When(@"I click continue")]
+        public void WhenIClickContinue()
+        {
+            _dysacPage.ClickContinueToSaveProgress();
+        }
+
+
+        [Then(@"The reference code is displayed")]
+        public void ThenTheReferenceCodeIsDisplayed()
+        {
+            Assert.NotEmpty(_dysacPage.GetReferenceCode());
+        }
 
     }
 }
