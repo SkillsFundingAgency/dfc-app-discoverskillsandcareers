@@ -101,7 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(4, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(3, Times.Exactly);
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored, true)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened(NumerOfSummaryItems, Times.Exactly);
@@ -130,7 +130,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(4, Times.Exactly);
+            A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored)).MustHaveHappened(3, Times.Exactly);
             A.CallTo(() => fakeContentCacheService.Clear()).MustNotHaveHappened();
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeMapper.Map<DysacQuestionSetContentModel>(A<ApiQuestionSet>.Ignored)).MustNotHaveHappened();

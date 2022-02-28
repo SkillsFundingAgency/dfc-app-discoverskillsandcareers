@@ -35,7 +35,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.contentProcessors = contentProcessors;
         }
 
-        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType)
+        public async Task<HttpStatusCode> ProcessMessageAsync(
+            WebhookCacheOperation webhookCacheOperation,
+            Guid eventId,
+            Guid contentId,
+            string apiEndpoint,
+            string contentType)
         {
             if (contentType == null)
             {
@@ -70,7 +75,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return await contentProcessor.ProcessContent(url, contentId).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> ProcessContentItemAsync<TSource, TModel>(TSource sourceType, TModel modelType, Uri url, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
+        public async Task<HttpStatusCode> ProcessContentItemAsync<TSource, TModel>(
+            TSource sourceType,
+            TModel modelType,
+            Uri url,
+            Guid contentItemId,
+            IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
              where TSource : class, IBaseContentItemModel
         {
@@ -111,7 +121,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return result;
         }
 
-        public async Task<HttpStatusCode> DeleteContentItemAsync<TModel>(TModel destinationType, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)
+        public async Task<HttpStatusCode> DeleteContentItemAsync<TModel>(
+            TModel destinationType,
+            Guid contentItemId,
+            IEnumerable<ContentCacheResult> contentCacheStatuses)
              where TModel : class, IDysacContentModel
         {
             if (contentCacheStatuses == null || !contentCacheStatuses.Any())
@@ -123,7 +136,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 var contentProcessor = GetContentProcessor(cacheResult.ContentType!);
 
-                var result = await contentProcessor.DeleteContentItemAsync(cacheResult.ParentContentId!.Value, contentItemId).ConfigureAwait(false);
+                var result = await contentProcessor.DeleteContentItemAsync(
+                    cacheResult.ParentContentId!.Value,
+                    contentItemId).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.OK)
                 {
@@ -136,10 +151,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private IContentProcessor GetContentProcessor(string contentType)
         {
-            return contentProcessors.FirstOrDefault(x => x.Type.ToUpperInvariant() == ContentHelpers.GetDsyacTypeFromContentType(contentType).GetType().Name.ToUpperInvariant());
+            return contentProcessors.FirstOrDefault(
+                x => x.Type.ToUpperInvariant() == ContentHelpers.GetDsyacTypeFromContentType(contentType).GetType().Name.ToUpperInvariant())!;
         }
 
-        private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(Guid contentId, string apiEndpoint, Guid eventId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType, IBaseContentItemModel sourceType)
+        private async Task<HttpStatusCode> HandleWebhookCreateOrUpdate(
+            Guid contentId,
+            string apiEndpoint,
+            Guid eventId,
+            IEnumerable<ContentCacheResult> contentItemCacheStatus,
+            IDysacContentModel destinationType,
+            IBaseContentItemModel sourceType)
         {
             if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
             {
@@ -153,20 +175,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await ProcessContentItemAsync(sourceType, destinationType, url, contentId, parentContentItems.Where(x => x.Result == ContentCacheStatus.ContentItem)).ConfigureAwait(false);
             }
 
-            if (contentItemCacheStatus.Any(z => z.Result == ContentCacheStatus.Content))
+            if (contentItemCacheStatus.Any())
             {
                 await ProcessContentAsync(sourceType, destinationType, url, contentId).ConfigureAwait(false);
-            }
-
-            if (contentItemCacheStatus.All(x => x.Result == ContentCacheStatus.NotFound))
-            {
-                return HttpStatusCode.NotFound;
             }
 
             return HttpStatusCode.OK;
         }
 
-        private async Task<HttpStatusCode> HandleWebhookDelete(Guid contentId, IEnumerable<ContentCacheResult> contentItemCacheStatus, IDysacContentModel destinationType)
+        private async Task<HttpStatusCode> HandleWebhookDelete(
+            Guid contentId,
+            IEnumerable<ContentCacheResult> contentItemCacheStatus,
+            IDysacContentModel destinationType)
         {
             var parentContentItems = contentItemCacheStatus.Where(x => x.Result == ContentCacheStatus.ContentItem);
 
