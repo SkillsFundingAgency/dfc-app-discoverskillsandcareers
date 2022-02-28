@@ -67,21 +67,10 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             }
         }
 
-        public void WriteSitemapToFile(string path)
-        {
-            using var fs = new FileStream(path, FileMode.Create);
-            var ns = new XmlSerializerNamespaces();
-            ns.Add("image", "http://www.google.com/schemas/sitemap-image/1.1");
-
-            var xs = new XmlSerializer(typeof(Sitemap));
-            xs.Serialize(fs, this, ns);
-        }
-
         public string WriteSitemapToString()
         {
             using var sw = new StringWriter();
             var ns = new XmlSerializerNamespaces();
-            ns.Add("image", "http://www.google.com/schemas/sitemap-image/1.1");
 
             var xs = new XmlSerializer(typeof(Sitemap));
             xs.Serialize(sw, this, ns);
