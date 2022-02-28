@@ -66,18 +66,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                     if (eventGridEvent.Data is SubscriptionValidationEventData subscriptionValidationEventData)
                     {
-                        logger.LogInformation($"Got SubscriptionValidation event data, validationCode: {subscriptionValidationEventData!.ValidationCode},  validationUrl: {subscriptionValidationEventData.ValidationUrl}, topic: {eventGridEvent.Topic}");
+                        logger.LogInformation(
+                            $"Got SubscriptionValidation event data, validationCode: {subscriptionValidationEventData!.ValidationCode},  validationUrl: {subscriptionValidationEventData.ValidationUrl}, topic: {eventGridEvent.Topic}");
 
                         // Do any additional validation (as required) such as validating that the Azure resource ID of the topic matches
                         // the expected topic and then return back the below response
-                        var responseData = new SubscriptionValidationResponse()
+                        var responseData = new SubscriptionValidationResponse
                         {
                             ValidationResponse = subscriptionValidationEventData.ValidationCode,
                         };
 
                         return Ok(responseData);
                     }
-                    else if (eventGridEvent.Data is EventGridEventData eventGridEventData)
+
+                    if (eventGridEvent.Data is EventGridEventData eventGridEventData)
                     {
                         if (!Guid.TryParse(eventGridEventData.ItemId, out Guid contentId))
                         {
@@ -88,13 +90,19 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                         logger.LogInformation($"Got Event Id: {eventId}: {eventGridEvent.EventType}: Cache operation: {cacheOperation} {eventGridEventData.Api}");
 
-                        var result = await webhookService.ProcessMessageAsync(cacheOperation, eventId, contentId, eventGridEventData.Api, eventGridEventData.ContentType).ConfigureAwait(false);
+                        var result = await webhookService.ProcessMessageAsync(
+                            cacheOperation,
+                            eventId,
+                            contentId,
+                            eventGridEventData.Api,
+                            eventGridEventData.ContentType).ConfigureAwait(false);
 
                         LogResult(eventId, contentId, result);
                     }
                     else
                     {
-                        throw new InvalidDataException($"Invalid event type '{eventGridEvent.EventType}' received for Event Id: {eventId}, should be one of '{string.Join(",", acceptedEventTypes.Keys)}'");
+                        throw new InvalidDataException(
+                            $"Invalid event type '{eventGridEvent.EventType}' received for Event Id: {eventId}, should be one of '{string.Join(",", acceptedEventTypes.Keys)}'");
                     }
                 }
 
@@ -126,7 +134,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     break;
 
                 default:
-                    throw new InvalidDataException($"Event Id: {eventId}, Content Page Id: {contentPageId}: Content Page not updated: Status: {result}");
+                    throw new InvalidDataException(
+                        $"Event Id: {eventId}, Content Page Id: {contentPageId}: Content Page not updated: Status: {result}");
             }
         }
     }
