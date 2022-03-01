@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DFC.Compui.Cosmos;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculationServiceTests
@@ -16,6 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
     public class AssessmentCalculationServiceTests
     {
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService = A.Fake<IDocumentService<DysacTraitContentModel>>();
+        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService = A.Fake<IDocumentService<DysacJobProfileCategoryContentModel>>();
         private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
         private readonly IMapper mapper = A.Fake<IMapper>();
 
@@ -23,13 +25,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         {
             A.CallTo(() => traitDocumentService.GetAsync(A<Expression<Func<DysacTraitContentModel, bool>>>.Ignored)).Returns(AssessmentHelpers.GetTraits());
             A.CallTo(() => traitDocumentService.GetAllAsync(A<string>.Ignored)).Returns(AssessmentHelpers.GetTraits());
+            A.CallTo(() => jobProfileCategoryDocumentService.GetAsync(A<Expression<Func<DysacJobProfileCategoryContentModel, bool>>>.Ignored))
+                .Returns(AssessmentHelpers.GetAllJobCategories());
         }
 
         [Fact]
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(
+                traitDocumentService,
+                jobProfileCategoryDocumentService,
+                filteringQuestionDocumentService,
+                mapper,
+                A.Fake<ILoggerFactory>());
+            
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
@@ -45,7 +55,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenMultipleQuestionPositiveReturnsMultipleJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, jobProfileCategoryDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
             assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
@@ -63,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenAllNegativeReturnsNoJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(traitDocumentService, jobProfileCategoryDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
             var assessment = AssessmentHelpers.GetAssessment();
 
             // Act

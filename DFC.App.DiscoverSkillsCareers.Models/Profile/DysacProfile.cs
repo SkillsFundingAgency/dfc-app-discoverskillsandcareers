@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
@@ -37,13 +38,18 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiSkill, DysacSkillContentModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
-                .ForMember(d => d.Title, s => s.MapFrom(a => GetGenericSkillName(a.Title)));
+                .ForMember(d => d.Title, s => s.MapFrom(a => GeneralHelper.GetGenericSkillName(a.Title)));
+
+            CreateMap<ApiJobCategory, DysacJobProfileCategoryContentModel>()
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+                .ForMember(d => d.JobProfiles, s => s.MapFrom(z => ConstructJobProfiles(z.ContentItems)))
+                .ForMember(d => d.Title, s => s.MapFrom(z => z.Title));
 
             CreateMap<ApiJobProfile, JobProfileContentItemModel>();
 
             CreateMap<JobProfileContentItemModel, JobProfileResult>()
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
-                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => GetGenericSkillName(z.Title))));
+                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => GeneralHelper.GetGenericSkillName(z.Title))));
 
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
@@ -62,16 +68,6 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
             .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
             .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
-        }
-
-        private static string? GetGenericSkillName(string? socSkillsMatrixName)
-        {
-            if (socSkillsMatrixName?.IndexOf("-") != 5)
-            {
-                return socSkillsMatrixName;
-            }
-
-            return socSkillsMatrixName?[6..];
         }
 
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
@@ -96,7 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 ONetRank = !string.IsNullOrEmpty(x.ONetRank) ? decimal.Parse(x.ONetRank) : (decimal?)null,
                 Ordinal = x.Ordinal,
                 ItemId = x.ItemId,
-                Title = GetGenericSkillName(x.Title),
+                Title = GeneralHelper.GetGenericSkillName(x.Title),
                 Url = x.Url,
                 LastCached = DateTime.UtcNow,
             }));

@@ -27,17 +27,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         };
 
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
+        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService;
         private readonly IMapper mapper;
         private readonly ILogger<AssessmentCalculationService> logger;
 
         public AssessmentCalculationService(
             IDocumentService<DysacTraitContentModel> traitDocumentService,
+            IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService,
             IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService,
             IMapper mapper,
             ILoggerFactory loggerFactory)
         {
             this.traitDocumentService = traitDocumentService;
+            this.jobProfileCategoryDocumentService = jobProfileCategoryDocumentService;
             this.filteringQuestionDocumentService = filteringQuestionDocumentService;
             this.mapper = mapper;
             this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
@@ -87,7 +90,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(x => x.TotalScore)
                 .ToList();
 
-            var jobCategoryRelevance = CalculateJobFamilyRelevance(userTraits, allTraits, allFilteringQuestions);
+            var allJobCategories =
+                await jobProfileCategoryDocumentService.GetAsync(x => x.PartitionKey == "JobProfileCategory")
+                    .ConfigureAwait(false);
+
+            var jobCategoryRelevance = CalculateJobFamilyRelevance(userTraits, allTraits, allFilteringQuestions, allJobCategories);
 
             var jobCategories = jobCategoryRelevance
                 .OrderByDescending(x => x.Total)
@@ -110,7 +117,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
             IEnumerable<TraitResult> userTraits,
             IEnumerable<DysacTraitContentModel> allTraits,
-            IEnumerable<DysacFilteringQuestionContentModel> allFilteringQuestions)
+            IEnumerable<DysacFilteringQuestionContentModel> allFilteringQuestions,
+            IEnumerable<DysacJobProfileCategoryContentModel> allJobProfileCategories)
         {
             var results = new List<JobCategoryResult>();
 
@@ -136,33 +144,35 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     throw new InvalidOperationException($"Trait {applicableTrait} not found in trait repository");
                 }
 
-                foreach (var jc in applicableTrait.JobCategories)
+                foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
-                    if (results.Any(x => x.JobFamilyName == jc.Title))
+                    var fullJobCategory = allJobProfileCategories.FirstOrDefault(x => x.Url == limitedJobCategory.Url);
+
+                    if (results.Any(x => x.JobFamilyName == fullJobCategory.Title))
                     {
                         continue;
                     }
 
                     var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
-                        jc.JobProfiles.Where(z => z.Skills.Any()),
+                        fullJobCategory.JobProfiles.Where(z => z.Skills.Any()),
                         new HashSet<string>(),
                         0.75,
                         questionSkills);
 
-                    logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(jc)}");
+                    logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(fullJobCategory)}");
                     logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");
 
                     results.Add(new JobCategoryResult
                     {
-                        JobFamilyName = jc.Title!,
-                        JobFamilyUrl = jc.WebsiteURI?.Substring(jc.WebsiteURI.LastIndexOf("/") + 1, jc.WebsiteURI.Length - jc.WebsiteURI.LastIndexOf("/") - 1).ToString(),
+                        JobFamilyName = fullJobCategory.Title!,
+                        JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(limitedJobCategory.WebsiteURI.LastIndexOf("/") + 1, limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/") - 1).ToString(),
                         TraitsTotal = trait.TotalScore,
                         SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
-                        TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == jc.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
+                        TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == fullJobCategory.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
                         NormalizedTotal = trait.TotalScore,
                         Total = trait.TotalScore,
                         TotalQuestions = categorySkills.Count(),
-                        JobProfiles = jc.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
+                        JobProfiles = fullJobCategory.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                     });
                 }
             }

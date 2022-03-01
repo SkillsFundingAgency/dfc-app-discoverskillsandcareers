@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -66,7 +67,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory));
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetSkill, typeof(ApiSkill));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetOccupationalCode, typeof(ApiONetOccupationalCode));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
 
@@ -79,6 +79,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobProfile, typeof(ApiJobProfile));
 
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
+
+                // Don't map job profiles into traits (via job profiles)
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetSkill, typeof(ApiSkill));
+
+                await ReloadContentType<ApiJobCategory, DysacJobProfileCategoryContentModel>(DysacConstants.ContentTypeJobCategory, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);
                 apiCacheService.StopCache();
 
@@ -98,7 +103,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             logger.LogInformation("Get summary list - {ContentType}", contentType);
 
-            var summaryList = await cmsApiService.GetSummaryAsync<ApiSummaryItemModel>(contentType).ConfigureAwait(false);
+            var summaryList = await cmsApiService.GetSummaryAsync<ApiSummaryItemModel>(contentType, false).ConfigureAwait(false);
 
             logger.LogInformation("Get summary list completed - {ContentType}", contentType);
 
@@ -137,7 +142,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 logger.LogInformation($"Get details for {item.Title} - {url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(url, true).ConfigureAwait(false);
+                var options = new CmsApiOptions
+                {
+                    PreventRecursion = true,
+                    ContentTypeOptions = new Dictionary<string, CacheLookupOptions>
+                    {
+                        {
+                            "socskillsmatrix",
+                            new CacheLookupOptions
+                            {
+                                KeyName = "title",
+                                Transform = key => GeneralHelper.GetGenericSkillName(key) ?? key,
+                            }
+                        },
+                    },
+                };
+
+                var apiDataModel = await cmsApiService.GetItemAsync<TModel>(url, options).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
