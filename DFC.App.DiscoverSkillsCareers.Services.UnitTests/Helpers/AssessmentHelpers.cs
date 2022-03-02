@@ -30,16 +30,27 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
             };
         }
 
+        public static IEnumerable<DysacJobProfileCategoryContentModel> GetAllJobCategories()
+        {
+            var listOfCategories = new List<DysacJobProfileCategoryContentModel>
+            {
+                new DysacJobProfileCategoryContentModel { Title = "border force leader", Url = new Uri("https://localhost/jobprofile/1") },
+                new DysacJobProfileCategoryContentModel { Title = "border force doer", Url = new Uri("https://localhost/jobprofile/2") },
+            };
+            
+            return listOfCategories;
+        }
+
         public static IEnumerable<DysacTraitContentModel> GetTraits()
         {
             var listOfTraits = new List<DysacTraitContentModel>();
 
-            listOfTraits.Add(new DysacTraitContentModel { Title = "LEADER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Leader", WebsiteURI = "/job-profiles/border-force-leader" } } });
+            listOfTraits.Add(new DysacTraitContentModel { Title = "LEADER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Leader", Url = new Uri("https://localhost/jobprofile/1"), WebsiteURI = "/job-profiles/border-force-leader" } } });
             listOfTraits.Add(new DysacTraitContentModel { Title = "ORGANISER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Organiser", WebsiteURI = "/job-profiles/border-force-organiser" } } });
             listOfTraits.Add(new DysacTraitContentModel { Title = "INFLUENCER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Influencer", WebsiteURI = "/job-profiles/border-force-influencer" } } });
             listOfTraits.Add(new DysacTraitContentModel { Title = "DRIVER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Driver", WebsiteURI = "/job-profiles/border-force-driver" } } });
             listOfTraits.Add(new DysacTraitContentModel { Title = "ANALYST", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Analyst", WebsiteURI = "/job-profiles/border-force-analyst" } } });
-            listOfTraits.Add(new DysacTraitContentModel { Title = "DOER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Doer", WebsiteURI = "/job-profiles/border-force-doer" } } });
+            listOfTraits.Add(new DysacTraitContentModel { Title = "DOER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Doer", Url = new Uri("https://localhost/jobprofile/2"), WebsiteURI = "/job-profiles/border-force-doer" } } });
             listOfTraits.Add(new DysacTraitContentModel { Title = "CREATER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Creater", WebsiteURI = "/job-profiles/border-force-creater" } } });
             listOfTraits.Add(new DysacTraitContentModel { Title = "HELPER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel>() { new JobCategoryContentItemModel { Title = "Border Force Helper", WebsiteURI = "/job-profiles/border-force-helper" } } });
 

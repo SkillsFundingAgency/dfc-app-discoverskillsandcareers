@@ -14,19 +14,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IDocumentService<DysacSkillContentModel> dysacSkillDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> dysacJobProfileDocumentService;
+        private readonly IDocumentService<DysacJobProfileCategoryContentModel> dysacJobProfileCategoryDocumentService;
 
         public DocumentServiceFactory(
             IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
             IDocumentService<DysacSkillContentModel> dysacSkillDocumentService,
             IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService,
-            IDocumentService<DysacJobProfileOverviewContentModel> dysacJobProfileDocumentService)
+            IDocumentService<DysacJobProfileOverviewContentModel> dysacJobProfileDocumentService,
+            IDocumentService<DysacJobProfileCategoryContentModel> dysacJobProfileCategoryDocumentService)
         {
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.dysacTraitDocumentService = dysacTraitDocumentService;
             this.dysacSkillDocumentService = dysacSkillDocumentService;
             this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
             this.dysacJobProfileDocumentService = dysacJobProfileDocumentService;
+            this.dysacJobProfileCategoryDocumentService = dysacJobProfileCategoryDocumentService;
         }
 
         public IDocumentService<TModel> GetDocumentService<TModel>()
@@ -55,6 +58,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             if (typeof(TModel) == typeof(DysacJobProfileOverviewContentModel))
             {
                 return (IDocumentService<TModel>)dysacJobProfileDocumentService;
+            }
+
+            if (typeof(TModel) == typeof(DysacJobProfileCategoryContentModel))
+            {
+                return (IDocumentService<TModel>)dysacJobProfileCategoryDocumentService;
             }
 
             throw new InvalidOperationException($"No document service for {typeof(TModel)} found");

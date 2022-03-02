@@ -127,6 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
             services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
             services.AddDocumentServices<DysacJobProfileOverviewContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddDocumentServices<DysacJobProfileCategoryContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
 
             var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
             services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment(), cosmosRetryOptions);
