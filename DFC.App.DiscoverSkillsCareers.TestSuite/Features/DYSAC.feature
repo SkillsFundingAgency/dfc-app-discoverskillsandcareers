@@ -9,7 +9,7 @@ Scenario: Starting Assessment loads the first questions
 	Then The first question is displayed; I am comfortable telling people what they need to do
 
 @DYSAC
-Scenario: Starting Assessment loads the questions and show the percentage completion 
+Scenario: Starting Assessment loads the questions and show the percentage completion. Also displays the results
 	Given I load the DYSAC page
 	When I click on Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
@@ -173,6 +173,9 @@ Scenario: Starting Assessment loads the questions and show the percentage comple
 	And I click Next
 	Then The assessment is complete	
 	And The task is 100% complete
+	When I click See results button
+	Then The results are displayed
+
 
 
 @DYSAC
@@ -189,7 +192,7 @@ Scenario: Display error message when moving to next question without selecting a
 	And Percentage completion is 2%
 
 @DYSAC
-Scenario: Clicking browser back takes to the previous question and updates the percentage completion 
+Scenario: Clicking back link takes to the previous question and updates the percentage completion 
 	Given I load the DYSAC page
 	When I click on Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
@@ -216,3 +219,5 @@ Scenario: Saving progress and selecting reference code to return to the assessme
 	And I select reference code to return to the assessment
 	And I click continue
 	Then The reference code is displayed
+
+

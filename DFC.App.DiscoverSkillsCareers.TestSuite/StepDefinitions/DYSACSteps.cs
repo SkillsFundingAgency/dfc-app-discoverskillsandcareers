@@ -109,5 +109,17 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             Assert.NotEmpty(_dysacPage.GetReferenceCode());
         }
 
+        [When(@"I click See results button")]
+        public void WhenIClickSeeResultsButton()
+        {
+            _dysacPage.ClickSeeResults();
+        }
+
+        [Then(@"The results are displayed")]
+        public void ThenTheResultsAreDisplayed()
+        {
+            Assert.NotEmpty(_dysacPage.GetResultText());
+        }
+
     }
 }

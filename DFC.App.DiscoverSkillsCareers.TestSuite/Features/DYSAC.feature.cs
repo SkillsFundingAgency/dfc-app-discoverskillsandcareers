@@ -127,16 +127,19 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Starting Assessment loads the questions and show the percentage completion")]
+        [Xunit.SkippableFactAttribute(DisplayName="Starting Assessment loads the questions and show the percentage completion. Also " +
+            "displays the results")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "Starting Assessment loads the questions and show the percentage completion")]
+        [Xunit.TraitAttribute("Description", "Starting Assessment loads the questions and show the percentage completion. Also " +
+            "displays the results")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void StartingAssessmentLoadsTheQuestionsAndShowThePercentageCompletion()
+        public virtual void StartingAssessmentLoadsTheQuestionsAndShowThePercentageCompletion_AlsoDisplaysTheResults()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Starting Assessment loads the questions and show the percentage completion", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Starting Assessment loads the questions and show the percentage completion. Also " +
+                    "displays the results", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -655,6 +658,12 @@ this.ScenarioInitialize(scenarioInfo);
 #line 175
  testRunner.And("The task is 100% complete", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
+#line 176
+ testRunner.When("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 177
+ testRunner.Then("The results are displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
             }
             this.ScenarioCleanup();
         }
@@ -669,7 +678,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Display error message when moving to next question without selecting an option", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 179
+#line 182
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -689,55 +698,55 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 180
+#line 183
  testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 181
+#line 184
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 182
+#line 185
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 183
+#line 186
  testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 184
+#line 187
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 185
+#line 188
  testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 186
+#line 189
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 187
+#line 190
  testRunner.When("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 188
+#line 191
  testRunner.Then("The error is displayed; Choose an answer to the statement", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 189
+#line 192
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Clicking browser back takes to the previous question and updates the percentage c" +
-            "ompletion")]
+        [Xunit.SkippableFactAttribute(DisplayName="Clicking back link takes to the previous question and updates the percentage comp" +
+            "letion")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "Clicking browser back takes to the previous question and updates the percentage c" +
-            "ompletion")]
+        [Xunit.TraitAttribute("Description", "Clicking back link takes to the previous question and updates the percentage comp" +
+            "letion")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void ClickingBrowserBackTakesToThePreviousQuestionAndUpdatesThePercentageCompletion()
+        public virtual void ClickingBackLinkTakesToThePreviousQuestionAndUpdatesThePercentageCompletion()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Clicking browser back takes to the previous question and updates the percentage c" +
-                    "ompletion", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 192
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Clicking back link takes to the previous question and updates the percentage comp" +
+                    "letion", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 195
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -757,39 +766,39 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 193
+#line 196
  testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 194
+#line 197
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 195
+#line 198
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 196
- testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 197
- testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 198
- testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 199
- testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 200
- testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 201
- testRunner.When("I click Back to previous statement link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 202
+ testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 203
+ testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 204
+ testRunner.When("I click Back to previous statement link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 205
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 203
+#line 206
  testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -809,7 +818,7 @@ this.ScenarioInitialize(scenarioInfo);
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Saving progress and selecting reference code to return to the assessment displays" +
                     " reference code", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 206
+#line 209
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -829,41 +838,41 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 207
+#line 210
  testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 208
+#line 211
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 209
+#line 212
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 210
+#line 213
  testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 211
+#line 214
  testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 212
+#line 215
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 213
+#line 216
  testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 214
+#line 217
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 215
+#line 218
  testRunner.When("I save my progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 216
+#line 219
  testRunner.And("I select reference code to return to the assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 217
+#line 220
  testRunner.And("I click continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 218
+#line 221
  testRunner.Then("The reference code is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

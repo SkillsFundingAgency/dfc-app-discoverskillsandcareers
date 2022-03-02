@@ -28,6 +28,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
         IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
+        IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button app-button']"));
+        IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
 
         public void ClickStartAssessment()
         {
@@ -105,6 +107,18 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
             return referenceCode.GetElementText();
+        }
+
+        public void ClickSeeResults()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button app-button']"));
+            btnSeeResults.Click();
+        }
+
+        public string GetResultText()
+        {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector(".app-results h2.govuk-heading-l"));
+                return results.GetElementText();
         }
     }
 }
