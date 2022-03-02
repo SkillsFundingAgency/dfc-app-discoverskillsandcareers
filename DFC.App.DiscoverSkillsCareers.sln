@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.DiscoverSkillsCareers.Migration", "DFC.App.DiscoverSkillsCareers.Migration\DFC.App.DiscoverSkillsCareers.Migration.csproj", "{BF9A479B-8EB5-4ED6-AEEE-3A10C4432189}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.DiscoverSkillsCareers.TestSuite", "DFC.App.DiscoverSkillsCareers.TestSuite\DFC.App.DiscoverSkillsCareers.TestSuite.csproj", "{B4302497-3E9E-4061-A3E2-5C69FA1D7621}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,18 @@ Global
 		{BF9A479B-8EB5-4ED6-AEEE-3A10C4432189}.Release|x64.Build.0 = Release|Any CPU
 		{BF9A479B-8EB5-4ED6-AEEE-3A10C4432189}.Release|x86.ActiveCfg = Release|Any CPU
 		{BF9A479B-8EB5-4ED6-AEEE-3A10C4432189}.Release|x86.Build.0 = Release|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Debug|x64.Build.0 = Debug|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Debug|x86.Build.0 = Debug|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Release|x64.ActiveCfg = Release|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Release|x64.Build.0 = Release|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Release|x86.ActiveCfg = Release|Any CPU
+		{B4302497-3E9E-4061-A3E2-5C69FA1D7621}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
