@@ -29,7 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.jobProfileOverviewDocumentService = jobProfileOverviewDocumentService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(ResultsGetRequestViewModel requestViewModel)
         {
             if (!await HasSessionId().ConfigureAwait(false))
             {
@@ -59,6 +60,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 Results = mapper.Map<ResultsIndexResponseViewModel>(resultsResponse),
                 AssessmentReference = assessmentResponse.ReferenceCode,
             };
+
+            resultIndexResponseViewModel.Results.JobCategoriesNumberToShow = requestViewModel?.CountToShow ?? 3;
 
             logService.LogInformation("About to display results view");
             return View(resultIndexResponseViewModel);

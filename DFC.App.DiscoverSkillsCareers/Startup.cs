@@ -80,6 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers
                     name: "default",
                     pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
 
+                MapRoute(endpoints, "results", RouteName.Prefix + "/results/{countToShow}", "Results", "Index");
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}", "Assessment", "Index");
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
                 MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
@@ -171,7 +172,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
         {
-            var policyOptions = new PolicyOptions() { HttpRetry = new RetryPolicyOptions(), HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
+            var policyOptions = new PolicyOptions { HttpRetry = new RetryPolicyOptions(), HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
             policyRegistry.Add(nameof(PolicyOptions.HttpRetry), HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(policyOptions.HttpRetry.Count, retryAttempt => TimeSpan.FromSeconds(Math.Pow(policyOptions.HttpRetry.BackoffPower, retryAttempt))));
             policyRegistry.Add(nameof(PolicyOptions.HttpCircuitBreaker), HttpPolicyExtensions.HandleTransientHttpError().CircuitBreakerAsync(policyOptions.HttpCircuitBreaker.ExceptionsAllowedBeforeBreaking, policyOptions.HttpCircuitBreaker.DurationOfBreak));
         }

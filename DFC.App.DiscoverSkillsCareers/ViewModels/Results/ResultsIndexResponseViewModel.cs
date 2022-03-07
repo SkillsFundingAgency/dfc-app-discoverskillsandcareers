@@ -16,6 +16,8 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public IEnumerable<JobCategoryResultViewModel> JobCategories { get; set; }
 
+        public int JobCategoriesNumberToShow { get; set; }
+
         public IEnumerable<string> Traits { get; set; }
 
         public int JobFamilyCount { get; set; }
