@@ -3,7 +3,6 @@
     <div class="govuk-body">
         @if (Model.Results.JobCategories.Any())
         {
-            <partial name="_SendMyResults" model="@Model.AssessmentReference" />
             <div class="app-results">
                 <h2 class="govuk-heading-l">@Model.Results.JobFamilyCount job categories that might suit you</h2>
                 <partial name="_JobCategories" />
@@ -15,6 +14,8 @@
                     </a>
                 </div>
             </div>
+            
+            <partial name="_SendMyResults" model="@Model.AssessmentReference" />          
         }
     </div>
 </div>

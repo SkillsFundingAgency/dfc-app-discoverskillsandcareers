@@ -43,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             A.CallTo(() => sessionService.HasValidSession()).Returns(false);
 
-            var actionResponse = await controller.Index().ConfigureAwait(false);
+            var actionResponse = await controller.Index(null).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -62,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 
             A.CallTo(() => resultsService.GetResults()).Returns(resultsResponse);
 
-            var actionResponse = await controller.Index().ConfigureAwait(false);
+            var actionResponse = await controller.Index(null).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
 
-            var actionResponse = await controller.Index().ConfigureAwait(false);
+            var actionResponse = await controller.Index(null).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }
