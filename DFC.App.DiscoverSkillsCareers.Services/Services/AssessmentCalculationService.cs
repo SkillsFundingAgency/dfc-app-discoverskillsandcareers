@@ -146,17 +146,31 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
-                    var fullJobCategory = allJobProfileCategories.FirstOrDefault(x => x.Url == limitedJobCategory.Url);
+                    var fullJobCategory = allJobProfileCategories.First(x => x.Url == limitedJobCategory.Url);
 
                     if (results.Any(x => x.JobFamilyName == fullJobCategory.Title))
                     {
                         continue;
                     }
 
+                    var relevantSkills = fullJobCategory.JobProfiles
+                        .SelectMany(jp => jp.Skills.Select(s => s.Title))
+                        .Where(t => questionSkills?.Contains(t) != false)
+                        .Distinct()
+                        .ToList();
+
+                    var jobProfiles = fullJobCategory.JobProfiles.GroupBy(jp => jp.Title).Select(jpg => jpg.First())
+                        .ToList();
+
+                    var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles.Where(z => z.Skills.Any())
+                        .GroupBy(jp => jp.Title).Select(jpg => jpg.First()).ToList();
+
+                    var prominentSkills = new HashSet<string>();
+
                     var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
-                        fullJobCategory.JobProfiles.Where(z => z.Skills.Any()),
-                        new HashSet<string>(),
-                        0.75,
+                        jobProfilesWithAtLeastOneSkill,
+                        prominentSkills,
+                        75,
                         questionSkills);
 
                     logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(fullJobCategory)}");
@@ -172,7 +186,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         NormalizedTotal = trait.TotalScore,
                         Total = trait.TotalScore,
                         TotalQuestions = categorySkills.Count(),
-                        JobProfiles = fullJobCategory.JobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
+                        JobProfiles = jobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                     });
                 }
             }

@@ -12,12 +12,13 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
 {
     public class JobCategorySkillMapperTests
     {
-        private readonly IEnumerable<JobProfileContentItemModel> JobProfilesWithCommonSkills;
+        private readonly IEnumerable<JobProfileContentItemModel> JobProfilesWithCommonSkills_7Items;
+        private readonly IEnumerable<JobProfileContentItemModel> JobProfilesWithCommonSkills_2Items;
         private readonly IEnumerable<JobProfileContentItemModel> JobProfilesWithNoCommonSkills;
 
         public JobCategorySkillMapperTests()
         {
-            JobProfilesWithCommonSkills = new List<JobProfileContentItemModel>
+            JobProfilesWithCommonSkills_7Items = new List<JobProfileContentItemModel>
             {
                 new JobProfileContentItemModel
                 {
@@ -44,7 +45,93 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
                         new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
                     },
                 },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 3",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 4",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 5",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 6",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 7",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 8",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
+                new JobProfileContentItemModel
+                {
+                    Title = "Job Profile 9",
+                    Skills = new List<DysacSkillContentItemModel>
+                    {
+                        new DysacSkillContentItemModel { Ordinal = 1, ONetRank = 4.75m, Title = "SKILL2" },
+                        new DysacSkillContentItemModel { Ordinal = 2, ONetRank = 1.24m, Title = "SKILL3" },
+                        new DysacSkillContentItemModel { Ordinal = 3, ONetRank = 3.14m, Title = "SKILL4" },
+                        new DysacSkillContentItemModel { Ordinal = 4, ONetRank = 2.10m, Title = "SKILL5" },
+                        new DysacSkillContentItemModel { Ordinal = 5, ONetRank = 2.32m, Title = "SKILL7" },
+                    },
+                },
             };
+
+            JobProfilesWithCommonSkills_2Items = JobProfilesWithCommonSkills_7Items.Take(2).ToList();
 
             JobProfilesWithNoCommonSkills = new List<JobProfileContentItemModel>
             {
@@ -81,7 +168,10 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
         {
             // Arrange
             // Act
-            var result = JobCategorySkillMappingHelper.CalculateCommonSkillsToRemoveByPercentage(JobProfilesWithCommonSkills.ToList(), 0.75);
+            var result = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(
+                JobProfilesWithCommonSkills_2Items.SelectMany(x => x.Skills).Select(x => x.Title).Distinct().ToList(),
+                JobProfilesWithCommonSkills_2Items.ToList(),
+                0.75);
 
             // Assert
             Assert.Equal(4, result.Count);
@@ -96,7 +186,10 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
         {
             // Arrange
             // Act
-            var result = JobCategorySkillMappingHelper.CalculateCommonSkillsToRemoveByPercentage(JobProfilesWithNoCommonSkills.ToList(), 0.75);
+            var result = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(
+                JobProfilesWithCommonSkills_2Items.SelectMany(x => x.Skills).Select(x => x.Title).Distinct().ToList(),
+                JobProfilesWithNoCommonSkills.ToList(),
+                0.75);
 
             // Assert
             Assert.Empty(result);
@@ -108,13 +201,13 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
             // Arrange
             // Act
             var result = JobCategorySkillMappingHelper.GetSkillAttributes(
-                JobProfilesWithCommonSkills,
+                JobProfilesWithCommonSkills_7Items,
                 new HashSet<string> { "SKILL7", "SKILL1" },
                 0.75,
-                JobProfilesWithCommonSkills.SelectMany(x => x.Skills).Select(x => x.Title).ToList());
+                JobProfilesWithCommonSkills_7Items.SelectMany(x => x.Skills).Select(x => x.Title).Distinct().ToList());
 
             // Assert
-            Assert.Equal(5, result.Count());
+            Assert.Equal(1, result.Count());
         }
     }
 }

@@ -8,14 +8,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 {
     public static class JobCategorySkillMappingHelper
     {
-        public static HashSet<string> CalculateCommonSkillsToRemoveByPercentage(IList<JobProfileContentItemModel> jobProfiles, double percentage = 0.75)
+        public static HashSet<string> CalculateCommonSkillsByPercentage(
+            IList<string> skills,
+            IList<JobProfileContentItemModel> jobProfiles,
+            double percentage = 0.75)
         {
             if (jobProfiles == null)
             {
                 throw new ArgumentNullException(nameof(jobProfiles));
             }
 
-            var skills = jobProfiles.SelectMany(p => p.Skills.Select(s => s.Title!)).Distinct();
             var result = new Dictionary<string, IList<string>>();
 
             foreach (var skill in skills)
@@ -28,15 +30,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
                 foreach (var jobProfile in jobProfiles)
                 {
-                    if (jobProfile.Skills.Any(s =>
-                        skill.Equals(s.Title, StringComparison.InvariantCultureIgnoreCase)))
+                    if (jobProfile.Skills.Any(s => skill.Equals(s.Title, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         profiles.Add(jobProfile.Title!);
                     }
                 }
             }
 
-            return new HashSet<string>(result.Where(k => (double)k.Value.Count / (double)jobProfiles.Count >= percentage).Select(r => r.Key));
+            var commonSkills = result
+                .Where(k => (k.Value.Count / (double)jobProfiles.Count) >= percentage)
+                .Select(r => r.Key)
+                .ToList();
+
+            return new HashSet<string>(commonSkills);
         }
 
         public static IEnumerable<SkillAttribute> GetSkillAttributes(
@@ -73,10 +79,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 };
             });
 
-            return profileSkillAttributes.OrderByDescending(a => a.PercentageProfileWithSkill)
+            return profileSkillAttributes
+                .OrderByDescending(a => a.PercentageProfileWithSkill)
                 .SkipWhile(a => a.PercentageProfileWithSkill < maxProfileDistributionPercentage)
                 .TakeWhile(a => a.PercentageProfileWithSkill > (1 - maxProfileDistributionPercentage))
-                .Take(5) // TODO (in future) - do we want this? It means any profile that has more then 5 skills won't be matched first time - and some questions will never asked - consider raising the number further
+                .Take(Math.Min(5, (int) Math.Log(totalProfileCount, 2) - 2)) // TODO (in future) - Bear in mind this means any profile that has more then 5 skills won't be matched first time - and some questions will never asked - consider raising the number further
                 .OrderByDescending(a => a.CompositeRank)
                 .ToArray();
         }

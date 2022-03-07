@@ -6,10 +6,13 @@ using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DFC.Compui.Cosmos;
+using FluentAssertions;
+using NHibernate.Mapping;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculationServiceTests
@@ -29,6 +32,57 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 .Returns(AssessmentHelpers.GetAllJobCategories());
         }
 
+        [Fact]
+        public async Task CalculateJobFamilyRelevanceTests()
+        {
+            // Arrange
+            var serviceToTest = new AssessmentCalculationService(
+                traitDocumentService,
+                jobProfileCategoryDocumentService,
+                filteringQuestionDocumentService,
+                mapper,
+                A.Fake<ILoggerFactory>());
+
+            var skills = new List<DysacSkillContentItemModel>
+            {
+                new DysacSkillContentItemModel
+                {
+                    Title = "SKILL1",
+                    ItemId = new Guid(),
+                }
+            };
+
+            var jobProfiles = new List<JobProfileContentItemModel>
+            {
+                new JobProfileContentItemModel
+                {
+                    Title = "JOB1",
+                    Skills = skills,
+                }
+            };
+            
+            var jobCategories = new List<JobCategoryContentItemModel>
+            {
+                new JobCategoryContentItemModel
+                {  
+                    Title = "CATEGORY1",
+                    Url = new Uri("http://localhost/category1"),
+                    JobProfiles = jobProfiles,
+                },
+            };
+            
+            // Act
+            var result = serviceToTest.CalculateJobFamilyRelevance(
+                new List<TraitResult> { new TraitResult { TraitCode = "LEADER" } }, 
+                new List<DysacTraitContentModel> { new DysacTraitContentModel { Title = "LEADER", JobCategories = jobCategories } }, 
+                new List<DysacFilteringQuestionContentModel> { new DysacFilteringQuestionContentModel { Title = "QUESTION1", Skills = skills } },
+                new List<DysacJobProfileCategoryContentModel> { new DysacJobProfileCategoryContentModel { Title = "CATEGORY1", Url = new Uri("http://localhost/category1"), JobProfiles = jobProfiles} });
+            
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(1);
+        }
+        
         [Fact]
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
         {
