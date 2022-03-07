@@ -7,7 +7,7 @@
                 @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
                 {
                     <li>
-                        <a href="#code" class="govuk-link govuk-link--no-visited-state">@modelError.ErrorMessage</a>
+                        <a href="#dysac-form" class="govuk-link govuk-link--no-visited-state">@modelError.ErrorMessage</a>
                     </li>
                 }
             </ul>
