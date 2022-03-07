@@ -43,12 +43,31 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 mapper,
                 A.Fake<ILoggerFactory>());
 
+            var skills = new List<DysacSkillContentItemModel>
+            {
+                new DysacSkillContentItemModel
+                {
+                    Title = "SKILL1",
+                    ItemId = new Guid(),
+                }
+            };
+
+            var jobProfiles = new List<JobProfileContentItemModel>
+            {
+                new JobProfileContentItemModel
+                {
+                    Title = "JOB1",
+                    Skills = skills,
+                }
+            };
+            
             var jobCategories = new List<JobCategoryContentItemModel>
             {
                 new JobCategoryContentItemModel
                 {  
-                    Title = "JOB1",
-                    Url = new Uri("http://localhost/job1"),
+                    Title = "CATEGORY1",
+                    Url = new Uri("http://localhost/category1"),
+                    JobProfiles = jobProfiles,
                 },
             };
             
@@ -56,8 +75,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             var result = serviceToTest.CalculateJobFamilyRelevance(
                 new List<TraitResult> { new TraitResult { TraitCode = "LEADER" } }, 
                 new List<DysacTraitContentModel> { new DysacTraitContentModel { Title = "LEADER", JobCategories = jobCategories } }, 
-                new List<DysacFilteringQuestionContentModel> {}, 
-                new List<DysacJobProfileCategoryContentModel> { new DysacJobProfileCategoryContentModel { Title = "JOB1", Url = new Uri("http://localhost/job1")} });
+                new List<DysacFilteringQuestionContentModel> { new DysacFilteringQuestionContentModel { Title = "QUESTION1", Skills = skills } },
+                new List<DysacJobProfileCategoryContentModel> { new DysacJobProfileCategoryContentModel { Title = "CATEGORY1", Url = new Uri("http://localhost/category1"), JobProfiles = jobProfiles} });
             
             // Assert
             result.Should().NotBeNull();

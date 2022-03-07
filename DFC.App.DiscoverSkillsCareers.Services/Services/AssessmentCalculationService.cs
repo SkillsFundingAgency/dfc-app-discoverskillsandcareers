@@ -165,10 +165,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles.Where(z => z.Skills.Any())
                         .GroupBy(jp => jp.Title).Select(jpg => jpg.First()).ToList();
 
-                    var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(
-                        relevantSkills,
-                        jobProfiles);
-                    prominentSkills = new HashSet<string>();
+                    var prominentSkills = new HashSet<string>();
 
                     var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                         jobProfilesWithAtLeastOneSkill,
