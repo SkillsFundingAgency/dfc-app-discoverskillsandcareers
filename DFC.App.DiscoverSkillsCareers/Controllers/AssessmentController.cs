@@ -72,9 +72,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
             }
 
-            var hasGoneBackAQuestion = (requestViewModel.QuestionNumber + 1) == assessment.CurrentQuestionNumber;
+            var hasGoneBackOneOrMoreQuestions = (requestViewModel.QuestionNumber + 1) <= assessment.CurrentQuestionNumber;
 
-            if (hasGoneBackAQuestion)
+            if (hasGoneBackOneOrMoreQuestions)
             {
                 assessment.CurrentQuestionNumber = requestViewModel.QuestionNumber;
 
