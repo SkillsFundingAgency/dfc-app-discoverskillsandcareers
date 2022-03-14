@@ -9,7 +9,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
     public static class JobCategorySkillMappingHelper
     {
         public static HashSet<string> CalculateCommonSkillsByPercentage(
-            IList<string> skills,
             IList<JobProfileContentItemModel> jobProfiles,
             double percentage = 0.75)
         {
@@ -18,6 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 throw new ArgumentNullException(nameof(jobProfiles));
             }
 
+            var skills = jobProfiles.SelectMany(p => p.Skills.Select(s => s.Title)).Distinct();
             var result = new Dictionary<string, IList<string>>();
 
             foreach (var skill in skills)
@@ -56,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             var profilesBySkill =
                 profiles
                     .SelectMany(y =>
-                        y.SkillsToCompare(prominentSkills, questionSkills).Select(s => new { Profile = y, Skill = s }))
+                        y.SkillsToCompare(prominentSkills).Select(s => new { Profile = y, Skill = s }))
                     .GroupBy(s => s.Skill.Title).ToArray();
 
             var profileSkillAttributes = profilesBySkill.Select(s =>
@@ -79,12 +79,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 };
             });
 
+            var minProfileDistributionPercentage = 100 - maxProfileDistributionPercentage;
+
+            // NOTE - This means any profile that has more then 5 skills won't be matched first time - and some questions
+            // will never be asked - consider raising the number higher
+            var maxProfilesToTake = Math.Min(5, (int)Math.Log(totalProfileCount, 2) - 2);
+
             return profileSkillAttributes
                 .OrderByDescending(a => a.PercentageProfileWithSkill)
                 .SkipWhile(a => a.PercentageProfileWithSkill < maxProfileDistributionPercentage)
-                .TakeWhile(a => a.PercentageProfileWithSkill > (1 - maxProfileDistributionPercentage))
-                .Take(Math.Min(5, (int) Math.Log(totalProfileCount, 2) - 2)) // TODO (in future) - Bear in mind this means any profile that has more then 5 skills won't be matched first time - and some questions will never asked - consider raising the number further
-                .OrderByDescending(a => a.CompositeRank)
+                .TakeWhile(a => a.PercentageProfileWithSkill > minProfileDistributionPercentage)
+                .Take(maxProfilesToTake)
+                .OrderByDescending(att => att.CompositeRank)
                 .ToArray();
         }
     }

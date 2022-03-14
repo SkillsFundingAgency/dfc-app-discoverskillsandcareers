@@ -169,7 +169,6 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
             // Arrange
             // Act
             var result = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(
-                JobProfilesWithCommonSkills_2Items.SelectMany(x => x.Skills).Select(x => x.Title).Distinct().ToList(),
                 JobProfilesWithCommonSkills_2Items.ToList(),
                 0.75);
 
@@ -187,7 +186,6 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
             // Arrange
             // Act
             var result = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(
-                JobProfilesWithCommonSkills_2Items.SelectMany(x => x.Skills).Select(x => x.Title).Distinct().ToList(),
                 JobProfilesWithNoCommonSkills.ToList(),
                 0.75);
 

@@ -28,7 +28,6 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiQuestionSet, DysacQuestionSetContentModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
-                .ForMember(d => d.Type, s => s.MapFrom(a => a.Type.ToLower()))
                 .ForMember(d => d.ShortQuestions, s => s.MapFrom(z => Construct(z.ContentItems)));
 
             CreateMap<ApiTrait, DysacTraitContentModel>()
@@ -38,6 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<ApiSkill, DysacSkillContentModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+                .ForMember(d => d.AttributeType, s => s.MapFrom(a => a.ONetAttributeType))
                 .ForMember(d => d.Title, s => s.MapFrom(a => GeneralHelper.GetGenericSkillName(a.Title)));
 
             CreateMap<ApiJobCategory, DysacJobProfileCategoryContentModel>()
@@ -72,30 +72,21 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
         {
-            var listToReturn = new List<DysacSkillContentItemModel>();
-
             var apiSkills = contentItems
-                .Where(x => x.ContentType == DysacConstants.ContentTypeONetSkill)
+                .Where(x => x.ContentType == DysacConstants.ContentTypeSkill)
                 .Select(x => x as ApiSkill)
                 .Where(x => x != null);
 
-            var oNetOccupationCodes = contentItems
-                .Where(x => x.ContentType == DysacConstants.ContentTypeONetOccupationalCode)
-                .Select(x => x as ApiONetOccupationalCode)
-                .Where(x => x != null)
-                .SelectMany(y => y.ContentItems
-                    .Select(z => z as ApiSkill)
-                    .Where(z => z != null));
-
-            listToReturn.AddRange(apiSkills.Union(oNetOccupationCodes).Select(x => new DysacSkillContentItemModel
+            var listToReturn = apiSkills.Select(x => new DysacSkillContentItemModel
             {
                 ONetRank = !string.IsNullOrEmpty(x.ONetRank) ? decimal.Parse(x.ONetRank) : (decimal?)null,
                 Ordinal = x.Ordinal,
                 ItemId = x.ItemId,
                 Title = GeneralHelper.GetGenericSkillName(x.Title),
+                AttributeType = x.ONetAttributeType,
                 Url = x.Url,
                 LastCached = DateTime.UtcNow,
-            }));
+            }).ToList();
 
             return listToReturn;
         }

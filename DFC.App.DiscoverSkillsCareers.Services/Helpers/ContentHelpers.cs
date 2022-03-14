@@ -48,7 +48,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 return new DysacQuestionSetContentModel();
             }
 
-            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeONetSkill.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeSkill.ToUpperInvariant())
             {
                 return new DysacSkillContentModel();
             }
@@ -88,7 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 return new ApiQuestionSet();
             }
 
-            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeONetSkill.ToUpperInvariant())
+            if (contentType.ToUpperInvariant() == DysacConstants.ContentTypeSkill.ToUpperInvariant())
             {
                 return new ApiSkill();
             }

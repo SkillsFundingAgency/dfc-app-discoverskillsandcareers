@@ -135,6 +135,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             logger.LogInformation($"Top Traits: {JsonConvert.SerializeObject(topTraits)}");
             logger.LogInformation($"All Filtering Questions: {JsonConvert.SerializeObject(allFilteringQuestions)}");
 
+            var allJobProfiles = allJobProfileCategories
+                .SelectMany(x => x.JobProfiles)
+                .GroupBy(x => x.Title)
+                .Select(x => x.First())
+                .ToList();
+
+            var prominentSkills =
+                JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
+
             foreach (var trait in topTraits)
             {
                 var applicableTrait = allTraits.FirstOrDefault(x => x.Title == trait.TraitCode);
@@ -159,19 +168,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         .Distinct()
                         .ToList();
 
-                    var jobProfiles = fullJobCategory.JobProfiles.GroupBy(jp => jp.Title).Select(jpg => jpg.First())
+                    var jobProfiles = fullJobCategory.JobProfiles.GroupBy(jp => jp.Title)
+                        .Select(jpg => jpg.First())
                         .ToList();
 
                     var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles.Where(z => z.Skills.Any())
                         .GroupBy(jp => jp.Title).Select(jpg => jpg.First()).ToList();
 
-                    var prominentSkills = new HashSet<string>();
-
                     var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                         jobProfilesWithAtLeastOneSkill,
                         prominentSkills,
                         75,
-                        questionSkills);
+                        relevantSkills);
 
                     logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(fullJobCategory)}");
                     logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");

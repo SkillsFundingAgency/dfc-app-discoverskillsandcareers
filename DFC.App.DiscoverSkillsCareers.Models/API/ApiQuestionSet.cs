@@ -8,8 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
     [ExcludeFromCodeCoverage]
     public class ApiQuestionSet : BaseContentItemModel, IBaseContentItemModel
     {
-        public string? Type { get; set; }
-
         public new IList<IBaseContentItemModel> ContentItems { get; set; } = new List<IBaseContentItemModel>();
     }
 }

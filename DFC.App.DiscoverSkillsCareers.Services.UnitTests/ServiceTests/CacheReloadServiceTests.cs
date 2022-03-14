@@ -387,7 +387,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             {
                 Id = Guid.NewGuid(),
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
-                Type = "Short",
                 ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {
                     new DysacShortQuestionContentItemModel

@@ -13,5 +13,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
         public int? Ordinal { get; set; }
 
         public string? ONetRank { get; set; }
+
+        public string? ONetAttributeType { get; set; }
     }
 }

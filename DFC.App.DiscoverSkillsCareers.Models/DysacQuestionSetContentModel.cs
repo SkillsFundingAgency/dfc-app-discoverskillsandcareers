@@ -25,9 +25,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
-        [Required]
-        public string? Type { get; set; }
-
         public DateTime? LastCached { get; set; }
 
         public int? Ordinal { get; set; }

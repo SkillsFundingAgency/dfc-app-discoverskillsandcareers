@@ -86,7 +86,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         {
             return new ApiQuestionSet
             {
-                Type = "Short",
                 ItemId = Guid.NewGuid(),
                 Url = new Uri("http://somewhere.com/somewhereelse/aresource")
             };
@@ -133,7 +132,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             {
                 Id = QuestionSetId,
                 ItemId = QuestionSetId,
-                Type = "Short",
                 Url = new Uri("http://somewhere.com/somelocation/aresource"),
                 ShortQuestions = new List<DysacShortQuestionContentItemModel>
                 {

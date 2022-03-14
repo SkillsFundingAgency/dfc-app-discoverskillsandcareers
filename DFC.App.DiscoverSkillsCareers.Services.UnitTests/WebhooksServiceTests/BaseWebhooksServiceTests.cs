@@ -61,7 +61,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var model = new ApiQuestionSet
             {
                 ItemId = Guid.NewGuid(),
-                Type = "Short",
                 Url = new Uri("https://localhost"),
                 ContentLinks = new ContentLinksModel(new JObject())
                 {

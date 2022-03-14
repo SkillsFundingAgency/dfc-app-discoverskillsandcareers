@@ -42,7 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<bool> NewSession(string assessmentType)
         {
-            var questionSet = await questionSetDocumentService.GetAsync(x => x.Type == assessmentType.ToLower()).ConfigureAwait(false);
+            var questionSet = await questionSetDocumentService.GetAsync(x => x.PartitionKey == "QuestionSet").ConfigureAwait(false);
             var assessmentId = Guid.NewGuid();
             var assessmentCode = SessionIdHelper.GenerateSessionId("ncs");
 
