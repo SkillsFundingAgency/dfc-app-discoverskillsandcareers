@@ -67,7 +67,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityShortQuestion, typeof(ApiShortQuestion));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityTrait, typeof(ApiTrait));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypeJobCategory, typeof(ApiJobCategory));
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetOccupationalCode, typeof(ApiONetOccupationalCode));
                 contentTypeMappingService.AddMapping(DysacConstants.ContentTypePersonalityFilteringQuestion, typeof(ApiPersonalityFilteringQuestion));
 
                 logger.LogInformation("Reloading Content Types from Service Taxonomy");
@@ -81,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await ReloadContentType<ApiTrait, DysacTraitContentModel>(DysacConstants.ContentTypePersonalityTrait, stoppingToken).ConfigureAwait(false);
 
                 // Don't map job profiles into traits (via job profiles)
-                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeONetSkill, typeof(ApiSkill));
+                contentTypeMappingService.AddMapping(DysacConstants.ContentTypeSkill, typeof(ApiSkill));
 
                 await ReloadContentType<ApiJobCategory, DysacJobProfileCategoryContentModel>(DysacConstants.ContentTypeJobCategory, stoppingToken).ConfigureAwait(false);
                 await ReloadContentType<ApiPersonalityFilteringQuestion, DysacFilteringQuestionContentModel>(DysacConstants.ContentTypePersonalityFilteringQuestion, stoppingToken).ConfigureAwait(false);

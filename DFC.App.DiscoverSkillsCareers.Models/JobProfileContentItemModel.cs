@@ -41,11 +41,12 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             }
         }
 
-        public IEnumerable<DysacSkillContentItemModel> SkillsToCompare(HashSet<string> skillsToRemove, List<string?> questionSkills)
+        public IEnumerable<DysacSkillContentItemModel> SkillsToCompare(HashSet<string> skillsToRemove)
         {
             return Skills
+                .OrderBy(x => x.Ordinal)
+                .Where(skill => skill.AttributeType?.ToLower().Equals("knowledge", StringComparison.InvariantCultureIgnoreCase) != true)
                 .Where(skill => !skillsToRemove.Contains(skill.Title!))
-                .Where(skill => questionSkills?.Contains(skill.Title) != false)
                 .Take(8);
         }
     }
