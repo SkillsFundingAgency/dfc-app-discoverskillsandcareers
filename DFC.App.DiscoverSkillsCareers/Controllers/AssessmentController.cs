@@ -227,6 +227,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(viewReponse);
         }
 
+        private void SanitiseEmail(AssessmentEmailPostRequest request)
+        {
+            request.Email = request.Email?.ToLower();
+            ModelState.Clear();
+
+            TryValidateModel(request);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Email(AssessmentEmailPostRequest request)
         {
@@ -234,6 +242,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 return BadRequest();
             }
+
+            SanitiseEmail(request);
 
             if (!ModelState.IsValid)
             {
