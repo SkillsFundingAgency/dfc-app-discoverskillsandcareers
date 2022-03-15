@@ -240,15 +240,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(new AssessmentEmailPostRequest { Email = request.Email });
             }
 
-            var emailResponse = await assessmentService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
-            if (emailResponse.IsSuccess)
+            try
             {
-                if (TempData != null)
-                {
-                    TempData["SentEmail"] = request.Email;
-                }
+                var emailResponse = await assessmentService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
 
-                return RedirectTo("assessment/emailsent");
+                if (emailResponse.IsSuccess)
+                {
+                    if (TempData != null)
+                    {
+                        TempData["SentEmail"] = request.Email;
+                    }
+
+                    return RedirectTo("assessment/emailsent");
+                }
+            }
+            catch (Exception ex)
+            {
+                logService.LogError(ex.Message);
             }
 
             ModelState.AddModelError("Email", "There was a problem sending email");
