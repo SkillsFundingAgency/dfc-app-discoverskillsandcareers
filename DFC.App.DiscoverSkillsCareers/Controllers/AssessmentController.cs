@@ -135,6 +135,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(result);
         }
 
+        [HttpGet]
         [HttpPost]
         public async Task<IActionResult> New(string assessmentType)
         {
