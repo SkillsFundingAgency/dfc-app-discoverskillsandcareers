@@ -81,9 +81,9 @@ namespace DFC.App.DiscoverSkillsCareers
                     pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
 
                 MapRoute(endpoints, "results", RouteName.Prefix + "/results/{countToShow}", "Results", "Index");
-                MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/new", "Assessment", "New");
+                MapRoute(endpoints, "assessmentNew", RouteName.Prefix + "/assessment/{assessmentType}/new", "Assessment", "New");
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}", "Assessment", "Index");
-                MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
+                MapRoute(endpoints, "assessmentReload", RouteName.Prefix + "/reload", "Assessment", "Reload");
                 MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
                 MapRoute(endpoints, "filterQuestions", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}", "FilterQuestions", "Index");
                 MapRoute(endpoints, "testLoadSession", RouteName.Prefix + "/loadsession", "Test", "LoadSession");
