@@ -25,7 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Features
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-        private string[] _featureTags = new string[] {
+        private static string[] featureTags = new string[] {
                 "webtest"};
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
@@ -42,8 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "DYSACUserActions", null, ProgrammingLanguage.CSharp, new string[] {
-                        "webtest"});
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "DYSACUserActions", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -53,29 +52,38 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Features
             testRunner = null;
         }
         
-        public virtual void TestInitialize()
+        public void TestInitialize()
         {
         }
         
-        public virtual void TestTearDown()
+        public void TestTearDown()
         {
             testRunner.OnScenarioEnd();
         }
         
-        public virtual void ScenarioInitialize(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
+        public void ScenarioInitialize(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
         {
             testRunner.OnScenarioInitialize(scenarioInfo);
             testRunner.ScenarioContext.ScenarioContainer.RegisterInstanceAs<Xunit.Abstractions.ITestOutputHelper>(_testOutputHelper);
         }
         
-        public virtual void ScenarioStart()
+        public void ScenarioStart()
         {
             testRunner.OnScenarioStart();
         }
         
-        public virtual void ScenarioCleanup()
+        public void ScenarioCleanup()
         {
             testRunner.CollectScenarioErrors();
+        }
+        
+        public virtual void FeatureBackground()
+        {
+#line 4
+#line hidden
+#line 5
+ testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
         }
         
         void System.IDisposable.Dispose()
@@ -87,39 +95,29 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Features
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
         [Xunit.TraitAttribute("Description", "Starting Assessment loads the first questions")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void StartingAssessmentLoadsTheFirstQuestions()
+        public void StartingAssessmentLoadsTheFirstQuestions()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Starting Assessment loads the first questions", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 6
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Starting Assessment loads the first questions", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 8
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
             {
                 testRunner.SkipScenario();
             }
             else
             {
                 this.ScenarioStart();
-#line 7
- testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 8
- testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 4
+this.FeatureBackground();
 #line hidden
 #line 9
+ testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 10
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -127,41 +125,31 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Starting Assessment loads the questions and show the percentage completion. Also " +
-            "displays the results")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC01 - Starting Assessment loads the questions and show the percentage completion" +
+            ". Also displays the results")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "Starting Assessment loads the questions and show the percentage completion. Also " +
-            "displays the results")]
+        [Xunit.TraitAttribute("Description", "TC01 - Starting Assessment loads the questions and show the percentage completion" +
+            ". Also displays the results")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void StartingAssessmentLoadsTheQuestionsAndShowThePercentageCompletion_AlsoDisplaysTheResults()
+        public void TC01_StartingAssessmentLoadsTheQuestionsAndShowThePercentageCompletion_AlsoDisplaysTheResults()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Starting Assessment loads the questions and show the percentage completion. Also " +
-                    "displays the results", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 12
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC01 - Starting Assessment loads the questions and show the percentage completion" +
+                    ". Also displays the results", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 13
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
             {
                 testRunner.SkipScenario();
             }
             else
             {
                 this.ScenarioStart();
-#line 13
- testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 4
+this.FeatureBackground();
 #line hidden
 #line 14
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -668,212 +656,522 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Display error message when moving to next question without selecting an option")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC02 - Display error message when moving to next question without selecting an op" +
+            "tion")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "Display error message when moving to next question without selecting an option")]
+        [Xunit.TraitAttribute("Description", "TC02 - Display error message when moving to next question without selecting an op" +
+            "tion")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void DisplayErrorMessageWhenMovingToNextQuestionWithoutSelectingAnOption()
+        public void TC02_DisplayErrorMessageWhenMovingToNextQuestionWithoutSelectingAnOption()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Display error message when moving to next question without selecting an option", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 182
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC02 - Display error message when moving to next question without selecting an op" +
+                    "tion", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 180
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
             {
                 testRunner.SkipScenario();
             }
             else
             {
                 this.ScenarioStart();
-#line 183
- testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 4
+this.FeatureBackground();
 #line hidden
-#line 184
+#line 181
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 185
+#line 182
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 186
+#line 183
  testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 187
+#line 184
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 188
+#line 185
  testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 186
+ testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 187
+ testRunner.When("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 188
+ testRunner.Then("The error is displayed; Choose an answer to the statement", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 189
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 190
- testRunner.When("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 191
- testRunner.Then("The error is displayed; Choose an answer to the statement", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 192
- testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Clicking back link takes to the previous question and updates the percentage comp" +
-            "letion")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC03 - Clicking back link takes to the previous question and updates the percenta" +
+            "ge completion")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "Clicking back link takes to the previous question and updates the percentage comp" +
-            "letion")]
+        [Xunit.TraitAttribute("Description", "TC03 - Clicking back link takes to the previous question and updates the percenta" +
+            "ge completion")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void ClickingBackLinkTakesToThePreviousQuestionAndUpdatesThePercentageCompletion()
+        public void TC03_ClickingBackLinkTakesToThePreviousQuestionAndUpdatesThePercentageCompletion()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Clicking back link takes to the previous question and updates the percentage comp" +
-                    "letion", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 195
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC03 - Clicking back link takes to the previous question and updates the percenta" +
+                    "ge completion", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 192
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
             {
                 testRunner.SkipScenario();
             }
             else
             {
                 this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 193
+ testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 194
+ testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
+                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 195
+ testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
 #line 196
- testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 197
- testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 198
- testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
-                        "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 199
- testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 200
- testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 201
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 202
+#line 198
  testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 203
+#line 199
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 204
+#line 200
  testRunner.When("I click Back to previous statement link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 205
+#line 201
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 206
+#line 202
  testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Saving progress and selecting reference code to return to the assessment displays" +
-            " reference code")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC04 - Saving progress and selecting reference code to return to the assessment d" +
+            "isplays reference code")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "Saving progress and selecting reference code to return to the assessment displays" +
-            " reference code")]
+        [Xunit.TraitAttribute("Description", "TC04 - Saving progress and selecting reference code to return to the assessment d" +
+            "isplays reference code")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        public virtual void SavingProgressAndSelectingReferenceCodeToReturnToTheAssessmentDisplaysReferenceCode()
+        public void TC04_SavingProgressAndSelectingReferenceCodeToReturnToTheAssessmentDisplaysReferenceCode()
         {
             string[] tagsOfScenario = new string[] {
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Saving progress and selecting reference code to return to the assessment displays" +
-                    " reference code", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 209
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC04 - Saving progress and selecting reference code to return to the assessment d" +
+                    "isplays reference code", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 205
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
             {
                 testRunner.SkipScenario();
             }
             else
             {
                 this.ScenarioStart();
-#line 210
- testRunner.Given("I load the DYSAC page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 4
+this.FeatureBackground();
 #line hidden
-#line 211
+#line 206
  testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 212
+#line 207
  testRunner.Then("The first question is displayed; I am comfortable telling people what they need t" +
                         "o do", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 213
+#line 208
  testRunner.And("Percentage completion is 0%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 214
+#line 209
  testRunner.When("I select Strongly agree option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 215
+#line 210
  testRunner.And("I click Next", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 216
+#line 211
  testRunner.Then("The next question is displayed; I make decisions quickly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 217
+#line 212
  testRunner.And("Percentage completion is 2%", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 218
+#line 213
  testRunner.When("I save my progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 219
+#line 214
  testRunner.And("I select reference code to return to the assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 220
+#line 215
  testRunner.And("I click continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 221
+#line 216
  testRunner.Then("The reference code is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC05 - Progress bar displays correctly on each question")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC05 - Progress bar displays correctly on each question")]
+        public void TC05_ProgressBarDisplaysCorrectlyOnEachQuestion()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC05 - Progress bar displays correctly on each question", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 218
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 219
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 220
+ testRunner.When("I select \"Strongly agree\" option and answer questions to the end", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Class attribute"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__0"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__2"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__5"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__7"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__10"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__12"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__15"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__17"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__20"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__22"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__25"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__27"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__30"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__32"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__35"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__37"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__40"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__42"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__45"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__47"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__50"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__52"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__55"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__57"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__60"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__62"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__65"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__67"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__70"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__72"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__75"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__77"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__80"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__82"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__85"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__87"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__90"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__92"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__95"});
+                table1.AddRow(new string[] {
+                            "ncs-progress__97"});
+#line 221
+ testRunner.Then("the questions in turn have the following class attributes", ((string)(null)), table1, "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableTheoryAttribute(DisplayName="TC06 - Return to assessment using reference code")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC06 - Return to assessment using reference code")]
+        [Xunit.InlineDataAttribute("70", new string[0])]
+        [Xunit.InlineDataAttribute("2", new string[0])]
+        [Xunit.InlineDataAttribute("30", new string[0])]
+        public void TC06_ReturnToAssessmentUsingReferenceCode(string percentageCompleted, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("Percentage completed", percentageCompleted);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC06 - Return to assessment using reference code", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 264
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 265
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 266
+ testRunner.And("I select the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 267
+ testRunner.And(string.Format("I proceed with answering questions up to {0} percent", percentageCompleted), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 268
+ testRunner.When("I save progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 269
+ testRunner.Then("the \"Send me an email with a link\" radio button is present on the resultant page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 270
+ testRunner.And("the \"Get a reference code\" radio button is present on the resultant page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 271
+ testRunner.When("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 272
+ testRunner.And("I make a note of the reference code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 273
+ testRunner.And("I use the reference code to return to my assessment from the Dysac home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 274
+ testRunner.Then("I am at the question where I left off", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC07 - Return to assessment using reference code")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC07 - Return to assessment using reference code")]
+        public void TC07_ReturnToAssessmentUsingReferenceCode()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC07 - Return to assessment using reference code", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 281
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 282
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 283
+ testRunner.And("I select the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 284
+ testRunner.And("I proceed with answering questions up to \"10\" percent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 285
+ testRunner.And("I save progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 286
+ testRunner.And("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 287
+ testRunner.When("I view the date on the resultant page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 288
+ testRunner.Then("the date is todays date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 289
+ testRunner.When("I click the Return to assessment link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 290
+ testRunner.Then("I am at the question where I left off", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC08 - Phone number supplied appears on Check your phone page")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC08 - Phone number supplied appears on Check your phone page")]
+        public void TC08_PhoneNumberSuppliedAppearsOnCheckYourPhonePage()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC08 - Phone number supplied appears on Check your phone page", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 292
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 293
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 294
+ testRunner.And("I select the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 295
+ testRunner.And("I proceed with answering questions up to \"7\" percent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 296
+ testRunner.And("I save progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 297
+ testRunner.And("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 298
+ testRunner.When("I supply phone number \"07424037362\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 299
+ testRunner.Then("the phone number appears on the Check your phone page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 300
+ testRunner.When("I click the Return to assessment button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 301
+ testRunner.Then("I am at the question where I left off", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 302
+ testRunner.When("I go Back and I click the Back to start link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 303
+ testRunner.Then("I am navigate to the Dysac home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC09 - Phone number field validation")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC09 - Phone number field validation")]
+        public void TC09_PhoneNumberFieldValidation()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC09 - Phone number field validation", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 305
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 306
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 307
+ testRunner.And("I select the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 308
+ testRunner.And("I proceed with answering questions up to \"2\" percent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 309
+ testRunner.And("I save progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 310
+ testRunner.And("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 311
+ testRunner.When("I supply phone number \"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 312
+ testRunner.Then("validation messages are displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 313
+ testRunner.When("I click Back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 314
+ testRunner.Then("I am navigated to the \"How would you like to return to your assessment?\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
