@@ -18,13 +18,9 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public string ReferenceCode { get; set; }
 
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-your-reference__code"));
-
         IWebElement date => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-grid-column-one-third.govuk-body-s"));
-
         IWebElement fldPhoneNumber => _scenarioContext.GetWebDriver().FindElement(By.Id("code"));
-
         IWebElement divPhoneNumberTopValidation => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-validation-summary"));
-        
         IWebElement txtPhoneNumberBottomValidation => _scenarioContext.GetWebDriver().FindElement(By.Id("code-error"));
         IWebElement lnkBack => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Back"));
 

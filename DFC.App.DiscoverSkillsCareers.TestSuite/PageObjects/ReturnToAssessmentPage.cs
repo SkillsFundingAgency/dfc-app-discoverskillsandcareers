@@ -16,15 +16,19 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         }
 
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
-
         IWebElement lnkReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Return to assessment"));
-
-        IWebElement txtHeader => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-fieldset__heading"));
+        IWebElement txtHeader => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-fieldset__heading"));
+        IWebElement optionSendMeEmailLink => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-1']"));
 
         public void SelectReferenceCode()
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.LinkText("Return to assessment"));
             optionReferenceCode.Click();
+        }
+        public void SelectSendMeEmailLink()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.LinkText("Return to assessment"));
+            optionSendMeEmailLink.Click();
         }
 
         public void ClickReturnToAssessment()
@@ -43,8 +47,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string GetHeaderText(string text)
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
-            return txtHeader.Text;
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.LinkText("Return to assessment"));
+            return txtHeader.Text.Trim();
         }
     }
 }

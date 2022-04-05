@@ -131,28 +131,41 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
                 return results.GetElementText();
         }
 
-        public void AnswerOptionClick(string answerOption)
+        public bool AnswerOptionClick(string answerOption)
         {
             WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
-
+            bool radioButtonSelected = false;
+            
             switch (answerOption)
             {
                 case "Strongly agree":
                     _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-1")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-1"));
                     break;
                 case "Agree":
                     _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-2")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-2"));
                     break;
                 case "It depends":
                     _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-3")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-3"));
                     break;
                 case "Disagree":
                     _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-4")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-4"));
                     break;
                 case "Strongly disagree":
                     _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-5")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-5"));
                     break;
             }
+
+            return radioButtonSelected;
+        }
+
+        public bool RadioButtonSelected(By element)
+        {
+            return _scenarioContext.GetWebDriver().FindElement(element).Selected;
         }
 
         public bool VerifyProgressBar(IEnumerable<LocatorAttributes> attributes, string answerOption)
@@ -219,6 +232,15 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public string GetUrl()
         {
             return _scenarioContext.GetWebDriver().Url.ToString();
+        }
+
+        public void AnswerAllQuestions(string answerOption)
+        {
+            for (int i = 0; i < 40; i++)
+            {
+                AnswerOptionClick(answerOption);
+                btnNextQuestion.Click();
+            }
         }
     }
 }
