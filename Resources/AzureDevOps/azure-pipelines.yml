@@ -60,10 +60,15 @@ stages:
         PublishWebApp: true
 
   #Build Test Suite Tests
-  - job: BuildUITestSuiteTests
+  - job: Builduifunctionaltests
     displayName: Build UI TestSuite
+    pool:
+      name: NCS - CI and CD
+      demands:
+      - msbuild
+      - visualstudio
     steps:
-  # Build all UI Functional Tests that ends with TestSuite
+    # Build all UI Functional Tests that ends with TestSuite
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName).TestSuite
