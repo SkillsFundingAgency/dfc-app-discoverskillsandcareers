@@ -1165,13 +1165,245 @@ this.FeatureBackground();
  testRunner.When("I supply phone number \"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 312
- testRunner.Then("validation messages are displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("validation messages are displayed for the \"phone number\" field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 313
  testRunner.When("I click Back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 314
  testRunner.Then("I am navigated to the \"How would you like to return to your assessment?\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC10 - Home page reference code field validation")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC10 - Home page reference code field validation")]
+        public void TC10_HomePageReferenceCodeFieldValidation()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC10 - Home page reference code field validation", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 316
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 317
+ testRunner.And("I click continue without providing a reference", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 318
+ testRunner.Then("validation messages are displayed for the \"reference code\" field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC11 - Email field validation and population")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC11 - Email field validation and population")]
+        public void TC11_EmailFieldValidationAndPopulation()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC11 - Email field validation and population", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 320
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 321
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 322
+ testRunner.And("I select the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 323
+ testRunner.And("I proceed with answering questions up to \"2\" percent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 324
+ testRunner.And("I save progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 325
+ testRunner.And("I choose the \"Send me an email with a link\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 326
+ testRunner.When("I click the Back link from the \"Email address\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 327
+ testRunner.Then("I am navigated to the \"How would you like to return to your assessment?\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 328
+ testRunner.And("I go forward", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 329
+ testRunner.When("I click Send on the resultant page without providing an email address", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 330
+ testRunner.Then("validation messages are displayed for the \"email address\" field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 331
+ testRunner.When("I provide email address \"victor.abegunde@methods.co.uk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 332
+ testRunner.Then("I am navigated to the \"Check your email\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 333
+ testRunner.And("the email address used is present in the text on the page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 334
+ testRunner.When("I click the Back link from the \"Check your email\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 335
+ testRunner.Then("I am navigated to the \"Email address\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 336
+ testRunner.And("I go forward", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 337
+ testRunner.When("I click the Return to assessment button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 338
+ testRunner.Then("I am at the question where I left off", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 339
+ testRunner.When("I go Back and I click the Back to start link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 340
+ testRunner.Then("I am navigate to the Dysac home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC12 - All question radio button options are usable")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC12 - All question radio button options are usable")]
+        public void TC12_AllQuestionRadioButtonOptionsAreUsable()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC12 - All question radio button options are usable", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 342
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 343
+ testRunner.When("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 344
+ testRunner.Then("I am able to select the \"Strongly agree\" option for the \"first\" question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 345
+ testRunner.And("I am able to select the \"Agree\" option for the \"second\" question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 346
+ testRunner.And("I am able to select the \"It depends\" option for the \"third\" question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 347
+ testRunner.And("I am able to select the \"Disagree\" option for the \"fourth\" question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 348
+ testRunner.And("I am able to select the \"Strongly disagree\" option for the \"fifth\" question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC13 - Initial and all suggested job categories")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC13 - Initial and all suggested job categories")]
+        public void TC13_InitialAndAllSuggestedJobCategories()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC13 - Initial and all suggested job categories", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 350
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 351
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 352
+ testRunner.And("I answer all questions selecting the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 353
+ testRunner.When("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category"});
+                table2.AddRow(new string[] {
+                            "Sports and leisure"});
+                table2.AddRow(new string[] {
+                            "Manufacturing"});
+                table2.AddRow(new string[] {
+                            "Creative and media"});
+#line 354
+ testRunner.Then("the initial job categories dispalyed are", ((string)(null)), table2, "Then ");
+#line hidden
+#line 359
+ testRunner.When("I click See matches to See 7 other career areas that might interest you", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category"});
+                table3.AddRow(new string[] {
+                            "Sports and leisure"});
+                table3.AddRow(new string[] {
+                            "Manufacturing"});
+                table3.AddRow(new string[] {
+                            "Creative and media"});
+                table3.AddRow(new string[] {
+                            "Construction and trades"});
+                table3.AddRow(new string[] {
+                            "Science and research"});
+                table3.AddRow(new string[] {
+                            "Business and finance"});
+                table3.AddRow(new string[] {
+                            "Emergency and uniform services"});
+                table3.AddRow(new string[] {
+                            "Law and legal"});
+                table3.AddRow(new string[] {
+                            "Teaching and education"});
+                table3.AddRow(new string[] {
+                            "Travel and tourism"});
+#line 360
+ testRunner.Then("all the job categories dispalyed are", ((string)(null)), table3, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

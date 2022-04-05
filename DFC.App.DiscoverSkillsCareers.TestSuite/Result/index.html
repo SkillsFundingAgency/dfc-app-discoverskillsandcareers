@@ -52,7 +52,7 @@
           </li>
             <li class="m-r-10">
                 <a href="#">
-                    <span class="badge badge-primary">4/4/2022 5:53:08 PM</span>
+                    <span class="badge badge-primary">4/5/2022 6:17:04 PM</span>
                 </a>
             </li>
         </ul>
@@ -107,7 +107,7 @@
 											<i class="fa fa-exclamation-circle"></i>
 										</a>
 										<ul id="status-toggle" class="dropdown-menu dropdown-md p-v-0">
-<a status="pass" class="dropdown-item" href="#"><span>Pass</span><span class="status success pull-right"></span></a>																																																																		<div class="dropdown-divider"></div>
+<a status="pass" class="dropdown-item" href="#"><span>Pass</span><span class="status success pull-right"></span></a>											<a status="fail" class="dropdown-item" href="#"><span>Fail</span><span class="status danger pull-right"></span></a>																																																							<div class="dropdown-divider"></div>
 											<a status="clear" class="dropdown-item" href="#"><span>Clear</span><span class="pull-right"><i class="fa fa-close"></i></span></a>
 										</ul>
 									</li>
@@ -115,30 +115,93 @@
                             </div>
                             <div class="test-list-wrapper scrollable">
                                 <ul class="test-list-item">
-										<li class="test-item" status="pass" author="" device="" tag=""> 
-											<div class="status-avatar pass-bg">
-												<i class="fa fa-check text-white"></i>
+										<li class="test-item" status="fail" author="" device="" tag=""> 
+											<div class="status-avatar fail-bg">
+												<i class="fa fa-times text-white"></i>
 											</div>
 											<div class="open-test">
 												<div class="test-detail"> 
 													<p class="name">DYSACUserActions</p> 
-													<p class="duration text-sm">0h:0m:54s+278ms</p> 
-													<span class="datetime">17:53:08 PM</span>
+													<p class="duration text-sm">0h:1m:52s+794ms</p> 
+													<span class="datetime">18:17:04 PM</span>
 												</div>
 											</div>
 											<div class="test-contents d-none">
 												<div class="detail-head">
 													<div class="p-v-10 d-inline-block">	
 														<div class="info">
-															<h5 class="test-status text-pass">DYSACUserActions</h5>
-															<span class='badge badge-success'>4/4/2022 5:53:08 PM</span>
-															<span class='badge badge-danger'>4/4/2022 5:54:03 PM</span>
-															<span class='badge badge-default'>0h:0m:54s+278ms</span>
+															<h5 class="test-status text-fail">DYSACUserActions</h5>
+															<span class='badge badge-success'>4/5/2022 6:17:04 PM</span>
+															<span class='badge badge-danger'>4/5/2022 6:18:57 PM</span>
+															<span class='badge badge-default'>0h:1m:52s+794ms</span>
 														</div>
 																											</div>
 												</div>
 
 <div class="accordion mt-4">
+	<div class="card">
+		<div class="card-header" role="tab">
+			<h5 class="card-title pl-3">
+				<div class="node">TC12 - All question radio button options are usable</div>
+				<div class="status-avatar float-left pass-bg">
+					<i class="fa fa-check text-white"></i>
+				</div>
+			</h5>
+		</div>
+				<div class="collapse">
+					<div class="card-body">
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I load the DYSAC page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click on Assessment</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am able to select the "Strongly agree" option for the "first" question</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am able to select the "Agree" option for the "second" question</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am able to select the "It depends" option for the "third" question</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am able to select the "Disagree" option for the "fourth" question</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am able to select the "Strongly disagree" option for the "fifth" question</span>
+							</div>
+			<div class="details"></div>
+					</div>
+				</div>
+	</div>
 	<div class="card">
 		<div class="card-header" role="tab">
 			<h5 class="card-title pl-3">
@@ -176,6 +239,167 @@
 									<i class="fa fa-check text-white"></i>
 								</span>
 								<span>the questions in turn have the following class attributes</span>
+							</div>
+			<div class="details"></div>
+					</div>
+				</div>
+	</div>
+	<div class="card">
+		<div class="card-header" role="tab">
+			<h5 class="card-title pl-3">
+				<div class="node">TC11 - Email field validation and population</div>
+				<div class="status-avatar float-left pass-bg">
+					<i class="fa fa-check text-white"></i>
+				</div>
+			</h5>
+		</div>
+				<div class="collapse">
+					<div class="card-body">
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I load the DYSAC page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click on Assessment</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I select the "Strongly agree" option</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I proceed with answering questions up to "2" percent</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I save progress</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I choose the "Send me an email with a link" option of returning to assessment</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click the Back link from the "Email address" page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am navigated to the "How would you like to return to your assessment?" page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I go forward</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click Send on the resultant page without providing an email address</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>validation messages are displayed for the "email address" field</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I provide email address "victor.abegunde@methods.co.uk"</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am navigated to the "Check your email" page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>the email address used is present in the text on the page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click the Back link from the "Check your email" page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am navigated to the "Email address" page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I go forward</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click the Return to assessment button</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am at the question where I left off</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I go Back and I click the Back to start link</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I am navigate to the Dysac home page</span>
 							</div>
 			<div class="details"></div>
 					</div>
@@ -366,6 +590,92 @@
 	<div class="card">
 		<div class="card-header" role="tab">
 			<h5 class="card-title pl-3">
+				<div class="node">TC13 - Initial and all suggested job categories</div>
+				<div class="status-avatar float-left fail-bg">
+					<i class="fa fa-times text-white"></i>
+				</div>
+			</h5>
+		</div>
+				<div class="collapse">
+					<div class="card-body">
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I load the DYSAC page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click on Assessment</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I answer all questions selecting the "Strongly agree" option</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click See results button</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon fail-bg">
+									<i class="fa fa-times text-white"></i>
+								</span>
+								<span>the initial job categories dispalyed are</span>
+							</div>
+			<div class="details">'3 job categories that might suit you' list is incorrect
+  Expected: True
+  But was:  False</div>
+					</div>
+				</div>
+	</div>
+	<div class="card">
+		<div class="card-header" role="tab">
+			<h5 class="card-title pl-3">
+				<div class="node">TC10 - Home page reference code field validation</div>
+				<div class="status-avatar float-left pass-bg">
+					<i class="fa fa-check text-white"></i>
+				</div>
+			</h5>
+		</div>
+				<div class="collapse">
+					<div class="card-body">
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I load the DYSAC page</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>I click continue without providing a reference</span>
+							</div>
+			<div class="details"></div>
+							<div class="d-flex align-items-center justify-content-start and" title="">
+								<span class="alert-icon pass-bg">
+									<i class="fa fa-check text-white"></i>
+								</span>
+								<span>validation messages are displayed for the "reference code" field</span>
+							</div>
+			<div class="details"></div>
+					</div>
+				</div>
+	</div>
+	<div class="card">
+		<div class="card-header" role="tab">
+			<h5 class="card-title pl-3">
 				<div class="node">TC09 - Phone number field validation</div>
 				<div class="status-avatar float-left pass-bg">
 					<i class="fa fa-check text-white"></i>
@@ -427,7 +737,7 @@
 								<span class="alert-icon pass-bg">
 									<i class="fa fa-check text-white"></i>
 								</span>
-								<span>validation messages are displayed</span>
+								<span>validation messages are displayed for the "phone number" field</span>
 							</div>
 			<div class="details"></div>
 							<div class="d-flex align-items-center justify-content-start and" title="">

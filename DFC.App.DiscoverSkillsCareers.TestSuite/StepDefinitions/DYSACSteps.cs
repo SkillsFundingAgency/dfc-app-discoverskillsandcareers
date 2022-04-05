@@ -18,10 +18,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private readonly ReturnToAssessmentPage _returnToAssessmentPage;
         private readonly YourReferenceCodePage _yourReferenceCodePage;
         private readonly CheckYourPhonePage _checkYourPhonePage;
-        private string theAnswerOption;
+        private readonly EmailAddressPage _emailAddressPage;
+        private readonly CheckYourEmailPage _checkYourEmailPage; 
+        private readonly YourResultsPage _yourResultsPage; 
+        private string _theAnswerOption;
         private string dateOnPage;
         private string _phoneNumber;
         private string _percentCompleted;
+        private string _theEmailAddress;
 
         public DYSACSteps(ScenarioContext scenarioContext)
         {
@@ -30,6 +34,9 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _returnToAssessmentPage = new ReturnToAssessmentPage(_scenarioContext);
             _yourReferenceCodePage = new YourReferenceCodePage(_scenarioContext);
             _checkYourPhonePage = new CheckYourPhonePage(_scenarioContext);
+            _emailAddressPage = new EmailAddressPage(_scenarioContext);
+            _checkYourEmailPage = new CheckYourEmailPage(_scenarioContext);
+            _yourResultsPage = new YourResultsPage(_scenarioContext);
         }
 
         [Given]
@@ -135,10 +142,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             Assert.NotEmpty(_dysacPage.GetResultText());
         }
 
+        [Given(@"I select ""(.*)"" option and answer questions to the end")]
         [When(@"I select ""(.*)"" option and answer questions to the end")]
         public void WhenISelectOptionAndAnswerQuestionsToTheEnd(string answerOption)
         {
-            theAnswerOption = answerOption;
+            _theAnswerOption = answerOption;
         }
 
         [Then(@"the questions in turn have the following class attributes")]
@@ -146,13 +154,13 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             IEnumerable<LocatorAttributes> theAttributes = table.CreateSet<LocatorAttributes>().ToList();
             
-            Assert.True(_dysacPage.VerifyProgressBar(theAttributes, theAnswerOption), "Progress bar not proceeding steadily");
+            Assert.True(_dysacPage.VerifyProgressBar(theAttributes, _theAnswerOption), "Progress bar not proceeding steadily");
         }
 
         [Given(@"I select the ""(.*)"" option")]
         public void GivenISelectTheOption(string answerOption)
         {
-            theAnswerOption = answerOption;
+            _theAnswerOption = answerOption;
         }
 
         [Given(@"I proceed with answering questions up to ""(.*)"" percent")]
@@ -160,7 +168,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void GivenIProceedWithAnsweringQuestionsUpToPercent(string percentComplete)
         {
             _percentCompleted = percentComplete;
-            _dysacPage.AnswerQuestions(theAnswerOption, percentComplete);
+            _dysacPage.AnswerQuestions(_theAnswerOption, percentComplete);
         }
 
         [When(@"I save progress")]
@@ -174,8 +182,17 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Given(@"I choose the ""(.*)"" option of returning to assessment")]
         public void GivenIChooseTheOptionOfReturningToAssessment(string assessmentReturnOption)
         {
-            _returnToAssessmentPage.SelectReferenceCode();
-            _dysacPage.ClickContinueToSaveProgress();
+            switch (assessmentReturnOption)
+            {
+                case "Get a reference code":
+                    _returnToAssessmentPage.SelectReferenceCode();
+                    _dysacPage.ClickContinueToSaveProgress();
+                    break;
+                case "Send me an email with a link":
+                    _returnToAssessmentPage.SelectSendMeEmailLink();
+                    _dysacPage.ClickContinueToSaveProgress();
+                    break;
+            }
         }
 
         [When(@"I make a note of the reference code")]
@@ -255,11 +272,20 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.AreEqual("radio", _returnToAssessmentPage.GetElementAttribute(radioButton), "Radio button not present");
         }
 
-        [Then(@"validation messages are displayed")]
-        public void ThenValidationMessagesAreDisplayed()
+        [Then(@"validation messages are displayed for the ""(.*)"" field")]
+        public void ThenValidationMessagesAreDisplayedForTheField(string fieldForValidation)
         {
-            NUnit.Framework.Assert.IsTrue(_yourReferenceCodePage.ValidationBoxPresent(), "The validation box is not present.");
-            NUnit.Framework.Assert.AreEqual("Enter a phone number", _yourReferenceCodePage.PhoneValidationMsg(), "The validation message was not displayed.");
+            switch (fieldForValidation)
+            {
+                case "phone number":
+                    NUnit.Framework.Assert.IsTrue(_yourReferenceCodePage.ValidationBoxPresent(), "The validation box is not present.");
+                    NUnit.Framework.Assert.AreEqual("Enter a phone number", _yourReferenceCodePage.PhoneValidationMsg(), "The validation message was not displayed.");
+                    break;
+                case "reference code":
+                    NUnit.Framework.Assert.IsTrue(_yourReferenceCodePage.ValidationBoxPresent(), "The validation box is not present.");
+                    NUnit.Framework.Assert.AreEqual("Enter your reference", _yourReferenceCodePage.PhoneValidationMsg(), "The validation message was not displayed.");
+                    break;
+            }
         }
 
         [When(@"I click Back")]
@@ -271,7 +297,99 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"I am navigated to the ""(.*)"" page")]
         public void ThenIAmNavigatedToThePage(string pageText)
         {
-            NUnit.Framework.Assert.AreEqual(pageText, _returnToAssessmentPage.GetHeaderText(pageText), "Navigation has not been to the correct page.");
+            switch (pageText)
+            {
+                case "How would you like to return to your assessment?":
+                    NUnit.Framework.Assert.AreEqual(pageText, _returnToAssessmentPage.GetHeaderText(pageText), "Navigation has not been to the correct page.");
+                    break;
+                case "Check your email":
+                    NUnit.Framework.Assert.AreEqual(pageText, _checkYourEmailPage.GetHeader(), "Navigation has not been to the correct page.");
+                    break;
+            }
+        }
+
+        [Given(@"I click continue without providing a reference")]
+        public void GivenIClickContinueWithoutProvidingAReference()
+        {
+            _dysacPage.ClickContinueToSaveProgress();
+        }
+
+        [When(@"I click Send on the resultant page without providing an email address")]
+        public void GivenIClickSendOnTheResultantPageWithoutProvidingAnEmailAddress()
+        {
+            _dysacPage.ClickContinueToSaveProgress();
+        }
+
+        [When(@"I provide email address ""(.*)""")]
+        public void WhenIProvideEmailAddress(string emailAddress)
+        {
+            _theEmailAddress = emailAddress;
+            _emailAddressPage.EnterEmailAddress(emailAddress);
+            _dysacPage.ClickContinueToSaveProgress();
+        }
+
+        [Then(@"the email address used is present in the text on the page")]
+        public void ThenTheEmailAddressUsedIsPresentInTheTextOnThePage()
+        {
+            NUnit.Framework.Assert.AreEqual(_theEmailAddress, _checkYourEmailPage.GetEmailAddressNotification(), "The email address is incorrect");
+        }
+
+        [When(@"I click the Back link")]
+        public void WhenIClickTheBackLink()
+        {
+            _checkYourEmailPage.ClickBack();
+        }
+
+        [When(@"I click the Back link from the ""(.*)"" page")]
+        public void WhenIClickTheBackLinkFromThePage(string page)
+        {
+            switch (page)
+            {
+                case "Email address":
+                    _emailAddressPage.ClickBack();
+                    break;
+                case "Check your email":
+                    _checkYourEmailPage.ClickBack();
+                    break;
+            }
+        }
+
+        [Then(@"I go forward")]
+        public void ThenIGoForward()
+        {
+            _emailAddressPage.GoFoward();
+        }
+
+        [Then(@"I am able to select the ""(.*)"" option for the ""(.*)"" question")]
+        public void ThenIAmAbleToSelectTheOptionForTheQuestion(string questionOption, string questionNumber)
+        {
+            NUnit.Framework.Assert.True(_dysacPage.AnswerOptionClick(questionOption), "Answer option radio button not clicked");
+        }
+
+        [Then(@"the initial job categories dispalyed are")]
+        public void ThenTheInitialJobCategoriesDispalyedAre(Table table)
+        {
+            IEnumerable<JobCategories> initialJobCategories = table.CreateSet<JobCategories>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobCategories(initialJobCategories), "'3 job categories that might suit you' list is incorrect");
+        }
+
+        [Given(@"I answer all questions selecting the ""(.*)"" option")]
+        public void GivenIAnswerAllQuestionsSelectingTheOption(string questionOption)
+        {
+            _dysacPage.AnswerAllQuestions(questionOption);
+        }
+
+        [When(@"I click See matches to See 7 other career areas that might interest you")]
+        public void WhenIClickSeeMatchesToSee7OtherCareerAreasThatMightInterestYou()
+        {
+            _yourResultsPage.ClickSeeMatches();
+        }
+
+        [Then(@"all the job categories dispalyed are")]
+        public void ThenAllTheJobCategoriesDispalyedAre(Table table)
+        {
+            IEnumerable<JobCategories> initialJobCategories = table.CreateSet<JobCategories>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobCategories(initialJobCategories), "'10 job categories that might suit you' list is incorrect");
         }
     }
 }

@@ -309,7 +309,63 @@ Scenario Outline: TC09 - Phone number field validation
 	And I save progress
 	And I choose the "Get a reference code" option of returning to assessment
 	When I supply phone number ""
-	Then validation messages are displayed
+	Then validation messages are displayed for the "phone number" field
 	When I click Back 
 	Then I am navigated to the "How would you like to return to your assessment?" page
-	
+
+Scenario: TC10 - Home page reference code field validation
+	And I click continue without providing a reference
+	Then validation messages are displayed for the "reference code" field
+
+Scenario: TC11 - Email field validation and population
+	And I click on Assessment
+	And I select the "Strongly agree" option
+	And I proceed with answering questions up to "2" percent
+	And I save progress
+	And I choose the "Send me an email with a link" option of returning to assessment
+	When I click the Back link from the "Email address" page
+	Then I am navigated to the "How would you like to return to your assessment?" page
+	And I go forward
+	When I click Send on the resultant page without providing an email address
+	Then validation messages are displayed for the "email address" field
+	When I provide email address "victor.abegunde@methods.co.uk"
+	Then I am navigated to the "Check your email" page
+	And the email address used is present in the text on the page
+	When I click the Back link from the "Check your email" page
+	Then I am navigated to the "Email address" page
+	And I go forward
+	When I click the Return to assessment button
+	Then I am at the question where I left off
+	When I go Back and I click the Back to start link
+	Then I am navigate to the Dysac home page 
+
+Scenario: TC12 - All question radio button options are usable
+	When I click on Assessment
+	Then I am able to select the "Strongly agree" option for the "first" question
+	And I am able to select the "Agree" option for the "second" question
+	And I am able to select the "It depends" option for the "third" question
+	And I am able to select the "Disagree" option for the "fourth" question
+	And I am able to select the "Strongly disagree" option for the "fifth" question	
+
+Scenario: TC13 - Initial and all suggested job categories
+	And I click on Assessment
+	And I answer all questions selecting the "Strongly agree" option
+	When I click See results button
+	Then the initial job categories dispalyed are
+	| Job category                   |
+	| Sports and leisure             |
+	| Manufacturing                  |
+	| Creative and media             |
+	When I click See matches to See 7 other career areas that might interest you
+	Then all the job categories dispalyed are
+	| Job category                   |
+	| Sports and leisure             |
+	| Manufacturing                  |
+	| Creative and media             |
+	| Construction and trades        |
+	| Science and research           |
+	| Business and finance           |
+	| Emergency and uniform services |
+	| Law and legal                  |
+	| Teaching and education         |
+	| Travel and tourism             |
