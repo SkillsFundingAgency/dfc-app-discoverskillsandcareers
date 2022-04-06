@@ -130,10 +130,17 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             Assert.NotEmpty(_dysacPage.GetReferenceCode());
         }
 
+        [Given(@"I click See results button")]
         [When(@"I click See results button")]
         public void WhenIClickSeeResultsButton()
         {
             _dysacPage.ClickSeeResults();
+        }
+
+        [Then(@"the job categories suggestions are (.*) in number")]
+        public void ThenTheJobCategoriesSuggestionsAreInNumber(int numberOfJobCategories)
+        {
+            NUnit.Framework.Assert.AreEqual(numberOfJobCategories, _yourResultsPage.GetJobCategories().Count, "Number of job category suggestions not correct.");
         }
 
         [Then(@"The results are displayed")]
@@ -373,7 +380,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobCategories(initialJobCategories), "'3 job categories that might suit you' list is incorrect");
         }
 
-        [Given(@"I answer all questions selecting the ""(.*)"" option")]
+        [Given(@"I answer all questions selecting the (.*) option")]
         public void GivenIAnswerAllQuestionsSelectingTheOption(string questionOption)
         {
             _dysacPage.AnswerAllQuestions(questionOption);
@@ -390,6 +397,13 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             IEnumerable<JobCategories> initialJobCategories = table.CreateSet<JobCategories>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobCategories(initialJobCategories), "'10 job categories that might suit you' list is incorrect");
+        }
+
+        [Then(@"the following are the job categories suggested and their number of answer more questions")]
+        public void ThenTheFollowingAreTheJobCategoriesSuggestedAndTheirNumberOfAnswerMoreQuestions(Table table)
+        {
+            IEnumerable<JobCategories> jobCategoriesAndNumbers = table.CreateSet<JobCategories>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategoriesAndNumbers), "The number of answer * more questions for the job categories are not correct.");
         }
     }
 }
