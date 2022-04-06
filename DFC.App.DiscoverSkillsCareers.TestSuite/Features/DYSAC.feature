@@ -382,16 +382,16 @@ Scenario Outline: TC14 - Number of answer more questions for each category are c
 	When I click See matches to See 7 other career areas that might interest you
 	Then the following are the job categories suggested and their number of answer more questions
 	| Job category                   | Number of answer more questions |
-	| Teaching and education         | 3                               |
-	| Emergency and uniform services | 3                               |
-	| Managerial                     | 4                               |
 	| Sports and leisure             | 3                               |
-	| Business and finance           | 3                               |
+	| Manufacturing                  | 4                               |
+	| Creative and media             | 5                               |
+	| Construction and trades        | 4                               |
 	| Science and research           | 4                               |
-	| Beauty and wellbeing           | 2                               |
-	| Law and legal                  | 2                               |
-	| Hospitality and food           | 3                               |
-	| Retail and sales               | 4                               |
+	| Business and finance           | 3                               |
+	| Emergency and uniform services | 3                               |
+	| Law and legal                  | 3                               |
+	| Teaching and education         | 3                               |
+	| Travel and tourism             | 2                               |
 	Examples: 
 	| Answer option  |
 	| Strongly agree |
