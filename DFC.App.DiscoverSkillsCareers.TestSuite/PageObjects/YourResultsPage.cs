@@ -29,7 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
             string[] allJobCategories = jobCategories.Select(p => p.JobCategory).ToArray();
 
-            IList<IWebElement> jobCategoriesUI = _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
+            //IList<IWebElement> jobCategoriesUI = _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
+            IList<IWebElement> jobCategoriesUI = GetJobCategories();
             //translate IWebElements above into a collection of strings so they can be compared
             IEnumerable<string> actual = jobCategoriesUI.Select(i => i.Text);
 
@@ -53,9 +54,36 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             return a_and_b_checks;
         }
 
+        public IList<IWebElement> GetJobCategories()
+        {
+            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
+        }
+
         public void ClickSeeMatches()
         {
-            lnkSeeMatches.Click();
+            lnkSeeMatches.Click(); 
+        }
+
+        public bool VerifyJobsAndNumberOfAnswers(IEnumerable<JobCategories> jobCategoriesAndNumberOfAnswers)
+        {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+            
+            int[] numberExpected = jobCategoriesAndNumberOfAnswers.Select(p => p.NumberOfAnswerMoreQuestions).ToArray();
+            string[] jobCategoryExpected = jobCategoriesAndNumberOfAnswers.Select(p => p.JobCategory).ToArray();
+
+            bool jobCategoryAndNumberOfAnswersMatch = true;
+            
+            for (int i = 0; i < numberExpected.Count(); i++)
+            {
+                var uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]//..//following-sibling::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Replace("for " + jobCategoryExpected[i], string.Empty).Trim();
+
+                if (numberExpected[i].ToString() != uiElementData.Trim())
+                {
+                    jobCategoryAndNumberOfAnswersMatch = false;
+                }
+            }
+
+            return jobCategoryAndNumberOfAnswersMatch;
         }
     }
 }

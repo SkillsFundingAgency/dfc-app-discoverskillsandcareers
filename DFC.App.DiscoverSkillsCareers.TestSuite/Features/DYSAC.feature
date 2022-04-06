@@ -278,7 +278,7 @@ Examples:
 	| 2                    |
 	| 30                   |
 
-Scenario: TC07 - Return to assessment using reference code
+Scenario: TC07 - Current date is displayed on reference code page
 	And I click on Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "10" percent
@@ -347,17 +347,19 @@ Scenario: TC12 - All question radio button options are usable
 	And I am able to select the "Disagree" option for the "fourth" question
 	And I am able to select the "Strongly disagree" option for the "fifth" question	
 
-Scenario: TC13 - Initial and all suggested job categories
+Scenario Outline: TC13 - Initial and all suggested job categories
 	And I click on Assessment
-	And I answer all questions selecting the "Strongly agree" option
+	And I answer all questions selecting the <Answer option> option
 	When I click See results button
-	Then the initial job categories dispalyed are
-	| Job category                   |
-	| Sports and leisure             |
-	| Manufacturing                  |
-	| Creative and media             |
+	Then the job categories suggestions are <Initial job categories> in number
+	And the initial job categories dispalyed are
+	| Job category       |
+	| Sports and leisure |
+	| Manufacturing      |
+	| Creative and media |
 	When I click See matches to See 7 other career areas that might interest you
-	Then all the job categories dispalyed are
+	Then the job categories suggestions are <All job categories> in number
+	And all the job categories dispalyed are
 	| Job category                   |
 	| Sports and leisure             |
 	| Manufacturing                  |
@@ -369,3 +371,27 @@ Scenario: TC13 - Initial and all suggested job categories
 	| Law and legal                  |
 	| Teaching and education         |
 	| Travel and tourism             |
+	Examples: 
+	| Answer option  | Initial job categories | All job categories |
+	| Strongly agree | 3                      | 10                 |
+
+Scenario Outline: TC14 - Number of answer more questions for each category are correct
+	And I click on Assessment
+	And I answer all questions selecting the <Answer option> option
+	And I click See results button
+	When I click See matches to See 7 other career areas that might interest you
+	Then the following are the job categories suggested and their number of answer more questions
+	| Job category                   | Number of answer more questions |
+	| Teaching and education         | 3                               |
+	| Emergency and uniform services | 3                               |
+	| Managerial                     | 4                               |
+	| Sports and leisure             | 3                               |
+	| Business and finance           | 3                               |
+	| Science and research           | 4                               |
+	| Beauty and wellbeing           | 2                               |
+	| Law and legal                  | 2                               |
+	| Hospitality and food           | 3                               |
+	| Retail and sales               | 4                               |
+	Examples: 
+	| Answer option  |
+	| Strongly agree |

@@ -1015,14 +1015,14 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="TC07 - Return to assessment using reference code")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC07 - Current date is displayed on reference code page")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "TC07 - Return to assessment using reference code")]
-        public void TC07_ReturnToAssessmentUsingReferenceCode()
+        [Xunit.TraitAttribute("Description", "TC07 - Current date is displayed on reference code page")]
+        public void TC07_CurrentDateIsDisplayedOnReferenceCodePage()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC07 - Return to assessment using reference code", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC07 - Current date is displayed on reference code page", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 281
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -1336,13 +1336,17 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="TC13 - Initial and all suggested job categories")]
+        [Xunit.SkippableTheoryAttribute(DisplayName="TC13 - Initial and all suggested job categories")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
         [Xunit.TraitAttribute("Description", "TC13 - Initial and all suggested job categories")]
-        public void TC13_InitialAndAllSuggestedJobCategories()
+        [Xunit.InlineDataAttribute("Strongly agree", "3", "10", new string[0])]
+        public void TC13_InitialAndAllSuggestedJobCategories(string answerOption, string initialJobCategories, string allJobCategories, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("Answer option", answerOption);
+            argumentsOfScenario.Add("Initial job categories", initialJobCategories);
+            argumentsOfScenario.Add("All job categories", allJobCategories);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC13 - Initial and all suggested job categories", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 350
 this.ScenarioInitialize(scenarioInfo);
@@ -1361,10 +1365,13 @@ this.FeatureBackground();
  testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 352
- testRunner.And("I answer all questions selecting the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And(string.Format("I answer all questions selecting the {0} option", answerOption), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 353
  testRunner.When("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 354
+ testRunner.Then(string.Format("the job categories suggestions are {0} in number", initialJobCategories), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
                 TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                             "Job category"});
@@ -1374,11 +1381,14 @@ this.FeatureBackground();
                             "Manufacturing"});
                 table2.AddRow(new string[] {
                             "Creative and media"});
-#line 354
- testRunner.Then("the initial job categories dispalyed are", ((string)(null)), table2, "Then ");
+#line 355
+ testRunner.And("the initial job categories dispalyed are", ((string)(null)), table2, "And ");
 #line hidden
-#line 359
+#line 360
  testRunner.When("I click See matches to See 7 other career areas that might interest you", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 361
+ testRunner.Then(string.Format("the job categories suggestions are {0} in number", allJobCategories), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
                 TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                             "Job category"});
@@ -1402,8 +1412,84 @@ this.FeatureBackground();
                             "Teaching and education"});
                 table3.AddRow(new string[] {
                             "Travel and tourism"});
-#line 360
- testRunner.Then("all the job categories dispalyed are", ((string)(null)), table3, "Then ");
+#line 362
+ testRunner.And("all the job categories dispalyed are", ((string)(null)), table3, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableTheoryAttribute(DisplayName="TC14 - Number of answer more questions for each category are correct")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC14 - Number of answer more questions for each category are correct")]
+        [Xunit.InlineDataAttribute("Strongly agree", new string[0])]
+        public void TC14_NumberOfAnswerMoreQuestionsForEachCategoryAreCorrect(string answerOption, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("Answer option", answerOption);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC14 - Number of answer more questions for each category are correct", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 378
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 379
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 380
+ testRunner.And(string.Format("I answer all questions selecting the {0} option", answerOption), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 381
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 382
+ testRunner.When("I click See matches to See 7 other career areas that might interest you", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table4.AddRow(new string[] {
+                            "Teaching and education",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Emergency and uniform services",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Managerial",
+                            "4"});
+                table4.AddRow(new string[] {
+                            "Sports and leisure",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Business and finance",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Science and research",
+                            "4"});
+                table4.AddRow(new string[] {
+                            "Beauty and wellbeing",
+                            "2"});
+                table4.AddRow(new string[] {
+                            "Law and legal",
+                            "2"});
+                table4.AddRow(new string[] {
+                            "Hospitality and food",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Retail and sales",
+                            "4"});
+#line 383
+ testRunner.Then("the following are the job categories suggested and their number of answer more qu" +
+                        "estions", ((string)(null)), table4, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
