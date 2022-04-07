@@ -21,6 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private readonly EmailAddressPage _emailAddressPage;
         private readonly CheckYourEmailPage _checkYourEmailPage; 
         private readonly YourResultsPage _yourResultsPage; 
+        private readonly AssessmentCompletePage _assessmentCompletePage; 
         private string _theAnswerOption;
         private string dateOnPage;
         private string _phoneNumber;
@@ -37,6 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _emailAddressPage = new EmailAddressPage(_scenarioContext);
             _checkYourEmailPage = new CheckYourEmailPage(_scenarioContext);
             _yourResultsPage = new YourResultsPage(_scenarioContext);
+            _assessmentCompletePage = new AssessmentCompletePage(_scenarioContext);
         }
 
         [Given]
@@ -404,6 +406,20 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             IEnumerable<JobCategories> jobCategoriesAndNumbers = table.CreateSet<JobCategories>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategoriesAndNumbers), "The number of answer * more questions for the job categories are not correct.");
+        }
+
+        [Given(@"I provide the following answers to the resultant questions")]
+        public void GivenIProvideTheFollowingAnswersToTheResultantQuestions(Table table)
+        {
+            IEnumerable<AnswersShowThat> answers = table.CreateSet<AnswersShowThat>().ToList();
+            _yourResultsPage.AnswerQuestions(answers);
+        }
+
+        [Then(@"the Your results page What you told us section displays the text ""(.*)""")]
+        public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheText(string resultStatement)
+        {
+            _assessmentCompletePage.ClickSeeResults();
+            NUnit.Framework.Assert.AreEqual(resultStatement, _yourResultsPage.GetYourResultStatement(), "Result statement is incorrect");
         }
     }
 }

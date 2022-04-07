@@ -395,3 +395,371 @@ Scenario Outline: TC14 - Number of answer more questions for each category are c
 	Examples: 
 	| Answer option  |
 	| Strongly agree |
+
+Scenario: TC15 - Driver-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Strongly agree    |
+	| 17               | I think I am a competitive person                                    | Strongly agree    |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Strongly agree    |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
+
+Scenario: TC16 - Leader-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | Strongly agree    |
+	| 7                | I prefer to follow what other people are doing                       | Strongly disagree |
+	| 10               | I like taking responsibility for other people                        | Strongly agree    |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the Your results page What you told us section displays the text "you like to lead other people and are good at taking control of situations"
+
+Scenario: TC17 - Influencer-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly agree    |
+	| 27               | I am good at coming to an agreement with other people                | Strongly agree    |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly agree    |
+	| 32               | I like meeting new people                                            | Strongly agree    |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the Your results page What you told us section displays the text "you are sociable and find it easy to understand people"
+
+Scenario: TC18 - Helper-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly agree    |
+	| 40               | I enjoy working with other people around me                          | Strongly agree    |
+	| 42               | I want to make things better for people                              | Strongly agree    |
+	| 45               | I will get involved if I think I can help                            | Strongly agree    |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly agree    |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
+
+Scenario: TC19 - Analyst-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly agree    |
+	| 52               | I like to get to the centre of the issue                             | Strongly agree    |
+	| 55               | I like working with facts                                            | Strongly agree    |
+	| 57               | I like working with numbers                                          | Strongly agree    |
+	| 60               | I enjoy learning new things                                          | Strongly agree    |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+Then the Your results page What you told us section displays the text "you like dealing with complicated problems or working with numbers"
+
+Scenario: TC20 - Creator-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly agree    |
+	| 65               | I try to think differently to others                                 | Strongly agree    |
+	| 67               | I like to use my imagination to create new things                    | Strongly agree    |
+	| 70               | I like to try new things                                             | Strongly agree    |
+	| 72               | I enjoy creative activities                                          | Strongly agree    |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the Your results page What you told us section displays the text "you are a creative person and enjoy coming up with new ways of doing things"
+
+Scenario: TC21 - Organiser-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly agree    |
+	| 77               | I plan my day so I can use my time best                              | Strongly agree    |
+	| 80               | I like doing things in a careful order                               | Strongly agree    |
+	| 82               | I like to follow rules and processes                                 | Strongly agree    |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+Then the Your results page What you told us section displays the text "you like to plan things and are well organised"
+
+Scenario: TC22 - Doer-What you told us summary invoking answers
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | Strongly agree    |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly agree    |
+	| 95               | I like working with my hands or tools                                | Strongly agree    |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
+Then the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"

@@ -20,6 +20,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         IWebElement txtHeader => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-heading-xl"));
         IWebElement lnkSeeMatches => _scenarioContext.GetWebDriver().FindElement(By.LinkText("See matches"));
+        IWebElement btnNext => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
+        IWebElement txtYourResultStatement => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-list.govuk-list--bullet > li:nth-of-type(1)"));
 
         public bool VerifyJobCategories(IEnumerable<JobCategories> jobCategories)
         {
@@ -29,8 +31,17 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
             string[] allJobCategories = jobCategories.Select(p => p.JobCategory).ToArray();
 
-            //IList<IWebElement> jobCategoriesUI = _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
-            IList<IWebElement> jobCategoriesUI = GetJobCategories();
+            IList<IWebElement> jobCategoriesUI;
+
+            try
+            {
+                jobCategoriesUI = GetJobCategories();
+            }
+            catch (NoSuchElementException)
+            {
+                jobCategoriesUI = null;
+            }
+
             //translate IWebElements above into a collection of strings so they can be compared
             IEnumerable<string> actual = jobCategoriesUI.Select(i => i.Text);
 
@@ -61,7 +72,16 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickSeeMatches()
         {
-            lnkSeeMatches.Click(); 
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+
+            try
+            {
+                lnkSeeMatches.Click();
+            }
+            catch (NoSuchElementException)
+            {
+
+            }
         }
 
         public bool VerifyJobsAndNumberOfAnswers(IEnumerable<JobCategories> jobCategoriesAndNumberOfAnswers)
@@ -84,6 +104,26 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             }
 
             return jobCategoryAndNumberOfAnswersMatch;
+        }
+
+        public void AnswerQuestions(IEnumerable<AnswersShowThat> questionsAndAnswers)
+        {
+            //string[] PercentProgress = questionsAndAnswers.Select(p => p.PercentProgress).ToArray();
+            string[] question = questionsAndAnswers.Select(p => p.Question).ToArray();
+            string[] answer = questionsAndAnswers.Select(p => p.Answer).ToArray();
+
+            for (int i = 0; i < question.Count(); i++)
+            {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("btn-next-question"));
+                _scenarioContext.GetWebDriver().FindElement(By.XPath("//h1[contains(text(), \"" + question[i].Trim() + "\")]//..//following-sibling::div//label[contains(text(), \"" + answer[i].Trim() + "\")]//preceding::input[1]")).Click();
+                btnNext.Click();
+            }
+        }
+
+        public string GetYourResultStatement()
+        {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+            return txtYourResultStatement.Text;
         }
     }
 }

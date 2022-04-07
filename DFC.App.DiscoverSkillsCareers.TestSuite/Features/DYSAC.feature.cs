@@ -1458,38 +1458,1631 @@ this.FeatureBackground();
                             "Job category",
                             "Number of answer more questions"});
                 table4.AddRow(new string[] {
-                            "Teaching and education",
+                            "Sports and leisure",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Manufacturing",
+                            "4"});
+                table4.AddRow(new string[] {
+                            "Creative and media",
+                            "5"});
+                table4.AddRow(new string[] {
+                            "Construction and trades",
+                            "4"});
+                table4.AddRow(new string[] {
+                            "Science and research",
+                            "4"});
+                table4.AddRow(new string[] {
+                            "Business and finance",
                             "3"});
                 table4.AddRow(new string[] {
                             "Emergency and uniform services",
                             "3"});
                 table4.AddRow(new string[] {
-                            "Managerial",
-                            "4"});
-                table4.AddRow(new string[] {
-                            "Sports and leisure",
-                            "3"});
-                table4.AddRow(new string[] {
-                            "Business and finance",
-                            "3"});
-                table4.AddRow(new string[] {
-                            "Science and research",
-                            "4"});
-                table4.AddRow(new string[] {
-                            "Beauty and wellbeing",
-                            "2"});
-                table4.AddRow(new string[] {
                             "Law and legal",
-                            "2"});
-                table4.AddRow(new string[] {
-                            "Hospitality and food",
                             "3"});
                 table4.AddRow(new string[] {
-                            "Retail and sales",
-                            "4"});
+                            "Teaching and education",
+                            "3"});
+                table4.AddRow(new string[] {
+                            "Travel and tourism",
+                            "2"});
 #line 383
  testRunner.Then("the following are the job categories suggested and their number of answer more qu" +
                         "estions", ((string)(null)), table4, "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC15 - Driver-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC15 - Driver-What you told us summary invoking answers")]
+        public void TC15_Driver_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC15 - Driver-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 399
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 400
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table5.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table5.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table5.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 401
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table5, "And ");
+#line hidden
+#line 443
+ testRunner.Then("the Your results page What you told us section displays the text \"you are motivat" +
+                        "ed, set yourself personal goals and are comfortable competing with other people\"" +
+                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC16 - Leader-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC16 - Leader-What you told us summary invoking answers")]
+        public void TC16_Leader_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC16 - Leader-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 445
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 446
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table6.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly agree"});
+                table6.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly agree"});
+                table6.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly agree"});
+                table6.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly agree"});
+                table6.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table6.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table6.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table6.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 447
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table6, "And ");
+#line hidden
+#line 489
+ testRunner.Then("the Your results page What you told us section displays the text \"you like to lea" +
+                        "d other people and are good at taking control of situations\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC17 - Influencer-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC17 - Influencer-What you told us summary invoking answers")]
+        public void TC17_Influencer_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC17 - Influencer-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 491
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 492
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table7.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table7.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly agree"});
+                table7.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly agree"});
+                table7.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly agree"});
+                table7.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly agree"});
+                table7.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table7.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table7.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 493
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table7, "And ");
+#line hidden
+#line 535
+ testRunner.Then("the Your results page What you told us section displays the text \"you are sociabl" +
+                        "e and find it easy to understand people\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC18 - Helper-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC18 - Helper-What you told us summary invoking answers")]
+        public void TC18_Helper_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC18 - Helper-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 537
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 538
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table8.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table8.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table8.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 539
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table8, "And ");
+#line hidden
+#line 581
+ testRunner.Then("the Your results page What you told us section displays the text \"you enjoy helpi" +
+                        "ng and listening to other people\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC19 - Analyst-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC19 - Analyst-What you told us summary invoking answers")]
+        public void TC19_Analyst_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC19 - Analyst-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 583
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 584
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table9.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table9.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table9.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 585
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table9, "And ");
+#line hidden
+#line 627
+testRunner.Then("the Your results page What you told us section displays the text \"you like dealin" +
+                        "g with complicated problems or working with numbers\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC20 - Creator-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC20 - Creator-What you told us summary invoking answers")]
+        public void TC20_Creator_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC20 - Creator-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 629
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 630
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table10.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table10.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table10.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 631
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table10, "And ");
+#line hidden
+#line 673
+ testRunner.Then("the Your results page What you told us section displays the text \"you are a creat" +
+                        "ive person and enjoy coming up with new ways of doing things\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC21 - Organiser-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC21 - Organiser-What you told us summary invoking answers")]
+        public void TC21_Organiser_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC21 - Organiser-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 675
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 676
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table11.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table11.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table11.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly agree"});
+                table11.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly agree"});
+                table11.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly agree"});
+                table11.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly agree"});
+                table11.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table11.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 677
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table11, "And ");
+#line hidden
+#line 719
+testRunner.Then("the Your results page What you told us section displays the text \"you like to pla" +
+                        "n things and are well organised\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC22 - Doer-What you told us summary invoking answers")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC22 - Doer-What you told us summary invoking answers")]
+        public void TC22_Doer_WhatYouToldUsSummaryInvokingAnswers()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC22 - Doer-What you told us summary invoking answers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 721
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 722
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table12.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table12.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly agree"});
+                table12.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly disagree"});
+#line 723
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table12, "And ");
+#line hidden
+#line 765
+testRunner.Then("the Your results page What you told us section displays the text \"you are a pract" +
+                        "ical person and enjoy getting things done\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
