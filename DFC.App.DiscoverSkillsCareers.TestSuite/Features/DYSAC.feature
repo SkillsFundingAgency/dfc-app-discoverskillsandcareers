@@ -9,6 +9,7 @@ Scenario: Starting Assessment loads the first questions
 	When I click on Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 
+@smoke
 @DYSAC
 Scenario: TC01 - Starting Assessment loads the questions and show the percentage completion. Also displays the results
 	When I click on Assessment
@@ -176,6 +177,7 @@ Scenario: TC01 - Starting Assessment loads the questions and show the percentage
 	When I click See results button
 	Then The results are displayed
 
+@smoke
 @DYSAC
 Scenario: TC02 - Display error message when moving to next question without selecting an option 
 	When I click on Assessment
@@ -188,6 +190,7 @@ Scenario: TC02 - Display error message when moving to next question without sele
 	Then The error is displayed; Choose an answer to the statement
 	And Percentage completion is 2%
 
+@smoke
 @DYSAC
 Scenario: TC03 - Clicking back link takes to the previous question and updates the percentage completion 
 	When I click on Assessment
@@ -201,6 +204,7 @@ Scenario: TC03 - Clicking back link takes to the previous question and updates t
 	Then The first question is displayed; I am comfortable telling people what they need to do
 	And Percentage completion is 0%
 
+@smoke
 @DYSAC
 Scenario: TC04 - Saving progress and selecting reference code to return to the assessment displays reference code 
 	When I click on Assessment
@@ -215,6 +219,7 @@ Scenario: TC04 - Saving progress and selecting reference code to return to the a
 	And I click continue
 	Then The reference code is displayed
 
+@DYSAC
 Scenario: TC05 - Progress bar displays correctly on each question
 	And I click on Assessment
 	When I select "Strongly agree" option and answer questions to the end
@@ -261,6 +266,8 @@ Scenario: TC05 - Progress bar displays correctly on each question
 	| ncs-progress__95 |
 	| ncs-progress__97 |
 
+@smoke
+@DYSAC
 Scenario Outline: TC06 - Return to assessment using reference code
 	And I click on Assessment
 	And I select the "Strongly agree" option
@@ -278,6 +285,7 @@ Examples:
 	| 2                    |
 	| 30                   |
 
+@DYSAC
 Scenario: TC07 - Current date is displayed on reference code page
 	And I click on Assessment
 	And I select the "Strongly agree" option
@@ -289,6 +297,8 @@ Scenario: TC07 - Current date is displayed on reference code page
 	When I click the Return to assessment link
 	Then I am at the question where I left off
 
+@smoke
+@DYSAC
 Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 	And I click on Assessment
 	And I select the "Strongly agree" option
@@ -302,6 +312,8 @@ Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 	When I go Back and I click the Back to start link
 	Then I am navigate to the Dysac home page
 
+@smoke
+@DYSAC
 Scenario Outline: TC09 - Phone number field validation
 	And I click on Assessment
 	And I select the "Strongly agree" option
@@ -313,10 +325,14 @@ Scenario Outline: TC09 - Phone number field validation
 	When I click Back 
 	Then I am navigated to the "How would you like to return to your assessment?" page
 
+@smoke
+@DYSAC
 Scenario: TC10 - Home page reference code field validation
 	And I click continue without providing a reference
 	Then validation messages are displayed for the "reference code" field
 
+@smoke
+@DYSAC
 Scenario: TC11 - Email field validation and population
 	And I click on Assessment
 	And I select the "Strongly agree" option
@@ -339,6 +355,7 @@ Scenario: TC11 - Email field validation and population
 	When I go Back and I click the Back to start link
 	Then I am navigate to the Dysac home page 
 
+@DYSAC
 Scenario: TC12 - All question radio button options are usable
 	When I click on Assessment
 	Then I am able to select the "Strongly agree" option for the "first" question
@@ -347,6 +364,7 @@ Scenario: TC12 - All question radio button options are usable
 	And I am able to select the "Disagree" option for the "fourth" question
 	And I am able to select the "Strongly disagree" option for the "fifth" question	
 
+@DYSAC
 Scenario Outline: TC13 - Initial and all suggested job categories
 	And I click on Assessment
 	And I answer all questions selecting the <Answer option> option
@@ -375,6 +393,7 @@ Scenario Outline: TC13 - Initial and all suggested job categories
 	| Answer option  | Initial job categories | All job categories |
 	| Strongly agree | 3                      | 10                 |
 
+@DYSAC
 Scenario Outline: TC14 - Number of answer more questions for each category are correct
 	And I click on Assessment
 	And I answer all questions selecting the <Answer option> option
@@ -396,6 +415,8 @@ Scenario Outline: TC14 - Number of answer more questions for each category are c
 	| Answer option  |
 	| Strongly agree |
 
+@smoke
+@DYSAC
 Scenario: TC15 - Driver-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -442,6 +463,7 @@ Scenario: TC15 - Driver-What you told us summary invoking answers
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
 	Then the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
 
+@DYSAC
 Scenario: TC16 - Leader-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -488,6 +510,8 @@ Scenario: TC16 - Leader-What you told us summary invoking answers
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
 	Then the Your results page What you told us section displays the text "you like to lead other people and are good at taking control of situations"
 
+@smoke
+@DYSAC
 Scenario: TC17 - Influencer-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -534,6 +558,7 @@ Scenario: TC17 - Influencer-What you told us summary invoking answers
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
 	Then the Your results page What you told us section displays the text "you are sociable and find it easy to understand people"
 
+@DYSAC
 Scenario: TC18 - Helper-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -580,6 +605,8 @@ Scenario: TC18 - Helper-What you told us summary invoking answers
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
 	Then the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
 
+@smoke
+@DYSAC
 Scenario: TC19 - Analyst-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -624,8 +651,9 @@ Scenario: TC19 - Analyst-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-Then the Your results page What you told us section displays the text "you like dealing with complicated problems or working with numbers"
+	Then the Your results page What you told us section displays the text "you like dealing with complicated problems or working with numbers"
 
+@DYSAC
 Scenario: TC20 - Creator-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -672,6 +700,8 @@ Scenario: TC20 - Creator-What you told us summary invoking answers
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
 	Then the Your results page What you told us section displays the text "you are a creative person and enjoy coming up with new ways of doing things"
 
+@smoke
+@DYSAC
 Scenario: TC21 - Organiser-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -716,8 +746,9 @@ Scenario: TC21 - Organiser-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-Then the Your results page What you told us section displays the text "you like to plan things and are well organised"
+	Then the Your results page What you told us section displays the text "you like to plan things and are well organised"
 
+@DYSAC
 Scenario: TC22 - Doer-What you told us summary invoking answers
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -762,4 +793,4 @@ Scenario: TC22 - Doer-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly agree    |
 	| 95               | I like working with my hands or tools                                | Strongly agree    |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
-Then the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"
+	Then the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"
