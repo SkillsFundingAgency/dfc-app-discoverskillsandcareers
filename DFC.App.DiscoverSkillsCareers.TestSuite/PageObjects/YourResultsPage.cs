@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
+using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -92,11 +93,19 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             string[] jobCategoryExpected = jobCategoriesAndNumberOfAnswers.Select(p => p.JobCategory).ToArray();
 
             bool jobCategoryAndNumberOfAnswersMatch = true;
-            
+            string uiElementData = string.Empty;
+
             for (int i = 0; i < numberExpected.Count(); i++)
             {
-                var uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]//..//following-sibling::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Replace("for " + jobCategoryExpected[i], string.Empty).Trim();
-
+                try
+                {
+                    uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]//..//following-sibling::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Replace("for " + jobCategoryExpected[i], string.Empty).Trim();
+                } 
+                catch (NoSuchElementException)
+                {
+                    jobCategoryAndNumberOfAnswersMatch = false;
+                }
+                
                 if (numberExpected[i].ToString() != uiElementData.Trim())
                 {
                     jobCategoryAndNumberOfAnswersMatch = false;
@@ -120,10 +129,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             }
         }
 
-        public string GetYourResultStatement()
+        public bool GetYourResultStatement(string jobCategory)
         {
             WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
-            return txtYourResultStatement.Text;
+
+            return Support.GetAllText(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-list.govuk-list--bullet > li")).Contains(jobCategory);
         }
     }
 }

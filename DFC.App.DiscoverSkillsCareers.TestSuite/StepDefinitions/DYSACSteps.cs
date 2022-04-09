@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects;
+using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -418,8 +419,16 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"the Your results page What you told us section displays the text ""(.*)""")]
         public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheText(string resultStatement)
         {
-            _assessmentCompletePage.ClickSeeResults();
-            NUnit.Framework.Assert.AreEqual(resultStatement, _yourResultsPage.GetYourResultStatement(), "Result statement is incorrect");
+            Support.RunOnce(new Action(_assessmentCompletePage.ClickSeeResults));
+            NUnit.Framework.Assert.True(_yourResultsPage.GetYourResultStatement(resultStatement), "Result statement is incorrect");
+        }
+
+        [Then(@"the following job categories with their corresponding number of answer more questions are displayed")]
+        public void ThenTheFollowingJobCategoriesWithTheirCorrespondingNumberOfAnswerMoreQuestionsAreDisplayed(Table table)
+        {
+            _yourResultsPage.ClickSeeMatches();
+            IEnumerable<JobCategories> jobCategories = table.CreateSet<JobCategories>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategories), "Job categories and or number for answer * more questions incorrect.");
         }
     }
 }

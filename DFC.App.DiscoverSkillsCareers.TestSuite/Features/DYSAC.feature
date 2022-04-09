@@ -794,3 +794,126 @@ Scenario: TC22 - Doer-What you told us summary invoking answers
 	| 95               | I like working with my hands or tools                                | Strongly agree    |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
 	Then the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"
+
+@smoke
+@DYSAC
+Scenario: TC23 - Real user interaction 1
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | It depends        |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | It depends        |
+	| 7                | I prefer to follow what other people are doing                       | Agree             |
+	| 10               | I like taking responsibility for other people                        | Disagree          |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Agree             |
+	| 17               | I think I am a competitive person                                    | Disagree          |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Agree             |
+	| 25               | I am comfortable talking people around to my way of thinking         | Disagree          |
+	| 27               | I am good at coming to an agreement with other people                | Disagree          |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | It depends        |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly agree    |
+	| 40               | I enjoy working with other people around me                          | Disagree          |
+	| 42               | I want to make things better for people                              | Strongly agree    |
+	| 45               | I will get involved if I think I can help                            | Strongly agree    |
+	| 47               | I am comfortable hearing other people's problems                     | Agree             |
+	| 50               | I like to work out complicated things                                | Agree             |
+	| 52               | I like to get to the centre of the issue                             | Agree             |
+	| 55               | I like working with facts                                            | Strongly agree    |
+	| 57               | I like working with numbers                                          | It depends        |
+	| 60               | I enjoy learning new things                                          | Strongly agree    |
+	| 62               | I enjoy coming up with new ways of doing things                      | Agree             |
+	| 65               | I try to think differently to others                                 | Agree             |
+	| 67               | I like to use my imagination to create new things                    | Disagree          |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Disagree          |
+	| 75               | I like to focus on details                                           | Agree             |
+	| 77               | I plan my day so I can use my time best                              | It depends        |
+	| 80               | I like doing things in a careful order                               | Strongly agree    |
+	| 82               | I like to follow rules and processes                                 | Agree             |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | It depends        |
+	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
+	| 95               | I like working with my hands or tools                                | Agree             |
+	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
+	Then the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
+	And the Your results page What you told us section displays the text "you like dealing with complicated problems or working with numbers"
+	And the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category         | Number of answer more questions |
+	| Manufacturing        | 4                               |
+	| Science and research | 4                               |
+	| Travel and tourism   | 2                               |
+	| Business and finance | 3                               |
+	| Law and Legal        | 3                               |
+	| Animal care          | 2                               |
+	| Deliver and storage  | 2                               |
+	| Healthcare           | 4                               |
+	| Home services        | 3                               |
+	| Transport            | 3                               |
+
+@DYSAC
+Scenario: TC24 - Real user interaction 2
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | It depends        |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | It depends        |
+	| 7                | I prefer to follow what other people are doing                       | Agree             |
+	| 10               | I like taking responsibility for other people                        | Disagree          |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Agree             |
+	| 17               | I think I am a competitive person                                    | Disagree          |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Agree             |
+	| 25               | I am comfortable talking people around to my way of thinking         | Disagree          |
+	| 27               | I am good at coming to an agreement with other people                | Disagree          |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | It depends        |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly agree    |
+	| 40               | I enjoy working with other people around me                          | Disagree          |
+	| 42               | I want to make things better for people                              | Strongly agree    |
+	| 45               | I will get involved if I think I can help                            | Strongly agree    |
+	| 47               | I am comfortable hearing other people's problems                     | Agree             |
+	| 50               | I like to work out complicated things                                | Agree             |
+	| 52               | I like to get to the centre of the issue                             | Agree             |
+	| 55               | I like working with facts                                            | Strongly agree    |
+	| 57               | I like working with numbers                                          | It depends        |
+	| 60               | I enjoy learning new things                                          | Strongly agree    |
+	| 62               | I enjoy coming up with new ways of doing things                      | Agree             |
+	| 65               | I try to think differently to others                                 | Agree             |
+	| 67               | I like to use my imagination to create new things                    | Disagree          |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Disagree          |
+	| 75               | I like to focus on details                                           | Agree             |
+	| 77               | I plan my day so I can use my time best                              | It depends        |
+	| 80               | I like doing things in a careful order                               | Strongly agree    |
+	| 82               | I like to follow rules and processes                                 | Agree             |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | It depends        |
+	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
+	| 95               | I like working with my hands or tools                                | Agree             |
+	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
+	Then the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
+	And the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
+	And the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category                   | Number of answer more questions |
+	| Business and finance           | 3                               |
+	| Emergency and uniform services | 3                               |
+	| Law and legal                  | 3                               |
+	| Travel and tourism             | 2                               |
+	| Sports and leisure             | 3                               |
+	| Manufacturing                  | 4                               |
+	| Creative and media             | 5                               |
+	| Construction and trades        | 4                               |
+	| Science and research           | 4                               |
+	| Teaching and education         | 3                               |
