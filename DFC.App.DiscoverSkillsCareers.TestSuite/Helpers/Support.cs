@@ -7,8 +7,6 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers
 {
     public static class Support
     {
-        private static bool _hasRun;
-
         public static string[] GetAllText(IWebDriver driver, By locator)
         {
             IList<IWebElement> all = driver.FindElements(locator) ;
@@ -22,15 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers
             }
 
             return allText;
-        }
-
-        public static void RunOnce(Action method)
-        {
-            if (!_hasRun)
-            {
-                method();
-            }
-            _hasRun = true;
         }
     }
 }

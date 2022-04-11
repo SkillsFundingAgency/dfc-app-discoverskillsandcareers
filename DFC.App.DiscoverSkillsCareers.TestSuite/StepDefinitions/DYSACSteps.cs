@@ -414,12 +414,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             IEnumerable<AnswersShowThat> answers = table.CreateSet<AnswersShowThat>().ToList();
             _yourResultsPage.AnswerQuestions(answers);
+            _assessmentCompletePage.ClickSeeResults();
         }
 
         [Then(@"the Your results page What you told us section displays the text ""(.*)""")]
         public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheText(string resultStatement)
         {
-            Support.RunOnce(new Action(_assessmentCompletePage.ClickSeeResults));
             NUnit.Framework.Assert.True(_yourResultsPage.GetYourResultStatement(resultStatement), "Result statement is incorrect");
         }
 

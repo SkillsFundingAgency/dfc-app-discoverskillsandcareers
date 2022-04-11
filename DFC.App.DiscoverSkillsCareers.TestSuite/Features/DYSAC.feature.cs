@@ -3168,14 +3168,16 @@ this.FeatureBackground();
         [Xunit.SkippableFactAttribute(DisplayName="TC23 - Real user interaction 1")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
         [Xunit.TraitAttribute("Description", "TC23 - Real user interaction 1")]
+        [Xunit.TraitAttribute("Category", "smoke")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
         public void TC23_RealUserInteraction1()
         {
             string[] tagsOfScenario = new string[] {
+                    "smoke",
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC23 - Real user interaction 1", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 799
+#line 800
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -3188,7 +3190,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 4
 this.FeatureBackground();
 #line hidden
-#line 800
+#line 801
  testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
@@ -3355,18 +3357,18 @@ this.FeatureBackground();
                             "97",
                             "I enjoy planning a task more than actually doing it",
                             "It depends"});
-#line 801
+#line 802
  testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table13, "And ");
 #line hidden
-#line 843
+#line 844
  testRunner.Then("the Your results page What you told us section displays the text \"you enjoy helpi" +
                         "ng and listening to other people\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 844
+#line 845
  testRunner.And("the Your results page What you told us section displays the text \"you like dealin" +
                         "g with complicated problems or working with numbers\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 845
+#line 846
  testRunner.And("the Your results page What you told us section displays the text \"you are motivat" +
                         "ed, set yourself personal goals and are comfortable competing with other people\"" +
                         "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -3404,7 +3406,7 @@ this.FeatureBackground();
                 table14.AddRow(new string[] {
                             "Transport",
                             "3"});
-#line 846
+#line 847
  testRunner.And("the following job categories with their corresponding number of answer more quest" +
                         "ions are displayed", ((string)(null)), table14, "And ");
 #line hidden
@@ -3422,7 +3424,7 @@ this.FeatureBackground();
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC24 - Real user interaction 2", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 860
+#line 861
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -3435,7 +3437,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 4
 this.FeatureBackground();
 #line hidden
-#line 861
+#line 862
  testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
@@ -3602,19 +3604,19 @@ this.FeatureBackground();
                             "97",
                             "I enjoy planning a task more than actually doing it",
                             "It depends"});
-#line 862
+#line 863
  testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table15, "And ");
 #line hidden
-#line 904
+#line 905
  testRunner.Then("the Your results page What you told us section displays the text \"you are motivat" +
                         "ed, set yourself personal goals and are comfortable competing with other people\"" +
                         "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 905
+#line 906
  testRunner.And("the Your results page What you told us section displays the text \"you enjoy helpi" +
                         "ng and listening to other people\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 906
+#line 907
  testRunner.And("the Your results page What you told us section displays the text \"you are a pract" +
                         "ical person and enjoy getting things done\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -3651,7 +3653,7 @@ this.FeatureBackground();
                 table16.AddRow(new string[] {
                             "Teaching and education",
                             "3"});
-#line 907
+#line 908
  testRunner.And("the following job categories with their corresponding number of answer more quest" +
                         "ions are displayed", ((string)(null)), table16, "And ");
 #line hidden
