@@ -1,10 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
-using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
-using DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using TechTalk.SpecFlow;
 
@@ -13,14 +10,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
     class DysacPage
     {
         private ScenarioContext _scenarioContext;
-        private YourReferenceCodePage _yourReferenceCodePage;
         public DysacPage(ScenarioContext context)
         {
             _scenarioContext = context;
-            _yourReferenceCodePage = new YourReferenceCodePage(context);
         }
-
-        public string InitialPercentComplete { get; set; }
 
         IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-button--start"));
         IWebElement question => _scenarioContext.GetWebDriver().FindElement(By.Id("question-heading"));
@@ -37,8 +30,6 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
         IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button app-button']"));
         IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
-        IWebElement answer => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
-        IWebElement enterYourReference => _scenarioContext.GetWebDriver().FindElement(By.Id("code"));
 
         public void ClickStartAssessment()
         {
@@ -97,7 +88,6 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public void ClickSaveProgress()
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
-            InitialPercentComplete = GetPercentageComplete();
             linkSaveProgress.Click();
         }
 
@@ -129,118 +119,6 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
                 WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector(".app-results h2.govuk-heading-l"));
                 return results.GetElementText();
-        }
-
-        public bool AnswerOptionClick(string answerOption)
-        {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
-            bool radioButtonSelected = false;
-            
-            switch (answerOption)
-            {
-                case "Strongly agree":
-                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-1")).Click();
-                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-1"));
-                    break;
-                case "Agree":
-                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-2")).Click();
-                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-2"));
-                    break;
-                case "It depends":
-                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-3")).Click();
-                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-3"));
-                    break;
-                case "Disagree":
-                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-4")).Click();
-                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-4"));
-                    break;
-                case "Strongly disagree":
-                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-5")).Click();
-                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-5"));
-                    break;
-            }
-
-            return radioButtonSelected;
-        }
-
-        public bool RadioButtonSelected(By element)
-        {
-            return _scenarioContext.GetWebDriver().FindElement(element).Selected;
-        }
-
-        public bool VerifyProgressBar(IEnumerable<LocatorAttributes> attributes, string answerOption)
-        {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
-
-            string[] innerAttributes = attributes.Select(p => p.ClassAttribute).ToArray();
-            bool progressSteady = true;
-
-            for (int i = 0; i < innerAttributes.Length; i++)
-            {
-                var barProgress = _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".ncs-progress__bar span")).GetAttribute("class");
-
-                if (innerAttributes[i] != barProgress)
-                {
-                    progressSteady = false;
-                    break;
-                }
-
-                AnswerOptionClick(answerOption);
-                btnNextQuestion.Click();
-            }
-
-            return progressSteady;
-        }
-
-        public void AnswerQuestions(string answerOption, string percentComplete)
-        {
-            do
-            {
-                AnswerOptionClick(answerOption);
-                btnNextQuestion.Click();
-            }
-            while (percentageComplete.Text.Replace("%", string.Empty) != percentComplete);
-        }
-
-        public void ReturnToAssessmentOption(string option)
-        {
-            _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk - radios__item']/label[contains(text(), '" + option + "')]")).Click();
-        }
-
-        public void EnterYourReference(string referenceCode)
-        {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("code"));
-            
-
-            if (_scenarioContext.GetEnv().DYSACApiBaseUrl.Substring(8, 3) == "dev")
-            {
-                _scenarioContext.GetWebDriver().Url = "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers";
-            }
-            else if (_scenarioContext.GetEnv().DYSACApiBaseUrl.Substring(8, 3) == "sit")
-            {
-                _scenarioContext.GetWebDriver().Url = "https://sit-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers";
-            }
-
-            enterYourReference.SendKeys(referenceCode);
-        }
-
-        public void GoBack()
-        {
-            _scenarioContext.GetWebDriver().Navigate().Back();
-        }
-
-        public string GetUrl()
-        {
-            return _scenarioContext.GetWebDriver().Url.ToString();
-        }
-
-        public void AnswerAllQuestions(string answerOption)
-        {
-            for (int i = 0; i < 40; i++)
-            {
-                AnswerOptionClick(answerOption);
-                btnNextQuestion.Click();
-            }
         }
     }
 }

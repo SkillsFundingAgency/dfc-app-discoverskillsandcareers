@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using AventStack.ExtentReports;
-using AventStack.ExtentReports.Gherkin.Model;
-using AventStack.ExtentReports.Reporter;
+
 using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 
 using TechTalk.SpecFlow;
@@ -18,98 +16,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Hooks
         readonly ScenarioContext _scenarioContext;
         private int _WebdriverTimeoutSeconds = 0; // 0 means use default value
         private const int _WebdriverExtendedTimeout = 1200;
-        //Extent reports
-        private static string filePath = Directory.GetParent(@"../../../").FullName + Path.DirectorySeparatorChar + "Result" + "\\";
-        private static AventStack.ExtentReports.ExtentReports extentReports;
-        private static ExtentHtmlReporter extentHtmlReporter;
-        private static ExtentTest feature;
-        private static ExtentTest scenario;
 
         // For additional details on SpecFlow hooks see http://go.specflow.org/doc-hooks
         public SetupContext(FeatureContext fContext, ScenarioContext sContext)
         {
             _featureContext = fContext;
             _scenarioContext = sContext;
-        }
-
-        //Extent reports
-        [BeforeTestRun]
-        public static void BeforeTestRun()
-        {
-            extentHtmlReporter = new ExtentHtmlReporter(filePath);
-            extentHtmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
-            extentReports = new AventStack.ExtentReports.ExtentReports();
-            extentReports.AttachReporter(extentHtmlReporter);
-        }
-
-        [BeforeFeature]
-        public static void BeforeFeature(FeatureContext context)
-        {
-            if (context != null)
-            {
-                feature = extentReports.CreateTest<Feature>(context.FeatureInfo.Title, context.FeatureInfo.Description);
-            }
-        }
-
-        [AfterStep]
-        public void AfterStep(ScenarioContext scenarioContext)
-        {
-            if (scenarioContext == null)
-            {
-                throw new ArgumentNullException(nameof(scenarioContext));
-            }
-
-            ScenarioBlock scenarioBlock = scenarioContext.CurrentScenarioBlock;
-
-            switch (scenarioBlock)
-            {
-                case ScenarioBlock.Given:
-                    ReportExecution(scenarioContext);
-                    break;
-                case ScenarioBlock.When:
-                    ReportExecution(scenarioContext);
-                    break;
-                case ScenarioBlock.Then:
-                    ReportExecution(scenarioContext);
-                    break;
-                default:
-                    ReportExecution(scenarioContext);
-                    break;
-            }
-        }
-
-        public void ReportExecution(ScenarioContext scenarioContext)
-        {
-            if (scenarioContext == null)
-            {
-                throw new ArgumentNullException(nameof(scenarioContext));
-            }
-
-            if (scenarioContext.TestError != null)
-            {
-                //screenShot.TakeScreenShot(scenarioContext.GetWebDriver(), filePath);
-
-                scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message);
-            }
-            else
-            {
-                scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty);
-            }
-        }
-
-        [AfterFeature]
-        public static void AfterFeature()
-        {
-            extentReports.Flush();
-        }
-
-        [BeforeScenario]
-        public static void BeforeScenarioStart(ScenarioContext scenarioContext)
-        {
-            if (scenarioContext != null)
-            {
-                scenario = feature.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title, scenarioContext.ScenarioInfo.Description);
-            }
         }
 
         [BeforeScenario("longrunning", Order = 10)]

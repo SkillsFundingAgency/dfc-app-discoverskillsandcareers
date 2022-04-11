@@ -17,8 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite
         //public string DysacContentCollectionId => Configuration["Configuration:CosmosDbConnections:DysacContent:CollectionId"];
         //public string DysacAssessmentCollectionId => Configuration["Configuration:CosmosDbConnections:DysacAssessment:CollectionId"];
         //public string SessionStateCollectionId => Configuration["Configuration:CosmosDbConnections:SessionState:CollectionId"];
-        //public string DYSACApiBaseUrl => Configuration["DYSACApi:BaseUrl"];
-        public string DYSACApiBaseUrl = "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers";
+        public string DYSACApiBaseUrl => Configuration["DYSACApi:BaseUrl"];
         public bool PipelineRun => Environment.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI") == "https://sfa-gov-uk.visualstudio.com/";
     }
 }
