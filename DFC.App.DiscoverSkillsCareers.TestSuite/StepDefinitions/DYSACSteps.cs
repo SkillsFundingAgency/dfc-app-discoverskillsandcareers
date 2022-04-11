@@ -420,7 +420,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"the Your results page What you told us section displays the text ""(.*)""")]
         public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheText(string resultStatement)
         {
-            NUnit.Framework.Assert.True(_yourResultsPage.GetYourResultStatement(resultStatement), "Result statement is incorrect");
+            NUnit.Framework.Assert.True(_yourResultsPage.GetYourResultStatement(resultStatement), "What you told us trait(s) incorrect");
         }
 
         [Then(@"the following job categories with their corresponding number of answer more questions are displayed")]
