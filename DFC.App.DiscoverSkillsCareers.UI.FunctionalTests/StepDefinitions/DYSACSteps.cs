@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects;
+using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private readonly EmailAddressPage _emailAddressPage;
         private readonly CheckYourEmailPage _checkYourEmailPage; 
         private readonly YourResultsPage _yourResultsPage; 
+        private readonly AssessmentCompletePage _assessmentCompletePage; 
         private string _theAnswerOption;
         private string dateOnPage;
         private string _phoneNumber;
@@ -37,6 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _emailAddressPage = new EmailAddressPage(_scenarioContext);
             _checkYourEmailPage = new CheckYourEmailPage(_scenarioContext);
             _yourResultsPage = new YourResultsPage(_scenarioContext);
+            _assessmentCompletePage = new AssessmentCompletePage(_scenarioContext);
         }
 
         [Given]
@@ -404,6 +407,28 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             IEnumerable<JobCategories> jobCategoriesAndNumbers = table.CreateSet<JobCategories>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategoriesAndNumbers), "The number of answer * more questions for the job categories are not correct.");
+        }
+
+        [Given(@"I provide the following answers to the resultant questions")]
+        public void GivenIProvideTheFollowingAnswersToTheResultantQuestions(Table table)
+        {
+            IEnumerable<AnswersShowThat> answers = table.CreateSet<AnswersShowThat>().ToList();
+            _yourResultsPage.AnswerQuestions(answers);
+            _assessmentCompletePage.ClickSeeResults();
+        }
+
+        [Then(@"the Your results page What you told us section displays the text ""(.*)""")]
+        public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheText(string resultStatement)
+        {
+            NUnit.Framework.Assert.True(_yourResultsPage.GetYourResultStatement(resultStatement), "What you told us trait(s) incorrect");
+        }
+
+        [Then(@"the following job categories with their corresponding number of answer more questions are displayed")]
+        public void ThenTheFollowingJobCategoriesWithTheirCorrespondingNumberOfAnswerMoreQuestionsAreDisplayed(Table table)
+        {
+            _yourResultsPage.ClickSeeMatches();
+            IEnumerable<JobCategories> jobCategories = table.CreateSet<JobCategories>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategories), "Job categories and or number for answer * more questions incorrect.");
         }
     }
 }
