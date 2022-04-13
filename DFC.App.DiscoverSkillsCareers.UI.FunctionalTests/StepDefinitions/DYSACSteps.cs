@@ -28,6 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private string _phoneNumber;
         private string _percentCompleted;
         private string _theEmailAddress;
+        IEnumerable<Traits> expectedTraits;
 
         public DYSACSteps(ScenarioContext scenarioContext)
         {
@@ -417,10 +418,28 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _assessmentCompletePage.ClickSeeResults();
         }
 
-        [Then(@"the Your results page What you told us section displays the text ""(.*)""")]
-        public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheText(string resultStatement)
+        [Then(@"the Your results page What you told us section displays the trait text ""(.*)""")]
+        public void ThenTheYourResultsPageWhatYouToldUsSectionDisplaysTheTraitText(string trait)
         {
-            NUnit.Framework.Assert.True(_yourResultsPage.GetYourResultStatement(resultStatement), "What you told us trait(s) incorrect");
+            _yourResultsPage.GetYourResultStatement(trait);
+        }
+
+        [Then(@"the What you told us section of the Your results page displays the following traits")]
+        public void ThenTheWhatYouToldUsSectionOfTheYourResultsPageDisplaysTheFollowingTraits(Table table)
+        {
+            expectedTraits = table.CreateSet<Traits>().ToList();
+
+            switch (_scenarioContext.ScenarioInfo.Title)
+            {
+                case "TC23 - Real user interaction 1":
+                    _yourResultsPage.VerifyTraits(expectedTraits);
+                    break;
+                case "TC24 - Real user interaction 2":
+                    _yourResultsPage.VerifyTraits(expectedTraits);
+                    break;
+            }
+
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyTraits(expectedTraits), "What you told us trait(s) incorrect");
         }
 
         [Then(@"the following job categories with their corresponding number of answer more questions are displayed")]

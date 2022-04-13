@@ -302,7 +302,7 @@ Scenario: TC07 - Current date is displayed on reference code page
 Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 	And I click on Assessment
 	And I select the "Strongly agree" option
-	And I proceed with answering questions up to "7" percent
+	And I proceed with answering questions up to "62" percent
 	And I save progress
 	And I choose the "Get a reference code" option of returning to assessment
 	When I supply phone number "07424037362"
@@ -336,7 +336,7 @@ Scenario: TC10 - Home page reference code field validation
 Scenario: TC11 - Email field validation and population
 	And I click on Assessment
 	And I select the "Strongly agree" option
-	And I proceed with answering questions up to "2" percent
+	And I proceed with answering questions up to "72" percent
 	And I save progress
 	And I choose the "Send me an email with a link" option of returning to assessment
 	When I click the Back link from the "Email address" page
@@ -461,7 +461,7 @@ Scenario: TC15 - Driver-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
+	Then the Your results page What you told us section displays the trait text "you are motivated, set yourself personal goals and are comfortable competing with other people"
 
 @DYSAC
 Scenario: TC16 - Leader-What you told us summary invoking answers
@@ -508,7 +508,7 @@ Scenario: TC16 - Leader-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you like to lead other people and are good at taking control of situations"
+	Then the Your results page What you told us section displays the trait text "you like to lead other people and are good at taking control of situations"
 
 @smoke
 @DYSAC
@@ -556,7 +556,7 @@ Scenario: TC17 - Influencer-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you are sociable and find it easy to understand people"
+	Then the Your results page What you told us section displays the trait text "you are sociable and find it easy to understand people"
 
 @DYSAC
 Scenario: TC18 - Helper-What you told us summary invoking answers
@@ -603,7 +603,7 @@ Scenario: TC18 - Helper-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
+	Then the Your results page What you told us section displays the trait text "you enjoy helping and listening to other people"
 
 @smoke
 @DYSAC
@@ -651,7 +651,7 @@ Scenario: TC19 - Analyst-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you like dealing with complicated problems or working with numbers"
+	Then the Your results page What you told us section displays the trait text "you like dealing with complicated problems or working with numbers"
 
 @DYSAC
 Scenario: TC20 - Creator-What you told us summary invoking answers
@@ -698,7 +698,7 @@ Scenario: TC20 - Creator-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you are a creative person and enjoy coming up with new ways of doing things"
+	Then the Your results page What you told us section displays the trait text "you are a creative person and enjoy coming up with new ways of doing things"
 
 @smoke
 @DYSAC
@@ -746,7 +746,7 @@ Scenario: TC21 - Organiser-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
 	| 95               | I like working with my hands or tools                                | Strongly disagree |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
-	Then the Your results page What you told us section displays the text "you like to plan things and are well organised"
+	Then the Your results page What you told us section displays the trait text "you like to plan things and are well organised"
 
 @DYSAC
 Scenario: TC22 - Doer-What you told us summary invoking answers
@@ -793,7 +793,7 @@ Scenario: TC22 - Doer-What you told us summary invoking answers
 	| 92               | I enjoy getting involved in practical tasks                          | Strongly agree    |
 	| 95               | I like working with my hands or tools                                | Strongly agree    |
 	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
-	Then the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"
+	Then the Your results page What you told us section displays the trait text "you are a practical person and enjoy getting things done"
 
 @smoke
 @DYSAC
@@ -841,9 +841,12 @@ Scenario: TC23 - Real user interaction 1
 	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
 	| 95               | I like working with my hands or tools                                | Agree             |
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
-	Then the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
-	And the Your results page What you told us section displays the text "you like dealing with complicated problems or working with numbers"
-	And the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                         |
+	| you enjoy helping and listening to other people                    |
+	| you like dealing with complicated problems or working with numbers |
+	| you like to plan things and are well organised                     |
+	#And the traits appear in the same order as in the data table above
 	And the following job categories with their corresponding number of answer more questions are displayed
 	| Job category         | Number of answer more questions |
 	| Manufacturing        | 4                               |
@@ -902,9 +905,11 @@ Scenario: TC24 - Real user interaction 2
 	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
 	| 95               | I like working with my hands or tools                                | Agree             |
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
-	Then the Your results page What you told us section displays the text "you are motivated, set yourself personal goals and are comfortable competing with other people"
-	And the Your results page What you told us section displays the text "you enjoy helping and listening to other people"
-	And the Your results page What you told us section displays the text "you are a practical person and enjoy getting things done"
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                                     |
+	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| you enjoy helping and listening to other people                                                |
+	| you are a practical person and enjoy getting things done                                       |
 	And the following job categories with their corresponding number of answer more questions are displayed
 	| Job category                   | Number of answer more questions |
 	| Business and finance           | 3                               |
