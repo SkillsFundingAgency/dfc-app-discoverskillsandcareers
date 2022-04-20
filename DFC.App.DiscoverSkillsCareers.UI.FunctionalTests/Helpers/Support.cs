@@ -1,6 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers

@@ -33,12 +33,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Hooks
 
         public void CloseDriver()
         {
-            if (driver != null)
-            {
-                driver.Close();
-                driver.Quit();
-                driver = null;
-            }
+            //if (driver != null)
+            //{
+            //    driver.Close();
+            //    driver.Quit();
+            //    driver = null;
+            //}
         }
     }
 }

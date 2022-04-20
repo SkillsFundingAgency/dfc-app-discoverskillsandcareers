@@ -144,9 +144,31 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public IList<IWebElement> GetTraitsUI()
         {
-            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".govuk-list.govuk-list--bullet > li"));
+            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".govuk-text > ul:nth-of-type(1) li"));
         }
-        
+
+        public bool AreTheyInSequence(IEnumerable<Traits> traits)
+        {
+            //expected (data table) Traits
+            string[] a = traits.Select(p => p.TraitText).ToArray();
+            //actual (UI) Traits
+            string[] b = Support.GetAllText(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-text > ul:nth-of-type(1) li"));
+
+            return IsSequenceEqual(a, b);
+        }
+
+        public bool IsSequenceEqual(string[] a, string[] b)
+        {
+            if (a.Length != b.Length)
+                return false;
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+
         public bool VerifyTraits(IEnumerable<Traits> traits)
         {
             WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
@@ -176,6 +198,94 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             }
 
             return a_and_b_checks;
+        }
+
+        public void ClickAnswerMoreQuestionsButton(string noOfMoreQuestions, string jobCategories)
+        {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+
+            if (_scenarioContext.GetWebDriver().FindElement(By.ClassName("app-results-load-more")).Displayed)
+            {
+                lnkSeeMatches.Click();
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+            }
+
+            _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategories + "')]//..//following-sibling::a[contains(text(), 'Answer " + noOfMoreQuestions + " more questions')]")).Click();
+        }
+
+        public string GetNumberOfRolesInterestedIn(string jobCategory)
+        {
+            var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[1]")).Text;
+            return text.Replace("roles you might be interested in", string.Empty).Trim();
+        }
+
+        public IList<IWebElement> GetRolesUI(string jobCategory)
+        {
+            return _scenarioContext.GetWebDriver().FindElements(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::ul//a"));
+        }
+
+        public bool VerifyRoles(IEnumerable<JobCategoryRoles> roles, string jobCategory)
+        {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+
+            try
+            {
+                do
+                {
+                    WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+                    _scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 3 more profiles")).Click();
+                } while (_scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 3 more profiles")).Displayed);
+            }
+            catch (NoSuchElementException)
+            {
+
+            }
+
+            try
+            {
+                do
+                {
+                    WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+                    _scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 1 more profile")).Click();
+                } while (_scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 1 more profile")).Displayed);
+            }
+            catch (NoSuchElementException)
+            {
+
+            }
+
+            bool a_and_b_checks = false;
+
+            string[] expectedTraits = roles.Select(p => p.JobRoles).ToArray();
+
+            //translate IWebElements into a collection of strings so they can be compared
+            IEnumerable<string> actual = GetRolesUI(jobCategory).Select(i => i.Text);
+
+            //determines, as bool, if items in 1 and 2 are present in the other
+            var traitsVerified = expectedTraits.All(d => actual.Contains(d));
+
+            //B - Check.
+            int noOfActualElements = GetRolesUI(jobCategory).Count;
+            bool optionsEqual = false;
+
+            if (expectedTraits.Length == noOfActualElements)
+            {
+                optionsEqual = true;
+            }
+
+            if (traitsVerified == true && optionsEqual == true)
+            {
+                a_and_b_checks = true;
+            }
+
+            return a_and_b_checks;
+        }
+
+        public void GoBackAnswering()
+        {
+            string url = _scenarioContext.GetWebDriver().Url.Split(".uk")[0].Trim() + ".uk";
+            _scenarioContext.GetWebDriver().Url = url;
+            //_scenarioContext.GetWebDriver().Navigate();
         }
     }
 }

@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects;
 using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
+using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,15 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private readonly EmailAddressPage _emailAddressPage;
         private readonly CheckYourEmailPage _checkYourEmailPage; 
         private readonly YourResultsPage _yourResultsPage; 
-        private readonly AssessmentCompletePage _assessmentCompletePage; 
+        private readonly AssessmentCompletePage _assessmentCompletePage;
+        private readonly YesNoQuestionsPage _yesNoQuestionsPage;
         private string _theAnswerOption;
         private string dateOnPage;
         private string _phoneNumber;
         private string _percentCompleted;
         private string _theEmailAddress;
+        private string _answerMoreJobCategory;
+        IEnumerable<AnswersShowThat> _answers;
         IEnumerable<Traits> expectedTraits;
 
         public DYSACSteps(ScenarioContext scenarioContext)
@@ -41,6 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _checkYourEmailPage = new CheckYourEmailPage(_scenarioContext);
             _yourResultsPage = new YourResultsPage(_scenarioContext);
             _assessmentCompletePage = new AssessmentCompletePage(_scenarioContext);
+            _yesNoQuestionsPage = new YesNoQuestionsPage(_scenarioContext);
         }
 
         [Given]
@@ -66,6 +71,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void WhenISelectStronglyAgreeOption(string selectedOption)
         {
             _dysacPage.SelectAnswer();
+        }
+
+        [When(@"I select ""(.*)"" answer and proceed")]
+        [When(@"I select ""(.*)"" answer and proceed to the next question")]
+        public void WhenISelectAnswerAndProceedToTheNextQuestion(string answerOption)
+        {
+            _yesNoQuestionsPage.ClickAnswerRadioButton(answerOption);
+            _yesNoQuestionsPage.ClickNext();
         }
 
         [When(@"I click Next")]
@@ -413,8 +426,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Given(@"I provide the following answers to the resultant questions")]
         public void GivenIProvideTheFollowingAnswersToTheResultantQuestions(Table table)
         {
-            IEnumerable<AnswersShowThat> answers = table.CreateSet<AnswersShowThat>().ToList();
-            _yourResultsPage.AnswerQuestions(answers);
+            _answers = table.CreateSet<AnswersShowThat>().ToList();
+            _yourResultsPage.AnswerQuestions(_answers);
             _assessmentCompletePage.ClickSeeResults();
         }
 
@@ -442,6 +455,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyTraits(expectedTraits), "What you told us trait(s) incorrect");
         }
 
+        [Then(@"the traits appear in the same order as in the data table above")]
+        public void ThenTheTraitsAppearInTheSameOrderAsInTheDataTableAbove()
+        {
+            NUnit.Framework.Assert.True(_yourResultsPage.AreTheyInSequence(expectedTraits), "Trait(s) are not in the expected sequence");
+        }
+
         [Then(@"the following job categories with their corresponding number of answer more questions are displayed")]
         public void ThenTheFollowingJobCategoriesWithTheirCorrespondingNumberOfAnswerMoreQuestionsAreDisplayed(Table table)
         {
@@ -449,5 +468,41 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             IEnumerable<JobCategories> jobCategories = table.CreateSet<JobCategories>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategories), "Job categories and or number for answer * more questions incorrect.");
         }
+
+        [When(@"I click the Answer ""(.*)"" more questions button for ""(.*)""")]
+        public void WhenIClickTheAnswerMoreQuestionsButtonFor(string numberOfQuestions, string jobCategory)
+        {
+            _answerMoreJobCategory = jobCategory;
+            _yourResultsPage.ClickAnswerMoreQuestionsButton(numberOfQuestions, jobCategory);
+        }
+
+        [When(@"I go back and click the Answer ""(.*)"" more questions button for ""(.*)""")]
+        public void WhenIGoBackAndClickTheAnswerMoreQuestionsButtonFor(string numberOfQuestions, string jobCategory)
+        {
+            _yourResultsPage.GoBackAnswering();
+            _dysacPage.ClickStartAssessment();
+            _yourResultsPage.AnswerQuestions(_answers);
+            //_yourResultsPage.ClickAnswerMoreQuestionsButton(numberOfQuestions, jobCategory);
+        }
+
+        [Then(@"the following question is displayed; ""(.*)""")]
+        public void ThenTheFollowingQuestionIsDisplayed(string question)
+        {
+            NUnit.Framework.Assert.AreEqual(question, _yesNoQuestionsPage.GetYesNoQuestion(), "Yes / No question is wrong.");
+        }
+
+        [Then(@"there are ""(.*)"" roles I might be interested in")]
+        public void ThenThereAreRolesIMightBeInterestedIn(string numberOfRoles)
+        {
+            NUnit.Framework.Assert.AreEqual(numberOfRoles, _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory), "Number of roles stated as interested in are incorrect");
+        }
+
+        [Then(@"I see the following job roles")]
+        public void ThenISeeTheFollowingJobRoles(Table table)
+        {
+            IEnumerable<JobCategoryRoles> jobRoles = table.CreateSet<JobCategoryRoles>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(jobRoles, _answerMoreJobCategory), "Roles are incorrect");
+        }
+
     }
 }

@@ -220,6 +220,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             {
                 _scenarioContext.GetWebDriver().Url = "https://sit-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers";
             }
+            else if (_scenarioContext.GetEnv().DYSACApiBaseUrl.Substring(8, 4) == "beta")
+            {
+                _scenarioContext.GetWebDriver().Url = "https://beta.nationalcareers.service.gov.uk/";
+            }
 
             enterYourReference.SendKeys(referenceCode);
         }
