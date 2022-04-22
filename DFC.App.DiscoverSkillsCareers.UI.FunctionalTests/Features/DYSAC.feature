@@ -984,6 +984,116 @@ Scenario: TC25 - Leader-Driver
 	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
 	When I select "Yes" answer and proceed to the next question
 	Then the following question is displayed; "Are you able to read well?" 
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "19" roles I might be interested in
+	And I see the following job roles
+	| Job roles                         |
+	| Human resources officer           |
+	| Health and safety adviser         |
+	| Estates officer                   |
+	| Office manager                    |
+	| Digital delivery manager          |
+	| Management accountant             |
+	| Travel agency manager             |
+	| Customer services manager         |
+	| Private practice accountant       |
+	| Housing officer                   |
+	| Supply chain manager              |
+	| General practice surveyor         |
+	| Rural surveyor                    |
+	| Facilities manager                |
+	| Civil Service executive officer   |
+	| Planning and development surveyor |
+	| Construction contracts manager    |
+	| Public relations director         |
+	| Security Service personnel        | 
+
+Scenario: TC26 - Leader-Driver-Influencer
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | Strongly agree    |
+	| 7                | I prefer to follow what other people are doing                       | Strongly disagree |
+	| 10               | I like taking responsibility for other people                        | Strongly agree    |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Strongly agree    |
+	| 17               | I think I am a competitive person                                    | Strongly agree    |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Strongly agree    |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly agree    |
+	| 27               | I am good at coming to an agreement with other people                | Strongly agree    |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly agree    |
+	| 32               | I like meeting new people                                            | Strongly agree    |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                                     |
+	| you like to lead other people and are good at taking control of situations                     |
+	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| you are sociable and find it easy to understand people                                         |
+	And the traits appear in the same order as in the data table above
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category | Number of answer more questions |
+	| Managerial   | 4                               |
+	When I click the Answer "4" more questions button for "Managerial"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to read well?" 
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "19" roles I might be interested in
+	And I see the following job roles
+	| Job roles                         |
+	| Human resources officer           |
+	| Health and safety adviser         |
+	| Estates officer                   |
+	| Office manager                    |
+	| Digital delivery manager          |
+	| Management accountant             |
+	| Travel agency manager             |
+	| Customer services manager         |
+	| Private practice accountant       |
+	| Housing officer                   |
+	| Supply chain manager              |
+	| General practice surveyor         |
+	| Rural surveyor                    |
+	| Facilities manager                |
+	| Civil Service executive officer   |
+	| Planning and development surveyor |
+	| Construction contracts manager    |
+	| Public relations director         |
+	| Security Service personnel        |
 
 Scenario: TC27 - Leader-Driver-Influencer-Helper
 	And I click on Assessment
@@ -1074,4 +1184,135 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Construction contracts manager    |
 	| Public relations director         |
 	| Security Service personnel        |
+	#And the job roles appear in the same order as in the data table above
 	When I go back and click the Answer "2" more questions button for "Hospitality and food"
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "19" roles I might be interested in
+	And I see the following job roles
+	| Job roles                    |
+	| Catering manager             |
+	| Counter service assistant    |
+	| Publican                     |
+	| Street food trader           |
+	| Chef                         |
+	| Cake decorator               |
+	| Restaurant manager           |
+	| Kitchen porter               |
+	| Baker                        |
+	| Butcher                      |
+	| Bar person                   |
+	| Hotel porter                 |
+	| School lunchtime supervisor  |
+	| Cruise ship steward          |
+	| Fishmonger                   |
+	| Butler                       |
+	| Barista                      |
+	| Wedding planner              |
+	| Food manufacturing inspector |
+	#And the job roles appear in the same order as in the data table above
+	When I go back and click the Answer "4" more questions button for "Retail and sales"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "28" roles I might be interested in
+	And I see the following job roles
+	| Job roles                            |
+	| Call centre operator                 |
+	| Customer service assistant           |
+	| Shopkeeper                           |
+	| Stock control assistant              |
+	| Art valuer                           |
+	| Pharmacist                           |
+	| Construction plant hire adviser      |
+	| Car rental agent                     |
+	| Butcher                              |
+	| Emergency medical dispatcher         |
+	| Bar person                           |
+	| Pharmacy assistant                   |
+	| Retail manager                       |
+	| Train station worker                 |
+	| Bookmaker                            |
+	| Leisure centre assistant             |
+	| Pharmacy technician                  |
+	| Customer services manager            |
+	| Barista                              |
+	| Shelf filler                         |
+	| Events manager                       |
+	| Airline customer service agent       |
+	| Cabin crew                           |
+	| Airport information assistant        |
+	| Franchise owner                      |
+	| Telephonist                          |
+	| Tourist information centre assistant |
+	| Builders' merchant                   |
+	#And the job roles appear in the same order as in the data table above
+	When I go back and click the Answer "3" more questions button for "Social care"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "48" roles I might be interested in
+	And I see the following job roles
+	| Job roles                                  |
+	| Foster carer                               |
+	| Social worker                              |
+	| Residential support worker                 |
+	| Substance misuse outreach worker           |
+	| Funeral director                           |
+	| Social work assistant                      |
+	| Religious leader                           |
+	| Money adviser                              |
+	| Senior care worker                         |
+	| Nanny                                      |
+	| Nursery worker                             |
+	| Playworker                                 |
+	| Learning mentor                            |
+	| Welfare rights officer                     |
+	| Psychological wellbeing practitioner       |
+	| Education welfare officer                  |
+	| Communication support worker               |
+	| Play therapist                             |
+	| Family support worker                      |
+	| Childminder                                |
+	| Aid worker                                 |
+	| Victim care officer                        |
+	| Palliative care assistant                  |
+	| Patient advice and liaison service officer |
+	| Youth worker                               |
+	| Nursery manager                            |
+	| Care home manager                          |
+	| Psychologist                               |
+	| Psychotherapist                            |
+	| Cognitive behavioural therapist            |
+	| Care home advocate                         |
+	| Horticultural therapist                    |
+	| Forensic psychologist                      |
+	| Family mediator                            |
+	| Occupational therapist                     |
+	| Counsellor                                 |
+	| Child protection officer                   |
+	| Careers adviser                            |
+	| School crossing patrol                     |
+	| School houseparent                         |
+	| Life coach                                 |
+	| Occupational therapy support worker        |
+	| Clinical psychologist                      |
+	| Music therapist                            |
+	| Care worker                                |
+	| Dramatherapist                             |
+	| Care escort                                |
+	| Art therapist                              |
+	#And the job roles appear in the same order as in the data table above

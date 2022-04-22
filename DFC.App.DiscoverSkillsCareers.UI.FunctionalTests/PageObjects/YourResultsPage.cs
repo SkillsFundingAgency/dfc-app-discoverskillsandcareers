@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using TechTalk.SpecFlow;
 
 namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
@@ -157,6 +158,19 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             return IsSequenceEqual(a, b);
         }
 
+        public bool AreJobRolesInSequence(IEnumerable<JobCategoryRoles> traits, string jobCategory)
+        {
+            //expected (data table) Traits
+            string[] a = traits.Select(p => p.JobRoles).ToArray();
+            //actual (UI) Traits
+            
+            string[] b = Support.GetAllText(_scenarioContext.GetWebDriver(), By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::ul//a"));
+            //WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector(".app-sendresults button"));
+            //Thread.Sleep(250);
+
+            return IsSequenceEqual(a, b);
+        }
+
         public bool IsSequenceEqual(string[] a, string[] b)
         {
             if (a.Length != b.Length)
@@ -204,10 +218,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
 
-            if (_scenarioContext.GetWebDriver().FindElement(By.ClassName("app-results-load-more")).Displayed)
+            try
             {
                 lnkSeeMatches.Click();
                 WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+            }
+            catch (NoSuchElementException)
+            {
+
             }
 
             _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategories + "')]//..//following-sibling::a[contains(text(), 'Answer " + noOfMoreQuestions + " more questions')]")).Click();
@@ -234,6 +252,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
                 {
                     WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
                     _scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 3 more profiles")).Click();
+                    Thread.Sleep(250);
                 } while (_scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 3 more profiles")).Displayed);
             }
             catch (NoSuchElementException)

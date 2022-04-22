@@ -32,7 +32,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private string _theEmailAddress;
         private string _answerMoreJobCategory;
         IEnumerable<AnswersShowThat> _answers;
-        IEnumerable<Traits> expectedTraits;
+        IEnumerable<Traits> _expectedTraits;
+        IEnumerable<JobCategoryRoles> _expectedJobRoles;
 
         public DYSACSteps(ScenarioContext scenarioContext)
         {
@@ -440,25 +441,31 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"the What you told us section of the Your results page displays the following traits")]
         public void ThenTheWhatYouToldUsSectionOfTheYourResultsPageDisplaysTheFollowingTraits(Table table)
         {
-            expectedTraits = table.CreateSet<Traits>().ToList();
+            _expectedTraits = table.CreateSet<Traits>().ToList();
 
             switch (_scenarioContext.ScenarioInfo.Title)
             {
                 case "TC23 - Real user interaction 1":
-                    _yourResultsPage.VerifyTraits(expectedTraits);
+                    _yourResultsPage.VerifyTraits(_expectedTraits);
                     break;
                 case "TC24 - Real user interaction 2":
-                    _yourResultsPage.VerifyTraits(expectedTraits);
+                    _yourResultsPage.VerifyTraits(_expectedTraits);
                     break;
             }
 
-            NUnit.Framework.Assert.True(_yourResultsPage.VerifyTraits(expectedTraits), "What you told us trait(s) incorrect");
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyTraits(_expectedTraits), "What you told us trait(s) incorrect");
         }
 
         [Then(@"the traits appear in the same order as in the data table above")]
         public void ThenTheTraitsAppearInTheSameOrderAsInTheDataTableAbove()
         {
-            NUnit.Framework.Assert.True(_yourResultsPage.AreTheyInSequence(expectedTraits), "Trait(s) are not in the expected sequence");
+            NUnit.Framework.Assert.True(_yourResultsPage.AreTheyInSequence(_expectedTraits), "Trait(s) are not in the expected sequence");
+        }
+
+        [Then(@"the job roles appear in the same order as in the data table above")]
+        public void ThenTheJobRolesAppearInTheSameOrderAsInTheDataTableAbove()
+        {
+            NUnit.Framework.Assert.True(_yourResultsPage.AreJobRolesInSequence(_expectedJobRoles, _answerMoreJobCategory), "Job roles(s) are not in the expected sequence for " + _answerMoreJobCategory + " category.");
         }
 
         [Then(@"the following job categories with their corresponding number of answer more questions are displayed")]
@@ -479,10 +486,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [When(@"I go back and click the Answer ""(.*)"" more questions button for ""(.*)""")]
         public void WhenIGoBackAndClickTheAnswerMoreQuestionsButtonFor(string numberOfQuestions, string jobCategory)
         {
+            _answerMoreJobCategory = jobCategory;
             _yourResultsPage.GoBackAnswering();
             _dysacPage.ClickStartAssessment();
             _yourResultsPage.AnswerQuestions(_answers);
-            //_yourResultsPage.ClickAnswerMoreQuestionsButton(numberOfQuestions, jobCategory);
+            _assessmentCompletePage.ClickSeeResults();
+            _yourResultsPage.ClickAnswerMoreQuestionsButton(numberOfQuestions, jobCategory);
         }
 
         [Then(@"the following question is displayed; ""(.*)""")]
@@ -494,15 +503,15 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"there are ""(.*)"" roles I might be interested in")]
         public void ThenThereAreRolesIMightBeInterestedIn(string numberOfRoles)
         {
+            var xxx = _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory);
             NUnit.Framework.Assert.AreEqual(numberOfRoles, _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory), "Number of roles stated as interested in are incorrect");
         }
 
         [Then(@"I see the following job roles")]
         public void ThenISeeTheFollowingJobRoles(Table table)
         {
-            IEnumerable<JobCategoryRoles> jobRoles = table.CreateSet<JobCategoryRoles>().ToList();
-            NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(jobRoles, _answerMoreJobCategory), "Roles are incorrect");
+            _expectedJobRoles = table.CreateSet<JobCategoryRoles>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(_expectedJobRoles, _answerMoreJobCategory), "Roles are incorrect for " + _answerMoreJobCategory + " job category.");
         }
-
     }
 }
