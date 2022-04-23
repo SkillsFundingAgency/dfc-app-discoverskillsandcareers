@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects;
+using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TechTalk.SpecFlow;
@@ -17,7 +19,6 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Hooks
             _scenarioContext = context;
             _featureContext = fContext;
         }
-
 
         [AfterScenario("webtest", Order = 10)]
         public void TearDownData()

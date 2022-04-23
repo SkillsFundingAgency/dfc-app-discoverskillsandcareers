@@ -53,6 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void GivenILoadTheDYSACPage()
         {
             _scenarioContext.GetWebDriver().Navigate().GoToUrl(_scenarioContext.GetEnv().DYSACApiBaseUrl);
+            _dysacPage.AcceptAllCookies();
         }
 
         [Given(@"I click on Assessment")]
@@ -503,8 +504,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"there are ""(.*)"" roles I might be interested in")]
         public void ThenThereAreRolesIMightBeInterestedIn(string numberOfRoles)
         {
-            var xxx = _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory);
-            NUnit.Framework.Assert.AreEqual(numberOfRoles, _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory), "Number of roles stated as interested in are incorrect");
+            NUnit.Framework.Assert.AreEqual(numberOfRoles, _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory), "Number of roles stated as interested in for " + _answerMoreJobCategory  + " are incorrect.");
         }
 
         [Then(@"I see the following job roles")]
@@ -512,6 +512,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             _expectedJobRoles = table.CreateSet<JobCategoryRoles>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(_expectedJobRoles, _answerMoreJobCategory), "Roles are incorrect for " + _answerMoreJobCategory + " job category.");
+        }
+
+        [Then(@"the following message is displayed; ""(.*)""")]
+        public void ThenTheFollowingMessageIsDisplayed(string noCareersMessage)
+        {
+            NUnit.Framework.Assert.AreEqual(noCareersMessage, _yourResultsPage.GetNoCareersMessage(_answerMoreJobCategory), "Roles you might be interested in are displayed; unexpectedly.");
         }
     }
 }

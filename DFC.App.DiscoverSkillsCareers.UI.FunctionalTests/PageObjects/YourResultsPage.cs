@@ -234,7 +234,21 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public string GetNumberOfRolesInterestedIn(string jobCategory)
         {
             var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[1]")).Text;
-            return text.Replace("roles you might be interested in", string.Empty).Trim();
+
+            if (text.Contains("roles"))
+            {
+                return text.Replace("roles you might be interested in", string.Empty).Trim();
+            }
+            else
+            {
+                return text.Replace("role you might be interested in", string.Empty).Trim();
+            }
+        }
+
+        public string GetNoCareersMessage(string jobCategory)
+        {
+            var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[2]//span")).Text;
+            return text.Trim();
         }
 
         public IList<IWebElement> GetRolesUI(string jobCategory)
@@ -251,24 +265,15 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
                 do
                 {
                     WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
-                    _scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 3 more profiles")).Click();
+                    _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".show-more > a:nth-of-type(1)")).Click();
                     Thread.Sleep(250);
-                } while (_scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 3 more profiles")).Displayed);
+                } while (_scenarioContext.GetWebDriver().FindElement(By.CssSelector(".show-more > a:nth-of-type(1)")).Displayed);
             }
             catch (NoSuchElementException)
             {
 
             }
-
-            try
-            {
-                do
-                {
-                    WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
-                    _scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 1 more profile")).Click();
-                } while (_scenarioContext.GetWebDriver().FindElement(By.LinkText("Show 1 more profile")).Displayed);
-            }
-            catch (NoSuchElementException)
+            catch (ElementNotInteractableException)
             {
 
             }
@@ -304,7 +309,6 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             string url = _scenarioContext.GetWebDriver().Url.Split(".uk")[0].Trim() + ".uk";
             _scenarioContext.GetWebDriver().Url = url;
-            //_scenarioContext.GetWebDriver().Navigate();
         }
     }
 }

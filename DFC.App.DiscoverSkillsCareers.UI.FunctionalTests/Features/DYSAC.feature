@@ -1316,3 +1316,450 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Care escort                                |
 	| Art therapist                              |
 	#And the job roles appear in the same order as in the data table above
+
+Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | Strongly agree    |
+	| 7                | I prefer to follow what other people are doing                       | Strongly disagree |
+	| 10               | I like taking responsibility for other people                        | Strongly agree    |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Strongly agree    |
+	| 17               | I think I am a competitive person                                    | Strongly agree    |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Strongly agree    |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly agree    |
+	| 27               | I am good at coming to an agreement with other people                | Strongly agree    |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly agree    |
+	| 32               | I like meeting new people                                            | Strongly agree    |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly agree    |
+	| 40               | I enjoy working with other people around me                          | Strongly agree    |
+	| 42               | I want to make things better for people                              | Strongly agree    |
+	| 45               | I will get involved if I think I can help                            | Strongly agree    |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly agree    |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly agree    |
+	| 77               | I plan my day so I can use my time best                              | Strongly agree    |
+	| 80               | I like doing things in a careful order                               | Strongly agree    |
+	| 82               | I like to follow rules and processes                                 | Strongly agree    |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | Strongly agree    |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly agree    |
+	| 95               | I like working with my hands or tools                                | Strongly agree    |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                                     |
+	| you like to lead other people and are good at taking control of situations                     |
+	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| you are sociable and find it easy to understand people                                         |
+	| you enjoy helping and listening to other people                                                |
+	And the traits appear in the same order as in the data table above
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category                   | Number of answer more questions |
+	| Business and finance           | 3                               |
+	| Emergency and uniform services | 3                               |
+	| Law and legal                  | 3                               |
+	| Teaching and education         | 3                               |
+	| Travel and tourism             | 2                               |
+	| Animal care                    | 2                               |
+	| Delivery and storage           | 2                               |
+	| Healthcare                     | 4                               |
+	| Home services                  | 3                               |
+	| Managerial                     | 4                               |
+	When I click the Answer "3" more questions button for "Business and finance"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you confident solving maths problems using statistics, algebra and arithmetic?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to read well?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "1" roles I might be interested in
+	And I see the following job roles
+	| Job roles       |
+	| Chief executive |
+	When I go back and click the Answer "3" more questions button for "Emergency and uniform services"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then the following message is displayed; "No careers were found that might interest you based on your responses."
+	When I go back and click the Answer "3" more questions button for "Law and legal"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the following job roles
+	| Job roles           |
+	| Court legal adviser |
+	| Proofreader         |
+	When I go back and click the Answer "3" more questions button for "Teaching and education"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "1" roles I might be interested in
+	And I see the following job roles
+	| Job roles            |
+	| Education technician |
+	When I go back and click the Answer "2" more questions button for "Travel and tourism"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the following job roles
+	| Job roles      |
+	| Airline pilot  |
+	| Port operative |
+	When I go back and click the Answer "2" more questions button for "Animal care"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the following job roles
+	| Job roles          |
+	| Countryside ranger |
+	| Biologist          |
+	When I go back and click the Answer "2" more questions button for "Delivery and storage"
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "16" roles I might be interested in
+	And I see the following job roles
+	| Job roles                  |
+	| Order picker               |
+	| Warehouse worker           |
+	| Postperson                 |
+	| Shelf filler               |
+	| Import-export clerk        |
+	| Road transport manager     |
+	| Delivery van driver        |
+	| Tanker driver              |
+	| Packer                     |
+	| Large goods vehicle driver |
+	| Food packaging operative   |
+	| Forklift driver            |
+	| Airport baggage handler    |
+	| Stock control assistant    |
+	| Builders' merchant         |
+	| Port operative             |
+	When I go back and click the Answer "4" more questions button for "Healthcare"
+	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "5" roles I might be interested in
+	And I see the following job roles
+	| Job roles         |
+	| Radiographer      |
+	| Dentist           |
+	| Medical herbalist |
+	| Naturopath        |
+	| Homeopath         |
+	When I go back and click the Answer "3" more questions button for "Home services"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "4" roles I might be interested in
+	And I see the following job roles
+	| Job roles                         |
+	| Window cleaner                    |
+	| Industrial cleaner                |
+	| Caretaker                         |
+	| British Sign Language interpreter |
+	When I go back and click the Answer "4" more questions button for "Managerial"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to read well?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "1" roles I might be interested in
+	And I see the following job roles
+	| Job roles           |
+	| Technical architect |
+
+Scenario: TC29 - Leader-Influencer-Analyst-Organiser
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | Strongly agree    |
+	| 7                | I prefer to follow what other people are doing                       | Strongly disagree |
+	| 10               | I like taking responsibility for other people                        | Strongly agree    |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly disagree |
+	| 15               | I like to see things through to the end                              | Strongly disagree |
+	| 17               | I think I am a competitive person                                    | Strongly disagree |
+	| 20               | Doing well in a career motivates me                                  | Strongly disagree |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly agree    |
+	| 27               | I am good at coming to an agreement with other people                | Strongly agree    |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly agree    |
+	| 32               | I like meeting new people                                            | Strongly agree    |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly agree    |
+	| 52               | I like to get to the centre of the issue                             | Strongly agree    |
+	| 55               | I like working with facts                                            | Strongly agree    |
+	| 57               | I like working with numbers                                          | Strongly agree    |
+	| 60               | I enjoy learning new things                                          | Strongly agree    |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly disagree |
+	| 65               | I try to think differently to others                                 | Strongly disagree |
+	| 67               | I like to use my imagination to create new things                    | Strongly disagree |
+	| 70               | I like to try new things                                             | Strongly disagree |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly agree    |
+	| 77               | I plan my day so I can use my time best                              | Strongly agree    |
+	| 80               | I like doing things in a careful order                               | Strongly agree    |
+	| 82               | I like to follow rules and processes                                 | Strongly agree    |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly disagree |
+	| 90               | I like to get involved in making things                              | Strongly disagree |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly disagree |
+	| 95               | I like working with my hands or tools                                | Strongly disagree |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly agree    |
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                 |
+	| you like to lead other people and are good at taking control of situations |
+	| you are sociable and find it easy to understand people                     |
+	| you like dealing with complicated problems or working with numbers         |
+	| you like to plan things and are well organised                             |
+	And the traits appear in the same order as in the data table above
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category        | Number of answer more questions |
+	| Government services | 3                               |
+	| Administration      | 3                               |
+	When I click the Answer "3" more questions button for "Government services"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the following job roles
+	| Job roles                  |
+	| Coastguard                 |
+	| Probation services officer |
+	When I go back and click the Answer "3" more questions button for "Administration"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to read well?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then the following message is displayed; "No careers were found that might interest you based on your responses."
+
+Scenario: TC30 - Driver-Helper-Creator-Doer
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
+	| 2                | I make decisions quickly                                             | Strongly disagree |
+	| 5                | I like to take control of situations                                 | Strongly disagree |
+	| 7                | I prefer to follow what other people are doing                       | Strongly agree    |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Strongly agree    |
+	| 17               | I think I am a competitive person                                    | Strongly agree    |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Strongly agree    |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly disagree |
+	| 27               | I am good at coming to an agreement with other people                | Strongly disagree |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly disagree |
+	| 32               | I like meeting new people                                            | Strongly disagree |
+	| 35               | I find it hard to understand other people's point of view            | Strongly agree    |
+	| 37               | I like to help other people                                          | Strongly agree    |
+	| 40               | I enjoy working with other people around me                          | Strongly agree    |
+	| 42               | I want to make things better for people                              | Strongly agree    |
+	| 45               | I will get involved if I think I can help                            | Strongly agree    |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly agree    |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly agree    |
+	| 65               | I try to think differently to others                                 | Strongly agree    |
+	| 67               | I like to use my imagination to create new things                    | Strongly agree    |
+	| 70               | I like to try new things                                             | Strongly agree    |
+	| 72               | I enjoy creative activities                                          | Strongly agree    |
+	| 75               | I like to focus on details                                           | Strongly disagree |
+	| 77               | I plan my day so I can use my time best                              | Strongly disagree |
+	| 80               | I like doing things in a careful order                               | Strongly disagree |
+	| 82               | I like to follow rules and processes                                 | Strongly disagree |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly agree    |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | Strongly agree    |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly agree    |
+	| 95               | I like working with my hands or tools                                | Strongly agree    |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                                     |
+	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| you enjoy helping and listening to other people                                                |
+	| you are a creative person and enjoy coming up with new ways of doing things                    |
+	| you are a practical person and enjoy getting things done                                       |
+	And the traits appear in the same order as in the data table above
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category                | Number of answer more questions |
+	| Animal care                 | 2                               |
+	| Healthcare                  | 4                               |
+	| Beauty and wellbeing        | 2                               |
+	| Engineering and maintenance | 5                               |
+	| Social care                 | 3                               |
+	| Environment and land        | 4                               |
+	When I click the Answer "2" more questions button for "Animal care"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "20" roles I might be interested in
+	And I see the following job roles
+	| Job roles                  |
+	| Zookeeper                  |
+	| Animal care worker         |
+	| Kennel worker              |
+	| RSPCA inspector            |
+	| Horse groom                |
+	| Assistance dog trainer     |
+	| Gamekeeper                 |
+	| Racehorse trainer          |
+	| Jockey                     |
+	| Fish farmer                |
+	| Dog groomer                |
+	| Veterinary physiotherapist |
+	| Veterinary nurse           |
+	| Fishing boat deckhand      |
+	| Vet                        |
+	| Agricultural inspector     |
+	| Horse riding instructor    |
+	| Pet behaviour consultant   |
+	| Pet shop assistant         |
+	| Dog handler                |
+	When I go back and click the Answer "4" more questions button for "Healthcare"
+	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "4" roles I might be interested in
+	And I see the following job roles
+	| Job roles                   |
+	| Surgeon                     |
+	| Cosmetic surgeon            |
+	| Critical care technologist  |
+	| Sterile services technician |
+	When I go back and click the Answer "2" more questions button for "Beauty and wellbeing"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then the following message is displayed; "No careers were found that might interest you based on your responses."
+	When I go back and click the Answer "5" more questions button for "Engineering and maintenance"
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at using words to describe ideas?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to do detailed, intricate work with your hands?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the following job roles
+	| Job roles   |
+	| Model maker |
+	| Electrician |
+	When I go back and click the Answer "3" more questions button for "Social care"
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "6" roles I might be interested in
+	And I see the following job roles
+	| Job roles                         |
+	| Youth offending team officer      |
+	| British Sign Language interpreter |
+	| Housing officer                   |
+	| Accommodation warden              |
+	| Probation officer                 |
+	| Equalities officer                |
+	When I go back and click the Answer "4" more questions button for "Environment and land"
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to read well?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "5" roles I might be interested in
+	And I see the following job roles
+	| Job roles                                                |
+	| Meat hygiene inspector                                   |
+	| Landscape architect                                      |
+	| Agricultural inspector                                   |
+	| Corporate responsibility and sustainability practitioner |
+	| Food manufacturing inspector                             |
