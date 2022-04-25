@@ -6359,6 +6359,1815 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
+        [Xunit.SkippableFactAttribute(DisplayName="TC31 - Analyst-Creator-Organiser-Doer")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC31 - Analyst-Creator-Organiser-Doer")]
+        public void TC31_Analyst_Creator_Organiser_Doer()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC31 - Analyst-Creator-Organiser-Doer", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 1767
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 1768
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table58 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table58.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly disagree"});
+                table58.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly agree"});
+                table58.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly disagree"});
+#line 1769
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table58, "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table59 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Trait text"});
+                table59.AddRow(new string[] {
+                            "you like dealing with complicated problems or working with numbers"});
+                table59.AddRow(new string[] {
+                            "you are a creative person and enjoy coming up with new ways of doing things"});
+                table59.AddRow(new string[] {
+                            "you like to plan things and are well organised"});
+                table59.AddRow(new string[] {
+                            "you are a practical person and enjoy getting things done"});
+#line 1811
+ testRunner.Then("the What you told us section of the Your results page displays the following trai" +
+                        "ts", ((string)(null)), table59, "Then ");
+#line hidden
+#line 1817
+ testRunner.And("the traits appear in the same order as in the data table above", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table60 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table60.AddRow(new string[] {
+                            "Creative and media",
+                            "5"});
+                table60.AddRow(new string[] {
+                            "Construction and trades",
+                            "4"});
+                table60.AddRow(new string[] {
+                            "Delivery and storage",
+                            "2"});
+                table60.AddRow(new string[] {
+                            "Home services",
+                            "3"});
+                table60.AddRow(new string[] {
+                            "Transport",
+                            "3"});
+                table60.AddRow(new string[] {
+                            "Computing, technology and digital",
+                            "3"});
+                table60.AddRow(new string[] {
+                            "Government services",
+                            "3"});
+                table60.AddRow(new string[] {
+                            "Engineering and maintenance",
+                            "5"});
+                table60.AddRow(new string[] {
+                            "Administration",
+                            "3"});
+                table60.AddRow(new string[] {
+                            "Environment and land",
+                            "4"});
+#line 1818
+ testRunner.And("the following job categories with their corresponding number of answer more quest" +
+                        "ions are displayed", ((string)(null)), table60, "And ");
+#line hidden
+#line 1830
+ testRunner.When("I click the Answer \"5\" more questions button for \"Creative and media\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1831
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1832
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1833
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1834
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1835
+ testRunner.Then("the following question is displayed; \"Are you good at thinking of new ways to do " +
+                        "something without being told?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1836
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1837
+ testRunner.Then("the following question is displayed; \"Are you comfortable doing a variety of task" +
+                        "s in a job and open to things changing?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1838
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1839
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1840
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1841
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1842
+ testRunner.Then("there are \"7\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table61 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table61.AddRow(new string[] {
+                            "Newspaper journalist"});
+                table61.AddRow(new string[] {
+                            "Film critic"});
+                table61.AddRow(new string[] {
+                            "Broadcast journalist"});
+                table61.AddRow(new string[] {
+                            "Magazine journalist"});
+                table61.AddRow(new string[] {
+                            "Media researcher"});
+                table61.AddRow(new string[] {
+                            "Vlogger"});
+                table61.AddRow(new string[] {
+                            "Market research data analyst"});
+#line 1843
+ testRunner.And("I see the following job roles", ((string)(null)), table61, "And ");
+#line hidden
+#line 1852
+ testRunner.When("I go back and click the Answer \"4\" more questions button for \"Construction and tr" +
+                        "ades\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1853
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1854
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1855
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1856
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1857
+ testRunner.Then("the following question is displayed; \"Are you good at thinking of new ways to do " +
+                        "something without being told?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1858
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1859
+ testRunner.Then("the following question is displayed; \"Are you able to do detailed, intricate work" +
+                        " with your hands?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1860
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1861
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1862
+ testRunner.Then("there are \"8\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table62 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table62.AddRow(new string[] {
+                            "Plasterer"});
+                table62.AddRow(new string[] {
+                            "Scaffolder"});
+                table62.AddRow(new string[] {
+                            "Steeplejack"});
+                table62.AddRow(new string[] {
+                            "Construction labourer"});
+                table62.AddRow(new string[] {
+                            "Steel erector"});
+                table62.AddRow(new string[] {
+                            "Engineering construction craftworker"});
+                table62.AddRow(new string[] {
+                            "Gas mains layer"});
+                table62.AddRow(new string[] {
+                            "Steel fixer"});
+#line 1863
+ testRunner.And("I see the following job roles", ((string)(null)), table62, "And ");
+#line hidden
+#line 1873
+ testRunner.When("I go back and click the Answer \"2\" more questions button for \"Delivery and storag" +
+                        "e\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1874
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1875
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1876
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1877
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1878
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1879
+ testRunner.Then("there are \"4\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table63 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table63.AddRow(new string[] {
+                            "Removals worker"});
+                table63.AddRow(new string[] {
+                            "Motor vehicle parts person"});
+                table63.AddRow(new string[] {
+                            "Supply chain manager"});
+                table63.AddRow(new string[] {
+                            "Warehouse manager"});
+#line 1880
+ testRunner.And("I see the following job roles", ((string)(null)), table63, "And ");
+#line hidden
+#line 1886
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Home services\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1887
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1888
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1889
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1890
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1891
+ testRunner.Then("the following question is displayed; \"Do you think you are good at staying calm u" +
+                        "nder pressure?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1892
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1893
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1894
+ testRunner.Then("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table64 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table64.AddRow(new string[] {
+                            "Domestic energy assessor"});
+#line 1895
+ testRunner.And("I see the following job roles", ((string)(null)), table64, "And ");
+#line hidden
+#line 1898
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Transport\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1899
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1900
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1901
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1902
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1903
+ testRunner.Then("the following question is displayed; \"Do you think you are good at staying calm u" +
+                        "nder pressure?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1904
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1905
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1906
+ testRunner.Then("there are \"3\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table65 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table65.AddRow(new string[] {
+                            "Fishing vessel skipper"});
+                table65.AddRow(new string[] {
+                            "Airline pilot"});
+                table65.AddRow(new string[] {
+                            "Tractor driver"});
+#line 1907
+ testRunner.And("I see the following job roles", ((string)(null)), table65, "And ");
+#line hidden
+#line 1912
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Computing, technolo" +
+                        "gy and digital\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1913
+ testRunner.Then("the following question is displayed; \"Are you comfortable analysing information t" +
+                        "o solve problems?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1914
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1915
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1916
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1917
+ testRunner.Then("the following question is displayed; \"Are you able to carry on with a task even i" +
+                        "f it starts to get difficult?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1918
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1919
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1920
+ testRunner.Then("there are \"8\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table66 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table66.AddRow(new string[] {
+                            "User researcher"});
+                table66.AddRow(new string[] {
+                            "Digital product owner"});
+                table66.AddRow(new string[] {
+                            "Systems analyst"});
+                table66.AddRow(new string[] {
+                            "Cartographer"});
+                table66.AddRow(new string[] {
+                            "Information scientist"});
+                table66.AddRow(new string[] {
+                            "IT support technician"});
+                table66.AddRow(new string[] {
+                            "Network engineer"});
+                table66.AddRow(new string[] {
+                            "Digital delivery manager"});
+#line 1921
+ testRunner.And("I see the following job roles", ((string)(null)), table66, "And ");
+#line hidden
+#line 1931
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Government services" +
+                        "\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1932
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1933
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1934
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1935
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1936
+ testRunner.Then("the following question is displayed; \"Do you think you are good at staying calm u" +
+                        "nder pressure?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1937
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1938
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1939
+ testRunner.Then("there are \"5\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table67 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table67.AddRow(new string[] {
+                            "MP"});
+                table67.AddRow(new string[] {
+                            "Intelligence analyst"});
+                table67.AddRow(new string[] {
+                            "Civil Service administrative officer"});
+                table67.AddRow(new string[] {
+                            "Criminologist"});
+                table67.AddRow(new string[] {
+                            "Museum attendant"});
+#line 1940
+ testRunner.And("I see the following job roles", ((string)(null)), table67, "And ");
+#line hidden
+#line 1947
+ testRunner.When("I go back and click the Answer \"5\" more questions button for \"Engineering and mai" +
+                        "ntenance\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1948
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1949
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1950
+ testRunner.Then("the following question is displayed; \"Are you comfortable analysing information t" +
+                        "o solve problems?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1951
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1952
+ testRunner.Then("the following question is displayed; \"Do you think you are good at using words to" +
+                        " describe ideas?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1953
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1954
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1955
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1956
+ testRunner.Then("the following question is displayed; \"Are you able to do detailed, intricate work" +
+                        " with your hands?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1957
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1958
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1959
+ testRunner.Then("there are \"6\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table68 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table68.AddRow(new string[] {
+                            "Forklift truck engineer"});
+                table68.AddRow(new string[] {
+                            "Shoe repairer"});
+                table68.AddRow(new string[] {
+                            "Motor mechanic"});
+                table68.AddRow(new string[] {
+                            "Maintenance fitter"});
+                table68.AddRow(new string[] {
+                            "Aerospace engineering technician"});
+                table68.AddRow(new string[] {
+                            "Plumber"});
+#line 1960
+ testRunner.And("I see the following job roles", ((string)(null)), table68, "And ");
+#line hidden
+#line 1968
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Administration\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1969
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1970
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1971
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1972
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1973
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1974
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1975
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1976
+ testRunner.Then("there are \"3\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table69 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table69.AddRow(new string[] {
+                            "Charity fundraiser"});
+                table69.AddRow(new string[] {
+                            "Post Office customer service assistant"});
+                table69.AddRow(new string[] {
+                            "Sports development officer"});
+#line 1977
+ testRunner.And("I see the following job roles", ((string)(null)), table69, "And ");
+#line hidden
+#line 1982
+ testRunner.When("I go back and click the Answer \"4\" more questions button for \"Environment and lan" +
+                        "d\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1983
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1984
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1985
+ testRunner.Then("the following question is displayed; \"Are you comfortable analysing information t" +
+                        "o solve problems?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1986
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1987
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1988
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1989
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 1990
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1991
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1992
+ testRunner.Then("there are \"7\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table70 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table70.AddRow(new string[] {
+                            "Countryside officer"});
+                table70.AddRow(new string[] {
+                            "Countryside ranger"});
+                table70.AddRow(new string[] {
+                            "Archaeologist"});
+                table70.AddRow(new string[] {
+                            "Climate scientist"});
+                table70.AddRow(new string[] {
+                            "Meteorologist"});
+                table70.AddRow(new string[] {
+                            "Rural surveyor"});
+                table70.AddRow(new string[] {
+                            "Hydrologist"});
+#line 1993
+ testRunner.And("I see the following job roles", ((string)(null)), table70, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC32 - Helper-Analyst-Creator")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC32 - Helper-Analyst-Creator")]
+        public void TC32_Helper_Analyst_Creator()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC32 - Helper-Analyst-Creator", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2003
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2004
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table71 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table71.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly agree"});
+                table71.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly disagree"});
+                table71.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly agree"});
+#line 2005
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table71, "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table72 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Trait text"});
+                table72.AddRow(new string[] {
+                            "you like dealing with complicated problems or working with numbers"});
+                table72.AddRow(new string[] {
+                            "you are a creative person and enjoy coming up with new ways of doing things"});
+#line 2047
+ testRunner.Then("the What you told us section of the Your results page displays the following trai" +
+                        "ts", ((string)(null)), table72, "Then ");
+#line hidden
+#line 2051
+ testRunner.And("the traits appear in the same order as in the data table above", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table73 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table73.AddRow(new string[] {
+                            "Computing, technology and digital",
+                            "3"});
+#line 2052
+ testRunner.And("the following job categories with their corresponding number of answer more quest" +
+                        "ions are displayed", ((string)(null)), table73, "And ");
+#line hidden
+#line 2055
+ testRunner.When("I click the Answer \"3\" more questions button for \"Computing, technology and digit" +
+                        "al\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2056
+ testRunner.Then("the following question is displayed; \"Are you comfortable analysing information t" +
+                        "o solve problems?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2057
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2058
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2059
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2060
+ testRunner.Then("the following question is displayed; \"Are you able to carry on with a task even i" +
+                        "f it starts to get difficult?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2061
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2062
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2063
+ testRunner.Then("there are \"16\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table74 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table74.AddRow(new string[] {
+                            "Test lead"});
+                table74.AddRow(new string[] {
+                            "Technical architect"});
+                table74.AddRow(new string[] {
+                            "Database administrator"});
+                table74.AddRow(new string[] {
+                            "Web content manager"});
+                table74.AddRow(new string[] {
+                            "IT security co-ordinator"});
+                table74.AddRow(new string[] {
+                            "Network manager"});
+                table74.AddRow(new string[] {
+                            "Forensic computer analyst"});
+                table74.AddRow(new string[] {
+                            "Cyber intelligence officer"});
+                table74.AddRow(new string[] {
+                            "Web developer"});
+                table74.AddRow(new string[] {
+                            "Media researcher"});
+                table74.AddRow(new string[] {
+                            "Archivist"});
+                table74.AddRow(new string[] {
+                            "Web designer"});
+                table74.AddRow(new string[] {
+                            "Data scientist"});
+                table74.AddRow(new string[] {
+                            "Operational researcher"});
+                table74.AddRow(new string[] {
+                            "Business analyst"});
+                table74.AddRow(new string[] {
+                            "Robotics engineer"});
+#line 2064
+ testRunner.And("I see the following job roles", ((string)(null)), table74, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC33 - Organiser-Doer")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC33 - Organiser-Doer")]
+        public void TC33_Organiser_Doer()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC33 - Organiser-Doer", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2083
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2084
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table75 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table75.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly disagree"});
+                table75.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly agree"});
+                table75.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly disagree"});
+#line 2085
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table75, "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table76 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Trait text"});
+                table76.AddRow(new string[] {
+                            "you like to plan things and are well organised"});
+                table76.AddRow(new string[] {
+                            "you are a practical person and enjoy getting things done"});
+#line 2127
+ testRunner.Then("the What you told us section of the Your results page displays the following trai" +
+                        "ts", ((string)(null)), table76, "Then ");
+#line hidden
+#line 2131
+ testRunner.And("the traits appear in the same order as in the data table above", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table77 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table77.AddRow(new string[] {
+                            "Delivery and storage",
+                            "2"});
+                table77.AddRow(new string[] {
+                            "Home services",
+                            "3"});
+                table77.AddRow(new string[] {
+                            "Transport",
+                            "3"});
+                table77.AddRow(new string[] {
+                            "Government services",
+                            "3"});
+                table77.AddRow(new string[] {
+                            "Engineering and maintenance",
+                            "5"});
+                table77.AddRow(new string[] {
+                            "Administration",
+                            "3"});
+                table77.AddRow(new string[] {
+                            "Environment and land",
+                            "4"});
+#line 2132
+ testRunner.And("the following job categories with their corresponding number of answer more quest" +
+                        "ions are displayed", ((string)(null)), table77, "And ");
+#line hidden
+#line 2141
+ testRunner.When("I click the Answer \"2\" more questions button for \"Delivery and storage\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2142
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2143
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2144
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2145
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2146
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2147
+ testRunner.Then("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table78 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table78.AddRow(new string[] {
+                            "Roadie"});
+#line 2148
+ testRunner.And("I see the following job roles", ((string)(null)), table78, "And ");
+#line hidden
+#line 2151
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Home services\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2152
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2153
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2154
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2155
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2156
+ testRunner.Then("the following question is displayed; \"Do you think you are good at staying calm u" +
+                        "nder pressure?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2157
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2158
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2159
+ testRunner.Then("the following message is displayed; \"No careers were found that might interest yo" +
+                        "u based on your responses.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2160
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Transport\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2161
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2162
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2163
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2164
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2165
+ testRunner.Then("the following question is displayed; \"Do you think you are good at staying calm u" +
+                        "nder pressure?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2166
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2167
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2168
+ testRunner.Then("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table79 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table79.AddRow(new string[] {
+                            "Transport planner"});
+#line 2169
+ testRunner.And("I see the following job roles", ((string)(null)), table79, "And ");
+#line hidden
+#line 2172
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Government services" +
+                        "\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2173
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2174
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2175
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2176
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2177
+ testRunner.Then("the following question is displayed; \"Do you think you are good at staying calm u" +
+                        "nder pressure?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2178
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2179
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2180
+ testRunner.Then("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table80 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table80.AddRow(new string[] {
+                            "Forensic collision investigator"});
+#line 2181
+ testRunner.And("I see the following job roles", ((string)(null)), table80, "And ");
+#line hidden
+#line 2184
+ testRunner.When("I go back and click the Answer \"5\" more questions button for \"Engineering and mai" +
+                        "ntenance\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2185
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2186
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2187
+ testRunner.Then("the following question is displayed; \"Are you comfortable analysing information t" +
+                        "o solve problems?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2188
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2189
+ testRunner.Then("the following question is displayed; \"Do you think you are good at using words to" +
+                        " describe ideas?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2190
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2191
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2192
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2193
+ testRunner.Then("the following question is displayed; \"Are you able to do detailed, intricate work" +
+                        " with your hands?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2194
+ testRunner.When("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2195
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2196
+ testRunner.Then("there are \"5\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table81 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table81.AddRow(new string[] {
+                            "Smart meter installer"});
+                table81.AddRow(new string[] {
+                            "Lift engineer"});
+                table81.AddRow(new string[] {
+                            "Nuclear technician"});
+                table81.AddRow(new string[] {
+                            "Lighting technician"});
+                table81.AddRow(new string[] {
+                            "Merchant Navy engineering officer"});
+#line 2197
+ testRunner.And("I see the following job roles", ((string)(null)), table81, "And ");
+#line hidden
+#line 2204
+ testRunner.When("I go back and click the Answer \"3\" more questions button for \"Administration\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2205
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2206
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2207
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2208
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2209
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2210
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2211
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2212
+ testRunner.Then("the following message is displayed; \"No careers were found that might interest yo" +
+                        "u based on your responses.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2213
+ testRunner.When("I go back and click the Answer \"4\" more questions button for \"Environment and lan" +
+                        "d\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2214
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2215
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2216
+ testRunner.Then("the following question is displayed; \"Are you comfortable analysing information t" +
+                        "o solve problems?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2217
+ testRunner.When("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2218
+ testRunner.Then("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2219
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2220
+ testRunner.Then("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2221
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2222
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2223
+ testRunner.Then("there are \"7\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table82 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table82.AddRow(new string[] {
+                            "Research scientist"});
+                table82.AddRow(new string[] {
+                            "Agricultural engineer"});
+                table82.AddRow(new string[] {
+                            "Agricultural engineering technician"});
+                table82.AddRow(new string[] {
+                            "Nuclear engineer"});
+                table82.AddRow(new string[] {
+                            "Zoologist"});
+                table82.AddRow(new string[] {
+                            "Land surveyor"});
+                table82.AddRow(new string[] {
+                            "Cartographer"});
+#line 2224
+ testRunner.And("I see the following job roles", ((string)(null)), table82, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC34 - Creator-Organiser-Doer")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC34 - Creator-Organiser-Doer")]
+        public void TC34_Creator_Organiser_Doer()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC34 - Creator-Organiser-Doer", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2234
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2235
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table83 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Percent progress",
+                            "Question",
+                            "Answer"});
+                table83.AddRow(new string[] {
+                            "0",
+                            "I am comfortable telling people what they need to do",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "2",
+                            "I make decisions quickly",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "5",
+                            "I like to take control of situations",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "7",
+                            "I prefer to follow what other people are doing",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "10",
+                            "I like taking responsibility for other people",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "12",
+                            "I set myself targets when I have things to do, and usually meet them",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "15",
+                            "I like to see things through to the end",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "17",
+                            "I think I am a competitive person",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "20",
+                            "Doing well in a career motivates me",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "22",
+                            "I set myself goals in life",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "25",
+                            "I am comfortable talking people around to my way of thinking",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "27",
+                            "I am good at coming to an agreement with other people",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "30",
+                            "I am comfortable talking in front of a group of people",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "32",
+                            "I like meeting new people",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "35",
+                            "I find it hard to understand other people\'s point of view",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "37",
+                            "I like to help other people",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "40",
+                            "I enjoy working with other people around me",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "42",
+                            "I want to make things better for people",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "45",
+                            "I will get involved if I think I can help",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "47",
+                            "I am comfortable hearing other people\'s problems",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "50",
+                            "I like to work out complicated things",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "52",
+                            "I like to get to the centre of the issue",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "55",
+                            "I like working with facts",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "57",
+                            "I like working with numbers",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "60",
+                            "I enjoy learning new things",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "62",
+                            "I enjoy coming up with new ways of doing things",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "65",
+                            "I try to think differently to others",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "67",
+                            "I like to use my imagination to create new things",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "70",
+                            "I like to try new things",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "72",
+                            "I enjoy creative activities",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "75",
+                            "I like to focus on details",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "77",
+                            "I plan my day so I can use my time best",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "80",
+                            "I like doing things in a careful order",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "82",
+                            "I like to follow rules and processes",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "85",
+                            "I feel restricted when I have to follow a routine",
+                            "Strongly disagree"});
+                table83.AddRow(new string[] {
+                            "87",
+                            "I like to see the results of the work I do",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "90",
+                            "I like to get involved in making things",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "92",
+                            "I enjoy getting involved in practical tasks",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "95",
+                            "I like working with my hands or tools",
+                            "Strongly agree"});
+                table83.AddRow(new string[] {
+                            "97",
+                            "I enjoy planning a task more than actually doing it",
+                            "Strongly disagree"});
+#line 2236
+ testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table83, "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table84 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Trait text"});
+                table84.AddRow(new string[] {
+                            "you are a creative person and enjoy coming up with new ways of doing things"});
+                table84.AddRow(new string[] {
+                            "you like to plan things and are well organised"});
+                table84.AddRow(new string[] {
+                            "you are a practical person and enjoy getting things done"});
+#line 2278
+ testRunner.Then("the What you told us section of the Your results page displays the following trai" +
+                        "ts", ((string)(null)), table84, "Then ");
+#line hidden
+#line 2283
+ testRunner.And("the traits appear in the same order as in the data table above", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table85 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table85.AddRow(new string[] {
+                            "Delivery and storage",
+                            "2"});
+                table85.AddRow(new string[] {
+                            "Home services",
+                            "3"});
+                table85.AddRow(new string[] {
+                            "Transport",
+                            "3"});
+                table85.AddRow(new string[] {
+                            "Government services",
+                            "3"});
+                table85.AddRow(new string[] {
+                            "Engineering and maintenance",
+                            "5"});
+                table85.AddRow(new string[] {
+                            "Administration",
+                            "3"});
+                table85.AddRow(new string[] {
+                            "Environment and land",
+                            "4"});
+#line 2284
+ testRunner.And("the following job categories with their corresponding number of answer more quest" +
+                        "ions are displayed", ((string)(null)), table85, "And ");
+#line hidden
+#line 2293
+ testRunner.When("I click the Answer \"2\" more questions button for \"Delivery and storage\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2294
+ testRunner.Then("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2295
+ testRunner.When("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2296
+ testRunner.Then("the following question is displayed; \"Are you able to control your emotions even " +
+                        "in difficult situations?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2297
+ testRunner.When("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2298
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2299
+ testRunner.Then("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table86 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+#line 2300
+ testRunner.And("I see the following job roles", ((string)(null)), table86, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
         [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         public class FixtureData : System.IDisposable
