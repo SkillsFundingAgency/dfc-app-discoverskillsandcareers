@@ -163,10 +163,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             //expected (data table) Traits
             string[] a = traits.Select(p => p.JobRoles).ToArray();
             //actual (UI) Traits
-            
             string[] b = Support.GetAllText(_scenarioContext.GetWebDriver(), By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::ul//a"));
-            //WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector(".app-sendresults button"));
-            //Thread.Sleep(250);
 
             return IsSequenceEqual(a, b);
         }
@@ -216,19 +213,16 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickAnswerMoreQuestionsButton(string noOfMoreQuestions, string jobCategories)
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
-
             try
             {
                 lnkSeeMatches.Click();
-                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
             }
             catch (NoSuchElementException)
             {
 
             }
 
-            _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategories + "')]//..//following-sibling::a[contains(text(), 'Answer " + noOfMoreQuestions + " more questions')]")).Click();
+            _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategories + "')]//..//following-sibling::a[contains(text(), 'Answer " + noOfMoreQuestions + " more question')]")).Click();
         }
 
         public string GetNumberOfRolesInterestedIn(string jobCategory)
@@ -309,6 +303,18 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             string url = _scenarioContext.GetWebDriver().Url.Split(".uk")[0].Trim() + ".uk";
             _scenarioContext.GetWebDriver().Url = url;
+        }
+
+        public void ClickSeeResultsForJobCatergory(string jobCategory)
+        {
+            try
+            {
+                _scenarioContext.GetWebDriver().FindElement(By.XPath("(//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::a)[2]")).Click();
+            }
+            catch (NoSuchElementException)
+            {
+
+            }
         }
     }
 }

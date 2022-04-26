@@ -987,7 +987,7 @@ Scenario: TC25 - Leader-Driver
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "19" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                         |
 	| Human resources officer           |
 	| Health and safety adviser         |
@@ -1073,7 +1073,7 @@ Scenario: TC26 - Leader-Driver-Influencer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "19" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                         |
 	| Human resources officer           |
 	| Health and safety adviser         |
@@ -1163,7 +1163,7 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "19" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                         |
 	| Human resources officer           |
 	| Health and safety adviser         |
@@ -1192,7 +1192,7 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "19" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                    |
 	| Catering manager             |
 	| Counter service assistant    |
@@ -1225,7 +1225,7 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "28" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                            |
 	| Call centre operator                 |
 	| Customer service assistant           |
@@ -1265,7 +1265,7 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "48" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                                  |
 	| Foster carer                               |
 	| Social worker                              |
@@ -1389,7 +1389,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles       |
 	| Chief executive |
 	When I go back and click the Answer "3" more questions button for "Emergency and uniform services"
@@ -1410,7 +1410,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "2" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles           |
 	| Court legal adviser |
 	| Proofreader         |
@@ -1423,7 +1423,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles            |
 	| Education technician |
 	When I go back and click the Answer "2" more questions button for "Travel and tourism"
@@ -1433,7 +1433,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "2" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles      |
 	| Airline pilot  |
 	| Port operative |
@@ -1444,7 +1444,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "2" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles          |
 	| Countryside ranger |
 	| Biologist          |
@@ -1455,7 +1455,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "16" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                  |
 	| Order picker               |
 	| Warehouse worker           |
@@ -1484,7 +1484,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "5" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles         |
 	| Radiographer      |
 	| Dentist           |
@@ -1500,7 +1500,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "4" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                         |
 	| Window cleaner                    |
 	| Industrial cleaner                |
@@ -1517,7 +1517,7 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles           |
 	| Technical architect |
 
@@ -1585,7 +1585,7 @@ Scenario: TC29 - Leader-Influencer-Analyst-Organiser
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "2" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                  |
 	| Coastguard                 |
 	| Probation services officer |
@@ -1665,7 +1665,7 @@ Scenario: TC30 - Driver-Helper-Creator-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "20" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                  |
 	| Zookeeper                  |
 	| Animal care worker         |
@@ -1698,7 +1698,7 @@ Scenario: TC30 - Driver-Helper-Creator-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "4" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                   |
 	| Surgeon                     |
 	| Cosmetic surgeon            |
@@ -1724,7 +1724,7 @@ Scenario: TC30 - Driver-Helper-Creator-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "2" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles   |
 	| Model maker |
 	| Electrician |
@@ -1737,7 +1737,7 @@ Scenario: TC30 - Driver-Helper-Creator-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "6" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                         |
 	| Youth offending team officer      |
 	| British Sign Language interpreter |
@@ -1756,7 +1756,7 @@ Scenario: TC30 - Driver-Helper-Creator-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "5" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                                                |
 	| Meat hygiene inspector                                   |
 	| Landscape architect                                      |
@@ -1840,7 +1840,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "7" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                    |
 	| Newspaper journalist         |
 	| Film critic                  |
@@ -1860,7 +1860,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "8" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                            |
 	| Plasterer                            |
 	| Scaffolder                           |
@@ -1877,7 +1877,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "4" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                  |
 	| Removals worker            |
 	| Motor vehicle parts person |
@@ -1892,7 +1892,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                |
 	| Domestic energy assessor |
 	When I go back and click the Answer "3" more questions button for "Transport"
@@ -1904,7 +1904,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "3" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles              |
 	| Fishing vessel skipper |
 	| Airline pilot          |
@@ -1918,7 +1918,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "8" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                |
 	| User researcher          |
 	| Digital product owner    |
@@ -1937,7 +1937,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "5" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                            |
 	| MP                                   |
 	| Intelligence analyst                 |
@@ -1957,7 +1957,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "6" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                        |
 	| Forklift truck engineer          |
 	| Shoe repairer                    |
@@ -1974,7 +1974,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "3" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                              |
 	| Charity fundraiser                     |
 	| Post Office customer service assistant |
@@ -1990,7 +1990,7 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "7" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles           |
 	| Countryside officer |
 	| Countryside ranger  |
@@ -2061,7 +2061,7 @@ Scenario: TC32 - Helper-Analyst-Creator
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "16" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                  |
 	| Test lead                  |
 	| Technical architect        |
@@ -2145,7 +2145,7 @@ Scenario: TC33 - Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles |
 	| Roadie    |
 	When I go back and click the Answer "3" more questions button for "Home services"
@@ -2166,7 +2166,7 @@ Scenario: TC33 - Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles         |
 	| Transport planner |
 	When I go back and click the Answer "3" more questions button for "Government services"
@@ -2178,7 +2178,7 @@ Scenario: TC33 - Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                       |
 	| Forensic collision investigator |
 	When I go back and click the Answer "5" more questions button for "Engineering and maintenance"
@@ -2194,7 +2194,7 @@ Scenario: TC33 - Organiser-Doer
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "5" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                         |
 	| Smart meter installer             |
 	| Lift engineer                     |
@@ -2221,7 +2221,7 @@ Scenario: TC33 - Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "7" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles                           |
 	| Research scientist                  |
 	| Agricultural engineer               |
@@ -2231,7 +2231,7 @@ Scenario: TC33 - Organiser-Doer
 	| Land surveyor                       |
 	| Cartographer                        |
 
-Scenario: TC34 - Creator-Organiser-Doer
+Scenario: TC34 - Creator-Organiser-Doer - user journey
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
@@ -2297,5 +2297,217 @@ Scenario: TC34 - Creator-Organiser-Doer
 	When I select "Yes" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
-	And I see the following job roles
+	And I see the job roles
 	| Job roles |
+	| Roadie    |
+	When I click the Answer "1" more questions button for "Home services"
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "4" roles I might be interested in
+	And I see the job roles
+	| Job roles                         |
+	| Window cleaner                    |
+	| Industrial cleaner                |
+	| Caretaker                         |
+	| British Sign Language interpreter |
+	When I click See results button for "Transport"
+	Then there are "3" roles I might be interested in
+	And I see the job roles
+	| Job roles              |
+	| Fishing vessel skipper |
+	| Airline pilot          |
+	| Tractor driver         |
+	When I click the Answer "1" more questions button for "Government services"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the job roles
+	| Job roles                  |
+	| Coastguard                 |
+	| Probation services officer |
+	When I click the Answer "3" more questions button for "Engineering and maintenance"
+	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at using words to describe ideas?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to do detailed, intricate work with your hands?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then the following message is displayed; "No careers were found that might interest you based on your responses."
+	When I click the Answer "1" more questions button for "Administration"
+	Then the following question is displayed; "Are you able to read well?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles                 |
+	| Trading standards officer |
+	
+Scenario: TC35 - Leader-Driver-Influencer-Creator-Organiser-Doer - user journey
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
+	| 2                | I make decisions quickly                                             | Strongly agree    |
+	| 5                | I like to take control of situations                                 | Strongly agree    |
+	| 7                | I prefer to follow what other people are doing                       | Strongly disagree |
+	| 10               | I like taking responsibility for other people                        | Strongly agree    |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Strongly agree    |
+	| 17               | I think I am a competitive person                                    | Strongly agree    |
+	| 20               | Doing well in a career motivates me                                  | Strongly agree    |
+	| 22               | I set myself goals in life                                           | Strongly agree    |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly agree    |
+	| 27               | I am good at coming to an agreement with other people                | Strongly agree    |
+	| 30               | I am comfortable talking in front of a group of people               | Strongly agree    |
+	| 32               | I like meeting new people                                            | Strongly agree    |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly disagree |
+	| 40               | I enjoy working with other people around me                          | Strongly disagree |
+	| 42               | I want to make things better for people                              | Strongly disagree |
+	| 45               | I will get involved if I think I can help                            | Strongly disagree |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly disagree |
+	| 52               | I like to get to the centre of the issue                             | Strongly disagree |
+	| 55               | I like working with facts                                            | Strongly disagree |
+	| 57               | I like working with numbers                                          | Strongly disagree |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly agree    |
+	| 65               | I try to think differently to others                                 | Strongly agree    |
+	| 67               | I like to use my imagination to create new things                    | Strongly agree    |
+	| 70               | I like to try new things                                             | Strongly agree    |
+	| 72               | I enjoy creative activities                                          | Strongly agree    |
+	| 75               | I like to focus on details                                           | Strongly agree    |
+	| 77               | I plan my day so I can use my time best                              | Strongly agree    |
+	| 80               | I like doing things in a careful order                               | Strongly agree    |
+	| 82               | I like to follow rules and processes                                 | Strongly agree    |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | Strongly agree    |
+	| 92               | I enjoy getting involved in practical tasks                          | Strongly agree    |
+	| 95               | I like working with my hands or tools                                | Strongly agree    |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                                     |
+	| you like to lead other people and are good at taking control of situations                     |
+	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| you are sociable and find it easy to understand people                                         |
+	| you are a creative person and enjoy coming up with new ways of doing things                    |
+	And the traits appear in the same order as in the data table above
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category                | Number of answer more questions |
+	| Business and finance        | 3                               |
+	| Law and legal               | 3                               |
+	| Delivery and storage        | 2                               |
+	| Home services               | 3                               |
+	| Managerial                  | 4                               |
+	| Transport                   | 3                               |
+	| Beauty and wellbeing        | 2                               |
+	| Government services         | 3                               |
+	| Engineering and maintenance | 5                               |
+	| Administration              | 3                               |
+	When I click the Answer "3" more questions button for "Business and finance"
+	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	When I select "Yes" answer and proceed to the next question
+	Then the following question is displayed; "Are you confident solving maths problems using statistics, algebra and arithmetic?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to read well?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "6" roles I might be interested in
+	And I see the job roles
+	| Job roles                                                |
+	| Insurance loss adjuster                                  |
+	| Payroll manager                                          |
+	| Local government revenues officer                        |
+	| Insurance technician                                     |
+	| Corporate responsibility and sustainability practitioner |
+	| School business manager                                  |
+	When I click the Answer "2" more questions button for "Law and legal"
+	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles         |
+	| Company secretary |
+	And I view the "Government services" job category
+	Then there are "5" roles I might be interested in
+	And I see the job roles
+	| Job roles                  |
+	| Diplomatic Service officer |
+	| Prison instructor          |
+	| Housing policy officer     |
+	| Air accident investigator  |
+	| Careers adviser            |
+	When I click the Answer "1" more questions button for "Delivery and storage"
+	Then the following question is displayed; "Are you comfortable working in a team with other people?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles |
+	| Roadie    |
+	And I view the "Transport" job category
+	And I see the job roles
+	| Job roles                 |
+	| Driving instructor        |
+	| Helicopter engineer       |
+	| Air accident investigator |
+	And I view the "Administration" job category
+	And there are "3" roles I might be interested in
+	And I see the job roles
+	| Job roles            |
+	| Trade union official |
+	| Insurance broker     |
+	| Interpreter          |
+	And I view the "Home services" job category
+	And there are "2" roles I might be interested in
+	And I see the job roles
+	| Job roles     |
+	| Cleaner       |
+	| Chimney sweep |
+	When I click the Answer "1" more questions button for "Managerial"
+	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "7" roles I might be interested in
+	And I see the job roles
+	| Job roles                |
+	| MP                       |
+	| Payroll manager          |
+	| Nursery manager          |
+	| Bank manager             |
+	| Credit manager           |
+	| Building control officer |
+	| Tax inspector            |
+	When I click the Answer "1" more questions button for "Beauty and wellbeing"
+	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then there are "4" roles I might be interested in
+	And I see the job roles
+	| Job roles                  |
+	| Hairdresser                |
+	| Nail technician            |
+	| Pilates teacher            |
+	| Tattooist and body piercer |
+	When I click the Answer "3" more questions button for "Engineering and maintenance"
+	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
+	When I select "No" answer and proceed to the next question
+	Then the following question is displayed; "Do you think you are good at using words to describe ideas?"
+	When I select "No" answer and proceed
+	Then the following question is displayed; "Are you able to do detailed, intricate work with your hands?"
+	When I select "Yes" answer and proceed
+	And I click See results button
+	Then there are "4" roles I might be interested in
+	And I see the job roles
+	| Job roles                   |
+	| Security systems installer  |
+	| Engineering craft machinist |
+	| Vending machine operator    |
+	| Diver                       |

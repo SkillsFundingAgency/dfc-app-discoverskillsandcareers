@@ -31,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private string _percentCompleted;
         private string _theEmailAddress;
         private string _answerMoreJobCategory;
+        private string _SeeResultsButtonForJobCategory;
         IEnumerable<AnswersShowThat> _answers;
         IEnumerable<Traits> _expectedTraits;
         IEnumerable<JobCategoryRoles> _expectedJobRoles;
@@ -154,6 +155,13 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void WhenIClickSeeResultsButton()
         {
             _dysacPage.ClickSeeResults();
+        }
+
+        [When(@"I click See results button for ""(.*)""")]
+        public void WhenIClickSeeResultsButtonFor(string jobCategory)
+        {
+            _answerMoreJobCategory = jobCategory;
+            _yourResultsPage.ClickSeeResultsForJobCatergory(jobCategory);
         }
 
         [Then(@"the job categories suggestions are (.*) in number")]
@@ -504,14 +512,28 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"there are ""(.*)"" roles I might be interested in")]
         public void ThenThereAreRolesIMightBeInterestedIn(string numberOfRoles)
         {
-            NUnit.Framework.Assert.AreEqual(numberOfRoles, _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory), "Number of roles stated as interested in for " + _answerMoreJobCategory  + " are incorrect.");
+            NUnit.Framework.Assert.AreEqual(numberOfRoles, _yourResultsPage.GetNumberOfRolesInterestedIn(_answerMoreJobCategory), "Number of roles stated as interested in for " + _answerMoreJobCategory + " are incorrect.");
         }
 
-        [Then(@"I see the following job roles")]
-        public void ThenISeeTheFollowingJobRoles(Table table)
+        [Then(@"I view the ""(.*)"" job category")]
+        public void ThenIViewTheJobCategory(string jobCategory)
+        {
+            _answerMoreJobCategory = jobCategory;
+            _yourResultsPage.ClickSeeResultsForJobCatergory(jobCategory);
+        }
+
+        [Then(@"I see the job roles")]
+        public void ThenISeeTheJobRoles(Table table)
         {
             _expectedJobRoles = table.CreateSet<JobCategoryRoles>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(_expectedJobRoles, _answerMoreJobCategory), "Roles are incorrect for " + _answerMoreJobCategory + " job category.");
+        }
+
+        [Then(@"I see the job roles for the ""(.*)"" job category")]
+        public void ThenISeeTheJobRolesForTheJobCategory(string jobCategory, Table table)
+        {
+            _expectedJobRoles = table.CreateSet<JobCategoryRoles>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(_expectedJobRoles, jobCategory), "Roles are incorrect for " + jobCategory + " job category.");
         }
 
         [Then(@"the following message is displayed; ""(.*)""")]
