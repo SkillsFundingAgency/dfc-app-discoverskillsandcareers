@@ -8817,6 +8817,282 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
+        [Xunit.SkippableFactAttribute(DisplayName="TC36 - I want to save my progress during yes no questions")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC36 - I want to save my progress during yes no questions")]
+        public void TC36_IWantToSaveMyProgressDuringYesNoQuestions()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC36 - I want to save my progress during yes no questions", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2515
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2516
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2517
+ testRunner.And("I answer all the questions using the data file \"AnswerSetTC36\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2518
+ testRunner.And("I click the Answer \"4\" more questions button for \"Managerial\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2519
+ testRunner.And("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2520
+ testRunner.And("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2521
+ testRunner.And("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2522
+ testRunner.And("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2523
+ testRunner.And("the following question is displayed; \"Are you good at thinking of new ways to do " +
+                        "something without being told?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2524
+ testRunner.And("I make a note of this question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2525
+ testRunner.And("I save progress", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2526
+ testRunner.And("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2527
+ testRunner.And("I make a note of the reference code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2528
+ testRunner.When("I use the reference code to return to my assessment from the Dysac home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2529
+ testRunner.Then("I am at the question where I left off", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC37 - I want to change my answers after initial job category suggestion")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC37 - I want to change my answers after initial job category suggestion")]
+        public void TC37_IWantToChangeMyAnswersAfterInitialJobCategorySuggestion()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC37 - I want to change my answers after initial job category suggestion", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2531
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2532
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2533
+ testRunner.And("I answer all the questions using the data file \"AnswerSetTC36\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2534
+ testRunner.And("I click the Answer \"4\" more questions button for \"Managerial\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2535
+ testRunner.And("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2536
+ testRunner.And("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2537
+ testRunner.And("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2538
+ testRunner.And("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2539
+ testRunner.And("the following question is displayed; \"Are you good at thinking of new ways to do " +
+                        "something without being told?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2540
+ testRunner.And("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2541
+ testRunner.And("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2542
+ testRunner.And("I select \"Yes\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2543
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2544
+ testRunner.And("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table104 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table104.AddRow(new string[] {
+                            "Technical architect"});
+#line 2545
+ testRunner.And("I see the job roles", ((string)(null)), table104, "And ");
+#line hidden
+#line 2548
+ testRunner.And("I decide to change my answers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2549
+ testRunner.And("the following question is displayed; \"Are you comfortable talking through things " +
+                        "with other people so that they understand?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2550
+ testRunner.And("I select \"No\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2551
+ testRunner.And("the following question is displayed; \"Are you comfortable working in a team with " +
+                        "other people?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2552
+ testRunner.And("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2553
+ testRunner.And("the following question is displayed; \"Are you good at thinking of new ways to do " +
+                        "something without being told?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2554
+ testRunner.And("I select \"Yes\" answer and proceed to the next question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2555
+ testRunner.And("the following question is displayed; \"Are you able to read well?\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2556
+ testRunner.And("I select \"No\" answer and proceed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2557
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2558
+ testRunner.And("there are \"1\" roles I might be interested in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table105 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job roles"});
+                table105.AddRow(new string[] {
+                            "Textiles production manager"});
+#line 2559
+ testRunner.And("I see the job roles", ((string)(null)), table105, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC38 - I want to check that descriptive texts match suggested job categories")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC38 - I want to check that descriptive texts match suggested job categories")]
+        public void TC38_IWantToCheckThatDescriptiveTextsMatchSuggestedJobCategories()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC38 - I want to check that descriptive texts match suggested job categories", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2563
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2564
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2565
+ testRunner.And("I answer all the questions using the data file \"AnswerSetTC38\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2566
+ testRunner.When("I check each job category suggested", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2567
+ testRunner.Then("the description text each job category matches it", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="TC39 - I want to be able to use a reference code to see my results")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC39 - I want to be able to use a reference code to see my results")]
+        public void TC39_IWantToBeAbleToUseAReferenceCodeToSeeMyResults()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC39 - I want to be able to use a reference code to see my results", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 2569
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 2570
+ testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2571
+ testRunner.And("I answer all the questions using the data file \"AnswerSetTC38\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2572
+ testRunner.And("I make a note of the suggested job categories", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2573
+ testRunner.And("I make a note of the page that I am currently on", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2574
+ testRunner.And("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2575
+ testRunner.And("I make a note of the reference code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 2576
+ testRunner.When("I use the reference code to return to my assessment from the Dysac home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 2577
+ testRunner.Then("I am at the page noted earlier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 2578
+ testRunner.And("the job categories are the same as those noted earlier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
         [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         public class FixtureData : System.IDisposable

@@ -19,6 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement lnkReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Return to assessment"));
         IWebElement txtHeader => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-fieldset__heading"));
         IWebElement optionSendMeEmailLink => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-1']"));
+        IWebElement btnContinue => _scenarioContext.GetWebDriver().FindElement(By.CssSelector("[type='submit']"));
 
         public void SelectReferenceCode()
         {
@@ -49,6 +50,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.LinkText("Return to assessment"));
             return txtHeader.Text.Trim();
+        }
+
+        public void ClickContinue()
+        {
+            btnContinue.Click();
         }
     }
 }

@@ -2511,3 +2511,68 @@ Scenario: TC35 - Leader-Driver-Influencer-Creator-Organiser-Doer - user journey
 	| Engineering craft machinist |
 	| Vending machine operator    |
 	| Diver                       |
+
+Scenario: TC36 - I want to save my progress during yes no questions
+	And I click on Assessment
+	And I answer all the questions using the data file "AnswerSetTC36"
+	And I click the Answer "4" more questions button for "Managerial"
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I make a note of this question
+	And I save progress
+	And I choose the "Get a reference code" option of returning to assessment
+	And I make a note of the reference code
+	When I use the reference code to return to my assessment from the Dysac home page
+	Then I am at the question where I left off
+
+Scenario: TC37 - I want to change my answers after initial job category suggestion
+	And I click on Assessment
+	And I answer all the questions using the data file "AnswerSetTC36"
+	And I click the Answer "4" more questions button for "Managerial"
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you able to read well?"
+	And I select "Yes" answer and proceed
+	And I click See results button
+	And there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles           |
+	| Technical architect |
+	And I decide to change my answers
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you able to read well?"
+	And I select "No" answer and proceed
+	And I click See results button
+	And there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles                   |
+	| Textiles production manager |
+
+Scenario: TC38 - I want to check that descriptive texts match suggested job categories
+	And I click on Assessment
+	And I answer all the questions using the data file "AnswerSetTC38"
+	When I check each job category suggested
+	Then the description text each job category matches it
+
+Scenario: TC39 - I want to be able to use a reference code to see my results
+	And I click on Assessment
+	And I answer all the questions using the data file "AnswerSetTC38"
+	And I make a note of the suggested job categories
+	And I make a note of the page that I am currently on
+	And I choose the "Get a reference code" option of returning to assessment
+	And I make a note of the reference code
+	When I use the reference code to return to my assessment from the Dysac home page
+	Then I am at the page noted earlier
+	And the job categories are the same as those noted earlier

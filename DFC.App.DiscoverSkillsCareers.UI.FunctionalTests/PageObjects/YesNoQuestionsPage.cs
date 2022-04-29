@@ -21,6 +21,8 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects
         IWebElement answerYes => _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-1"));
         IWebElement answerNo => _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-2"));
         IWebElement next => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-button.app-button.btn-next-question"));
+        IWebElement saveMyProgress => _scenarioContext.GetWebDriver().FindElement(By.XPath("(//a[contains(text(), 'Save my progress')])[2]"));
+        IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
 
         public string GetYesNoQuestion()
         {
@@ -43,6 +45,16 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects
         public void ClickNext()
         {
             next.Click();
+        }
+
+        public void ClickSaveMyProgress()
+        {
+            saveMyProgress.Click();
+        }
+
+        public void ClickGetAReferenceCode()
+        {
+            optionReferenceCode.Click();
         }
     }
 }

@@ -1,14 +1,17 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using TechTalk.SpecFlow;
+using static DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers.QuestionsAnswers;
 
 namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 {
@@ -23,6 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         IWebElement lnkSeeMatches => _scenarioContext.GetWebDriver().FindElement(By.LinkText("See matches"));
         IWebElement btnNext => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
+        IWebElement btnContinue => _scenarioContext.GetWebDriver().FindElement(By.CssSelector("[type='submit']"));
 
         public bool VerifyJobCategories(IEnumerable<JobCategories> jobCategories)
         {
@@ -68,7 +72,66 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public IList<IWebElement> GetJobCategories()
         {
-            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
+            if (_scenarioContext.GetWebDriver().Url.Contains("https://beta.nationalcareers.service.gov.uk/"))
+            {
+                return _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".govuk-heading-m a"));
+            }
+            else
+            {
+                return _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
+            }
+        }
+
+        public IList<IWebElement> GetJobCategoryDescriptions()
+        {
+            return _scenarioContext.GetWebDriver().FindElements(By.ClassName("app-noprint"));
+        }
+
+        public bool VerifyJobCategoryDescription()
+        {
+            String[] allJobCategoryText = new String[GetJobCategories().Count];
+            String[] allDescriptionText = new String[GetJobCategoryDescriptions().Count];
+
+            int i = 0;
+            int j = 0;
+
+            foreach (IWebElement jobCategoryText in GetJobCategories())
+            {
+                allJobCategoryText[i++] = jobCategoryText.Text.Trim();
+            }
+
+            foreach (IWebElement jobCategoryDescriptionText in GetJobCategoryDescriptions())
+            {
+                allDescriptionText[j++] = jobCategoryDescriptionText.Text.Replace("Answer more questions to find roles that might interest you in ", string.Empty).Replace(".", string.Empty).Trim();
+            }
+
+            return allDescriptionText.SequenceEqual(allJobCategoryText);
+        }
+
+        public bool CompareBeforeAfterJobCategories(String[] initialJobcategories)
+        {
+            String[] subsequentJobcategories = new String[GetJobCategories().Count];
+            int j = 0;
+
+            foreach (IWebElement jobCategory in GetJobCategories())
+            {
+                subsequentJobcategories[j++] = jobCategory.Text.Trim();
+            }
+
+            return subsequentJobcategories.SequenceEqual(initialJobcategories);
+        }
+
+        public String[] GetIWebElementText()
+        {
+            String[] jobcategoriesinitially = new String[GetJobCategories().Count];
+            int j = 0;
+
+            foreach (IWebElement jobCategory in GetJobCategories())
+            {
+                jobcategoriesinitially[j++] = jobCategory.Text.Trim();
+            }
+
+            return jobcategoriesinitially;
         }
 
         public void ClickSeeMatches()
@@ -124,6 +187,19 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             {
                 WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("btn-next-question"));
                 _scenarioContext.GetWebDriver().FindElement(By.XPath("//h1[contains(text(), \"" + question[i].Trim() + "\")]//..//following-sibling::div//label[contains(text(), \"" + answer[i].Trim() + "\")]//preceding::input[1]")).Click();
+                btnNext.Click();
+            }
+        }
+
+        public void AnswerQuestionsFromJson(string file)
+        {
+            var json = File.ReadAllText(file);
+            var data = JsonConvert.DeserializeObject<IList<AnswerData>>(json);
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("btn-next-question"));
+                _scenarioContext.GetWebDriver().FindElement(By.XPath("//h1[contains(text(), \"" + data[i].Question.Trim() + "\")]//..//following-sibling::div//label[contains(text(), \"" + data[i].Answer.Trim() + "\")]//preceding::input[1]")).Click();
                 btnNext.Click();
             }
         }
@@ -315,6 +391,21 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             {
 
             }
+        }
+
+        public void ClickChangeMyAnswers(string jobCategory)
+        {
+            _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//../following-sibling::p[2]/a")).Click();
+        }
+
+        public void ClickContinue()
+        {
+            btnContinue.Click();
+        }
+
+        public string GetCurrentUrl()
+        {
+            return _scenarioContext.GetWebDriver().Url;
         }
     }
 }

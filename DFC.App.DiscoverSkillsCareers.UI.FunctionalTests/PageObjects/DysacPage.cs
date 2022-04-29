@@ -1,12 +1,15 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using TechTalk.SpecFlow;
+using static DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers.QuestionsAnswers;
 
 namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 {
@@ -35,6 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement linkSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
         IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
+        IWebElement btnContinue => _scenarioContext.GetWebDriver().FindElement(By.CssSelector("[type='submit']"));
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
         IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button app-button']"));
         IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
@@ -116,8 +120,16 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickContinueToSaveProgress()
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
-            btnContinueSaveProgress.Click();
+            if (_scenarioContext.GetWebDriver().Url.Contains("https://beta.nationalcareers.service.gov.uk/"))
+            {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector("[type='submit']"));
+                btnContinue.Click();
+            }
+            else
+            {
+                WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
+                btnContinueSaveProgress.Click();
+            }
         }
 
         public string GetReferenceCode()
@@ -216,8 +228,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void EnterYourReference(string referenceCode)
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("code"));
-            
+            if (_scenarioContext.GetWebDriver().Url.Contains("https://beta.nationalcareers.service.gov.uk/"))
+            {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector(".app-your-reference__code.govuk-heading-xl"));
+            }
+            else
+            {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("code"));
+            }
 
             if (_scenarioContext.GetEnv().DYSACApiBaseUrl.Substring(8, 3) == "dev")
             {

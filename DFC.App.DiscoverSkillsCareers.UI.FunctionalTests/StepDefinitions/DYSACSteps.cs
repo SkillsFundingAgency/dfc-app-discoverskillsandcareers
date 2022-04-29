@@ -3,12 +3,17 @@ using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects;
 using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
 using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using Xunit;
+using static DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers.QuestionsAnswers;
 
 namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
 {
@@ -31,10 +36,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private string _percentCompleted;
         private string _theEmailAddress;
         private string _answerMoreJobCategory;
-        private string _SeeResultsButtonForJobCategory;
+        private string _currentQuestion;
+        private string _currentPage;
+        private string filePath = Directory.GetParent(@"../../../").FullName + Path.DirectorySeparatorChar + "Helpers" + "\\";
         IEnumerable<AnswersShowThat> _answers;
         IEnumerable<Traits> _expectedTraits;
         IEnumerable<JobCategoryRoles> _expectedJobRoles;
+        String[] _jobCategoryCategoriesInitial;
+        IList<IWebElement> _jobCategoryCategoriesSubsequent;
 
         public DYSACSteps(ScenarioContext scenarioContext)
         {
@@ -76,6 +85,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _dysacPage.SelectAnswer();
         }
 
+        [Given(@"I select ""(.*)"" answer and proceed")]
+        [Given(@"I select ""(.*)"" answer and proceed to the next question")]
         [When(@"I select ""(.*)"" answer and proceed")]
         [When(@"I select ""(.*)"" answer and proceed to the next question")]
         public void WhenISelectAnswerAndProceedToTheNextQuestion(string answerOption)
@@ -209,23 +220,38 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Given(@"I save progress")]
         public void GivenISaveProgress()
         {
-            _dysacPage.ClickSaveProgress();
+            if (_scenarioContext.ScenarioInfo.Title.Contains("yes no questions"))
+            {
+                _yesNoQuestionsPage.ClickSaveMyProgress();
+            }
+            else
+            {
+                _dysacPage.ClickSaveProgress();
+            }
         }
 
         [When(@"I choose the ""(.*)"" option of returning to assessment")]
         [Given(@"I choose the ""(.*)"" option of returning to assessment")]
         public void GivenIChooseTheOptionOfReturningToAssessment(string assessmentReturnOption)
         {
-            switch (assessmentReturnOption)
+            if (_scenarioContext.ScenarioInfo.Title.Contains("yes no questions"))
             {
-                case "Get a reference code":
-                    _returnToAssessmentPage.SelectReferenceCode();
-                    _dysacPage.ClickContinueToSaveProgress();
-                    break;
-                case "Send me an email with a link":
-                    _returnToAssessmentPage.SelectSendMeEmailLink();
-                    _dysacPage.ClickContinueToSaveProgress();
-                    break;
+                _returnToAssessmentPage.SelectReferenceCode();
+                _returnToAssessmentPage.ClickContinue();
+            }
+            else
+            {
+                switch (assessmentReturnOption)
+                {
+                    case "Get a reference code":
+                        _returnToAssessmentPage.SelectReferenceCode();
+                        _dysacPage.ClickContinueToSaveProgress();
+                        break;
+                    case "Send me an email with a link":
+                        _returnToAssessmentPage.SelectSendMeEmailLink();
+                        _dysacPage.ClickContinueToSaveProgress();
+                        break;
+                }
             }
         }
 
@@ -236,6 +262,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourReferenceCodePage.GetReferenceCode();
         }
 
+        [Given(@"I use the reference code to return to my assessment from the Dysac home page")]
         [When(@"I use the reference code to return to my assessment from the Dysac home page")]
         public void WhenIUseTheReferenceCodeToReturnToMyAssessmentFromTheDysacHomePage()
         {
@@ -246,7 +273,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"I am at the question where I left off")]
         public void ThenIAmAtTheQuestionWhereILeftOff()
         {
-            NUnit.Framework.Assert.AreEqual(_percentCompleted + "%", _dysacPage.GetPercentageComplete(), "Reference code did not go to the correct percentage completed.");
+            if (_scenarioContext.ScenarioInfo.Title.Contains("yes no questions"))
+            {
+                NUnit.Framework.Assert.AreEqual(_yesNoQuestionsPage.GetYesNoQuestion(), _currentQuestion, "Question displayed is incorrect");
+            }
+            else
+            {
+                NUnit.Framework.Assert.AreEqual(_percentCompleted + "%", _dysacPage.GetPercentageComplete(), "Reference code did not go to the correct percentage completed.");
+            }
         }
 
         [When(@"I view the date on the resultant page")]
@@ -485,6 +519,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategories), "Job categories and or number for answer * more questions incorrect.");
         }
 
+        [Given(@"I click the Answer ""(.*)"" more questions button for ""(.*)""")]
         [When(@"I click the Answer ""(.*)"" more questions button for ""(.*)""")]
         public void WhenIClickTheAnswerMoreQuestionsButtonFor(string numberOfQuestions, string jobCategory)
         {
@@ -503,12 +538,21 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourResultsPage.ClickAnswerMoreQuestionsButton(numberOfQuestions, jobCategory);
         }
 
+        [Given(@"the following question is displayed; ""(.*)""")]
         [Then(@"the following question is displayed; ""(.*)""")]
         public void ThenTheFollowingQuestionIsDisplayed(string question)
         {
+            _currentQuestion = question;
             NUnit.Framework.Assert.AreEqual(question, _yesNoQuestionsPage.GetYesNoQuestion(), "Yes / No question is wrong.");
         }
 
+        [Given(@"I make a note of this question")]
+        public void GivenIMakeANoteOfThisQuestion()
+        {
+            /* current question noted in step above */
+        }
+
+        [Given(@"there are ""(.*)"" roles I might be interested in")]
         [Then(@"there are ""(.*)"" roles I might be interested in")]
         public void ThenThereAreRolesIMightBeInterestedIn(string numberOfRoles)
         {
@@ -522,6 +566,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourResultsPage.ClickSeeResultsForJobCatergory(jobCategory);
         }
 
+        [Given(@"I see the job roles")]
         [Then(@"I see the job roles")]
         public void ThenISeeTheJobRoles(Table table)
         {
@@ -540,6 +585,77 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void ThenTheFollowingMessageIsDisplayed(string noCareersMessage)
         {
             NUnit.Framework.Assert.AreEqual(noCareersMessage, _yourResultsPage.GetNoCareersMessage(_answerMoreJobCategory), "Roles you might be interested in are displayed; unexpectedly.");
+        }
+
+        [Given(@"I answer all the questions")]
+        public void GivenIAnswerAllTheQuestions()
+        {
+            _yourResultsPage.AnswerQuestionsFromJson(filePath + "DataSet.json");
+        }
+
+        [Given(@"I answer all the questions using the data file ""(.*)""")]
+        public void GivenIAnswerAllTheQuestionsUsingTheDataFile(string dataFile)
+        {
+            _yourResultsPage.AnswerQuestionsFromJson(filePath + dataFile + ".json");
+            _assessmentCompletePage.ClickSeeResults();
+        }
+
+        [Given(@"I answer the next ""(.*)"" questions")]
+        public void GivenIAnswerTheNextQuestions(int numberOfQuestionsToAnswer)
+        {
+            
+        }
+
+        [Given(@"I decide to change my answers")]
+        public void GivenIDecideToChangeMyAnswers()
+        {
+            _yourResultsPage.ClickChangeMyAnswers(_answerMoreJobCategory);
+        }
+
+        [When(@"I check each job category suggested")]
+        public void WhenICheckEachJobCategorySuggested()
+        {
+            _yourResultsPage.ClickSeeMatches();
+            _yourResultsPage.GetJobCategories();
+            _yourResultsPage.GetJobCategoryDescriptions();
+        }
+
+        [Then(@"the description text each job category matches it")]
+        public void ThenTheDescriptionTextEachJobCategoryMatchesIt()
+        {
+            NUnit.Framework.Assert.IsTrue(_yourResultsPage.VerifyJobCategoryDescription(), "Description text does not match job category.");
+        }
+
+        [Given(@"I proceed to obtain a reference code")]
+        public void GivenIProceedToObtainAReferenceCode()
+        {
+            _yourResultsPage.ClickContinue();
+        }
+
+        [Given(@"I make a note of the page that I am currently on")]
+        public void GivenIMakeANoteOfThePageThatIAmCurrentlyOn()
+        {
+            _currentPage = _yourResultsPage.GetCurrentUrl();
+            _yourResultsPage.ClickContinue();
+        }
+
+        [Given(@"I make a note of the suggested job categories")]
+        public void GivenIMakeANoteOfTheSuggestedJobCategories()
+        {
+            _yourResultsPage.ClickSeeMatches();
+            _jobCategoryCategoriesInitial  = _yourResultsPage.GetIWebElementText();
+        }
+
+        [Then(@"I am at the page noted earlier")]
+        public void ThenIAmAtThePageNotedEarlier()
+        {
+            NUnit.Framework.Assert.AreEqual(_currentPage, _scenarioContext.GetWebDriver().Url, "You are not on the page noted earlier.");
+        }
+
+        [Then(@"the job categories are the same as those noted earlier")]
+        public void ThenTheJobCategoriesAreTheSameAsThoseNotedEarlier()
+        {
+            NUnit.Framework.Assert.IsTrue(_yourResultsPage.CompareBeforeAfterJobCategories(_jobCategoryCategoriesInitial), "Job categories are not the same as those noted earlier.");
         }
     }
 }
