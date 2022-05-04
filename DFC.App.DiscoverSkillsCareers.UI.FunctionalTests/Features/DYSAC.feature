@@ -375,7 +375,7 @@ Scenario Outline: TC13 - Initial and all suggested job categories
 	| Sports and leisure |
 	| Manufacturing      |
 	| Creative and media |
-	When I click See matches to See 7 other career areas that might interest you
+	When I click See matches in order to view the other career areas that might interest you
 	Then the job categories suggestions are <All job categories> in number
 	And all the job categories dispalyed are
 	| Job category                   |
@@ -398,7 +398,7 @@ Scenario Outline: TC14 - Number of answer more questions for each category are c
 	And I click on Assessment
 	And I answer all questions selecting the <Answer option> option
 	And I click See results button
-	When I click See matches to See 7 other career areas that might interest you
+	When I click See matches in order to view the other career areas that might interest you
 	Then the following are the job categories suggested and their number of answer more questions
 	| Job category                   | Number of answer more questions |
 	| Sports and leisure             | 3                               |
@@ -1764,7 +1764,7 @@ Scenario: TC30 - Driver-Helper-Creator-Doer
 	| Corporate responsibility and sustainability practitioner |
 	| Food manufacturing inspector                             |
 
-Scenario: TC31 - Analyst-Creator-Organiser-Doer
+Scenario: TC31 - Analyst-Creator-Organiser-Doer - user journey
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
@@ -1849,158 +1849,111 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer
 	| Media researcher             |
 	| Vlogger                      |
 	| Market research data analyst |
-	When I go back and click the Answer "4" more questions button for "Construction and trades"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
+	And I view the "Administration" job category
+	And there are "3" roles I might be interested in
+	And I see the job roles
+	| Job roles            |
+	| Trade union official |
+	| Insurance broker     |
+	| Interpreter          |
+	When I click the Answer "2" more questions button for "Construction and trades"
 	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
 	When I select "Yes" answer and proceed to the next question
 	Then the following question is displayed; "Are you able to do detailed, intricate work with your hands?"
-	When I select "Yes" answer and proceed
-	And I click See results button
-	Then there are "8" roles I might be interested in
-	And I see the job roles
-	| Job roles                            |
-	| Plasterer                            |
-	| Scaffolder                           |
-	| Steeplejack                          |
-	| Construction labourer                |
-	| Steel erector                        |
-	| Engineering construction craftworker |
-	| Gas mains layer                      |
-	| Steel fixer                          |
-	When I go back and click the Answer "2" more questions button for "Delivery and storage"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed
-	And I click See results button
-	Then there are "4" roles I might be interested in
-	And I see the job roles
-	| Job roles                  |
-	| Removals worker            |
-	| Motor vehicle parts person |
-	| Supply chain manager       |
-	| Warehouse manager          |
-	When I go back and click the Answer "3" more questions button for "Home services"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
 	When I select "No" answer and proceed
 	And I click See results button
 	Then there are "1" roles I might be interested in
 	And I see the job roles
-	| Job roles                |
-	| Domestic energy assessor |
-	When I go back and click the Answer "3" more questions button for "Transport"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "No" answer and proceed to the next question
+	| Job roles   |
+	| Drone pilot |
+	And I view the "Delivery and storage" job category
+	And there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles |
+	| Roadie    |
+	When I click the Answer "1" more questions button for "Home services"
 	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
 	When I select "Yes" answer and proceed
 	And I click See results button
-	Then there are "3" roles I might be interested in
+	Then there are "4" roles I might be interested in
+	And I see the job roles
+	| Job roles                         |
+	| Window cleaner                    |
+	| Industrial cleaner                |
+	| Caretaker                         |
+	| British Sign Language interpreter |
+	And I view the "Government services" job category
+	And there are "33" roles I might be interested in
+	And I see the job roles
+	| Job roles                                                     |
+	| Civil enforcement officer                                     |
+	| RAF airman or airwoman                                        |
+	| Civil Service executive officer                               |
+	| Immigration officer                                           |
+	| Soldier                                                       |
+	| Civil Service manager                                         |
+	| Scenes of crime officer                                       |
+	| Police officer                                                |
+	| Royal Marines commando                                        |
+	| Neighbourhood warden                                          |
+	| RAF officer                                                   |
+	| Police community support officer                              |
+	| RAF non-commissioned aircrew                                  |
+	| Prison governor                                               |
+	| Royal Marines officer                                         |
+	| Royal Navy officer                                            |
+	| Royal Navy rating                                             |
+	| Army officer                                                  |
+	| Environmental health officer                                  |
+	| Bodyguard                                                     |
+	| Assistant immigration officer                                 |
+	| Registrar of births, deaths, marriages and civil partnerships |
+	| Food manufacturing inspector                                  |
+	| Border Force officer                                          |
+	| Dog handler                                                   |
+	| Chief inspector                                               |
+	| Fingerprint officer                                           |
+	| Probation officer                                             |
+	| Heritage officer                                              |
+	| Security Service personnel                                    |
+	| Child protection officer                                      |
+	| School crossing patrol                                        |
+	| Diver                                                         |
+	And I view the "Transport" job category
+	And there are "3" roles I might be interested in
 	And I see the job roles
 	| Job roles              |
 	| Fishing vessel skipper |
 	| Airline pilot          |
 	| Tractor driver         |
-	When I go back and click the Answer "3" more questions button for "Computing, technology and digital"
+	When I click the Answer "2" more questions button for "Computing, technology and digital"
 	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "Yes" answer and proceed to the next question
+	When I select "No" answer and proceed to the next question
 	Then the following question is displayed; "Are you able to carry on with a task even if it starts to get difficult?"
-	When I select "No" answer and proceed
+	When I select "Yes" answer and proceed
 	And I click See results button
-	Then there are "8" roles I might be interested in
+	Then there are "2" roles I might be interested in
 	And I see the job roles
-	| Job roles                |
-	| User researcher          |
-	| Digital product owner    |
-	| Systems analyst          |
-	| Cartographer             |
-	| Information scientist    |
-	| IT support technician    |
-	| Network engineer         |
-	| Digital delivery manager |
-	When I go back and click the Answer "3" more questions button for "Government services"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "No" answer and proceed
-	And I click See results button
-	Then there are "5" roles I might be interested in
+	| Job roles        |
+	| Technical author |
+	| Vlogger          |
+	And I view the "Environment and land" job category
+	And there are "2" roles I might be interested in
 	And I see the job roles
-	| Job roles                            |
-	| MP                                   |
-	| Intelligence analyst                 |
-	| Civil Service administrative officer |
-	| Criminologist                        |
-	| Museum attendant                     |
-	When I go back and click the Answer "5" more questions button for "Engineering and maintenance"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
-	When I select "No" answer and proceed to the next question
+	| Job roles   |
+	| Gamekeeper  |
+	| Drone pilot |
+	When I click the Answer "1" more questions button for "Engineering and maintenance"
 	Then the following question is displayed; "Do you think you are good at using words to describe ideas?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to do detailed, intricate work with your hands?"
 	When I select "Yes" answer and proceed
 	And I click See results button
-	Then there are "6" roles I might be interested in
+	Then there are "2" roles I might be interested in
 	And I see the job roles
-	| Job roles                        |
-	| Forklift truck engineer          |
-	| Shoe repairer                    |
-	| Motor mechanic                   |
-	| Maintenance fitter               |
-	| Aerospace engineering technician |
-	| Plumber                          |
-	When I go back and click the Answer "3" more questions button for "Administration"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "No" answer and proceed
-	And I click See results button
-	Then there are "3" roles I might be interested in
-	And I see the job roles
-	| Job roles                              |
-	| Charity fundraiser                     |
-	| Post Office customer service assistant |
-	| Sports development officer             |
-	When I go back and click the Answer "4" more questions button for "Environment and land"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "Yes" answer and proceed
-	And I click See results button
-	Then there are "7" roles I might be interested in
-	And I see the job roles
-	| Job roles           |
-	| Countryside officer |
-	| Countryside ranger  |
-	| Archaeologist       |
-	| Climate scientist   |
-	| Meteorologist       |
-	| Rural surveyor      |
-	| Hydrologist         |
+	| Job roles                       |
+	| Electricity generation worker   |
+	| Electricity distribution worker |
 
-Scenario: TC32 - Helper-Analyst-Creator
+Scenario: TC32 - Helper-Analyst-Creator - user journey
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
@@ -2080,7 +2033,7 @@ Scenario: TC32 - Helper-Analyst-Creator
 	| Business analyst           |
 	| Robotics engineer          |
 
-Scenario: TC33 - Organiser-Doer
+Scenario: TC33 - Organiser-Doer - user journey
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
@@ -2148,88 +2101,56 @@ Scenario: TC33 - Organiser-Doer
 	And I see the job roles
 	| Job roles |
 	| Roadie    |
-	When I go back and click the Answer "3" more questions button for "Home services"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "No" answer and proceed
-	And I click See results button
-	Then the following message is displayed; "No careers were found that might interest you based on your responses."
-	When I go back and click the Answer "3" more questions button for "Transport"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "No" answer and proceed
-	And I click See results button
-	Then there are "1" roles I might be interested in
-	And I see the job roles
-	| Job roles         |
-	| Transport planner |
-	When I go back and click the Answer "3" more questions button for "Government services"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
+	When I click the Answer "1" more questions button for "Home services"
 	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
 	When I select "Yes" answer and proceed
 	And I click See results button
-	Then there are "1" roles I might be interested in
+	Then there are "4" roles I might be interested in
 	And I see the job roles
-	| Job roles                       |
-	| Forensic collision investigator |
-	When I go back and click the Answer "5" more questions button for "Engineering and maintenance"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "No" answer and proceed to the next question
+	| Job roles                         |
+	| Window cleaner                    |
+	| Industrial cleaner                |
+	| Caretaker                         |
+	| British Sign Language interpreter |
+	When I click See results button for "Transport"
+	Then there are "3" roles I might be interested in
+	And I see the job roles
+	| Job roles              |
+	| Fishing vessel skipper |
+	| Airline pilot          |
+	| Tractor driver         |
+	When I click the Answer "1" more questions button for "Government services"
+	When I select "No" answer and proceed
+	And I click See results button
+	Then I see the job roles
+	| Job roles                  |
+	| Coastguard                 |
+	| Probation services officer |
+	When I click the Answer "3" more questions button for "Engineering and maintenance"
 	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
-	When I select "Yes" answer and proceed to the next question
+	When I select "No" answer and proceed to the next question
 	Then the following question is displayed; "Do you think you are good at using words to describe ideas?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
 	When I select "Yes" answer and proceed to the next question
 	Then the following question is displayed; "Are you able to do detailed, intricate work with your hands?"
 	When I select "No" answer and proceed
 	And I click See results button
-	Then there are "5" roles I might be interested in
-	And I see the job roles
-	| Job roles                         |
-	| Smart meter installer             |
-	| Lift engineer                     |
-	| Nuclear technician                |
-	| Lighting technician               |
-	| Merchant Navy engineering officer |
-	When I go back and click the Answer "3" more questions button for "Administration"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
+	Then I see the job roles
+	| Job roles                       |
+	| Electricity generation worker   |
+	| Electricity distribution worker |
+	When I click the Answer "1" more questions button for "Administration"
 	Then the following question is displayed; "Are you able to read well?"
-	When I select "Yes" answer and proceed
+	When I select "No" answer and proceed
 	And I click See results button
-	Then the following message is displayed; "No careers were found that might interest you based on your responses."
-	When I go back and click the Answer "4" more questions button for "Environment and land"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "Yes" answer and proceed
-	And I click See results button
-	Then there are "7" roles I might be interested in
-	And I see the job roles
-	| Job roles                           |
-	| Research scientist                  |
-	| Agricultural engineer               |
-	| Agricultural engineering technician |
-	| Nuclear engineer                    |
-	| Zoologist                           |
-	| Land surveyor                       |
-	| Cartographer                        |
+	Then I see the job roles
+	| Job roles              |
+	| Purchasing manager     |
+	| Reprographic assistant |
+	| Finance officer        |
+	When I click See results button for "Environment and land"
+	Then I see the job roles
+	| Job roles                   |
+	| Thermal insulation engineer |
 
 Scenario: TC34 - Creator-Organiser-Doer - user journey
 	And I click on Assessment
@@ -2526,7 +2447,7 @@ Scenario: TC36 - I want to save my progress during yes no questions
 	And I choose the "Get a reference code" option of returning to assessment
 	And I make a note of the reference code
 	When I use the reference code to return to my assessment from the Dysac home page
-	Then I am at the question where I left off
+	Then I am at the question noted earlier before I saved progress
 
 Scenario: TC37 - I want to change my answers after initial job category suggestion
 	And I click on Assessment
@@ -2545,7 +2466,7 @@ Scenario: TC37 - I want to change my answers after initial job category suggesti
 	And I see the job roles
 	| Job roles           |
 	| Technical architect |
-	And I decide to change my answers
+	But I decide to change my answers
 	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
 	And I select "No" answer and proceed to the next question
 	And the following question is displayed; "Are you comfortable working in a team with other people?"
@@ -2560,13 +2481,95 @@ Scenario: TC37 - I want to change my answers after initial job category suggesti
 	| Job roles                   |
 	| Textiles production manager |
 
-Scenario: TC38 - I want to check that descriptive texts match suggested job categories
+Scenario: TC38 - I want to change my answers after initial job category suggestion
+	And I click on Assessment
+	And I answer all the questions using the data file "AnswerSetTC36"
+	And I click the Answer "4" more questions button for "Managerial"
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you able to read well?"
+	And I select "Yes" answer and proceed
+	And I click See results button
+	And there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles       |
+	| Network manager |
+	But I decide to change my answers
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you able to read well?"
+	And I select "Yes" answer and proceed
+	And I click See results button
+	And there are "1" roles I might be interested in
+	And I see the job roles
+	| Job roles           |
+	| Technical architect |
+
+Scenario: TC39 - I want to change my answers after initial job category suggestion
+	And I click on Assessment
+	And I answer all the questions using the data file "AnswerSetTC36"
+	And I click the Answer "4" more questions button for "Managerial"
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you able to read well?"
+	And I select "Yes" answer and proceed
+	And I click See results button
+	And there are "12" roles I might be interested in
+	And I see the job roles
+	| Job roles                        |
+	| Bid writer                       |
+	| GP practice manager              |
+	| Community education co-ordinator |
+	| Town planner                     |
+	| Headteacher                      |
+	| Care home manager                |
+	| Surveying technician             |
+	| Health service manager           |
+	| Diplomatic Service officer       |
+	| Museum curator                   |
+	| Wedding planner                  |
+	| Events manager                   |
+	But I decide to change my answers
+	And the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you comfortable working in a team with other people?"
+	And I select "No" answer and proceed to the next question
+	And the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
+	And I select "Yes" answer and proceed to the next question
+	And the following question is displayed; "Are you able to read well?"
+	And I select "Yes" answer and proceed
+	And I click See results button
+	And there are "8" roles I might be interested in
+	And I see the job roles
+	| Job roles                    |
+	| Estimator                    |
+	| Advertising media planner    |
+	| Environmental consultant     |
+	| Consumer scientist           |
+	| Economist                    |
+	| Business development manager |
+	| Quantity surveyor            |
+	| Marketing manager            |
+
+Scenario: TC40 - I want to check that descriptive texts match suggested job categories
 	And I click on Assessment
 	And I answer all the questions using the data file "AnswerSetTC38"
-	When I check each job category suggested
-	Then the description text each job category matches it
+	When I check the description text beneath each suggested job category
+	Then each job category is mentioned as part of the narration of its corresponding descriptive text
 
-Scenario: TC39 - I want to be able to use a reference code to see my results
+Scenario: TC41 - I want to be able to use a reference code to see my results
 	And I click on Assessment
 	And I answer all the questions using the data file "AnswerSetTC38"
 	And I make a note of the suggested job categories

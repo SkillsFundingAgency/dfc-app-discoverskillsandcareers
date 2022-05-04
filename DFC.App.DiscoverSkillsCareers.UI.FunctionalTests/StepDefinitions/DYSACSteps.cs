@@ -271,7 +271,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         }
 
         [Then(@"I am at the question where I left off")]
-        public void ThenIAmAtTheQuestionWhereILeftOff()
+        [Then(@"I am at the question noted earlier before I saved progress")]
+        public void ThenIAmAtTheQuestionNotedEarlierBeforeISavedProgress()
         {
             if (_scenarioContext.ScenarioInfo.Title.Contains("yes no questions"))
             {
@@ -447,8 +448,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _dysacPage.AnswerAllQuestions(questionOption);
         }
 
-        [When(@"I click See matches to See 7 other career areas that might interest you")]
-        public void WhenIClickSeeMatchesToSee7OtherCareerAreasThatMightInterestYou()
+        [When(@"I click See matches in order to view the other career areas that might interest you")]
+        public void WhenIClickSeeMatchesInOrderToViewTheOtherCareerAreasThatMightInterestYou()
         {
             _yourResultsPage.ClickSeeMatches();
         }
@@ -549,7 +550,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Given(@"I make a note of this question")]
         public void GivenIMakeANoteOfThisQuestion()
         {
-            /* current question noted in step above */
+            /* current question noted in step '[Then(@"the following question is displayed; ""(.*)""")]' */
         }
 
         [Given(@"there are ""(.*)"" roles I might be interested in")]
@@ -612,16 +613,16 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourResultsPage.ClickChangeMyAnswers(_answerMoreJobCategory);
         }
 
-        [When(@"I check each job category suggested")]
-        public void WhenICheckEachJobCategorySuggested()
+        [When(@"I check the description text beneath each suggested job category")]
+        public void WhenICheckTheDescriptionTextBeneathEachSuggestedJobCategory()
         {
             _yourResultsPage.ClickSeeMatches();
             _yourResultsPage.GetJobCategories();
             _yourResultsPage.GetJobCategoryDescriptions();
         }
 
-        [Then(@"the description text each job category matches it")]
-        public void ThenTheDescriptionTextEachJobCategoryMatchesIt()
+        [Then(@"each job category is mentioned as part of the narration of its corresponding descriptive text")]
+        public void ThenEachJobCategoryIsMentionedAsPartOfTheNarrationOfItsCorrespondingDescriptiveText()
         {
             NUnit.Framework.Assert.IsTrue(_yourResultsPage.VerifyJobCategoryDescription(), "Description text does not match job category.");
         }
@@ -649,6 +650,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"I am at the page noted earlier")]
         public void ThenIAmAtThePageNotedEarlier()
         {
+            var qqq = _scenarioContext.GetWebDriver().Url;
             NUnit.Framework.Assert.AreEqual(_currentPage, _scenarioContext.GetWebDriver().Url, "You are not on the page noted earlier.");
         }
 
