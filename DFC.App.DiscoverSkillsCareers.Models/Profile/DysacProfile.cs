@@ -73,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
         {
             var apiSkills = contentItems
-                .Where(x => x.ContentType == DysacConstants.ContentTypeSkill)
+                .Where(x => x.ContentType.ToUpperInvariant() == DysacConstants.ContentTypeSkill.ToUpperInvariant())
                 .Select(x => x as ApiSkill)
                 .Where(x => x != null);
 
