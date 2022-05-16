@@ -127,8 +127,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     continue;
                 }
 
-                var jobProfileTitles = jobCategory.JobProfiles.GroupBy(y => y.Title).Select(
-                    x => x.FirstOrDefault()).Select(z => z?.Title?.ToLowerInvariant());
+                var jobProfileTitles = jobCategory.JobProfiles
+                    .GroupBy(jobProfile => jobProfile.Title)
+                    .Select(jobProfileGroup => jobProfileGroup.First())
+                    .Select(jobProfile => jobProfile?.Title?.ToLower());
+
                 var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
                         x => x.PartitionKey == "JobProfileOverview"
                              && jobProfileTitles.Contains(x.Title.ToLower()))
@@ -142,16 +145,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     continue;
                 }
 
-                var category = resultsByCategoryModel.JobsInCategory.FirstOrDefault(x =>
-                    x.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
+                var category = resultsByCategoryModel.JobsInCategory
+                    .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
 
                 category?.JobProfiles?.AddRange(jobProfileOverviews
-                    .GroupBy(x => x.Title)
-                    .Select(x => x.First())
-                    .Select(x => new ResultJobProfileOverViewModel
+                    .GroupBy(jobProfileOverview => jobProfileOverview.Title)
+                    .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
+                    .Select(jobProfileOverview => new ResultJobProfileOverViewModel
                     {
-                        Cname = x.Title.Replace(" ", "-"),
-                        OverViewHTML = x.Html ?? $"<a href='/job-profiles{x.Url}'>{x.Title}</a>",
+                        Cname = jobProfileOverview.Title.Replace(" ", "-"),
+                        OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
                         ReturnedStatusCode = System.Net.HttpStatusCode.OK
                     }));
             }
