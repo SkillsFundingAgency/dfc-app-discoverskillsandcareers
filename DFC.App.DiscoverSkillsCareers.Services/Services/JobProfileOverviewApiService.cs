@@ -27,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new ArgumentNullException(nameof(url));
             }
 
-            var jobProfileResponse = await httpClient.GetAsync(url!.ToString()).ConfigureAwait(false);
+            var jobProfileResponse = await httpClient.GetAsync(url.ToString()).ConfigureAwait(false);
 
             var jobProfileContent = await jobProfileResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -36,21 +36,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new InvalidOperationException($"Job Profile Overview response for {url} returned null content");
             }
 
-            return new ApiJobProfileOverview { CanonicalName = url.Segments.LastOrDefault().Trim('/'), Html = jobProfileContent };
+            return new ApiJobProfileOverview { CanonicalName = url.Segments.LastOrDefault()?.Trim('/'), Html = jobProfileContent };
         }
 
         public async Task<List<ApiJobProfileOverview>> GetOverviews(List<CanonicalNameWithTitle> jobProfileCanonicalNames)
         {
-            if (jobProfileCanonicalNames == null || !jobProfileCanonicalNames.Any())
+            if (!jobProfileCanonicalNames.Any())
             {
                 return new List<ApiJobProfileOverview>();
             }
 
-            List<ApiJobProfileOverview> results = new List<ApiJobProfileOverview>();
+            var results = new List<ApiJobProfileOverview>();
 
             foreach (var profile in jobProfileCanonicalNames)
             {
                 await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+
                 var result = await Get(profile).ConfigureAwait(false);
                 results.Add(result);
             }
