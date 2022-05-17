@@ -122,12 +122,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             var results = new List<JobCategoryResult>();
 
-            var topTraits = userTraits.OrderByDescending(x => x.TotalScore).Take(10);
+            var topTraits = userTraits.OrderByDescending(userTrait => userTrait.TotalScore).Take(10);
             var questionSkills = allFilteringQuestions?
-                .SelectMany(x => x.Skills)
-                .Select(x => x.Title)
-                .GroupBy(x => x)
-                .Select(x => x.First())
+                .SelectMany(question => question.Skills)
+                .Select(skill => skill.Title)
+                .GroupBy(title => title)
+                .Select(titleGroup => titleGroup.First())
                 .ToList();
 
             logger.LogInformation($"User Traits: {JsonConvert.SerializeObject(userTraits)}");
@@ -136,9 +136,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             logger.LogInformation($"All Filtering Questions: {JsonConvert.SerializeObject(allFilteringQuestions)}");
 
             var allJobProfiles = allJobProfileCategories
-                .SelectMany(x => x.JobProfiles)
-                .GroupBy(x => x.Title)
-                .Select(x => x.First())
+                .SelectMany(jobCategory => jobCategory.JobProfiles)
+                .GroupBy(jobProfile => jobProfile.Title)
+                .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
             var prominentSkills =
@@ -178,8 +178,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                         jobProfilesWithAtLeastOneSkill,
                         prominentSkills,
-                        75,
-                        relevantSkills);
+                        75);
 
                     logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(fullJobCategory)}");
                     logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");

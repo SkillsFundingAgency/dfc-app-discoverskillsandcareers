@@ -17,7 +17,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 throw new ArgumentNullException(nameof(jobProfiles));
             }
 
-            var skills = jobProfiles.SelectMany(p => p.Skills.Select(s => s.Title)).Distinct();
+            var skills = jobProfiles
+                .SelectMany(jobProfile => jobProfile.Skills.Select(s => s.Title))
+                .Distinct();
+
             var result = new Dictionary<string, IList<string>>();
 
             foreach (var skill in skills)
@@ -48,8 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
         public static IEnumerable<SkillAttribute> GetSkillAttributes(
             this IEnumerable<JobProfileContentItemModel> profiles,
             HashSet<string> prominentSkills,
-            double maxProfileDistributionPercentage,
-            List<string?> questionSkills)
+            double maxProfileDistributionPercentage)
         {
             var totalProfileCount = profiles.Count();
 
