@@ -436,6 +436,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
                 item.Id = id;
                 item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
+                item.JobCategories = new List<JobCategoryContentItemModel>
+                {
+                    new JobCategoryContentItemModel
+                    {
+                        JobProfiles = new List<JobProfileContentItemModel>
+                        {  
+                            new JobProfileContentItemModel
+                            {
+                                Title = "Example",
+                                JobProfileWebsiteUrl = "http://www.example.org/"
+                            }
+                        }
+                    }
+                };
             }
 
             return models.ToList();
