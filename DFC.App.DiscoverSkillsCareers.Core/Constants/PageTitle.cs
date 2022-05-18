@@ -14,6 +14,6 @@
         public const string AssessmentReturn = "Return";
         public const string LoadSession = "Load Session";
         public const string Results = "Results";
-        public const string AssessmentComplete = "Assessment Complete";
+        public const string AssessmentComplete = "Assessment complete";
     }
 }

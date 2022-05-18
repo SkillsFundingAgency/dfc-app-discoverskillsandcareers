@@ -341,13 +341,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .ToList();
 
             var transformedJobProfiles = allJobProfiles
-                .Where(z => z.JobProfileWebsiteUrl != null)
-                .Select(z => new CanonicalNameWithTitle(
-                    z.Title,
-                    z.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty).ToLowerInvariant()
+                .Where(jobProfile => jobProfile.JobProfileWebsiteUrl != null)
+                .Select(jobProfile => new CanonicalNameWithTitle(
+                    jobProfile.Title,
+                    jobProfile.JobProfileWebsiteUrl.Replace("/job-profiles/", string.Empty).ToLowerInvariant()
                     ))
-                .GroupBy(x => x.Title)
-                .Select(x => x.First())
+                .GroupBy(jobProfile => jobProfile.Title)
+                .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
             logger.LogInformation($"Retrieving {transformedJobProfiles.Count()} Job Profiles from Job Profiles API");
@@ -362,7 +362,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             var mappedProfileOverviews = overviews
-                .Select(x => mapper.Map<DysacJobProfileOverviewContentModel>(x));
+                .Select(overview => mapper.Map<DysacJobProfileOverviewContentModel>(overview));
 
             foreach (var mappedOverview in mappedProfileOverviews)
             {
