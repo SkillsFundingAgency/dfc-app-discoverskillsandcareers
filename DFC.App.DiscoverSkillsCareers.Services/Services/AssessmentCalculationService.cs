@@ -123,12 +123,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var results = new List<JobCategoryResult>();
 
             var topTraits = userTraits.OrderByDescending(userTrait => userTrait.TotalScore).Take(10);
-            var questionSkills = allFilteringQuestions?
-                .SelectMany(question => question.Skills)
-                .Select(skill => skill.Title)
-                .GroupBy(title => title)
-                .Select(titleGroup => titleGroup.First())
-                .ToList();
 
             logger.LogInformation($"User Traits: {JsonConvert.SerializeObject(userTraits)}");
             logger.LogInformation($"All Traits: {JsonConvert.SerializeObject(allTraits)}");
@@ -161,12 +155,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     {
                         continue;
                     }
-
-                    var relevantSkills = fullJobCategory.JobProfiles
-                        .SelectMany(jp => jp.Skills.Select(s => s.Title))
-                        .Where(t => questionSkills?.Contains(t) != false)
-                        .Distinct()
-                        .ToList();
 
                     var jobProfiles = fullJobCategory.JobProfiles.GroupBy(jp => jp.Title)
                         .Select(jpg => jpg.First())
@@ -203,7 +191,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
         {
-            int traitsTake = (traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore) ? 4 : 3;
+            int traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
             return traitResult.Take(traitsTake);
         }
     }
