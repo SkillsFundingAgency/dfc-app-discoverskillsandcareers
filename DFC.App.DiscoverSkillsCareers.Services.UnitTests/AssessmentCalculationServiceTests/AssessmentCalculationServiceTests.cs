@@ -80,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             
             // Assert
             result.Should().NotBeNull();
-            result.Should().HaveCount(1);
+            result.Should().BeEmpty();
         }
         
         [Fact]
