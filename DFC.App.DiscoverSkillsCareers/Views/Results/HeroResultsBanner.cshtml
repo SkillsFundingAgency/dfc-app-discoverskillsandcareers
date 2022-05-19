@@ -1,5 +1,5 @@
 ﻿@model ResultsHeroBannerViewModel
-<partial name="_ResultsHeader" />
+<partial name="_ResultsHeader"/>
 <div class="secondary-hero">
     <div class="govuk-main-wrapper govuk-width-container govuk-!-padding-top-7">
         <div class="govuk-grid-row">
@@ -13,11 +13,18 @@
                             <li>@trait</li>
                         }
                     </ul>
-                    @if(Model.IsCategoryBanner)
+                    @if (Model.IsCategoryBanner)
                     {
                         @if (Model.NumberOfCategories > 0)
                         {
-                            <p>The following job categories are based on the answers you have given. You can choose to view more results at the bottom of the page.</p>
+                            <p>The following careers are based on the answers you have given. You can refine your results by answering more questions.</p>
+                            <p class="govuk-body">You may want to:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li><a href="/discover-your-skills-and-careers/assessment/email" class="govuk-link govuk-link--no-visited-state">email</a> <span id="printBody"></span> your results to think about later</li>
+                                <li><a href="/explore-careers" class="govuk-link">explore careers</a> suggested for you</li>
+                                <li>compare different careers to see what you like</li>
+                                <li><a href="/contact-us" class="govuk-link">talk to a careers adviser</a> about your results and next steps</li>
+                            </ul>
                         }
                         else
                         {
@@ -27,14 +34,27 @@
                 </div>
             </div>
             <div class="govuk-grid-column-one-third">
-                <div>
-                    <div id="print-button-container"></div>
+                <div class="app-sidebar app-resume-panel">
+                    <h2 class="govuk-heading-m">Next steps</h2>
+
+                    <ul class="govuk-list govuk-list--spaced print-button-container">
+                        <li>
+                            <a href="/discover-your-skills-and-careers/assessment/email" class="govuk-link govuk-link--no-visited-state">Email your results</a>
+                        </li>
+
+                        <li>
+                            <a href="/skills-assessment/skills-health-check/home" class="govuk-link govuk-link--no-visited-state">Take a skills health check</a>
+                        </li>
+
+                        <li>
+                            <a href="/skills-assessment" class="govuk-link govuk-link--no-visited-state">Return to skills assessment</a>
+                        </li>
+                    </ul>
                 </div>
                 <div>
-                    <partial name="_SpeakToAnAdviser" />
+                    <partial name="_SpeakToAnAdviser"/>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
