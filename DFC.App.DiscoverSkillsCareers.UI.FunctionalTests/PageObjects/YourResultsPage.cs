@@ -214,7 +214,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public bool GetYourResultStatement(string jobCategory)
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
 
             return Support.GetAllText(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-list.govuk-list--bullet > li")).Contains(jobCategory);
         }

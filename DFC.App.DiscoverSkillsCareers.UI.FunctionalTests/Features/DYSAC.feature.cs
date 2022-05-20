@@ -3369,8 +3369,7 @@ this.FeatureBackground();
                 table14.AddRow(new string[] {
                             "you like dealing with complicated problems or working with numbers"});
                 table14.AddRow(new string[] {
-                            "you are motivated, set yourself personal goals and are comfortable competing with" +
-                                " other people"});
+                            "you like to plan things and are well organised"});
 #line 844
  testRunner.Then("the What you told us section of the Your results page displays the following trai" +
                         "ts", ((string)(null)), table14, "Then ");
@@ -3382,34 +3381,34 @@ this.FeatureBackground();
                             "Job category",
                             "Number of answer more questions"});
                 table15.AddRow(new string[] {
-                            "Retail and sales",
+                            "Manufacturing",
                             "4"});
                 table15.AddRow(new string[] {
-                            "Emergency and uniform services",
-                            "3"});
-                table15.AddRow(new string[] {
-                            "Hospitality and food",
-                            "3"});
-                table15.AddRow(new string[] {
-                            "Teaching and education",
-                            "3"});
-                table15.AddRow(new string[] {
-                            "Healthcare",
+                            "Science and research",
                             "4"});
                 table15.AddRow(new string[] {
                             "Travel and tourism",
                             "2"});
                 table15.AddRow(new string[] {
-                            "Social care",
+                            "Business and finance",
+                            "3"});
+                table15.AddRow(new string[] {
+                            "Law and legal",
                             "3"});
                 table15.AddRow(new string[] {
                             "Animal care",
                             "2"});
                 table15.AddRow(new string[] {
-                            "Science and research",
+                            "Delivery and storage",
+                            "2"});
+                table15.AddRow(new string[] {
+                            "Healthcare",
                             "4"});
                 table15.AddRow(new string[] {
-                            "Sports and leisure",
+                            "Home services",
+                            "3"});
+                table15.AddRow(new string[] {
+                            "Transport",
                             "3"});
 #line 850
  testRunner.And("the following job categories with their corresponding number of answer more quest" +
@@ -3615,12 +3614,11 @@ this.FeatureBackground();
                 TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
                             "Trait text"});
                 table17.AddRow(new string[] {
-                            "you are motivated, set yourself personal goals and are comfortable competing with" +
-                                " other people"});
-                table17.AddRow(new string[] {
                             "you enjoy helping and listening to other people"});
                 table17.AddRow(new string[] {
-                            "you are a practical person and enjoy getting things done"});
+                            "you like dealing with complicated problems or working with numbers"});
+                table17.AddRow(new string[] {
+                            "you like to plan things and are well organised"});
 #line 908
  testRunner.Then("the What you told us section of the Your results page displays the following trai" +
                         "ts", ((string)(null)), table17, "Then ");
@@ -3632,34 +3630,34 @@ this.FeatureBackground();
                             "Job category",
                             "Number of answer more questions"});
                 table18.AddRow(new string[] {
-                            "Business and finance",
-                            "3"});
-                table18.AddRow(new string[] {
-                            "Emergency and uniform services",
-                            "3"});
-                table18.AddRow(new string[] {
-                            "Law and legal",
-                            "3"});
-                table18.AddRow(new string[] {
-                            "Travel and tourism",
-                            "2"});
-                table18.AddRow(new string[] {
-                            "Sports and leisure",
-                            "3"});
-                table18.AddRow(new string[] {
                             "Manufacturing",
-                            "4"});
-                table18.AddRow(new string[] {
-                            "Creative and media",
-                            "5"});
-                table18.AddRow(new string[] {
-                            "Construction and trades",
                             "4"});
                 table18.AddRow(new string[] {
                             "Science and research",
                             "4"});
                 table18.AddRow(new string[] {
-                            "Teaching and education",
+                            "Travel and tourism",
+                            "2"});
+                table18.AddRow(new string[] {
+                            "Business and finance",
+                            "3"});
+                table18.AddRow(new string[] {
+                            "Law and legal",
+                            "3"});
+                table18.AddRow(new string[] {
+                            "Animal care",
+                            "2"});
+                table18.AddRow(new string[] {
+                            "Delivery and storage",
+                            "2"});
+                table18.AddRow(new string[] {
+                            "Healthcare",
+                            "4"});
+                table18.AddRow(new string[] {
+                            "Home services",
+                            "3"});
+                table18.AddRow(new string[] {
+                            "Transport",
                             "3"});
 #line 914
  testRunner.And("the following job categories with their corresponding number of answer more quest" +
@@ -6361,14 +6359,14 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="TC31 - Analyst-Creator-Organiser-Doer")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC31 - Analyst-Creator-Organiser-Doer - user journey")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "TC31 - Analyst-Creator-Organiser-Doer")]
-        public void TC31_Analyst_Creator_Organiser_Doer()
+        [Xunit.TraitAttribute("Description", "TC31 - Analyst-Creator-Organiser-Doer - user journey")]
+        public void TC31_Analyst_Creator_Organiser_Doer_UserJourney()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC31 - Analyst-Creator-Organiser-Doer", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC31 - Analyst-Creator-Organiser-Doer - user journey", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 1767
 this.ScenarioInitialize(scenarioInfo);
 #line hidden

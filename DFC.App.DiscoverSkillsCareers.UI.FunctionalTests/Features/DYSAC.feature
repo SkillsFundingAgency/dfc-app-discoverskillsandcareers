@@ -842,23 +842,23 @@ Scenario: TC23 - Real user interaction 1
 	| 95               | I like working with my hands or tools                                | Agree             |
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
 	Then the What you told us section of the Your results page displays the following traits
-	| Trait text                                                                                     |
-	| you enjoy helping and listening to other people                                                |
-	| you like dealing with complicated problems or working with numbers                             |
-	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| Trait text                                                         |
+	| you enjoy helping and listening to other people                    |
+	| you like dealing with complicated problems or working with numbers |
+	| you like to plan things and are well organised                     |
 	And the traits appear in the same order as in the data table above
 	And the following job categories with their corresponding number of answer more questions are displayed
-	| Job category                   | Number of answer more questions |
-	| Retail and sales               | 4                               |
-	| Emergency and uniform services | 3                               |
-	| Hospitality and food           | 3                               |
-	| Teaching and education         | 3                               |
-	| Healthcare                     | 4                               |
-	| Travel and tourism             | 2                               |
-	| Social care                    | 3                               |
-	| Animal care                    | 2                               |
-	| Science and research           | 4                               |
-	| Sports and leisure             | 3                               |
+	| Job category         | Number of answer more questions |
+	| Manufacturing        | 4                               |
+	| Science and research | 4                               |
+	| Travel and tourism   | 2                               |
+	| Business and finance | 3                               |
+	| Law and legal        | 3                               |
+	| Animal care          | 2                               |
+	| Delivery and storage | 2                               |
+	| Healthcare           | 4                               |
+	| Home services        | 3                               |
+	| Transport            | 3                               |
 
 @DYSAC
 Scenario: TC24 - Real user interaction 2
@@ -906,23 +906,23 @@ Scenario: TC24 - Real user interaction 2
 	| 95               | I like working with my hands or tools                                | Agree             |
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
 	Then the What you told us section of the Your results page displays the following traits
-	| Trait text                                                                                   |
-	| you are motivated, set yourself personal goals and are comfortable competing with other people |
-	| you enjoy helping and listening to other people                                                |
-	| you are a practical person and enjoy getting things done                                       |
+	| Trait text                                                         |
+	| you enjoy helping and listening to other people                    |
+	| you like dealing with complicated problems or working with numbers |
+	| you like to plan things and are well organised                     |
 	And the traits appear in the same order as in the data table above
 	And the following job categories with their corresponding number of answer more questions are displayed
-	| Job category                   | Number of answer more questions |
-	| Business and finance           | 3                               |
-	| Emergency and uniform services | 3                               |
-	| Law and legal                  | 3                               |
-	| Travel and tourism             | 2                               |
-	| Sports and leisure             | 3                               |
-	| Manufacturing                  | 4                               |
-	| Creative and media             | 5                               |
-	| Construction and trades        | 4                               |
-	| Science and research           | 4                               |
-	| Teaching and education         | 3                               |
+	| Job category         | Number of answer more questions |
+	| Manufacturing        | 4                               |
+	| Science and research | 4                               |
+	| Travel and tourism   | 2                               |
+	| Business and finance | 3                               |
+	| Law and legal        | 3                               |
+	| Animal care          | 2                               |
+	| Delivery and storage | 2                               |
+	| Healthcare           | 4                               |
+	| Home services        | 3                               |
+	| Transport            | 3                               |
 
 Scenario: TC25 - Leader-Driver
 	And I click on Assessment
