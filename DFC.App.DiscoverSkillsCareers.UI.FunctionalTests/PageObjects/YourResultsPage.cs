@@ -301,29 +301,60 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategories + "')]//..//following-sibling::a[contains(text(), 'Answer " + noOfMoreQuestions + " more question')]")).Click();
         }
 
+        //prod
+        //public string GetNumberOfRolesInterestedIn(string jobCategory)
+        //{
+        //    var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[1]")).Text;
+
+        //    if (text.Contains("roles"))
+        //    {
+        //        return text.Replace("roles you might be interested in", string.Empty).Trim();
+        //    }
+        //    else
+        //    {
+        //        return text.Replace("role you might be interested in", string.Empty).Trim();
+        //    }
+        //}
+
+        //dev
         public string GetNumberOfRolesInterestedIn(string jobCategory)
         {
-            var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[1]")).Text;
+            var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-full']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[1]")).Text;
 
             if (text.Contains("roles"))
             {
-                return text.Replace("roles you might be interested in", string.Empty).Trim();
+                return text.Replace("roles that might suit you", string.Empty).Trim();
             }
             else
             {
-                return text.Replace("role you might be interested in", string.Empty).Trim();
+                return text.Replace("role that might suit you", string.Empty).Trim();
             }
         }
 
+        //prod
+        //public string GetNoCareersMessage(string jobCategory)
+        //{
+        //    var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[2]//span")).Text;
+        //    return text.Trim();
+        //}
+
+        //dev
         public string GetNoCareersMessage(string jobCategory)
         {
-            var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//following-sibling::p[2]//span")).Text;
+            var text = _scenarioContext.GetWebDriver().FindElement(By.XPath("//*[@class='govuk-grid-column-full']/h2/a[contains(text(), '" + jobCategory + "')]//../following-sibling::p[1]/span")).Text;
             return text.Trim();
         }
 
+        //prod
+        //public IList<IWebElement> GetRolesUI(string jobCategory)
+        //{
+        //    return _scenarioContext.GetWebDriver().FindElements(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::ul//a"));
+        //}
+
+        //dev
         public IList<IWebElement> GetRolesUI(string jobCategory)
         {
-            return _scenarioContext.GetWebDriver().FindElements(By.XPath("//*[@class='govuk-grid-column-two-thirds']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::ul//a"));
+            return _scenarioContext.GetWebDriver().FindElements(By.XPath("//*[@class='govuk-grid-column-full']//h2//a[contains(text(), '" + jobCategory + "')]//..//..//..//following-sibling::ul//a"));
         }
 
         public bool VerifyRoles(IEnumerable<JobCategoryRoles> roles, string jobCategory)
