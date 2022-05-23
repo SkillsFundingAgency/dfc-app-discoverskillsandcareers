@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
@@ -16,17 +17,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService;
+        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService;
 
         public ResultsService(
             ISessionService sessionService,
             IAssessmentCalculationService assessmentCalculationService,
             IDocumentService<DysacAssessment> assessmentDocumentService,
-            IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService)
+            IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService,
+            IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService)
         {
             this.sessionService = sessionService;
             this.assessmentCalculationService = assessmentCalculationService;
             this.assessmentDocumentService = assessmentDocumentService;
             this.filteringQuestionDocumentService = filteringQuestionDocumentService;
+            this.jobProfileCategoryDocumentService = jobProfileCategoryDocumentService;
         }
 
         public async Task<GetResultsResponse> GetResults()
@@ -74,23 +78,49 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 .Select(x => x.First())
                 .ToList();
 
+            var allJobCategories =
+                await jobProfileCategoryDocumentService.GetAsync(document => document.PartitionKey == "JobProfileCategory")
+                    .ConfigureAwait(false);
+
+            var allJobProfiles = allJobCategories!
+                .SelectMany(jobCategory => jobCategory.JobProfiles)
+                .GroupBy(jobProfile => jobProfile.Title)
+                .Select(jobProfileGroup => jobProfileGroup.First())
+                .ToList();
+
+            var allSkills = allJobProfiles
+                .SelectMany(jobProfile => jobProfile.Skills)
+                .GroupBy(jobProfile => jobProfile.Title)
+                .Select(jobProfileGroup => jobProfileGroup.First())
+                .ToList();
+
+            var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
+
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
             {
                 var listOfJobProfiles = new List<JobProfileResult>();
+                var categoryJobProfiles = category.JobProfiles
+                    .Where(jobProfile => jobProfile.SkillCodes != null && jobProfile.SkillCodes.Any())
+                    .ToList();
 
-                foreach (var jobProfile in category.JobProfiles.Where(x => x.SkillCodes != null))
-                {
-                    var canAddJobProfile = true;
-                    var relevantSkills = jobProfile.SkillCodes!.Where(skillCode => questionSkills.Contains(skillCode));
-
-                    foreach (var skill in relevantSkills)
-                    {
-                        if (!answeredPositiveQuestions.Contains(skill))
+                var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
+                    categoryJobProfiles
+                        .Select(jobProfile => new JobProfileContentItemModel
                         {
-                            canAddJobProfile = false;
-                            break;
-                        }
-                    }
+                            Skills = jobProfile.SkillCodes!.Select(skillCode => allSkills.Single(sk => sk.Title == skillCode)).ToList(),
+                        }),
+                    prominentSkills,
+                    75).ToList();
+
+                foreach (var jobProfile in categoryJobProfiles)
+                {
+                    var relevantSkills = jobProfile.SkillCodes!
+                        .Where(skillCode => questionSkills!.Contains(skillCode))
+                        .Where(skillCode => categorySkills.Any(categorySkill => categorySkill.ONetAttribute == skillCode))
+                        .Select(skillCode => (string?)skillCode)
+                        .ToList();
+
+                    var canAddJobProfile = answeredPositiveQuestions.OrderBy(q => q).SequenceEqual(relevantSkills.OrderBy(s => s));
 
                     if (canAddJobProfile)
                     {

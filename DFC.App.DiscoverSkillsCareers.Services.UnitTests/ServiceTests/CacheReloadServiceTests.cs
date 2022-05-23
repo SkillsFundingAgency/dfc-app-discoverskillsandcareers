@@ -46,6 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var expectedValidDysacQuestionSetContentModel = BuildValidDysacQuestionSetContentModel();
             var fakePagesSummaryItemModels = BuldFakeQuestionSetSummaryItemModel(NumerOfSummaryItems);
             var fakeCachedDysacQuestionSetContentModels = BuldFakeDysacQuestionSetContentModels(NumberOfDeletions);
+            var fakeCachedDysacTraitContentModels = BuldFakeDysacTraitSummaryItemModel(NumerOfSummaryItems);
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<ApiSummaryItemModel>(A<string>.Ignored, A<bool>.Ignored)).Returns(fakePagesSummaryItemModels);
             A.CallTo(() => fakeCmsApiService.GetItemAsync<ApiQuestionSet>(A<Uri>.Ignored)).Returns(A.Fake<ApiQuestionSet>());
@@ -53,6 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(HttpStatusCode.Created);
             A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>()).Returns(fakeCachedDysacQuestionSetContentModels);
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync<DysacTraitContentModel>()).Returns(fakeCachedDysacTraitContentModels );
             A.CallTo(() => fakeEventMessageService.DeleteAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored, A<string>.Ignored));
             A.CallTo(() => fakeJobProfileOverviewService.GetOverviews(A<List<CanonicalNameWithTitle>>.Ignored)).Returns(new List<ApiJobProfileOverview>() { new ApiJobProfileOverview { CanonicalName = "A-Job-Profile" } });
@@ -419,6 +421,35 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 var id = Guid.NewGuid();
 
                 item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
+            }
+
+            return models.ToList();
+        }
+
+        private List<DysacTraitContentModel> BuldFakeDysacTraitSummaryItemModel(int itemCount)
+        {
+            var models = A.CollectionOfFake<DysacTraitContentModel>(itemCount);
+
+            foreach (var item in models)
+            {
+                var id = Guid.NewGuid();
+
+                item.Id = id;
+                item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
+                item.JobCategories = new List<JobCategoryContentItemModel>
+                {
+                    new JobCategoryContentItemModel
+                    {
+                        JobProfiles = new List<JobProfileContentItemModel>
+                        {  
+                            new JobProfileContentItemModel
+                            {
+                                Title = "Example",
+                                JobProfileWebsiteUrl = "http://www.example.org/"
+                            }
+                        }
+                    }
+                };
             }
 
             return models.ToList();

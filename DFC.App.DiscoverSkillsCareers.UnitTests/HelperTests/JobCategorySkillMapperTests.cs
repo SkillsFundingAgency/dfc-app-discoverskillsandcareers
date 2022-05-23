@@ -201,8 +201,7 @@ namespace DFC.App.DiscoverSkillsCareers.Helpers
             var result = JobCategorySkillMappingHelper.GetSkillAttributes(
                 JobProfilesWithCommonSkills_7Items,
                 new HashSet<string> { "SKILL7", "SKILL1" },
-                0.75,
-                JobProfilesWithCommonSkills_7Items.SelectMany(x => x.Skills).Select(x => x.Title).Distinct().ToList());
+                0.75);
 
             // Assert
             Assert.Equal(1, result.Count());
