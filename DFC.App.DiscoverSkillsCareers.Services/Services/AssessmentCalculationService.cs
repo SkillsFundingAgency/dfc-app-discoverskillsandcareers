@@ -124,6 +124,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var topTraits = userTraits.OrderByDescending(userTrait => userTrait.TotalScore).Take(10);
 
+            var traitLookup = userTraits.Where(r => r.TotalScore > 0)
+                .ToDictionary(r => r.TraitCode, StringComparer.InvariantCultureIgnoreCase);
+
             logger.LogInformation($"User Traits: {JsonConvert.SerializeObject(userTraits)}");
             logger.LogInformation($"All Traits: {JsonConvert.SerializeObject(allTraits)}");
             logger.LogInformation($"Top Traits: {JsonConvert.SerializeObject(topTraits)}");
@@ -149,9 +152,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
-                    var fullJobCategory = allJobProfileCategories.First(x => x.Url == limitedJobCategory.Url);
+                    var fullJobCategory = allJobProfileCategories
+                        .First(x => x.Url == limitedJobCategory.Url);
 
                     if (results.Any(x => x.JobFamilyName == fullJobCategory.Title))
+                    {
+                        continue;
+                    }
+
+                    var jobCategoryTraits = allTraits
+                        .Where(tr => tr.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
+                        .Select(tr => tr.Title)
+                        .ToList();
+
+                    if (!jobCategoryTraits.All(tc => traitLookup.ContainsKey(tc)))
                     {
                         continue;
                     }
