@@ -47,8 +47,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             await LoadJobCategoriesAndProfiles();
             await LoadFilteringQuestions();
             shortQuestions = await LoadShortQuestions();
-            List<dynamic> itemsToProcess = await LoadLegacyDocuments();
+            
+            Console.WriteLine("Fetching user sessions");
+            var itemsToProcess = await LoadLegacyDocuments();
 
+            var index = 1;
+            
+            Console.WriteLine($"Found {itemsToProcess.Count} sessions");
+            
             foreach (var item in itemsToProcess)
             {
                 var assessment = new DysacAssessment();
@@ -78,6 +84,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 }
 
                 var result = await dysacAssessmentDocumentService.UpsertAsync(assessment);
+                Console.WriteLine($"Wrote record {index++} of {itemsToProcess.Count} - {result}");
             }
         }
 
