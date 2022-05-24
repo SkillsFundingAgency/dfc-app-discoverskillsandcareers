@@ -53,10 +53,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var filteringQuestionDocumentService = serviceProvider.GetService<IDocumentService<DysacFilteringQuestionContentModel>>();
             var dysacQuestionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacQuestionSetContentModel>>();
             var userSessionDocumentService = serviceProvider.GetService<IDocumentClient>();
-            var autoMapper = serviceProvider.GetService<IMapper>();
             var migrationOptions = serviceProvider.GetService<MigrationOptions>();
 
-            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService, userSessionDocumentService, dysacQuestionSetDocumentService, autoMapper, migrationOptions);
+            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService, userSessionDocumentService, dysacQuestionSetDocumentService, migrationOptions);
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
         }
