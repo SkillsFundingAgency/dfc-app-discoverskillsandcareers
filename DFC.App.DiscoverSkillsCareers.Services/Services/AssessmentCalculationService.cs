@@ -79,7 +79,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .GroupBy(x => x.Trait)
                 .Select(g =>
                 {
-                    return new TraitResult()
+                    return new TraitResult
                     {
                         TraitCode = g.Key!,
                         TotalScore = g.Sum(x => x.Score),
@@ -155,11 +155,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     var fullJobCategory = allJobProfileCategories
                         .First(x => x.Url == limitedJobCategory.Url);
 
-                    if (results.Any(x => x.JobFamilyName == fullJobCategory.Title))
-                    {
-                        continue;
-                    }
-
                     var jobCategoryTraits = allTraits
                         .Where(tr => tr.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
                         .Select(tr => tr.Title)
@@ -185,14 +180,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     logger.LogInformation($"Job Category: {JsonConvert.SerializeObject(fullJobCategory)}");
                     logger.LogInformation($"Category Skills: {JsonConvert.SerializeObject(categorySkills)}");
 
+                    if (results.Any(x => x.JobFamilyName == fullJobCategory.Title))
+                    {
+                        var result = results.First(x => x.JobFamilyName == fullJobCategory.Title);
+                        result.Total += trait.TotalScore;
+
+                        continue;
+                    }
+
                     results.Add(new JobCategoryResult
                     {
                         JobFamilyName = fullJobCategory.Title!,
                         JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(limitedJobCategory.WebsiteURI.LastIndexOf("/") + 1, limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/") - 1).ToString(),
-                        TraitsTotal = trait.TotalScore,
                         SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
                         TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == fullJobCategory.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
-                        NormalizedTotal = trait.TotalScore,
                         Total = trait.TotalScore,
                         TotalQuestions = categorySkills.Count(),
                         JobProfiles = jobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),

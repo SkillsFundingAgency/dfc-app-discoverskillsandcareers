@@ -20,11 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public string? JobFamilyUrl { get; set; }
 
-        public int TraitsTotal { get; set; }
-
         public decimal Total { get; set; }
-
-        public decimal NormalizedTotal { get; set; }
 
         public List<TraitValue> TraitValues { get; set; }
 
