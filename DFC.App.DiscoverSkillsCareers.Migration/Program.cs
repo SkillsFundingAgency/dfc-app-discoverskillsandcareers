@@ -58,6 +58,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService, userSessionDocumentService, dysacQuestionSetDocumentService, migrationOptions);
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
+
+            Console.ReadKey();
         }
     }
 }
