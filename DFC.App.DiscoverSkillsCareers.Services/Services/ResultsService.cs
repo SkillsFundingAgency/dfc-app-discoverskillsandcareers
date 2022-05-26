@@ -68,7 +68,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
 
             var answeredPositiveQuestions = assessment.FilteredAssessment.Questions
-                .Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes).Select(z => z.TraitCode).ToList();
+                .Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes)
+                .Select(z => z.TraitCode)
+                .ToList();
 
             var allFilteringQuestions = await filteringQuestionDocumentService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
             var questionSkills = allFilteringQuestions?

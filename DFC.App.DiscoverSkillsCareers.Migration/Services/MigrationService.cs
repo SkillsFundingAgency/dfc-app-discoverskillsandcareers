@@ -141,6 +141,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             filteredAssessment.Questions = AddFilterQuestions(filteredAssessment.JobCategoryAssessments);
             AddFilterAnswers(dynamic["recordedAnswers"], filteredAssessment.Questions);
 
+            var code = (string) dynamic["currentFilterAssessmentCode"];
+
+            if (!string.IsNullOrEmpty(code))
+            {
+                filteredAssessment.CurrentFilterAssessmentCode = resultData.JobCategories
+                    .First(jc => jc.JobFamilyCode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
+                    .JobFamilyUrl;
+            }
+
             return filteredAssessment;
         }
 
