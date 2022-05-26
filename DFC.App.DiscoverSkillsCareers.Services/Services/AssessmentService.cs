@@ -170,15 +170,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             answeredQuestion.Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)answer };
 
-            // TODO: Check result status codes
-            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+            var answeredTraits = assessment.FilteredAssessment
+                .Questions!
+                .Where(x => x.Answer != null)
+                .Select(y => y.TraitCode);
 
-            var answeredTraits = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
-            assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).LastAnswer = DateTime.UtcNow;
+            assessment.FilteredAssessment.JobCategoryAssessments
+                .FirstOrDefault(x => x.JobCategory == jobCategory) !.LastAnswer = DateTime.UtcNow;
 
-            var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).QuestionSkills.Select(x => x.Key);
+            var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments
+                .FirstOrDefault(x => x.JobCategory == jobCategory) !
+                .QuestionSkills
+                .Select(x => x.Key);
 
-            bool completed = true;
+            var completed = true;
 
             foreach (var trait in jobCategoryRequiredTraits)
             {
@@ -187,6 +192,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     completed = false;
                 }
             }
+
+            assessment.FilteredAssessment.CurrentFilterAssessmentCode = completed ? null : jobCategory;
+            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
             if (completed)
             {
@@ -214,9 +222,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return new GetAssessmentResponse
             {
                 SessionId = sessionId,
-                CurrentFilterAssessmentCode = string.Empty,
+                CurrentFilterAssessmentCode = assessment.FilteredAssessment?.CurrentFilterAssessmentCode,
                 CurrentQuestionNumber = questionNumber + 1,
-                IsFilterAssessment = assessment.Questions.All(x => x != null) && assessment.ShortQuestionResult != null && assessment.FilteredAssessment != null,
+                IsFilterAssessment = assessment.Questions.All(x => x != null)
+                    && assessment.ShortQuestionResult != null
+                    && assessment.FilteredAssessment != null,
                 JobCategorySafeUrl = string.Empty,
                 MaxQuestionsCount = assessment.Questions.Count(),
                 QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,

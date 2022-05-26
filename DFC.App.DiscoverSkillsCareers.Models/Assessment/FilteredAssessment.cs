@@ -6,11 +6,13 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
     {
         public FilteredAssessment()
         {
-            this.JobCategoryAssessments = new List<JobCategoryAssessment>();
+            JobCategoryAssessments = new List<JobCategoryAssessment>();
         }
 
         public List<JobCategoryAssessment> JobCategoryAssessments { get; set; }
 
         public IEnumerable<FilteredAssessmentQuestion>? Questions { get; set; }
+
+        public string? CurrentFilterAssessmentCode { get; set; }
     }
 }
