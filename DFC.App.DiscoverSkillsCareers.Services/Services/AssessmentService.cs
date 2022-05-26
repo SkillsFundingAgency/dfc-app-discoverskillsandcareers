@@ -370,7 +370,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<bool> ReloadUsingSessionId(string sessionId)
         {
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService
+                .GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -398,14 +399,41 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = (await assessmentDocumentService
+                .GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false)) !.ToList();
 
             if (assessments == null || !assessments.Any())
             {
                 throw new InvalidOperationException($"Assesment {sessionId} not found");
             }
 
-            var assessment = assessments.FirstOrDefault();
+            var assessment = assessments.First();
+            const int questionSetCount = 40;
+
+            if (assessment.Questions.Count() < questionSetCount)
+            {
+                var questionSets = await questionSetDocumentService
+                    .GetAsync(document => document.PartitionKey == "QuestionSet").ConfigureAwait(false);
+
+                var missingQuestions = questionSets!
+                    .First()
+                    .ShortQuestions!
+                    .Where(shortQuestion => !assessment.Questions.Any(assessmentQuestion => assessmentQuestion.Ordinal == shortQuestion.Ordinal));
+
+                var shortQuestions = new List<ShortQuestion>(assessment.Questions);
+                shortQuestions.AddRange(missingQuestions.Select(missingQuestion => new ShortQuestion
+                {
+                    Id = missingQuestion.ItemId,
+                    QuestionText = missingQuestion.Title,
+                    IsNegative = missingQuestion.Impact!.ToUpperInvariant() != "POSITIVE",
+                    Ordinal = missingQuestion.Ordinal,
+                    Answer = null,
+                    Trait = missingQuestion.Traits.First().Title,
+                }));
+
+                assessment.Questions = shortQuestions;
+                await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+            }
 
             return assessment;
         }

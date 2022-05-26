@@ -170,12 +170,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         continue;
                     }
 
-                    var jobProfiles = fullJobCategory.JobProfiles.GroupBy(jp => jp.Title)
+                    var jobProfiles = fullJobCategory.JobProfiles
+                        .GroupBy(jp => jp.Title)
                         .Select(jpg => jpg.First())
                         .ToList();
 
-                    var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles.Where(z => z.Skills.Any())
-                        .GroupBy(jp => jp.Title).Select(jpg => jpg.First()).ToList();
+                    var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles
+                        .Where(z => z.Skills.Any())
+                        .GroupBy(jp => jp.Title)
+                        .Select(jpg => jpg.First())
+                        .ToList();
 
                     var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                         jobProfilesWithAtLeastOneSkill,
