@@ -389,7 +389,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (assessment.IsFilterComplete)
                 {
-                    return RedirectTo($"results/roles/{assessment.CurrentFilterAssessmentCode}");
+                    return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
 
                 return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.CurrentFilterAssessmentCode}/{assessment.CurrentQuestionNumber}");

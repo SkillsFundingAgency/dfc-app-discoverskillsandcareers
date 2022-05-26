@@ -441,8 +441,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     Trait = missingQuestion.Traits.First().Title,
                 }));
 
-                assessment.Questions = shortQuestions;
-                await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+                if (shortQuestions.Count > assessment.Questions.Count())
+                {
+                    assessment.Questions = shortQuestions;
+                    await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+                }
             }
 
             return assessment;
