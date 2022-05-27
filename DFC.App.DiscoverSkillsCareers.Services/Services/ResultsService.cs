@@ -167,7 +167,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             await assessmentDocumentService.UpsertAsync(assessmentCalculationResponse).ConfigureAwait(false);
 
-            return new GetResultsResponse { LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments.OrderByDescending(x => x.LastAnswer).FirstOrDefault()?.JobCategory!, JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!, JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories.Count(), JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles, Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!, SessionId = assessment.AssessmentCode!, AssessmentType = "short" };
+            return new GetResultsResponse
+            {
+                LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments
+                    .OrderByDescending(x => x.LastAnswer)
+                    .FirstOrDefault()?.JobCategory!,
+                JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!,
+                JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories.Count(),
+                JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles,
+                Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
+                SessionId = assessment.AssessmentCode!,
+                AssessmentType = "short"
+            };
         }
 
         private IEnumerable<JobCategoryResult> OrderResults(IEnumerable<JobCategoryResult> categories, string selectedCategory)

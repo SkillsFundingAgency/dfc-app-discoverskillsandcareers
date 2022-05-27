@@ -69,18 +69,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                     Url = new Uri("http://localhost/category1"),
                     JobProfiles = jobProfiles,
                 },
+                new JobCategoryContentItemModel
+                {  
+                    Title = "CATEGORY1",
+                    Url = new Uri("http://localhost/category1"),
+                    JobProfiles = jobProfiles,
+                },
             };
             
             // Act
             var result = serviceToTest.CalculateJobFamilyRelevance(
-                new List<TraitResult> { new TraitResult { TraitCode = "LEADER" } }, 
+                new List<TraitResult> { new TraitResult { TraitCode = "LEADER", TotalScore = 1 } }, 
                 new List<DysacTraitContentModel> { new DysacTraitContentModel { Title = "LEADER", JobCategories = jobCategories } }, 
                 new List<DysacFilteringQuestionContentModel> { new DysacFilteringQuestionContentModel { Title = "QUESTION1", Skills = skills } },
-                new List<DysacJobProfileCategoryContentModel> { new DysacJobProfileCategoryContentModel { Title = "CATEGORY1", Url = new Uri("http://localhost/category1"), JobProfiles = jobProfiles} });
+                new List<DysacJobProfileCategoryContentModel>
+                {
+                    new DysacJobProfileCategoryContentModel { Title = "CATEGORY1", Url = new Uri("http://localhost/category1"), JobProfiles = jobProfiles },
+                    new DysacJobProfileCategoryContentModel { Title = "CATEGORY1", Url = new Uri("http://localhost/category1"), JobProfiles = jobProfiles }
+                });
             
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeEmpty();
+            result.Should().HaveCount(1);
         }
         
         [Fact]
