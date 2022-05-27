@@ -170,15 +170,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             answeredQuestion.Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)answer };
 
-            // TODO: Check result status codes
-            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+            var answeredTraits = assessment.FilteredAssessment
+                .Questions!
+                .Where(x => x.Answer != null)
+                .Select(y => y.TraitCode);
 
-            var answeredTraits = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
-            assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).LastAnswer = DateTime.UtcNow;
+            assessment.FilteredAssessment.JobCategoryAssessments
+                .FirstOrDefault(x => x.JobCategory == jobCategory) !.LastAnswer = DateTime.UtcNow;
 
-            var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory).QuestionSkills.Select(x => x.Key);
+            var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments
+                .FirstOrDefault(x => x.JobCategory == jobCategory) !
+                .QuestionSkills
+                .Select(x => x.Key);
 
-            bool completed = true;
+            var completed = true;
 
             foreach (var trait in jobCategoryRequiredTraits)
             {
@@ -187,6 +192,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     completed = false;
                 }
             }
+
+            assessment.FilteredAssessment.CurrentFilterAssessmentCode = completed ? null : jobCategory;
+            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
             if (completed)
             {
@@ -214,9 +222,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             return new GetAssessmentResponse
             {
                 SessionId = sessionId,
-                CurrentFilterAssessmentCode = string.Empty,
+                CurrentFilterAssessmentCode = assessment.FilteredAssessment?.CurrentFilterAssessmentCode,
                 CurrentQuestionNumber = questionNumber + 1,
-                IsFilterAssessment = assessment.Questions.All(x => x != null) && assessment.ShortQuestionResult != null && assessment.FilteredAssessment != null,
+                IsFilterAssessment = assessment.Questions.All(x => x != null)
+                    && assessment.ShortQuestionResult != null
+                    && assessment.FilteredAssessment != null,
                 JobCategorySafeUrl = string.Empty,
                 MaxQuestionsCount = assessment.Questions.Count(),
                 QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,
@@ -370,7 +380,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
         public async Task<bool> ReloadUsingSessionId(string sessionId)
         {
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService
+                .GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -398,14 +409,44 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = (await assessmentDocumentService
+                .GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false)) !.ToList();
 
             if (assessments == null || !assessments.Any())
             {
                 throw new InvalidOperationException($"Assesment {sessionId} not found");
             }
 
-            var assessment = assessments.FirstOrDefault();
+            var assessment = assessments.First();
+            const int questionSetCount = 40;
+
+            if (assessment.Questions.Count() < questionSetCount)
+            {
+                var questionSets = await questionSetDocumentService
+                    .GetAsync(document => document.PartitionKey == "QuestionSet").ConfigureAwait(false);
+
+                var missingQuestions = questionSets!
+                    .First()
+                    .ShortQuestions!
+                    .Where(shortQuestion => !assessment.Questions.Any(assessmentQuestion => assessmentQuestion.Ordinal == shortQuestion.Ordinal));
+
+                var shortQuestions = new List<ShortQuestion>(assessment.Questions);
+                shortQuestions.AddRange(missingQuestions.Select(missingQuestion => new ShortQuestion
+                {
+                    Id = missingQuestion.ItemId,
+                    QuestionText = missingQuestion.Title,
+                    IsNegative = missingQuestion.Impact!.ToUpperInvariant() != "POSITIVE",
+                    Ordinal = missingQuestion.Ordinal,
+                    Answer = null,
+                    Trait = missingQuestion.Traits.First().Title,
+                }));
+
+                if (shortQuestions.Count > assessment.Questions.Count())
+                {
+                    assessment.Questions = shortQuestions;
+                    await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+                }
+            }
 
             return assessment;
         }

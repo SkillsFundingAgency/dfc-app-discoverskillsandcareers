@@ -387,12 +387,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (assessment.IsFilterAssessment)
             {
-                if (assessment.IsComplete)
+                if (assessment.IsFilterComplete)
                 {
                     return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
 
-                return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.JobCategorySafeUrl}/{assessment.CurrentQuestionNumber}");
+                return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.CurrentFilterAssessmentCode}/{assessment.CurrentQuestionNumber}");
             }
 
             if (assessment.IsComplete)

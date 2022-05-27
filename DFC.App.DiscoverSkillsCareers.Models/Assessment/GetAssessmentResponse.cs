@@ -8,8 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
     {
         public string? QuestionText { get; set; }
 
-        public string? TraitCode { get; set; }
-
         public string? QuestionId { get; set; }
 
         public int QuestionNumber { get; set; }
@@ -25,6 +23,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
             get { return MaxQuestionsCount == RecordedAnswersCount; }
         }
 
+        public bool IsFilterComplete
+        {
+            get { return string.IsNullOrEmpty(CurrentFilterAssessmentCode); }
+        }
+
         public string? ReloadCode { get; set; }
 
         public string? ReferenceCode { get; set; }
@@ -32,8 +35,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
         public DateTime StartedDt { get; set; }
 
         public int RecordedAnswersCount { get; set; }
-
-        public QuestionAnswer? RecordedAnswer { get; set; }
 
         public int MaxQuestionsCount { get; set; }
 

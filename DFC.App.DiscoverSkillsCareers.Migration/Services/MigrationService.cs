@@ -57,34 +57,41 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             
             foreach (var item in itemsToProcess)
             {
-                var assessment = new DysacAssessment();
-                dynamic d = JsonConvert.DeserializeObject<dynamic>(item.ToString());
-
-                string assessmentCode = d["id"];
-                var assessments = await dysacAssessmentDocumentService
-                    .GetAsync(x => x.AssessmentCode == assessmentCode);
-
-                if (assessments != null && assessments.Any())
+                try
                 {
-                    assessment = assessments.FirstOrDefault();
+                    var assessment = new DysacAssessment();
+                    dynamic d = JsonConvert.DeserializeObject<dynamic>(item.ToString());
+
+                    string assessmentCode = d["id"];
+                    var assessments = await dysacAssessmentDocumentService
+                        .GetAsync(x => x.AssessmentCode == assessmentCode);
+
+                    if (assessments != null && assessments.Any())
+                    {
+                        assessment = assessments.FirstOrDefault();
+                    }
+                    else
+                    {
+                        assessment.Id = Guid.NewGuid();
+                    }
+
+                    assessment.AssessmentCode = assessmentCode;
+
+                    assessment.Questions = ConvertToQuestions(d["assessmentState"]["recordedAnswers"]);
+                    assessment.ShortQuestionResult = ConvertToShortQuestionResult(d["resultData"]);
+
+                    if (d["filteredAssessmentState"] != null)
+                    {
+                        assessment.FilteredAssessment = ConvertToFilteredAssessment(d["filteredAssessmentState"], assessment.ShortQuestionResult!);
+                    }
+
+                    var result = await dysacAssessmentDocumentService.UpsertAsync(assessment);
+                    Console.WriteLine($"Wrote record {index++} of {itemsToProcess.Count} - {result}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    assessment.Id = Guid.NewGuid();
+                    Console.WriteLine($"Error processing {index++} of {itemsToProcess.Count} - {ex.Message}");
                 }
-
-                assessment.AssessmentCode = assessmentCode;
-
-                assessment.Questions = ConvertToQuestions(d["assessmentState"]["recordedAnswers"]);
-                assessment.ShortQuestionResult = ConvertToShortQuestionResult(d["resultData"]);
-
-                if (d["filteredAssessmentState"] != null)
-                {
-                    assessment.FilteredAssessment = ConvertToFilteredAssessment(d["filteredAssessmentState"], assessment.ShortQuestionResult!);
-                }
-
-                var result = await dysacAssessmentDocumentService.UpsertAsync(assessment);
-                Console.WriteLine($"Wrote record {index++} of {itemsToProcess.Count} - {result}");
             }
         }
 
@@ -134,6 +141,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             filteredAssessment.Questions = AddFilterQuestions(filteredAssessment.JobCategoryAssessments);
             AddFilterAnswers(dynamic["recordedAnswers"], filteredAssessment.Questions);
 
+            var code = (string) dynamic["currentFilterAssessmentCode"];
+
+            if (!string.IsNullOrEmpty(code))
+            {
+                filteredAssessment.CurrentFilterAssessmentCode = resultData.JobCategories
+                    .First(jc => jc.JobFamilyCode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
+                    .JobFamilyUrl;
+            }
+
             return filteredAssessment;
         }
 
@@ -168,14 +184,18 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 if (filterQuestion == null)
                 {
-                    throw new InvalidOperationException($"Filter question {question.Key} not found in Stax Filter Question Repository");
+                    if (question.Key != "Persistence")
+                    {
+                        throw new InvalidOperationException(
+                            $"Filter question {question.Key} not found in Stax Filter Question Repository");
+                    }
                 }
 
                 filteredAssessmentQuestions.Add(new FilteredAssessmentQuestion
                 {
-                    Id = filterQuestion.Id,
+                    Id = filterQuestion?.Id ?? Guid.NewGuid(),
                     Ordinal = questionIndex,
-                    QuestionText = filterQuestion.Text,
+                    QuestionText = filterQuestion?.Text,
                     TraitCode = question.Key
                 });
                 
@@ -205,11 +225,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                     if (skillQuestion == null)
                     {
-                        throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
+                        if (skill != "Persistence")
+                        {
+                            throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
+                        }
                     }
 
-                    jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion.Skills.FirstOrDefault().Ordinal.Value);
-
+                    jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion?.Skills.FirstOrDefault().Ordinal.Value ?? 0);
                     jobCategoryAssessments.Add(jobCategoryAssessment);
                 }
             }

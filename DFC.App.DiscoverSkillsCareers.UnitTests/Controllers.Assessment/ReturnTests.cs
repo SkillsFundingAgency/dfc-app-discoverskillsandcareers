@@ -50,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 IsFilterAssessment = true,
                 MaxQuestionsCount = 3,
                 RecordedAnswersCount = 2,
-                JobCategorySafeUrl = "sports",
+                CurrentFilterAssessmentCode = "sports",
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
