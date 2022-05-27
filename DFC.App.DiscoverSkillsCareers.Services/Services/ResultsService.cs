@@ -179,7 +179,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 if (!string.IsNullOrEmpty(selectedCategory))
                 {
-                    if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
+                    if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-").Replace(",", string.Empty))
                     {
                         c.DisplayOrder = 9999;
                     }
