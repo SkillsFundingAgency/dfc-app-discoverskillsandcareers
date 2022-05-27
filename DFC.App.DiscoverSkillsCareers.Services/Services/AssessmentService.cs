@@ -281,7 +281,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                         Id = x.Id,
                         Ordinal = x.Ordinal,
                         TraitCode = x.Skills.FirstOrDefault()?.Title,
-                    });
+                    })
+                    .OrderBy(x => x.Ordinal ?? -1);
 
                 foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories!)
                 {
