@@ -10,6 +10,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models.API
     {
         public string? Text { get; set; }
 
+        public int? Ordinal { get; set; }
+
         public new IList<IBaseContentItemModel> ContentItems { get; set; } = new List<IBaseContentItemModel>();
     }
 }
