@@ -218,6 +218,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var question = assessment.Questions.OrderBy(x => x.Ordinal).FirstOrDefault(z => z.Answer == null);
 
             var questionNumber = question != null ? question.Ordinal!.Value : 0;
+            var atLeastOneAnsweredFilterQuestion =
+                assessment.FilteredAssessment?.Questions?.Any(q => q.Answer != null) == true;
 
             return new GetAssessmentResponse
             {
@@ -226,7 +228,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 CurrentQuestionNumber = questionNumber + 1,
                 IsFilterAssessment = assessment.Questions.All(x => x != null)
                     && assessment.ShortQuestionResult != null
-                    && assessment.FilteredAssessment != null,
+                    && assessment.FilteredAssessment != null
+                    && atLeastOneAnsweredFilterQuestion,
                 JobCategorySafeUrl = string.Empty,
                 MaxQuestionsCount = assessment.Questions.Count(),
                 QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,
@@ -235,6 +238,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 StartedDt = assessment.StartedAt,
                 RecordedAnswersCount = assessment.Questions.Count(x => x.Answer != null),
                 ReferenceCode = sessionId,
+                AtLeastOneAnsweredFilterQuestion = atLeastOneAnsweredFilterQuestion,
             };
         }
 
