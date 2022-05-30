@@ -1,6 +1,14 @@
 ﻿@model ResultsByCategoryModel
 <partial name="_SendMyResults" model="@Model.AssessmentReference" />
-<h2 class="govuk-heading-l">Careers that might interest you</h2>
+@if (Model.JobsInCategory.Count() == 1)
+{
+    <h2 class="govuk-heading-l">1 career area that might interest you</h2>    
+}
+else
+{
+    <h2 class="govuk-heading-l">@Model.JobsInCategory.Count() career areas that might interest you</h2>
+}
+
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
     <div class="app-results">
         @foreach (var jobCategory in Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder))
