@@ -10,7 +10,13 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             QuestionSkills = new Dictionary<string, int>();
         }
 
-        public string? JobCategory { get; set; }
+        private string? jobCategory;
+
+        public string? JobCategory
+        {
+            get => jobCategory?.Replace(",", string.Empty);
+            set => jobCategory = value;
+        }
 
         public Dictionary<string, int> QuestionSkills { get; set; }
 
