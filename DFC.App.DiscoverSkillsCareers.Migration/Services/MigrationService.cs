@@ -298,7 +298,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var resultsToReturn = new List<JobProfileResult>();
 
             var category = jobCategories.FirstOrDefault(x =>
-                x.Title.ToLower().Replace(" ", "-").Equals(jobFamilyNameUrl, StringComparison.InvariantCultureIgnoreCase));
+                x.Title.ToLower().Replace(" ", "-").Replace(",", string.Empty)
+                    .Equals(jobFamilyNameUrl, StringComparison.InvariantCultureIgnoreCase));
 
             if (category == null)
             {

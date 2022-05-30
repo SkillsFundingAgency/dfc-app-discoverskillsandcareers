@@ -1,13 +1,13 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
@@ -177,7 +177,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles,
                 Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
                 SessionId = assessment.AssessmentCode!,
-                AssessmentType = "short"
+                AssessmentType = "short",
             };
         }
 
@@ -188,12 +188,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             {
                 c.DisplayOrder = order;
 
-                if (!string.IsNullOrEmpty(selectedCategory))
+                if (!string.IsNullOrEmpty(selectedCategory) && c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-").Replace(",", string.Empty))
                 {
-                    if (c.JobFamilyNameUrl == selectedCategory.ToLower()?.Replace(" ", "-"))
-                    {
-                        c.DisplayOrder = 9999;
-                    }
+                    c.DisplayOrder = 9999;
                 }
 
                 order--;

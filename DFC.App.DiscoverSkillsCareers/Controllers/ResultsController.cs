@@ -153,7 +153,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
                     .Select(jobProfileOverview => new ResultJobProfileOverViewModel
                     {
-                        Cname = jobProfileOverview.Title.Replace(" ", "-"),
+                        Cname = jobProfileOverview.Title.Replace(" ", "-").Replace(",", string.Empty),
                         OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
                         ReturnedStatusCode = System.Net.HttpStatusCode.OK
                     }));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
@@ -28,7 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public bool ResultsShown { get; set; }
 
-        public string? JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
+        public string? JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-").Replace(",", string.Empty);
 
         public int? DisplayOrder { get; set; }
 
