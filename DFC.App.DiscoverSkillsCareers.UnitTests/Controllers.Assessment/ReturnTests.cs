@@ -25,12 +25,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndIsCompletedThenRedirectedToResultsPage()
         {
-            var assessmentResponse = new GetAssessmentResponse()
+            var assessmentResponse = new GetAssessmentResponse
             {
                 IsFilterAssessment = true,
                 MaxQuestionsCount = 2,
                 RecordedAnswersCount = 2,
                 JobCategorySafeUrl = "sports",
+                AtLeastOneAnsweredFilterQuestion = true,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
             A.CallTo(() => Session.HasValidSession()).Returns(true);
