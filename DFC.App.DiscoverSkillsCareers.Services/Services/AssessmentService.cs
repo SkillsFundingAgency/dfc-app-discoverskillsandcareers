@@ -270,14 +270,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 }
 
                 var filterQuestions = await dysacFilteringQuestionService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
-
-                int questionNumber = 0;
-                foreach (var question in filterQuestions!)
-                {
-                    question.Ordinal = questionNumber;
-                    questionNumber++;
-                }
-
                 assessment.FilteredAssessment.Questions = filterQuestions
                     .Select(x => new FilteredAssessmentQuestion
                     {
