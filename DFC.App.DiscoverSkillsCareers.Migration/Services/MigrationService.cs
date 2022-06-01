@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using Microsoft.Azure.Documents.Linq;
 using MoreLinq.Extensions;
 using Newtonsoft.Json.Linq;
@@ -28,7 +30,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private List<JobCategoryContentItemModel> allJobCategories = new List<JobCategoryContentItemModel>();
         private List<DysacFilteringQuestionContentModel> filteringQuestions = new List<DysacFilteringQuestionContentModel>();
         private List<ShortQuestion> shortQuestions = new List<ShortQuestion>();
-
+        private StringBuilder logger = new StringBuilder();
+        
         public MigrationService(
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
             IDocumentService<DysacAssessment> dysacAssessmentDocumentService,
@@ -59,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var errorCount = 0;
             
             const int readBatchSize = 1000;
-            const int writeBatchSize = 10;
+            const int writeBatchSize = 30;  // 1 at 400, 3 at 1000, 33 at 10,000, 100 at 40,000
             
             var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
             
@@ -68,16 +71,18 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 var sessionGroupList = sessionGroup.ToList();
                 var sessionIds = sessionGroupList.Select(session => session.Id).ToList();
 
-                Console.WriteLine($"Fetching pre migrated assessments - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                Log($"Started fetching pre migrated assessments - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                 var start = DateTime.Now;
 
                 var legacySessionsTask = LoadLegacySessions(sessionGroupList);
                 
                 var preMigratedAssessments = (await dysacAssessmentDocumentService
-                    .GetAsync(assessment => sessionIds.Contains(assessment.AssessmentCode)))?
+                    .GetAsync(document => sessionIds.Contains(document.AssessmentCode)
+                        && document.PartitionKey == "/Assessment"))?
                     .ToList();
 
-                Console.WriteLine($"Finished fetching pre migrated assessments. Found {preMigratedAssessments!.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
+                Log($"Finished fetching pre migrated assessments. Found {preMigratedAssessments?.Count ?? 0} - " +
+                    $"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
                 
                 var legacySessions = await legacySessionsTask;
                 var legacySessionsWriteGroups = legacySessions.Batch(writeBatchSize);
@@ -88,14 +93,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     
                     foreach (var session in legacySessionWriteGroup)
                     {
-                        Console.WriteLine($"Started session {index} at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                        Log($"Started session {index} at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
 
                         try
                         {
-                            var sessionId = (string) session["id"];
+                            var sessionId = (string)session["id"];
                             DysacAssessment migratedAssessment = null;
 
-                            if (preMigratedAssessments.Any())
+                            if (preMigratedAssessments != null)
                             {
                                 migratedAssessment =
                                     preMigratedAssessments.FirstOrDefault(x => x.AssessmentCode == sessionId);
@@ -126,7 +131,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         }
                         catch (Exception exception)
                         {
-                            Console.WriteLine($"Error processing {index} of {legacySessions.Count} - {exception.Message}");
+                            Log($"Error processing {index} of {legacySessions.Count} - {exception.Message} " +
+                                $"at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                            
                             errorCount += 1;
                         }
                         finally
@@ -136,35 +143,38 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     }
                     
                     await Task.WhenAll(tasks);
-                    Console.WriteLine($"Wrote another {writeBatchSize} documents.");
+                    Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                 }
             }
             
-            Console.WriteLine($"Done. {errorCount} errors.");
+            Log($"Completed, with {errorCount} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+        }
+        
+        private void Log(string message)
+        {
+            Console.WriteLine(message);
+            logger.AppendLine(message);
         }
 
         private async Task Upsert(DysacAssessment migratedAssessment, int index, int count)
         {
-            Console.WriteLine($"Upserting assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started upserting assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var resourceResponse = await destinationDocumentClient.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri("dfc-app-dysac", "assessment"),
                 migratedAssessment,
-                new RequestOptions
-                {
-                    ConsistencyLevel = ConsistencyLevel.Eventual,
-                    
-                });
+                new RequestOptions());
             
             var charge = resourceResponse.RequestCharge;
             
-            Console.WriteLine($"Finished upserting assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds. Charge was {charge} RUs");
+            Log($"Finished upserting assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+                $"{(DateTime.Now - start).TotalSeconds} seconds. Charge was {charge} RUs");
         }
 
         private async Task LoadJobCategoriesFromTraits()
         {
-            Console.WriteLine($"Fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var allTraits = await dysacTraitDocumentService
@@ -176,24 +186,26 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 .Select(jobCategoryGroup => jobCategoryGroup.First())
                 .ToList();
             
-            Console.WriteLine($"Finished fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
+            Log($"Finished fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+                $"{(DateTime.Now - start).TotalSeconds} seconds");
         }
         
         private async Task LoadFilteringQuestions()
         {
-            Console.WriteLine($"Fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             filteringQuestions = (await dysacFilteringQuestionDocumentService
                 .GetAsync(document => document.PartitionKey == "FilteringQuestion"))!
                 .ToList();
             
-            Console.WriteLine($"Finished fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
+            Log($"Finished fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+                $"{(DateTime.Now - start).TotalSeconds} seconds");
         }
         
         private async Task LoadShortQuestionsFromQuestionSet()
         {
-            Console.WriteLine($"Fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var questionSets = await dysacQuestionSetDocumentService
@@ -213,17 +225,18 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 })
                 .ToList();
             
-            Console.WriteLine($"Finished fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");            
+            Log($"Finished fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+                $"{(DateTime.Now - start).TotalSeconds} seconds");            
         }
         
         private async Task<List<SessionIdentifier>> GetSessionIdentifiersToMigrate()
         {
-            Console.WriteLine($"Fetching all session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started fetching all session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                "select c.id, c.partitionKey from c order by c._ts asc",
+                "select c.id from c order by c._ts asc",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
@@ -231,13 +244,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 }).AsDocumentQuery();
 
             var returnList = (await query.ExecuteNextAsync<SessionIdentifier>()).ToList();
-            Console.WriteLine($"Finished fetching all session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
+            Log($"Finished fetching all session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+                $"took {(DateTime.Now - start).TotalSeconds} seconds");
+
             return returnList;
         }
         
         private async Task<List<Dictionary<string, object>>> LoadLegacySessions(List<SessionIdentifier> sessionSimples)
         {
-            Console.WriteLine($"Fetching legacy session identifiers for batch of {sessionSimples.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started fetching legacy session identifiers for batch of {sessionSimples.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
@@ -261,7 +276,10 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var returnList = (await query.ExecuteNextAsync<Dictionary<string, object>>())
                 .Select(dyn => (dyn["c"] as JObject)!.ToObject<Dictionary<string, object>>())
                 .ToList();
-            Console.WriteLine($"Finished fetching legacy session identifiers for batch. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
+            
+            Log($"Finished fetching legacy session identifiers for batch. Found {returnList.Count} - " +
+                $"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
+
             return returnList;
         }
 
@@ -273,7 +291,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             }
             
             var jobCategories = (filteredAssessmentState["jobCategories"] as JArray)!
-                .Select(x => x.ToObject<Dictionary<string, object>>())
+                .Select(jobCategory => jobCategory.ToObject<Dictionary<string, object>>())
                 .ToList();
 
             var jobCategoryMappings = resultData.JobCategories!
@@ -289,7 +307,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             };
             
             filteredAssessment.Questions = AddFilterQuestions(filteredAssessment.JobCategoryAssessments);
-            AddFilterAnswers(filteredAssessmentState["recordedAnswers"], filteredAssessment.Questions.ToList());
+
+            var recordedAnswers = (filteredAssessmentState["recordedAnswers"] as JArray)!
+                .Select(jobCategory => jobCategory.ToObject<Dictionary<string, object>>())
+                .ToList();
+            
+            AddFilterAnswers(recordedAnswers, filteredAssessment.Questions.ToList());
 
             var code = (string) filteredAssessmentState["currentFilterAssessmentCode"];
 
@@ -303,16 +326,16 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             return filteredAssessment;
         }
 
-        private static void AddFilterAnswers(dynamic recordedAnswers, List<FilteredAssessmentQuestion> questions)
+        private static void AddFilterAnswers(List<Dictionary<string, object>> recordedAnswers, List<FilteredAssessmentQuestion> questions)
         {
             foreach (var recordedAnswer in recordedAnswers)
             {
-                var answerTraitAsString = (string)recordedAnswer["traitCode"].Value;
-                var answeredDate = (DateTime)recordedAnswer["answeredDt"].Value;
-                var selectedAnswer = recordedAnswer["selectedOption"];
+                var answerTraitAsString = (string)recordedAnswer["traitCode"];
+                var answeredDate = (DateTime)recordedAnswer["answeredDt"];
+                var selectedAnswer = (Answer)(long)recordedAnswer["selectedOption"];
 
                 questions
-                    .First(question => question.TraitCode!.ToUpperInvariant() == answerTraitAsString.ToUpperInvariant())!
+                    .First(question => string.Equals(question.TraitCode!, answerTraitAsString, StringComparison.InvariantCultureIgnoreCase))!
                     .Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
             }
         }
@@ -330,7 +353,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             foreach (var question in distinctGroupedQuestions)
             {
                 var filterQuestion = filteringQuestions
-                    .FirstOrDefault(filteringQuestion => filteringQuestion.Title!.ToUpperInvariant() == question.Key.ToUpperInvariant());
+                    .FirstOrDefault(filteringQuestion =>
+                        string.Equals(filteringQuestion.Title!, question.Key, StringComparison.InvariantCultureIgnoreCase));
 
                 if (filterQuestion == null)
                 {
@@ -373,7 +397,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                     var skill = (string)question["Skill"];
                     var skillQuestion = filteringQuestions
-                        .FirstOrDefault(filteringQuestion => filteringQuestion.Title!.ToUpperInvariant() == skill.ToUpperInvariant());
+                        .FirstOrDefault(filteringQuestion =>
+                            string.Equals(filteringQuestion.Title!, skill, StringComparison.InvariantCultureIgnoreCase));
 
                     if (skillQuestion == null)
                     {
@@ -442,7 +467,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var resultsToReturn = new List<JobProfileResult>();
 
             var category = allJobCategories.FirstOrDefault(jobCategory =>
-                jobCategory.Title!.ToLower().Replace(" ", "-").Replace(",", string.Empty)
+                jobCategory.Title!.Replace(" ", "-").Replace(",", string.Empty)
                     .Equals(jobFamilyNameUrl, StringComparison.InvariantCultureIgnoreCase));
 
             if (category == null)
@@ -524,7 +549,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private class SessionIdentifier
         {
             public string Id { get; set; }
-            //public string PartitionKey { get; set; }
         }
     }
 }
