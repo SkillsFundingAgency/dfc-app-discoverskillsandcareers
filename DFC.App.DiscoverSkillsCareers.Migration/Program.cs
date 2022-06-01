@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -39,7 +38,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddSingleton(Configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ?? new MigrationOptions())
-                .AddSingleton<IDocumentClient>(new DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl, cosmosDbConnectionLegacyUserSessions.AccessKey))
+                .AddSingleton<IDocumentClient>(
+                    new DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl,
+                    cosmosDbConnectionLegacyUserSessions.AccessKey))
                 .AddAutoMapper(typeof(Program))
                 .BuildServiceProvider();
 
@@ -53,12 +54,29 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var filteringQuestionDocumentService = serviceProvider.GetService<IDocumentService<DysacFilteringQuestionContentModel>>();
             var dysacQuestionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacQuestionSetContentModel>>();
             var userSessionDocumentService = serviceProvider.GetService<IDocumentClient>();
-            var migrationOptions = serviceProvider.GetService<MigrationOptions>();
+            
+            var destinationDocumentClient = new DocumentClient(
+                cosmosDbConnectionAssessment.EndpointUrl,
+                cosmosDbConnectionAssessment.AccessKey,
+                new ConnectionPolicy
+                {
+                    MaxConnectionLimit = 1000,
+                    ConnectionMode = ConnectionMode.Direct, // Be careful on VPN
+                    ConnectionProtocol = Protocol.Tcp
+                });
 
-            var migrationService = new MigrationService(questionSetDocumentService, assessmentDocumentService, filteringQuestionDocumentService, userSessionDocumentService, dysacQuestionSetDocumentService, migrationOptions);
+            var migrationService = new MigrationService(
+                questionSetDocumentService,
+                assessmentDocumentService,
+                filteringQuestionDocumentService,
+                userSessionDocumentService,
+                dysacQuestionSetDocumentService,
+                destinationDocumentClient);
+            
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
 
+            Console.WriteLine("Completed - press a key to end");
             Console.ReadKey();
         }
     }
