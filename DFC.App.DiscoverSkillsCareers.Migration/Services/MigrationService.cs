@@ -62,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var errorCount = 0;
             
             const int readBatchSize = 1000;
-            const int writeBatchSize = 30;  // 1 at 400, 3 at 1000, 33 at 10,000, 100 at 40,000
+            const int writeBatchSize = 33;  // 1 at 400, 3 at 1000, 33 at 10,000, 133 at 40,000 - max RU is around 270
             
             var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
             

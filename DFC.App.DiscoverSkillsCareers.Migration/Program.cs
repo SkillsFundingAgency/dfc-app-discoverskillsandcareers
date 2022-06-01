@@ -73,7 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 dysacQuestionSetDocumentService,
                 destinationDocumentClient);*/
 
-            // Uncomment out the next few lines the ones above if wanting to populate data
+            // Uncomment out the next block and comment out the ones above if wanting to populate data
             var sourceDocumentClient = new DocumentClient(
                 cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                 cosmosDbConnectionLegacyUserSessions.AccessKey,
