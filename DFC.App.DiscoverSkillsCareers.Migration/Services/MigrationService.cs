@@ -89,11 +89,11 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 foreach (var legacySessionWriteGroup in legacySessionsWriteGroups)
                 {
-                    var tasks = new List<Task>();
+                    var upsertTasks = new List<Task>();
                     
                     foreach (var session in legacySessionWriteGroup)
                     {
-                        Log($"Started session {index} at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                        Log($"Started processing assessment {index} of {legacySessions.Count} at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
 
                         try
                         {
@@ -127,7 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                 (session["filteredAssessmentState"] as JObject)?.ToObject<Dictionary<string, object>>(),
                                 migratedAssessment.ShortQuestionResult!);
 
-                            tasks.Add(Upsert(migratedAssessment, index, legacySessions.Count));
+                            upsertTasks.Add(Upsert(migratedAssessment, index, legacySessions.Count));
                         }
                         catch (Exception exception)
                         {
@@ -142,7 +142,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         }
                     }
                     
-                    await Task.WhenAll(tasks);
+                    await Task.WhenAll(upsertTasks);
                     Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                 }
             }
