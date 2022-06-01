@@ -23,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         public async Task Start()
         {
             var itemsToInsert = 300000;
-            var batchSize = 320;  // 3 at 400, 8 at 1000, 80 at 10,000, 320 at 40,000 - charge is 116 RUs
+            var batchSize = 80;  // 3 at 400, 8 at 1000, 80 at 10,000, 320 at 40,000 - charge is 116 RUs
             var counter = 0;
 
             while (counter < itemsToInsert)
