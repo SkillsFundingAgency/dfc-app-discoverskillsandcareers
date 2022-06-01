@@ -72,6 +72,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 userSessionDocumentService,
                 dysacQuestionSetDocumentService,
                 destinationDocumentClient);
+
+            // Use the next line and comment out the ones above if wanting to populate data
+            //var migrationService = new PopulateTestDataService(destinationDocumentClient);
             
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
