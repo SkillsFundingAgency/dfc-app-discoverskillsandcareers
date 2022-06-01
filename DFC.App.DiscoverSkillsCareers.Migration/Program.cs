@@ -65,16 +65,25 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                     ConnectionProtocol = Protocol.Tcp
                 });
 
-            var migrationService = new MigrationService(
+            /*var migrationService = new MigrationService(
                 questionSetDocumentService,
                 assessmentDocumentService,
                 filteringQuestionDocumentService,
                 userSessionDocumentService,
                 dysacQuestionSetDocumentService,
-                destinationDocumentClient);
+                destinationDocumentClient);*/
 
-            // Use the next line and comment out the ones above if wanting to populate data
-            //var migrationService = new PopulateTestDataService(destinationDocumentClient);
+            // Uncomment out the next few lines the ones above if wanting to populate data
+            var sourceDocumentClient = new DocumentClient(
+                cosmosDbConnectionLegacyUserSessions.EndpointUrl,
+                cosmosDbConnectionLegacyUserSessions.AccessKey,
+                new ConnectionPolicy
+                {
+                    MaxConnectionLimit = 1000,
+                    ConnectionMode = ConnectionMode.Direct, // Be careful on VPN
+                    ConnectionProtocol = Protocol.Tcp
+                });
+            var migrationService = new PopulateTestDataService(sourceDocumentClient);
             
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();
