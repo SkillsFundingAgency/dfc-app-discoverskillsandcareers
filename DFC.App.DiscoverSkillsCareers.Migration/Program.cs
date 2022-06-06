@@ -50,7 +50,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             logger.LogDebug("Starting application");
 
             var questionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacTraitContentModel>>();
-            var assessmentDocumentService = serviceProvider.GetService<IDocumentService<DysacAssessment>>();
             var filteringQuestionDocumentService = serviceProvider.GetService<IDocumentService<DysacFilteringQuestionContentModel>>();
             var dysacQuestionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacQuestionSetContentModel>>();
             var userSessionDocumentService = serviceProvider.GetService<IDocumentClient>();
@@ -65,16 +64,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                     ConnectionProtocol = Protocol.Tcp
                 });
 
-            /*var migrationService = new MigrationService(
+            var migrationService = new MigrationService(
                 questionSetDocumentService,
-                assessmentDocumentService,
                 filteringQuestionDocumentService,
                 userSessionDocumentService,
                 dysacQuestionSetDocumentService,
-                destinationDocumentClient);*/
+                destinationDocumentClient);
 
             // Uncomment out the next block and comment out the ones above if wanting to populate data
-            var sourceDocumentClient = new DocumentClient(
+            /*var sourceDocumentClient = new DocumentClient(
                 cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                 cosmosDbConnectionLegacyUserSessions.AccessKey,
                 new ConnectionPolicy
@@ -83,7 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                     ConnectionMode = ConnectionMode.Direct, // Be careful on VPN
                     ConnectionProtocol = Protocol.Tcp
                 });
-            var migrationService = new PopulateTestDataService(sourceDocumentClient);
+            var migrationService = new PopulateTestDataService(sourceDocumentClient);*/
             
             Activity.Current = new Activity("Dysac Assessment Migration").Start();
             await migrationService.Start();

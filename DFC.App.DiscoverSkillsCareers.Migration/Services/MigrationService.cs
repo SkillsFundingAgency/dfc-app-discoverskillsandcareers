@@ -1,6 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Migration.Contacts;
-using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Azure.Documents;
@@ -13,6 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Migration.Models;
+using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using Microsoft.Azure.Documents.Linq;
 using MoreLinq.Extensions;
 using Newtonsoft.Json.Linq;
@@ -22,7 +23,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
     public class MigrationService : IMigrationService
     {
         private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
-        private readonly IDocumentService<DysacAssessment> dysacAssessmentDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
         private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
         private readonly IDocumentClient sourceDocumentClient;
@@ -35,14 +35,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         
         public MigrationService(
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
-            IDocumentService<DysacAssessment> dysacAssessmentDocumentService,
             IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService,
             IDocumentClient sourceDocumentClient,
             IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
             IDocumentClient destinationDocumentClient)
         {
             this.dysacTraitDocumentService = dysacTraitDocumentService;
-            this.dysacAssessmentDocumentService = dysacAssessmentDocumentService;
             this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.sourceDocumentClient = sourceDocumentClient;
@@ -52,6 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         public async Task Start()
         {
             var sessionsToMigrateTask = GetSessionIdentifiersToMigrate();
+            //var preMigratedSessionIdsTask = GetPreMigratedSessionIds();
             
             await Task.WhenAll(
                 LoadJobCategoriesFromTraits(),
@@ -59,54 +58,47 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 LoadShortQuestionsFromQuestionSet());
             
             var sessionsToMigrate = await sessionsToMigrateTask;
+            //var preMigratedSessionIds = await preMigratedSessionIdsTask;
+            
             var sessionsToMigrateCount = sessionsToMigrate.Count;
             var index = 1;
             var errors = new List<string>();
             var saves = 0;
 
             const int readBatchSize = 1000;
-            const int writeBatchSize = 1;  // 1 at 400, 2 at 1000, 23 at 10,000, 92 at 40,000 - max RU is around 397
+            const int writeBatchSize = 100;  // 4 at 400, 10 at 1000, 100 at 10,000, 400 at 40,000 - max RU is around 99
             
             var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
+            var sessionGroupsCount = sessionGroups.Count();
+            
+            var outerForeachCount = 1;
             
             foreach (var sessionGroup in sessionGroups)
             {
-                var sessionGroupList = sessionGroup.ToList();
-                var sessionIds = sessionGroupList.Select(session => session.Id).ToList();
+                var sessionIds = sessionGroup.ToList();
 
-                Log($"Started fetching pre migrated assessments - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
-                var start = DateTime.Now;
-
-                var legacySessionsTask = LoadLegacySessions(sessionGroupList);
-                
-                var preMigratedAssessments = (await dysacAssessmentDocumentService
-                    .GetAsync(document => sessionIds.Contains(document.Id)))?
-                    .ToList();
-
-                Log($"Finished fetching pre migrated assessments. Found {preMigratedAssessments?.Count ?? 0} - " +
-                    $"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
-                
-                var legacySessions = await legacySessionsTask;
+                var legacySessions = await LoadLegacySessions(sessionIds, outerForeachCount, sessionGroupsCount);
                 var legacySessionsWriteGroups = legacySessions.Batch(writeBatchSize);
-
+                
                 foreach (var legacySessionWriteGroup in legacySessionsWriteGroups)
                 {
+                    var sessionWriteGroupStartTime = DateTime.Now;
                     var createTasks = new List<Task>();
                     
                     foreach (var session in legacySessionWriteGroup)
                     {
-                        Log($"Started processing assessment {index} of {legacySessions.Count} at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                         var sessionId = (string)session["id"];
+                        Log($"Started processing assessment {index} of {sessionsToMigrateCount} ({sessionId}) at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                         
                         try
                         {
-                            if (preMigratedAssessments != null)
-                            {
-                                Log("Don't need to do it, its already there");
-                                continue;
-                            }
+                            //if (preMigratedAssessments.Contains(sessionId))
+                            //{
+                            //    Log("Don't need to do it, its already there");
+                            //    continue;
+                            //}
 
-                            var migratedAssessment = new DysacAssessment
+                            var migratedAssessment = new DysacAssessmentForCreate
                             {
                                 Id = sessionId
                             };
@@ -142,19 +134,34 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     }
                     
                     await Task.WhenAll(createTasks);
+
+                    var duration = DateTime.Now - sessionWriteGroupStartTime;
+
+                    if (duration.TotalSeconds < 1 && createTasks.Any())
+                    {
+                        var remainder = (int) ((1.0 - duration.TotalSeconds) * 1000);
+                        
+                        Log($"Too quick. Waiting {remainder}ms at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+                        
+                        // Too quick, waiting remaining time
+                        await Task.Delay(remainder);
+                    }
+                    
                     Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                 }
+
+                outerForeachCount += 1;
             }
             
             Log($"Completed, with {errors.Count} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+            Log(string.Empty);
+            Log(string.Empty);
 
-            Log(string.Empty);
-            Log(string.Empty);
             Log("Results:");
             Log($"{saves} items moved.");
-            
             Log(string.Empty);
             Log(string.Empty);
+
             Log("Error summary:");
             
             foreach (var error in errors)
@@ -171,7 +178,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             logger.AppendLine(message);
         }
 
-        private async Task Create(DysacAssessment migratedAssessment, int index, int count)
+        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count)
         {
             Log($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
@@ -179,11 +186,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var resourceResponse = await destinationDocumentClient.CreateDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri("dfc-app-dysac", "assessment"),
                 migratedAssessment,
-                new RequestOptions
-                {
-                    ConsistencyLevel = ConsistencyLevel.Eventual,
-                    IndexingDirective = IndexingDirective.Exclude,
-                });
+                new RequestOptions());
             
             var charge = resourceResponse.RequestCharge;
             
@@ -248,30 +251,82 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 $"{(DateTime.Now - start).TotalSeconds} seconds");            
         }
         
-        private async Task<List<SessionIdentifier>> GetSessionIdentifiersToMigrate()
+        private async Task<List<string>> GetSessionIdentifiersToMigrate()
         {
             Log($"Started fetching all session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
-            
-            var query = sourceDocumentClient.CreateDocumentQuery<int>(
-                UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                "select c.id from c order by c._ts asc",
-                new FeedOptions
-                {
-                    EnableCrossPartitionQuery = true,
-                    MaxItemCount = int.MaxValue
-                }).AsDocumentQuery();
 
-            var returnList = (await query.ExecuteNextAsync<SessionIdentifier>()).ToList();
+            var hasMore = true;
+            var returnList = new List<string>();
+            var loopCount = 0;
+            var countToFetch = 10000;
+            var maxLoops = 100;
+            
+            while (hasMore && loopCount < maxLoops)
+            {
+                var query = sourceDocumentClient.CreateDocumentQuery<int>(
+                    UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
+                    $"select c.id from c order by c._ts asc OFFSET {countToFetch * loopCount} LIMIT {countToFetch}",
+                    new FeedOptions
+                    {
+                        EnableCrossPartitionQuery = true,
+                        MaxItemCount = -1
+                    }).AsDocumentQuery();
+
+                while (query.HasMoreResults)
+                {
+                    returnList.AddRange((await query.ExecuteNextAsync<SessionIdentifier>()).Select(sessionIdentifier => sessionIdentifier.Id).ToList());
+                }
+
+                hasMore = returnList.Count % countToFetch == 0;
+                loopCount++;
+                
+                Log($"Fetched {returnList.Count} session identifiers in total. Continuing... - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            }
+
             Log($"Finished fetching all session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
         }
         
-        private async Task<List<Dictionary<string, object>>> LoadLegacySessions(List<SessionIdentifier> sessionSimples)
+        /*private async Task<HashSet<string>> GetPreMigratedSessionIds()
         {
-            Log($"Started fetching legacy session identifiers for batch of {sessionSimples.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started fetching all pre migrated session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            var start = DateTime.Now;
+            
+            var query = destinationDocumentClient.CreateDocumentQuery<int>(
+                UriFactory.CreateDocumentCollectionUri("dfc-app-dysac", "assessment"),
+                "select c.id from c order by c._ts asc",
+                new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true,
+                    MaxItemCount = -1
+                }).AsDocumentQuery();
+
+            var returnList = new List<SessionIdentifier>();
+            
+            while (query.HasMoreResults)
+            {
+                returnList.AddRange((await query.ExecuteNextAsync<SessionIdentifier>()).ToList());
+            }
+
+            Log($"Finished fetching all pre migrated session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+                $"took {(DateTime.Now - start).TotalSeconds} seconds");
+
+            var returnDictionary = new HashSet<string>();
+            
+            foreach (var item in returnList)
+            {
+                returnDictionary.Add(item.Id);
+            }
+            
+            return returnDictionary;
+        }*/
+        
+        private async Task<List<Dictionary<string, object>>> LoadLegacySessions(List<string> sessionIds,int outerForeachCount, int sessionGroupsCount)
+        {
+            Log($"Started fetching legacy session identifiers for batch of {sessionIds.Count} - {outerForeachCount} of {sessionGroupsCount} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
@@ -283,19 +338,24 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         new SqlParameter
                         {
                             Name = "@idList0",
-                            Value = sessionSimples.Select(session => session.Id).ToArray()
+                            Value = sessionIds.ToArray()
                         }
                     }),
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
-                    MaxItemCount = int.MaxValue
+                    MaxItemCount = -1
                 }).AsDocumentQuery();
+
+            var returnList = new List<Dictionary<string, object>>();
             
-            var returnList = (await query.ExecuteNextAsync<Dictionary<string, object>>())
-                .Select(dyn => (dyn["c"] as JObject)!.ToObject<Dictionary<string, object>>())
-                .ToList();
-            
+            while (query.HasMoreResults)
+            {
+                returnList.AddRange((await query.ExecuteNextAsync<Dictionary<string, object>>())
+                    .Select(dyn => (dyn["c"] as JObject)!.ToObject<Dictionary<string, object>>())
+                    .ToList());
+            }
+
             Log($"Finished fetching legacy session identifiers for batch. Found {returnList.Count} - " +
                 $"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
 
