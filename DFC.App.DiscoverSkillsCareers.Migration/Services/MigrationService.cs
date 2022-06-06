@@ -49,127 +49,136 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         public async Task Start()
         {
-            var sessionsToMigrateTask = GetSessionIdentifiersToMigrate();
-            //var preMigratedSessionIdsTask = GetPreMigratedSessionIds();
-            
-            await Task.WhenAll(
-                LoadJobCategoriesFromTraits(),
-                LoadFilteringQuestions(),
-                LoadShortQuestionsFromQuestionSet());
-            
-            var sessionsToMigrate = await sessionsToMigrateTask;
-            //var preMigratedSessionIds = await preMigratedSessionIdsTask;
-            
-            var sessionsToMigrateCount = sessionsToMigrate.Count;
-            var index = 1;
             var errors = new List<string>();
             var saves = 0;
-
-            const int readBatchSize = 1000;
-            const int writeBatchSize = 100;  // 4 at 400, 10 at 1000, 100 at 10,000, 400 at 40,000 - max RU is around 99
             
-            var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
-            var sessionGroupsCount = sessionGroups.Count();
-            
-            var outerForeachCount = 1;
-            
-            foreach (var sessionGroup in sessionGroups)
+            try
             {
-                var sessionIds = sessionGroup.ToList();
+                var sessionsToMigrateTask = GetSessionIdentifiersToMigrate();
 
-                var legacySessions = await LoadLegacySessions(sessionIds, outerForeachCount, sessionGroupsCount);
-                var legacySessionsWriteGroups = legacySessions.Batch(writeBatchSize);
-                
-                foreach (var legacySessionWriteGroup in legacySessionsWriteGroups)
+                await Task.WhenAll(
+                    LoadJobCategoriesFromTraits(),
+                    LoadFilteringQuestions(),
+                    LoadShortQuestionsFromQuestionSet());
+
+                var sessionsToMigrate = await sessionsToMigrateTask;
+
+                var sessionsToMigrateCount = sessionsToMigrate.Count;
+                var index = 1;
+
+                const int readBatchSize = 1000;
+                const int
+                    writeBatchSize = 100; // 4 at 400, 10 at 1000, 100 at 10,000, 400 at 40,000 - max RU is around 99
+
+                var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
+                var sessionGroupsCount = sessionGroups.Count();
+
+                var outerForeachCount = 1;
+
+                foreach (var sessionGroup in sessionGroups)
                 {
-                    var sessionWriteGroupStartTime = DateTime.Now;
-                    var createTasks = new List<Task>();
-                    
-                    foreach (var session in legacySessionWriteGroup)
-                    {
-                        var sessionId = (string)session["id"];
-                        Log($"Started processing assessment {index} of {sessionsToMigrateCount} ({sessionId}) at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
-                        
-                        try
-                        {
-                            //if (preMigratedAssessments.Contains(sessionId))
-                            //{
-                            //    Log("Don't need to do it, its already there");
-                            //    continue;
-                            //}
+                    var sessionIds = sessionGroup.ToList();
 
-                            var migratedAssessment = new DysacAssessmentForCreate
+                    var legacySessions = await LoadLegacySessions(sessionIds, outerForeachCount, sessionGroupsCount);
+                    var legacySessionsWriteGroups = legacySessions.Batch(writeBatchSize);
+
+                    foreach (var legacySessionWriteGroup in legacySessionsWriteGroups)
+                    {
+                        var sessionWriteGroupStartTime = DateTime.Now;
+                        var createTasks = new List<Task>();
+
+                        foreach (var session in legacySessionWriteGroup)
+                        {
+                            var sessionId = (string) session["id"];
+                            Log(
+                                $"Started processing assessment {index} of {sessionsToMigrateCount} ({sessionId}) at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+
+                            try
                             {
-                                Id = sessionId
-                            };
+                                var migratedAssessment = new DysacAssessmentForCreate
+                                {
+                                    Id = sessionId
+                                };
 
-                            var recordedAnswers = ((session["assessmentState"] as JObject)!
-                                    .ToObject<Dictionary<string, object>>()!
-                                    ["recordedAnswers"] as JArray)!
-                                .Select(x => x.ToObject<Dictionary<string, object>>())
-                                .ToList();
+                                var recordedAnswers = ((session["assessmentState"] as JObject)!
+                                        .ToObject<Dictionary<string, object>>()!
+                                        ["recordedAnswers"] as JArray)!
+                                    .Select(x => x.ToObject<Dictionary<string, object>>())
+                                    .ToList();
 
-                            migratedAssessment.Questions = ConvertToQuestions(recordedAnswers);
+                                migratedAssessment.Questions = ConvertToQuestions(recordedAnswers);
 
-                            migratedAssessment.ShortQuestionResult = ConvertToShortQuestionResult(
-                                (session["resultData"] as JObject)?.ToObject<Dictionary<string, object>>());
+                                migratedAssessment.ShortQuestionResult = ConvertToShortQuestionResult(
+                                    (session["resultData"] as JObject)?.ToObject<Dictionary<string, object>>());
 
-                            migratedAssessment.FilteredAssessment = ConvertToFilteredAssessment(
-                                (session["filteredAssessmentState"] as JObject)?.ToObject<Dictionary<string, object>>(),
-                                migratedAssessment.ShortQuestionResult!);
+                                migratedAssessment.FilteredAssessment = ConvertToFilteredAssessment(
+                                    (session["filteredAssessmentState"] as JObject)
+                                    ?.ToObject<Dictionary<string, object>>(),
+                                    migratedAssessment.ShortQuestionResult!);
 
-                            createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount));
+                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount));
+                            }
+                            catch (Exception exception)
+                            {
+                                Log($"Error processing {index} of {legacySessions.Count} - {exception.Message} " +
+                                    $"at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+
+                                errors.Add(sessionId);
+                            }
+                            finally
+                            {
+                                index++;
+                            }
                         }
-                        catch (Exception exception)
+
+                        await Task.WhenAll(createTasks);
+
+                        var duration = DateTime.Now - sessionWriteGroupStartTime;
+
+                        if (duration.TotalSeconds < 1 && createTasks.Any())
                         {
-                            Log($"Error processing {index} of {legacySessions.Count} - {exception.Message} " +
-                                $"at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
-                            
-                            errors.Add(sessionId);
-                        }
-                        finally
-                        {
-                            index++;
-                        }
-                    }
-                    
-                    await Task.WhenAll(createTasks);
+                            var remainder = (int) ((1.0 - duration.TotalSeconds) * 1000);
 
-                    var duration = DateTime.Now - sessionWriteGroupStartTime;
+                            Log($"Too quick. Waiting {remainder}ms at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
 
-                    if (duration.TotalSeconds < 1 && createTasks.Any())
-                    {
-                        var remainder = (int) ((1.0 - duration.TotalSeconds) * 1000);
-                        
-                        Log($"Too quick. Waiting {remainder}ms at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
-                        
-                        // Too quick, waiting remaining time
-                        await Task.Delay(remainder);
+                            // Too quick, waiting remaining time
+                            await Task.Delay(remainder);
+                        }
+
+                        Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                     }
-                    
-                    Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+
+                    outerForeachCount += 1;
                 }
 
-                outerForeachCount += 1;
+                Log($"Completed, with {errors.Count} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+                Log(string.Empty);
+                Log(string.Empty);
             }
-            
-            Log($"Completed, with {errors.Count} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
-            Log(string.Empty);
-            Log(string.Empty);
-
-            Log("Results:");
-            Log($"{saves} items moved.");
-            Log(string.Empty);
-            Log(string.Empty);
-
-            Log("Error summary:");
-            
-            foreach (var error in errors)
+            catch (Exception ex)
             {
-                Log($"Error - {error}");                                
+                var msg = "Fatal error: " + ex.Message + " - " + ex.StackTrace;
+                Log(msg);
+
+                errors.Add(msg);
+                Log(string.Empty);
             }
+            finally
+            {
+                Log("Results:");
+                Log($"{saves} items moved.");
+                Log(string.Empty);
+                Log(string.Empty);
+
+                Log("Error summary:");
             
-            File.WriteAllText($"{DateTime.Now.ToString("yyyy-MM-dd")}-report.txt", logger.ToString());
+                foreach (var error in errors)
+                {
+                    Log($"Error - {error}");                                
+                }
+            
+                File.WriteAllText($"{DateTime.Now.ToString("yyyy-MM-dd")}-report.txt", logger.ToString());   
+            }
         }
         
         private void Log(string message)
@@ -289,40 +298,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
             return returnList;
         }
-        
-        /*private async Task<HashSet<string>> GetPreMigratedSessionIds()
-        {
-            Log($"Started fetching all pre migrated session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
-            var start = DateTime.Now;
-            
-            var query = destinationDocumentClient.CreateDocumentQuery<int>(
-                UriFactory.CreateDocumentCollectionUri("dfc-app-dysac", "assessment"),
-                "select c.id from c order by c._ts asc",
-                new FeedOptions
-                {
-                    EnableCrossPartitionQuery = true,
-                    MaxItemCount = -1
-                }).AsDocumentQuery();
-
-            var returnList = new List<SessionIdentifier>();
-            
-            while (query.HasMoreResults)
-            {
-                returnList.AddRange((await query.ExecuteNextAsync<SessionIdentifier>()).ToList());
-            }
-
-            Log($"Finished fetching all pre migrated session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
-                $"took {(DateTime.Now - start).TotalSeconds} seconds");
-
-            var returnDictionary = new HashSet<string>();
-            
-            foreach (var item in returnList)
-            {
-                returnDictionary.Add(item.Id);
-            }
-            
-            return returnDictionary;
-        }*/
         
         private async Task<List<Dictionary<string, object>>> LoadLegacySessions(List<string> sessionIds,int outerForeachCount, int sessionGroupsCount)
         {
