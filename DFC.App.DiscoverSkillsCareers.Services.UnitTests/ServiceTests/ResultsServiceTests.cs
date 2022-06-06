@@ -46,7 +46,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public async Task ResultsServiceGetResultsReturnsResults()
         {
             //Arrange
-            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { new DysacAssessment { AssessmentCode = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
+            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored))
+                .Returns(new List<DysacAssessment> { new DysacAssessment { Id = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
 
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };

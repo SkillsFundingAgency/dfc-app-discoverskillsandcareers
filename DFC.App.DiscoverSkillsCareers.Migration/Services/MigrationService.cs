@@ -8,6 +8,7 @@ using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,11 +59,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 LoadShortQuestionsFromQuestionSet());
             
             var sessionsToMigrate = await sessionsToMigrateTask;
+            var sessionsToMigrateCount = sessionsToMigrate.Count;
             var index = 1;
-            var errorCount = 0;
-            
+            var errors = new List<string>();
+            var saves = 0;
+
             const int readBatchSize = 1000;
-            const int writeBatchSize = 33;  // 1 at 400, 3 at 1000, 33 at 10,000, 133 at 40,000 - max RU is around 270
+            const int writeBatchSize = 1;  // 1 at 400, 2 at 1000, 23 at 10,000, 92 at 40,000 - max RU is around 397
             
             var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
             
@@ -77,8 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 var legacySessionsTask = LoadLegacySessions(sessionGroupList);
                 
                 var preMigratedAssessments = (await dysacAssessmentDocumentService
-                    .GetAsync(document => sessionIds.Contains(document.AssessmentCode)
-                        && document.PartitionKey == "/Assessment"))?
+                    .GetAsync(document => sessionIds.Contains(document.Id)))?
                     .ToList();
 
                 Log($"Finished fetching pre migrated assessments. Found {preMigratedAssessments?.Count ?? 0} - " +
@@ -89,27 +91,24 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 foreach (var legacySessionWriteGroup in legacySessionsWriteGroups)
                 {
-                    var upsertTasks = new List<Task>();
+                    var createTasks = new List<Task>();
                     
                     foreach (var session in legacySessionWriteGroup)
                     {
                         Log($"Started processing assessment {index} of {legacySessions.Count} at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
-
+                        var sessionId = (string)session["id"];
+                        
                         try
                         {
-                            var sessionId = (string)session["id"];
-                            DysacAssessment migratedAssessment = null;
-
                             if (preMigratedAssessments != null)
                             {
-                                migratedAssessment =
-                                    preMigratedAssessments.FirstOrDefault(x => x.AssessmentCode == sessionId);
+                                Log("Don't need to do it, its already there");
+                                continue;
                             }
 
-                            migratedAssessment ??= new DysacAssessment
+                            var migratedAssessment = new DysacAssessment
                             {
-                                Id = Guid.NewGuid(),
-                                AssessmentCode = sessionId
+                                Id = sessionId
                             };
 
                             var recordedAnswers = ((session["assessmentState"] as JObject)!
@@ -127,14 +126,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                 (session["filteredAssessmentState"] as JObject)?.ToObject<Dictionary<string, object>>(),
                                 migratedAssessment.ShortQuestionResult!);
 
-                            upsertTasks.Add(Upsert(migratedAssessment, index, legacySessions.Count));
+                            createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount));
                         }
                         catch (Exception exception)
                         {
                             Log($"Error processing {index} of {legacySessions.Count} - {exception.Message} " +
                                 $"at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                             
-                            errorCount += 1;
+                            errors.Add(sessionId);
                         }
                         finally
                         {
@@ -142,12 +141,28 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         }
                     }
                     
-                    await Task.WhenAll(upsertTasks);
+                    await Task.WhenAll(createTasks);
                     Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                 }
             }
             
-            Log($"Completed, with {errorCount} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+            Log($"Completed, with {errors.Count} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+
+            Log(string.Empty);
+            Log(string.Empty);
+            Log("Results:");
+            Log($"{saves} items moved.");
+            
+            Log(string.Empty);
+            Log(string.Empty);
+            Log("Error summary:");
+            
+            foreach (var error in errors)
+            {
+                Log($"Error - {error}");                                
+            }
+            
+            File.WriteAllText($"{DateTime.Now.ToString("yyyy-MM-dd")}-report.txt", logger.ToString());
         }
         
         private void Log(string message)
@@ -156,19 +171,23 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             logger.AppendLine(message);
         }
 
-        private async Task Upsert(DysacAssessment migratedAssessment, int index, int count)
+        private async Task Create(DysacAssessment migratedAssessment, int index, int count)
         {
-            Log($"Started upserting assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            Log($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
-            var resourceResponse = await destinationDocumentClient.UpsertDocumentAsync(
+            var resourceResponse = await destinationDocumentClient.CreateDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri("dfc-app-dysac", "assessment"),
                 migratedAssessment,
-                new RequestOptions());
+                new RequestOptions
+                {
+                    ConsistencyLevel = ConsistencyLevel.Eventual,
+                    IndexingDirective = IndexingDirective.Exclude,
+                });
             
             var charge = resourceResponse.RequestCharge;
             
-            Log($"Finished upserting assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+            Log($"Finished creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
                 $"{(DateTime.Now - start).TotalSeconds} seconds. Charge was {charge} RUs");
         }
 
