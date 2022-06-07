@@ -90,12 +90,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var allSkills = allJobProfiles
-                .SelectMany(jobProfile => jobProfile.Skills)
-                .GroupBy(jobProfile => jobProfile.Title)
-                .Select(jobProfileGroup => jobProfileGroup.First())
-                .ToList();
-
             var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
@@ -107,10 +101,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                     categoryJobProfiles
-                        .Select(jobProfile => new JobProfileContentItemModel
-                        {
-                            Skills = jobProfile.SkillCodes!.Select(skillCode => allSkills.Single(sk => sk.Title == skillCode)).ToList(),
-                        }),
+                        .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title)),
                     prominentSkills,
                     75).ToList();
 
