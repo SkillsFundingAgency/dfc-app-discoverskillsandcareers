@@ -122,7 +122,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                     ?.ToObject<Dictionary<string, object>>(),
                                     migratedAssessment.ShortQuestionResult!);
 
-                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount, saves));
+                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount));
                             }
                             catch (Exception exception)
                             {
@@ -193,7 +193,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             logger.AppendLine(message);
         }
 
-        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count, int saves)
+        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count)
         {
             Log($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
