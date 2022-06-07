@@ -19,6 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public IEnumerable<ShortQuestion> Questions { get; set; }
 
+        [JsonProperty(Order = -30, PropertyName = "id")]
         public new string? Id { get; set; }
 
         public ResultData? ShortQuestionResult { get; set; }
