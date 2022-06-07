@@ -103,7 +103,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                             {
                                 var migratedAssessment = new DysacAssessmentForCreate
                                 {
-                                    Id = sessionId
+                                    id = sessionId
                                 };
 
                                 var recordedAnswers = ((session["assessmentState"] as JObject)!

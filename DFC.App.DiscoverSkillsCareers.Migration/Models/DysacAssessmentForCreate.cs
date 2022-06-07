@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Models
 
         public IEnumerable<ShortQuestion> Questions { get; set; }
 
-        public string? Id { get; set; }
+        public string? id { get; set; }
 
         public ResultData? ShortQuestionResult { get; set; }
 
