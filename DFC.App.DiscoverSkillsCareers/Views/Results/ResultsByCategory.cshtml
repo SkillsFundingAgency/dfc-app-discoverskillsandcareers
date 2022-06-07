@@ -1,5 +1,5 @@
 ﻿@model ResultsByCategoryModel
-<partial name="_SendMyResults" model="@Model.AssessmentReference" />
+
 @if (Model.JobsInCategory.Count() == 1)
 {
     <h2 class="govuk-heading-l">1 career area that might interest you</h2>    
@@ -69,3 +69,5 @@ else
         }
     </div>
 </div>
+
+<partial name="_SendMyResults" model="@Model.AssessmentReference" />
