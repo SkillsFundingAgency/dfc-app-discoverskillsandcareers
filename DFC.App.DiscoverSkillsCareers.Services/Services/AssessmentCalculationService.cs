@@ -96,7 +96,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
-                userTraits, allTraits, allFilteringQuestions, allJobCategories);
+                userTraits, allTraits, allFilteringQuestions!, allJobCategories!);
 
             var jobCategories = jobCategoryRelevance
                 .OrderByDescending(x => x.Total)
