@@ -34,6 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private readonly StringBuilder logger = new StringBuilder();
         private string destinationDatabaseId;
         private string destinationCollectionId;
+        private int saves = 0;
         
         public MigrationService(
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
@@ -56,8 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         public async Task Start()
         {
             var errors = new List<string>();
-            var saves = 0;
-            
+
             try
             {
                 var sessionsToMigrateTask = GetSessionIdentifiersToMigrate();
@@ -122,7 +122,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                     ?.ToObject<Dictionary<string, object>>(),
                                     migratedAssessment.ShortQuestionResult!);
 
-                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount, ref saves));
+                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount, saves));
                             }
                             catch (Exception exception)
                             {
@@ -193,7 +193,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             logger.AppendLine(message);
         }
 
-        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count, ref int saves)
+        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count, int saves)
         {
             Log($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
