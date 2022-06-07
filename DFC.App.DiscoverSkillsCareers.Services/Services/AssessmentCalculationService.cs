@@ -66,7 +66,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new InvalidOperationException("No traits retrieved from document service");
             }
 
-            var allFilteringQuestions = await filteringQuestionDocumentService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+            var allFilteringQuestions = await filteringQuestionDocumentService
+                .GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
 
             // User traits
             var userTraits = assessment.Questions
@@ -94,7 +95,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 await jobProfileCategoryDocumentService.GetAsync(x => x.PartitionKey == "JobProfileCategory")
                     .ConfigureAwait(false);
 
-            var jobCategoryRelevance = CalculateJobFamilyRelevance(userTraits, allTraits, allFilteringQuestions, allJobCategories);
+            var jobCategoryRelevance = CalculateJobFamilyRelevance(
+                userTraits, allTraits, allFilteringQuestions!, allJobCategories!);
 
             var jobCategories = jobCategoryRelevance
                 .OrderByDescending(x => x.Total)
