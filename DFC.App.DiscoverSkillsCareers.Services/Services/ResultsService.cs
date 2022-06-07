@@ -36,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<GetResultsResponse> GetResults()
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.Id == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategoryName)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.Id == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -62,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             if (assessment.FilteredAssessment == null || assessment.ShortQuestionResult == null)
             {
-                throw new InvalidOperationException($"Assessment not in the correct state for results. Short State: {assessment.ShortQuestionResult}, Filtered State: {assessment.FilteredAssessment}, Assessment: {assessment.AssessmentCode}");
+                throw new InvalidOperationException($"Assessment not in the correct state for results. Short State: {assessment.ShortQuestionResult}, Filtered State: {assessment.FilteredAssessment}, Assessment: {assessment.Id}");
             }
 
             await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
@@ -90,12 +90,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var allSkills = allJobProfiles
-                .SelectMany(jobProfile => jobProfile.Skills)
-                .GroupBy(jobProfile => jobProfile.Title)
-                .Select(jobProfileGroup => jobProfileGroup.First())
-                .ToList();
-
             var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
@@ -107,22 +101,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                     categoryJobProfiles
-                        .Select(jobProfile => new JobProfileContentItemModel
-                        {
-                            Skills = jobProfile.SkillCodes!.Select(skillCode => allSkills.Single(sk => sk.Title == skillCode)).ToList(),
-                        }),
+                        .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title)),
                     prominentSkills,
                     75).ToList();
 
                 foreach (var jobProfile in categoryJobProfiles)
                 {
-                    var relevantSkills = jobProfile.SkillCodes!
+                    var fullJobProfile = allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title);
+
+                    var relevantSkills = fullJobProfile
+                        .SkillsToCompare(prominentSkills)
+                        .Select(s => s.Title)
                         .Where(skillCode => questionSkills!.Contains(skillCode))
                         .Where(skillCode => categorySkills.Any(categorySkill => categorySkill.ONetAttribute == skillCode))
-                        .Select(skillCode => (string?)skillCode)
                         .ToList();
 
-                    var canAddJobProfile = answeredPositiveQuestions.OrderBy(q => q).SequenceEqual(relevantSkills.OrderBy(s => s));
+                    var canAddJobProfile = answeredPositiveQuestions
+                        .OrderBy(q => q)
+                        .SequenceEqual(relevantSkills.OrderBy(s => s));
 
                     if (canAddJobProfile)
                     {
@@ -162,7 +158,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             if (assessmentCalculationResponse == null)
             {
-                throw new InvalidOperationException($"Assessment Caluclation Response is null for {assessment.AssessmentCode}");
+                throw new InvalidOperationException($"Assessment Caluclation Response is null for {assessment.Id}");
             }
 
             await assessmentDocumentService.UpsertAsync(assessmentCalculationResponse).ConfigureAwait(false);
@@ -176,7 +172,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories.Count(),
                 JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles,
                 Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
-                SessionId = assessment.AssessmentCode!,
+                SessionId = assessment.Id!,
                 AssessmentType = "short",
             };
         }
