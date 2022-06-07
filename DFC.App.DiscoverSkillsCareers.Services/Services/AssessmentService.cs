@@ -43,15 +43,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<bool> NewSession(string assessmentType)
         {
             var questionSet = await questionSetDocumentService.GetAsync(x => x.PartitionKey == "QuestionSet").ConfigureAwait(false);
-            var assessmentId = Guid.NewGuid();
             var assessmentCode = SessionIdHelper.GenerateSessionId("ncs");
 
             var assessment = new DysacAssessment()
             {
                 StartedAt = DateTime.UtcNow,
-                Id = assessmentId,
                 Questions = questionSet != null && questionSet.Any() ? questionSet.FirstOrDefault().ShortQuestions.OrderBy(z => z.Ordinal).Select(x => mapper.Map<ShortQuestion>(x)) : new List<ShortQuestion>(),
-                AssessmentCode = assessmentCode,
+                Id = assessmentCode,
             };
 
             await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
@@ -72,7 +70,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             var sessionId = session.State!.SessionId;
 
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.Id == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -112,7 +110,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.Id == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -134,7 +132,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            var assessments = await assessmentDocumentService.GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+            var assessments = await assessmentDocumentService.GetAsync(x => x.Id == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -158,14 +156,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             if (assessment.FilteredAssessment == null)
             {
-                throw new InvalidOperationException($"Filtered Assessment for {assessment.AssessmentCode} not found");
+                throw new InvalidOperationException($"Filtered Assessment for {assessment.Id} not found");
             }
 
             var answeredQuestion = assessment.FilteredAssessment.Questions.FirstOrDefault(x => x.Ordinal == realQuestionNumber);
 
             if (answeredQuestion == null)
             {
-                throw new InvalidOperationException($"Question number {realQuestionNumber} not found in filtered assessment {jobCategory}-{assessment.AssessmentCode}");
+                throw new InvalidOperationException($"Question number {realQuestionNumber} not found in filtered assessment {jobCategory}-{assessment.Id}");
             }
 
             answeredQuestion.Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = (Answer)answer };
@@ -378,7 +376,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         public async Task<bool> ReloadUsingSessionId(string sessionId)
         {
             var assessments = await assessmentDocumentService
-                .GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false);
+                .GetAsync(x => x.Id == sessionId).ConfigureAwait(false);
 
             if (assessments == null || !assessments.Any())
             {
@@ -407,7 +405,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
             var assessments = (await assessmentDocumentService
-                .GetAsync(x => x.AssessmentCode == sessionId).ConfigureAwait(false)) !.ToList();
+                .GetAsync(x => x.Id == sessionId).ConfigureAwait(false)) !.ToList();
 
             if (assessments == null || !assessments.Any())
             {

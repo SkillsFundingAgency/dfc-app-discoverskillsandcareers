@@ -4,22 +4,24 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 
-namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
+namespace DFC.App.DiscoverSkillsCareers.Migration.Models
 {
     [ExcludeFromCodeCoverage]
-    public class DysacAssessment : DocumentModel
+    public class DysacAssessmentForCreate
     {
-        public DysacAssessment()
+        public DysacAssessmentForCreate()
         {
             Questions = new List<ShortQuestion>();
         }
 
-        public override string? PartitionKey { get; set; } = "/Assessment";
+        public string? PartitionKey { get; set; } = "/Assessment";
 
         public IEnumerable<ShortQuestion> Questions { get; set; }
 
-        public new string? Id { get; set; }
+        public string? Id { get; set; }
 
         public ResultData? ShortQuestionResult { get; set; }
 
