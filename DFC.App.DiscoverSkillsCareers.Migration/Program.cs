@@ -69,7 +69,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 filteringQuestionDocumentService,
                 userSessionDocumentService,
                 dysacQuestionSetDocumentService,
-                destinationDocumentClient);
+                destinationDocumentClient,
+                cosmosDbConnectionAssessment.DatabaseId,
+                cosmosDbConnectionAssessment.CollectionId);
 
             // Uncomment out the next block and comment out the ones above if wanting to populate data
             /*var sourceDocumentClient = new DocumentClient(

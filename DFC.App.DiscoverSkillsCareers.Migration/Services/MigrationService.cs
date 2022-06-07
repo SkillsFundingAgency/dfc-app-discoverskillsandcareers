@@ -31,20 +31,26 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private List<JobCategoryContentItemModel> allJobCategories = new List<JobCategoryContentItemModel>();
         private List<DysacFilteringQuestionContentModel> filteringQuestions = new List<DysacFilteringQuestionContentModel>();
         private List<ShortQuestion> shortQuestions = new List<ShortQuestion>();
-        private StringBuilder logger = new StringBuilder();
+        private readonly StringBuilder logger = new StringBuilder();
+        private string destinationDatabaseId;
+        private string destinationCollectionId;
         
         public MigrationService(
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
             IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService,
             IDocumentClient sourceDocumentClient,
             IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
-            IDocumentClient destinationDocumentClient)
+            IDocumentClient destinationDocumentClient,
+            string destinationDatabaseId,
+            string destinationCollectionId)
         {
             this.dysacTraitDocumentService = dysacTraitDocumentService;
             this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.sourceDocumentClient = sourceDocumentClient;
             this.destinationDocumentClient = destinationDocumentClient;
+            this.destinationDatabaseId = destinationDatabaseId;
+            this.destinationCollectionId = destinationCollectionId;
         }
 
         public async Task Start()
@@ -116,7 +122,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                     ?.ToObject<Dictionary<string, object>>(),
                                     migratedAssessment.ShortQuestionResult!);
 
-                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount));
+                                createTasks.Add(Create(migratedAssessment, index, sessionsToMigrateCount, ref saves));
                             }
                             catch (Exception exception)
                             {
@@ -187,16 +193,17 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             logger.AppendLine(message);
         }
 
-        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count)
+        private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count, ref int saves)
         {
             Log($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var resourceResponse = await destinationDocumentClient.CreateDocumentAsync(
-                UriFactory.CreateDocumentCollectionUri("dfc-app-dysac", "assessment"),
+                UriFactory.CreateDocumentCollectionUri(destinationDatabaseId, destinationCollectionId),
                 migratedAssessment,
                 new RequestOptions());
-            
+
+            saves += 1;
             var charge = resourceResponse.RequestCharge;
             
             Log($"Finished creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
