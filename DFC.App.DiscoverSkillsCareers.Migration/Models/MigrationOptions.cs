@@ -2,6 +2,6 @@
 {
     public class MigrationOptions
     {
-        public int ItemsPerCosmosBatch { get; set; }
+        public int ItemsPerCosmosBatch { get; set; } = 50;
     }
 }
