@@ -90,12 +90,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var allSkills = allJobProfiles
-                .SelectMany(jobProfile => jobProfile.Skills)
-                .GroupBy(jobProfile => jobProfile.Title)
-                .Select(jobProfileGroup => jobProfileGroup.First())
-                .ToList();
-
             var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
@@ -107,22 +101,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                 var categorySkills = JobCategorySkillMappingHelper.GetSkillAttributes(
                     categoryJobProfiles
-                        .Select(jobProfile => new JobProfileContentItemModel
-                        {
-                            Skills = jobProfile.SkillCodes!.Select(skillCode => allSkills.Single(sk => sk.Title == skillCode)).ToList(),
-                        }),
+                        .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title)),
                     prominentSkills,
                     75).ToList();
 
                 foreach (var jobProfile in categoryJobProfiles)
                 {
-                    var relevantSkills = jobProfile.SkillCodes!
+                    var fullJobProfile = allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title);
+
+                    var relevantSkills = fullJobProfile
+                        .SkillsToCompare(prominentSkills)
+                        .Select(s => s.Title)
                         .Where(skillCode => questionSkills!.Contains(skillCode))
                         .Where(skillCode => categorySkills.Any(categorySkill => categorySkill.ONetAttribute == skillCode))
-                        .Select(skillCode => (string?)skillCode)
                         .ToList();
 
-                    var canAddJobProfile = answeredPositiveQuestions.OrderBy(q => q).SequenceEqual(relevantSkills.OrderBy(s => s));
+                    var canAddJobProfile = answeredPositiveQuestions
+                        .OrderBy(q => q)
+                        .SequenceEqual(relevantSkills.OrderBy(s => s));
 
                     if (canAddJobProfile)
                     {

@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<JobProfileContentItemModel, JobProfileResult>()
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
-                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.Select(z => GeneralHelper.GetGenericSkillName(z.Title))));
+                .ForMember(d => d.SkillCodes, s => s.MapFrom(a => a.Skills.OrderBy(s => s.Ordinal).Select(z => GeneralHelper.GetGenericSkillName(z.Title))));
 
             CreateMap<DysacShortQuestionContentItemModel, ShortQuestion>()
              .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
