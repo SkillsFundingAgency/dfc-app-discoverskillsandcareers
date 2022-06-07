@@ -267,7 +267,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     assessment.FilteredAssessment = new FilteredAssessment();
                 }
 
-                var filterQuestions = await dysacFilteringQuestionService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+                var filterQuestions = await dysacFilteringQuestionService
+                    .GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+
                 assessment.FilteredAssessment.Questions = filterQuestions
                     .Select(x => new FilteredAssessmentQuestion
                     {
@@ -275,8 +277,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                         Id = x.Id,
                         Ordinal = x.Ordinal,
                         TraitCode = x.Skills.FirstOrDefault()?.Title,
-                    })
-                    .OrderBy(x => x.Ordinal ?? -1);
+                    });
 
                 foreach (var jobCat in assessment.ShortQuestionResult!.JobCategories!)
                 {
@@ -287,11 +288,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                             x.Ordinal,
                         });
 
-                    var questionSkills = applicableQuestions
-                        .Where(applicableQuestion =>
-                            jobCat.SkillQuestions?
-                                .Any(skillQuestion => skillQuestion == applicableQuestion.Code)
-                            == true)
+                    var questionSkills = jobCat.SkillQuestions
+                        .Select(skillQuestion =>
+                            applicableQuestions.Single(applicableQuestion => skillQuestion == applicableQuestion.Code))
                         .ToDictionary(x => x.Code!, x => x.Ordinal!.Value);
 
                     assessment.FilteredAssessment.JobCategoryAssessments.Add(
@@ -324,10 +323,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             }
 
             var jobCategoryAssessment = assessment.FilteredAssessment.JobCategoryAssessments.FirstOrDefault(x => x.JobCategory == jobCategory);
-            var categoryQuestions = jobCategoryAssessment.QuestionSkills.OrderBy(x => x.Value).ToList();
+            var categoryQuestions = jobCategoryAssessment.QuestionSkills.ToList();
             var answeredQuestions = assessment.FilteredAssessment.Questions.Where(x => x.Answer != null).Select(y => y.TraitCode);
 
-            var nextQuestionCode = categoryQuestions.Where(x => !answeredQuestions.Contains(x.Key)).OrderBy(z => z.Value).FirstOrDefault().Key;
+            var nextQuestionCode = categoryQuestions.FirstOrDefault(x => !answeredQuestions.Contains(x.Key)).Key;
 
             if (questionNumber == 1 && categoryQuestions.All(x => answeredQuestions.Contains(x.Key)))
             {
