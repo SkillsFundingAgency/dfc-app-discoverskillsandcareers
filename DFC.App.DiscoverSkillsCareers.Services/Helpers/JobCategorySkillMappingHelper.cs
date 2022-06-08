@@ -83,6 +83,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
             var minProfileDistributionPercentage = 100 - maxProfileDistributionPercentage;
 
+            // NOTE - recreating a bug in the old DYSAC that means stuff doesn't get filtered out when it should (percentage
+            // is between 0-1 but should be 0-100). So instead of 25 and 75, update these values to 0.25 and 0.75
+            minProfileDistributionPercentage /= 100;
+            maxProfileDistributionPercentage /= 100;
+
             // NOTE - This means any profile that has more then 5 skills won't be matched first time - and some questions
             // will never be asked - consider raising the number higher
             var maxProfilesToTake = Math.Min(5, (int)Math.Log(totalProfileCount, 2) - 2);
