@@ -34,7 +34,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private readonly StringBuilder logger = new StringBuilder();
         private string destinationDatabaseId;
         private string destinationCollectionId;
-        private int saves = 0;
+        private int cosmosDbDestinationRUs;
+        private int saveCount;
         
         public MigrationService(
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
@@ -43,7 +44,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
             IDocumentClient destinationDocumentClient,
             string destinationDatabaseId,
-            string destinationCollectionId)
+            string destinationCollectionId,
+            int cosmosDbDestinationRUs)
         {
             this.dysacTraitDocumentService = dysacTraitDocumentService;
             this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
@@ -52,11 +54,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             this.destinationDocumentClient = destinationDocumentClient;
             this.destinationDatabaseId = destinationDatabaseId;
             this.destinationCollectionId = destinationCollectionId;
+            this.cosmosDbDestinationRUs = cosmosDbDestinationRUs;
         }
 
         public async Task Start()
         {
-            var errors = new List<string>();
+            var errorsList = new List<string>();
+            var startTime = DateTime.Now;
 
             try
             {
@@ -73,8 +77,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 var index = 1;
 
                 const int readBatchSize = 1000;
-                const int
-                    writeBatchSize = 100; // 4 at 400, 10 at 1000, 100 at 10,000, 400 at 40,000 - max RU is around 99
+                const int ruCostPerItem = 99;
+                int writeBatchSize = cosmosDbDestinationRUs / ruCostPerItem;
 
                 var sessionGroups = sessionsToMigrate.Batch(readBatchSize);
                 var sessionGroupsCount = sessionGroups.Count();
@@ -96,7 +100,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         foreach (var session in legacySessionWriteGroup)
                         {
                             var sessionId = (string) session["id"];
-                            Log(
+                            WriteAndLog(
                                 $"Started processing assessment {index} of {sessionsToMigrateCount} ({sessionId}) at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
 
                             try
@@ -126,10 +130,10 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                             }
                             catch (Exception exception)
                             {
-                                Log($"Error processing {index} of {legacySessions.Count} - {exception.Message} " +
+                                WriteAndLog($"Error processing {index} of {legacySessions.Count} - {exception.Message} " +
                                     $"at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
 
-                                errors.Add(sessionId);
+                                errorsList.Add(sessionId);
                             }
                             finally
                             {
@@ -145,57 +149,62 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         {
                             var remainder = (int) ((1.0 - duration.TotalSeconds) * 1000);
 
-                            Log($"Too quick. Waiting {remainder}ms at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
+                            WriteAndLog($"Too quick. Waiting {remainder}ms at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
 
                             // Too quick, waiting remaining time
                             await Task.Delay(remainder);
                         }
 
-                        Log($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                        WriteAndLog($"Finished upserting batch of {writeBatchSize} documents at {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
                     }
 
                     outerForeachCount += 1;
                 }
 
-                Log($"Completed, with {errors.Count} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.");
-                Log(string.Empty);
-                Log(string.Empty);
+                WriteAndLog($"Completed, with {errorsList.Count} errors at {DateTime.Now:yyyy-MM-dd hh:mm:ss}.", 2);
             }
             catch (Exception ex)
             {
-                var msg = "Fatal error: " + ex.Message + " - " + ex.StackTrace;
-                Log(msg);
+                var errorMessage = "Fatal error: " + ex.Message + " - " + ex.StackTrace;
 
-                errors.Add(msg);
-                Log(string.Empty);
+                WriteAndLog(errorMessage, 1);
+                errorsList.Add(errorMessage);
             }
-            finally
+
+            var footerReport = new StringBuilder();
+            footerReport.AppendLine("Results:");
+            footerReport.Append($"{saveCount} items moved.\r\n\r\n");
+            footerReport.AppendLine("Error summary:");
+            
+            foreach (var error in errorsList)
             {
-                Log("Results:");
-                Log($"{saves} items moved.");
-                Log(string.Empty);
-                Log(string.Empty);
-
-                Log("Error summary:");
-            
-                foreach (var error in errors)
-                {
-                    Log($"Error - {error}");                                
-                }
-            
-                File.WriteAllText($"{DateTime.Now.ToString("yyyy-MM-dd")}-report.txt", logger.ToString());   
+                footerReport.AppendLine($"Error - {error}");                                
             }
+
+            var totalDuration = (DateTime.Now - startTime).ToString();
+            footerReport.AppendLine($"Finished in {totalDuration}");
+
+            logger.Append(footerReport.ToString());
+            
+            File.WriteAllText($"{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}-report.txt", logger.ToString());
+            Console.Write(footerReport.ToString());
         }
         
-        private void Log(string message)
+        private void WriteAndLog(string message, int blankLinesAfter = 0)
         {
             Console.WriteLine(message);
             logger.AppendLine(message);
+
+            for (var idx = 0; idx < blankLinesAfter; idx++)
+            {
+                Console.WriteLine(string.Empty);
+                logger.AppendLine(string.Empty);
+            }
         }
 
         private async Task Create(DysacAssessmentForCreate migratedAssessment, int index, int count)
         {
-            Log($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var resourceResponse = await destinationDocumentClient.CreateDocumentAsync(
@@ -203,16 +212,16 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 migratedAssessment,
                 new RequestOptions());
 
-            saves += 1;
+            saveCount += 1;
             var charge = resourceResponse.RequestCharge;
             
-            Log($"Finished creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+            WriteAndLog($"Finished creating assessment {index} of {count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
                 $"{(DateTime.Now - start).TotalSeconds} seconds. Charge was {charge} RUs");
         }
 
         private async Task LoadJobCategoriesFromTraits()
         {
-            Log($"Started fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var allTraits = await dysacTraitDocumentService
@@ -224,26 +233,26 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 .Select(jobCategoryGroup => jobCategoryGroup.First())
                 .ToList();
             
-            Log($"Finished fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+            WriteAndLog($"Finished fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
                 $"{(DateTime.Now - start).TotalSeconds} seconds");
         }
         
         private async Task LoadFilteringQuestions()
         {
-            Log($"Started fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             filteringQuestions = (await dysacFilteringQuestionDocumentService
                 .GetAsync(document => document.PartitionKey == "FilteringQuestion"))!
                 .ToList();
             
-            Log($"Finished fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+            WriteAndLog($"Finished fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
                 $"{(DateTime.Now - start).TotalSeconds} seconds");
         }
         
         private async Task LoadShortQuestionsFromQuestionSet()
         {
-            Log($"Started fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var questionSets = await dysacQuestionSetDocumentService
@@ -263,13 +272,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 })
                 .ToList();
             
-            Log($"Finished fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
+            WriteAndLog($"Finished fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
                 $"{(DateTime.Now - start).TotalSeconds} seconds");            
         }
         
         private async Task<List<string>> GetSessionIdentifiersToMigrate()
         {
-            Log($"Started fetching all session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching all session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
 
             var hasMore = true;
@@ -297,10 +306,10 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 hasMore = returnList.Count % countToFetch == 0;
                 loopCount++;
                 
-                Log($"Fetched {returnList.Count} session identifiers in total. Continuing... - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                WriteAndLog($"Fetched {returnList.Count} session identifiers in total. Continuing... - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             }
 
-            Log($"Finished fetching all session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+            WriteAndLog($"Finished fetching all session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
@@ -308,7 +317,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         
         private async Task<List<Dictionary<string, object>>> LoadLegacySessions(List<string> sessionIds,int outerForeachCount, int sessionGroupsCount)
         {
-            Log($"Started fetching legacy session identifiers for batch of {sessionIds.Count} - {outerForeachCount} of {sessionGroupsCount} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching legacy session identifiers for batch of {sessionIds.Count} - {outerForeachCount} of {sessionGroupsCount} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
@@ -338,7 +347,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     .ToList());
             }
 
-            Log($"Finished fetching legacy session identifiers for batch. Found {returnList.Count} - " +
+            WriteAndLog($"Finished fetching legacy session identifiers for batch. Found {returnList.Count} - " +
                 $"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;

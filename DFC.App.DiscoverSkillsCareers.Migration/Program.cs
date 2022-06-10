@@ -20,24 +20,54 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
     {
         static async Task Main(string[] args)
         {
-            IConfiguration Configuration = new ConfigurationBuilder()
+            IConfiguration configuration = new ConfigurationBuilder()
                .AddJsonFile("appsettings.development.json", optional: true, reloadOnChange: true)
                .AddEnvironmentVariables()
                .AddCommandLine(args)
                .Build();
 
-            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
-            var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
-            var cosmosDbConnectionLegacyUserSessions = Configuration.GetSection("Configuration:CosmosDbConnections:LegacySessions").Get<CosmosDbConnection>();
-            var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
+            var cosmosDbConnectionLegacyUserSessions = configuration.GetSection("Configuration:CosmosDbConnections:LegacySessions").Get<CosmosDbConnection>();
 
+            Console.WriteLine("Do you wish to populate test data in the old DYSAC or migrate data? Please enter either 'populatetest' or 'migrate'.");
+            var inputMode = Console.ReadLine();
+            
+            if (!inputMode.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase)
+                && !inputMode.Equals("migrate", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine($"Input mode '{inputMode}' not understood. Quitting.");
+                return;
+            }
+            
+            Console.WriteLine("Cosmos Db Connection mode: Please enter the Cosmos Db connection mode to use (gateway or direct - defaults to gateway)");
+            var cosmosDbConnectionMode = Console.ReadLine()!.Trim();
+
+            if (!cosmosDbConnectionMode.Equals("direct", StringComparison.InvariantCultureIgnoreCase))
+            {
+                cosmosDbConnectionMode = "gateway";
+            }
+
+            var connectionMode = cosmosDbConnectionMode == "direct" ? ConnectionMode.Direct : ConnectionMode.Gateway;
+
+            Console.WriteLine("Cosmos Db destination RUs: Please enter the RUs for the destination container.");
+            var cosmosDbDestinationRUs = int.Parse(Console.ReadLine()!.Trim());
+            
+            if (inputMode.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase))
+            {
+                await PopulateTestData(cosmosDbConnectionLegacyUserSessions, connectionMode, cosmosDbDestinationRUs);
+                return;
+            }
+
+            var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
+            var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+            var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
+            
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
                 .AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
-                .AddSingleton(Configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ?? new MigrationOptions())
+                .AddSingleton(configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ?? new MigrationOptions())
                 .AddSingleton<IDocumentClient>(
                     new DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                     cosmosDbConnectionLegacyUserSessions.AccessKey))
@@ -53,14 +83,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var filteringQuestionDocumentService = serviceProvider.GetService<IDocumentService<DysacFilteringQuestionContentModel>>();
             var dysacQuestionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacQuestionSetContentModel>>();
             var userSessionDocumentService = serviceProvider.GetService<IDocumentClient>();
-            
+
             var destinationDocumentClient = new DocumentClient(
                 cosmosDbConnectionAssessment.EndpointUrl,
                 cosmosDbConnectionAssessment.AccessKey,
                 new ConnectionPolicy
                 {
                     MaxConnectionLimit = 1000,
-                    ConnectionMode = ConnectionMode.Direct, // Be careful on VPN
+                    ConnectionMode = connectionMode,
                     ConnectionProtocol = Protocol.Tcp
                 });
 
@@ -71,25 +101,49 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 dysacQuestionSetDocumentService,
                 destinationDocumentClient,
                 cosmosDbConnectionAssessment.DatabaseId,
-                cosmosDbConnectionAssessment.CollectionId);
+                cosmosDbConnectionAssessment.CollectionId,
+                cosmosDbDestinationRUs);
+            
+            Console.Write("Please check and confirm the indexing strategy for the cosmos destination is set as per the below, or the import may fail. Press y to proceed;\r\n\r\n");
+            Console.Write(
+                @"                {
+                    ""indexingMode"": ""none"",
+                    ""automatic"": false,
+                    ""includedPaths"": [],
+                    ""excludedPaths"": []
+                }");
+            
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.ReadKey();
+            
+            Console.WriteLine();
+            Console.WriteLine("Please also confirm you are running standalone and not debugging - as that will make this process very slow. Press y to proceed");
+            Console.ReadKey();
 
-            // Uncomment out the next block and comment out the ones above if wanting to populate data
-            /*var sourceDocumentClient = new DocumentClient(
+            Console.WriteLine();
+            Console.WriteLine();
+            
+            Activity.Current = new Activity("Dysac assessment migration").Start();
+            await migrationService.Start();
+        }
+
+        private static async Task PopulateTestData(CosmosDbConnection cosmosDbConnectionLegacyUserSessions, ConnectionMode connectionMode, int cosmosDbDestinationRUs)
+        {
+            var sourceDocumentClient = new DocumentClient(
                 cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                 cosmosDbConnectionLegacyUserSessions.AccessKey,
                 new ConnectionPolicy
                 {
                     MaxConnectionLimit = 1000,
-                    ConnectionMode = ConnectionMode.Direct, // Be careful on VPN
+                    ConnectionMode = connectionMode,
                     ConnectionProtocol = Protocol.Tcp
                 });
-            var migrationService = new PopulateTestDataService(sourceDocumentClient);*/
-            
-            Activity.Current = new Activity("Dysac Assessment Migration").Start();
-            await migrationService.Start();
+                
+            var migrationService = new PopulateTestDataService(sourceDocumentClient, cosmosDbDestinationRUs);
 
-            Console.WriteLine("Completed - press a key to end");
-            Console.ReadKey();
+            Activity.Current = new Activity("Dysac test data population").Start();
+            await migrationService.Start();
         }
     }
 }

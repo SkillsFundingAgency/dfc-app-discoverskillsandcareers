@@ -12,18 +12,24 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
     public class PopulateTestDataService : IMigrationService
     {
         private readonly IDocumentClient destinationDocumentClient;
-        private static Random random = new Random();
+        private readonly int cosmosDbDestinationRUs;
+        private static readonly Random RandomGenerator = new Random();
         
         public PopulateTestDataService(
-            IDocumentClient destinationDocumentClient)
+            IDocumentClient destinationDocumentClient,
+            int cosmosDbDestinationRUs)
         {
             this.destinationDocumentClient = destinationDocumentClient;
+            this.cosmosDbDestinationRUs = cosmosDbDestinationRUs;
         }
 
         public async Task Start()
         {
-            var itemsToInsert = 300000;
-            var batchSize = 80;  // 3 at 400, 8 at 1000, 80 at 10,000, 320 at 40,000 - charge is 116 RUs
+            var itemsToInsert = 300_000;
+
+            var ruCostPerItem = 166;
+            var batchSize = cosmosDbDestinationRUs / ruCostPerItem;
+
             var counter = 0;
 
             while (counter < itemsToInsert)
@@ -32,7 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 for (int idx = 0, len = batchSize; idx < len; idx++)
                 {
-                    var assessment = Document.Replace("[id]", RandomString(14)).Replace("[partitionKey]", $"session{counter+idx}");
+                    var assessment = SerialisedDocument.Replace("[id]", RandomString(14)).Replace("[partitionKey]", $"session{counter+idx}");
                     populateTasks.Add(Add(assessment, counter + idx + 1, itemsToInsert));
                 }
                 
@@ -45,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray()).ToLower();
+                .Select(s => s[RandomGenerator.Next(s.Length)]).ToArray()).ToLower();
         }
         
         private async Task Add(string migratedAssessment, int index, int count)
@@ -69,7 +75,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             Console.WriteLine(message);
         }
 
-        private string Document =
+        private string SerialisedDocument =
             @"{
  ""partitionKey"": ""[partitionKey]"",
  ""id"": ""[id]"",
