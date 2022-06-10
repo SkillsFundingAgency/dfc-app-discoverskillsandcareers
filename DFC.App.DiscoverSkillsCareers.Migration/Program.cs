@@ -104,19 +104,38 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 cosmosDbConnectionAssessment.CollectionId,
                 cosmosDbDestinationRUs);
             
-            Console.Write("Please check and confirm the indexing strategy for the cosmos destination is set as per the below, or the import may fail. Press y to proceed;\r\n\r\n");
-            Console.Write(
-                @"                {
-                    ""indexingMode"": ""none"",
-                    ""automatic"": false,
-                    ""includedPaths"": [],
-                    ""excludedPaths"": []
-                }");
+            Console.Write(@"Please check and confirm the indexing strategy for the cosmos destination is set as per the below, or the import may fail.;
+
+{
+    ""indexingMode"": ""none"",
+    ""automatic"": false,
+    ""includedPaths"": [],
+    ""excludedPaths"": []
+}
+
+Please ensure you set it back after to;
+
+{
+    ""indexingMode"": ""consistent"",
+    ""automatic"": true,
+    ""includedPaths"": [
+        {
+            ""path"": ""/*""
+        }
+    ],
+    ""excludedPaths"": [
+        {
+            ""path"": ""/\""_etag\""/?""
+        }
+    ]
+}
+
+Press y to proceed if you are happy this has been done.
+");
             
-            Console.WriteLine();
-            Console.WriteLine();
             Console.ReadKey();
             
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Please also confirm you are running standalone and not debugging - as that will make this process very slow. Press y to proceed");
             Console.ReadKey();
