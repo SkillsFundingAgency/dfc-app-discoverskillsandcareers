@@ -170,7 +170,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     .FirstOrDefault()?.JobCategory!,
                 JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!,
                 JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories.Count(),
-                JobProfiles = assessmentCalculationResponse.ShortQuestionResult?.JobProfiles,
                 Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
                 SessionId = assessment.Id!,
                 AssessmentType = "short",
