@@ -83,8 +83,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 {
                     outerForeachCount = int.Parse(File.ReadAllText(bookmarkPath));
                 }
-                
-                const int ruCostPerItem = 99;
+
+                const int ruCostPerItem = 22;;
                 int writeBatchSize = cosmosDbDestinationRUs / ruCostPerItem;
 
                 WriteAndLog($"Writes per second attempting is {writeBatchSize}");
@@ -486,7 +486,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             BuildTraits(resultData, returnItem);
             BuildJobCategories(resultData, returnItem);
 
-            if (returnItem.JobCategories != null || returnItem.JobProfiles != null)
+            if (returnItem.JobCategories != null)
             {
                 return returnItem;
             }

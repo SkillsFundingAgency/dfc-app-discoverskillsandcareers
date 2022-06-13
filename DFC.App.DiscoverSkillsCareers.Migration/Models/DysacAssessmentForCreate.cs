@@ -10,6 +10,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 namespace DFC.App.DiscoverSkillsCareers.Migration.Models
 {
     [ExcludeFromCodeCoverage]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class DysacAssessmentForCreate
     {
         public DysacAssessmentForCreate()

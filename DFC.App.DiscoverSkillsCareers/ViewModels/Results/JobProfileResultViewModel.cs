@@ -7,8 +7,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     {
         public string JobCategoryName { get; set; }
 
-        public string SocCode { get; set; }
-
         public string Title { get; set; }
 
         public string Overview { get; set; }
