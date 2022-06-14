@@ -194,14 +194,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         continue;
                     }
 
+                    var skillQuestions = categorySkills
+                        .Where(categorySkill =>
+                            allFilteringQuestions.Any(applicableQuestion =>
+                                 applicableQuestion.Skills.Select(x => x.Title).Contains(categorySkill.ONetAttribute)))
+                        .Select(z => z.ONetAttribute!)
+                        .ToList();
+
                     results.Add(new JobCategoryResult
                     {
                         JobFamilyName = fullJobCategory.Title!,
                         JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(limitedJobCategory.WebsiteURI.LastIndexOf("/") + 1, limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/") - 1).ToString(),
-                        SkillQuestions = categorySkills.Select(z => z.ONetAttribute!),
+                        SkillQuestions = skillQuestions,
                         TraitValues = allTraits.Where(x => x.JobCategories.Any(y => y.ItemId == fullJobCategory.ItemId)).Select(p => new TraitValue { TraitCode = p.Title!.ToUpperInvariant(), NormalizedTotal = trait.TotalScore, Total = trait.TotalScore }).ToList(),
                         Total = trait.TotalScore,
-                        TotalQuestions = categorySkills.Count(),
+                        TotalQuestions = skillQuestions.Count,
                         JobProfiles = jobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
                     });
                 }
