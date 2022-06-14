@@ -14,12 +14,12 @@
 
                         @if (item.NumberOfMatchedJobProfile > 0)
                         {
-                            <p class="app-noprint">Answer some more questions to find job roles you might be suited to in @item.JobFamilyName.</p>
+                            <p class="app-noprint">Answer more questions to find roles that might interest you in @item.JobFamilyName.</p>
                             <a role="button" class="govuk-button app-button" asp-controller="results" asp-action="roles" asp-route-id="@item.JobFamilyUrl" draggable="false">View results</a>
                         }
                         else if (item.TotalQuestions > 0)
                         {
-                            <p class="app-noprint">Answer some more questions to find job roles you might be suited to in @item.JobFamilyName.</p>
+                            <p class="app-noprint">Answer more questions to find roles that might interest you in @item.JobFamilyName.</p>
                             <a role="button" draggable="false" class="govuk-button app-button" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyNameUrl" asp-route-questionNumber="0">
                                 Answer @item.TotalQuestions more question@{if (item.TotalQuestions > 1)@("s")}
                                 <span class="govuk-visually-hidden"> for @item.JobFamilyName</span>
