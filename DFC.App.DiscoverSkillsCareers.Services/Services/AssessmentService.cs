@@ -290,8 +290,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
                     var questionSkills = jobCat.SkillQuestions
                         .Select(skillQuestion =>
-                            applicableQuestions.Single(applicableQuestion => skillQuestion == applicableQuestion.Code))
-                        .ToDictionary(x => x.Code!, x => x.Ordinal!.Value);
+                            applicableQuestions.SingleOrDefault(applicableQuestion => skillQuestion == applicableQuestion.Code))
+                        .Where(applicableQuestion => applicableQuestion != null)
+                        .ToDictionary(applicableQuestion => applicableQuestion!.Code!, x => x!.Ordinal!.Value);
 
                     assessment.FilteredAssessment.JobCategoryAssessments.Add(
                         new JobCategoryAssessment
