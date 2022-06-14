@@ -108,7 +108,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             assessment.ShortQuestionResult = new ResultData
             {
-                Traits = limitedTraits,
+                Traits = userTraits,
                 JobCategories = jobCategories.ToList(),
                 TraitText = limitedTraits.Select(x => x.Text!),
             };
