@@ -123,7 +123,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         }
         
         [Fact]
-        public async Task ResultsServiceGetResultsByCategoryWithSkillsReturnsCategoryWithNoProfiles()
+        public async Task ResultsServiceGetResultsByCategoryWithSkillsReturnsCategoryWithSingleProfile()
         {
             //Arrange
             var assessment = AssessmentHelpers.GetAssessment();
@@ -193,7 +193,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             //Assert
             A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Single(results.JobCategories);
-            Assert.Empty(results.JobCategories.Single().JobProfiles);
+            Assert.Single(results.JobCategories.Single().JobProfiles);
         }
     }
 }

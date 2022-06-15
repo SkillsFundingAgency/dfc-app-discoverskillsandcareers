@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
@@ -67,12 +68,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
 
-            var answeredPositiveQuestions = assessment.FilteredAssessment.Questions
-                .Where(x => x.Answer != null && x.Answer!.Value == Core.Enums.Answer.Yes)
-                .Select(z => z.TraitCode)
+            var answeredQuestions = assessment.FilteredAssessment.Questions!
+                .Where(question => question.Answer != null)
+                .Select(question => (question.TraitCode, question.Answer!.Value))
                 .ToList();
 
-            var allFilteringQuestions = await filteringQuestionDocumentService.GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+            var allFilteringQuestions = await filteringQuestionDocumentService
+                .GetAsync(x => x.PartitionKey == "FilteringQuestion").ConfigureAwait(false);
+
             var questionSkills = allFilteringQuestions?
                 .SelectMany(x => x.Skills)
                 .Select(x => x.Title)
@@ -105,6 +108,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                     prominentSkills,
                     75).ToList();
 
+                var categoryAnsweredQuestions = categorySkills
+                    .Where(categorySkill => answeredQuestions.Any(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode))
+                    .Select(categorySkill => (categorySkill.ONetAttribute,
+                        answeredQuestions.First(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode).Value))
+                    .ToList();
+
                 foreach (var jobProfile in categoryJobProfiles)
                 {
                     var fullJobProfile = allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title);
@@ -116,9 +125,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                         .Where(skillCode => categorySkills.Any(categorySkill => categorySkill.ONetAttribute == skillCode))
                         .ToList();
 
-                    var canAddJobProfile = answeredPositiveQuestions
-                        .OrderBy(q => q)
-                        .SequenceEqual(relevantSkills.OrderBy(s => s));
+                    var profileAnswers = categoryAnsweredQuestions
+                        .Select(categoryAnsweredQuestion => (categoryAnsweredQuestion.ONetAttribute,
+                            relevantSkills.Contains(categoryAnsweredQuestion.ONetAttribute) ? Answer.Yes : Answer.No))
+                        .ToList();
+
+                    var canAddJobProfile = categoryAnsweredQuestions.SequenceEqual(profileAnswers);
 
                     if (canAddJobProfile)
                     {
