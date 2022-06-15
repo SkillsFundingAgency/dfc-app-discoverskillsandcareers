@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -8,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Core.Enums;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
