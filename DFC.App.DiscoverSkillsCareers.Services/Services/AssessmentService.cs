@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
@@ -244,14 +245,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            return notificationService.SendEmail(domain, emailAddress, sessionId);
+            return notificationService.SendEmail(domain, emailAddress, SessionHelper.FormatSessionId(sessionId));
         }
 
         public async Task<SendSmsResponse> SendSms(string domain, string mobile)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            return notificationService.SendSms(domain, mobile, sessionId);
+            return notificationService.SendSms(domain, mobile, SessionHelper.FormatSessionId(sessionId));
         }
 
         public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)

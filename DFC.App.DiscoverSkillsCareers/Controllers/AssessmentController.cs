@@ -9,6 +9,7 @@ using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
@@ -360,7 +361,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var result = new AssessmentReferenceGetResponse
             {
-                ReferenceCode = getAssessmentResponse.ReferenceCode,
+                ReferenceCode = SessionHelper.FormatSessionId(getAssessmentResponse.ReferenceCode!),
                 AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard),
             };
 
