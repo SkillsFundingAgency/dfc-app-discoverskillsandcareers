@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
+using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
@@ -41,8 +43,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             mapper = A.Fake<IMapper>();
             filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
             notificationService = A.Fake<INotificationService>();
+            var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
 
-            assessmentService = new AssessmentService(sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, filteringQuestionDocumentService, mapper, notificationService);
+            assessmentService = new AssessmentService(
+                sessionIdToCodeConverter,
+                sessionService,
+                assessmentDocumentService,
+                questionSetDocumentService,
+                filteringQuestionDocumentService,
+                mapper,
+                notificationService,
+                fakeContextAccessor);
         }
 
         [Fact]
