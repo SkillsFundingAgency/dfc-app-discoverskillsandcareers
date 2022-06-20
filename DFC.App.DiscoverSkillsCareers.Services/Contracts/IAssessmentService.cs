@@ -1,5 +1,7 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using System.Collections.Generic;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Models;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
@@ -12,6 +14,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer);
 
         Task<GetAssessmentResponse> GetAssessment();
+
+        Task<DysacAssessment> GetAssessment(string sessionId);
+
+        Task<DysacAssessment?> GetAssessment(string sessionId, bool throwErrorWhenNotFound);
+
+        Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions();
+
+        Task UpdateAssessment(DysacAssessment assessment);
 
         Task UpdateQuestionNumber(int questionNumber);
 

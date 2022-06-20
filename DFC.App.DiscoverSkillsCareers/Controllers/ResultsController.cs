@@ -20,13 +20,19 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
         private readonly ILogService logService;
 
-        public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService, IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService)
-            : base(sessionService)
+        public ResultsController(
+            ILogService logService,
+            IMapper mapper,
+            ISessionService sessionService,
+            IResultsService resultsService,
+            IAssessmentService assessmentService,
+            IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService)
+                : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
-            this.assessmentService = apiService;
+            this.assessmentService = assessmentService;
             this.jobProfileOverviewDocumentService = jobProfileOverviewDocumentService;
         }
 
@@ -39,14 +45,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
-            if (assessmentResponse == null)
-            {
-                logService.LogInformation("Assesment is null");
-                return RedirectTo("assessment/return");
-            }
-
-            logService.LogInformation("Assessment is not null");
-
             var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
 
             var lastFilterCategory = resultsResponse.LastAssessmentCategory;

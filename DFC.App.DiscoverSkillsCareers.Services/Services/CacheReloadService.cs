@@ -56,6 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             try
             {
+                return;
                 logger.LogInformation("Reload cache started");
 
                 if (dysacOptions.CacheReloadEnabled.HasValue && !dysacOptions.CacheReloadEnabled.Value)
