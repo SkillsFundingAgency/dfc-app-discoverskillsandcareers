@@ -34,7 +34,7 @@
         @if (Model.Results.JobCategories.Count() > Model.Results.JobCategoriesNumberToShow)
         {
             <div id="showMoreCategories">
-                <p><strong>See @(Model.Results.JobCategories.Count() - Model.Results.JobCategoriesNumberToShow) other career areas that might interest you</strong></p>
+                <h2 class="govuk-!-font-size-27">See @(Model.Results.JobCategories.Count() - Model.Results.JobCategoriesNumberToShow) other career areas that might interest you</h2>
 
                 <a href="/discover-your-skills-and-careers/results/100">See matches</a>
             </div>
