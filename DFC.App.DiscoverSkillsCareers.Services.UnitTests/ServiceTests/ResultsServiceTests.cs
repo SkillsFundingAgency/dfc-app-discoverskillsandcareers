@@ -33,6 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessmentCalculationService = A.Fake<IAssessmentCalculationService>();
             assessmentService = A.Fake<IAssessmentService>();
             jobProfileCategoryDocumentService = A.Fake<IDocumentService<DysacJobProfileCategoryContentModel>>();
+            filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
             
             resultsService = new ResultsService(sessionService, assessmentService, assessmentCalculationService, jobProfileCategoryDocumentService);
 
@@ -44,8 +45,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public async Task ResultsServiceGetResultsReturnsResults()
         {
             //Arrange
-//            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored))
-//                .Returns(new List<DysacAssessment> { new DysacAssessment { Id = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } } });
+            A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored))
+                .Returns(new DysacAssessment { Id = sessionId, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } });
 
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
@@ -456,7 +457,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             };
             
             A.CallTo(() => jobProfileCategoryDocumentService.GetAsync(A<Expression<Func<DysacJobProfileCategoryContentModel, bool>>>.Ignored)).Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
-//            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+            A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
 
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
@@ -476,8 +477,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             //Act
             var results = await resultsService.GetResultsByCategory(category);
 
-            //Assert
-//            A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
+            // Assert
+            A.CallTo(() => assessmentService.UpdateAssessment(A<DysacAssessment>.Ignored))
+                .MustHaveHappenedOnceExactly();
+            
             Assert.Single(results.JobCategories);
         }
         
@@ -489,7 +492,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "delivery and storage", JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, TraitText = new List<string>() { "you'd be good working in place a", "you might do well in place b", "you're really a at b" } };
             assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } } } } };
 
-//            A.CallTo(() => assessmentDocumentService.GetAsync(A<Expression<Func<DysacAssessment, bool>>>.Ignored)).Returns(new List<DysacAssessment> { assessment });
+            A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
             A.CallTo(() => filteringQuestionDocumentService.GetAsync(A<Expression<Func<DysacFilteringQuestionContentModel, bool>>>.Ignored))
                 .Returns(new List<DysacFilteringQuestionContentModel>
                 {
@@ -509,6 +512,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                     }
                 }
             );
+            
             var jobCategory = new DysacJobProfileCategoryContentModel
             {
                 JobProfiles = new List<JobProfileContentItemModel>
@@ -550,7 +554,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var results = await resultsService.GetResultsByCategory(category);
 
             //Assert
-//            A.CallTo(() => assessmentDocumentService.UpsertAsync(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => assessmentService.UpdateAssessment(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Single(results.JobCategories);
             Assert.Single(results.JobCategories.Single().JobProfiles);
         }

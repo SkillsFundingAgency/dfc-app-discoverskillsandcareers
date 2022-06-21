@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
@@ -43,8 +44,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
             notificationService = A.Fake<INotificationService>();
             var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
 
-            assessmentService = new AssessmentService(
+                assessmentService = new AssessmentService(
                 sessionIdToCodeConverter,
                 sessionService,
                 assessmentDocumentService,
@@ -52,7 +54,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 filteringQuestionDocumentService,
                 mapper,
                 notificationService,
-                fakeContextAccessor);
+                fakeContextAccessor,
+                fakeMemoryCache);
         }
 
         [Fact]
