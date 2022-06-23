@@ -3,7 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -74,11 +73,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var answerResponse = await apiService.AnswerFilterQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
-
-            if (answerResponse == null)
-            {
-                return BadRequest();
-            }
 
             if (!answerResponse.IsSuccess)
             {
