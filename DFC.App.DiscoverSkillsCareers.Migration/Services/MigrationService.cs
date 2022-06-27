@@ -23,12 +23,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
     public class MigrationService : IMigrationService
     {
         private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
+        private readonly IDocumentService<DysacJobProfileCategoryContentModel> dysacJobProfileCategoryDocumentService;
         private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
         private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
         private readonly IDocumentClient sourceDocumentClient;
         private readonly IDocumentClient destinationDocumentClient;
         
         private List<JobCategoryContentItemModel> allJobCategories = new List<JobCategoryContentItemModel>();
+        private List<JobProfileContentItemModel> allJobProfiles = new List<JobProfileContentItemModel>();
         private List<DysacFilteringQuestionContentModel> filteringQuestions = new List<DysacFilteringQuestionContentModel>();
         private List<ShortQuestion> shortQuestions = new List<ShortQuestion>();
         private readonly StringBuilder logger = new StringBuilder();
@@ -41,6 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         
         public MigrationService(
             IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
+            IDocumentService<DysacJobProfileCategoryContentModel> dysacJobProfileCategoryDocumentService,
             IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService,
             IDocumentClient sourceDocumentClient,
             IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
@@ -50,6 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             int cosmosDbDestinationRUs)
         {
             this.dysacTraitDocumentService = dysacTraitDocumentService;
+            this.dysacJobProfileCategoryDocumentService = dysacJobProfileCategoryDocumentService;
             this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
             this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
             this.sourceDocumentClient = sourceDocumentClient;
@@ -84,7 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     outerForeachCount = int.Parse(File.ReadAllText(bookmarkPath));
                 }
 
-                const int ruCostPerItem = 22;;
+                const int ruCostPerItem = 140; //98 to 185
                 int writeBatchSize = cosmosDbDestinationRUs / ruCostPerItem;
 
                 WriteAndLog($"Writes per second attempting is {writeBatchSize}");
@@ -119,7 +123,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                 var recordedAnswers = ((session["assessmentState"] as JObject)!
                                         .ToObject<Dictionary<string, object>>()!
                                         ["recordedAnswers"] as JArray)!
-                                    .Select(x => x.ToObject<Dictionary<string, object>>())
+                                    .Select(recordedAnswersObj => recordedAnswersObj.ToObject<Dictionary<string, object>>())
                                     .ToList();
 
                                 migratedAssessment.Questions = ConvertToQuestions(recordedAnswers);
@@ -250,6 +254,16 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 .SelectMany(trait => trait.JobCategories)
                 .GroupBy(jobCategory => jobCategory.Title)
                 .Select(jobCategoryGroup => jobCategoryGroup.First())
+                .ToList();
+            
+            var fullCategories =
+                await dysacJobProfileCategoryDocumentService
+                    .GetAsync(document => document.PartitionKey == "JobProfileCategory");
+
+            allJobProfiles = fullCategories!
+                .SelectMany(jobCategory => jobCategory.JobProfiles)
+                .GroupBy(jobProfile => jobProfile.Title)
+                .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
             
             WriteAndLog($"Finished fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
@@ -541,10 +555,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             // Old DYSAC, "Computing, Technology and Digital" is one category, needs sorting.
             foreach (var profile in category.JobProfiles)
             {
+                var fullProfile = allJobProfiles.First(x => x.Title == profile.Title);
+                
                 resultsToReturn.Add(new JobProfileResult
                 {
                     Title = profile.Title,
-                    SkillCodes = profile.Skills.Select(skill => skill.Title).ToList()
+                    SkillCodes = fullProfile.Skills.Select(skill => skill.Title).ToList()
                 });
             }
             

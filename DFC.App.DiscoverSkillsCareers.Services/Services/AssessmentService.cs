@@ -4,12 +4,12 @@ using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Api
 {
@@ -213,12 +213,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
-
             var question = assessment.Questions.OrderBy(x => x.Ordinal).FirstOrDefault(z => z.Answer == null);
 
             var questionNumber = question != null ? question.Ordinal!.Value : 0;
             var atLeastOneAnsweredFilterQuestion =
                 assessment.FilteredAssessment?.Questions?.Any(q => q.Answer != null) == true;
+
+            var jobCategoryRequiredTraits = assessment.FilteredAssessment?.JobCategoryAssessments
+                .FirstOrDefault(trait => trait.JobCategory == assessment.FilteredAssessment?.CurrentFilterAssessmentCode)?
+                .QuestionSkills
+                .Select(questionSkill => questionSkill.Key)
+                .ToList();
+
+            var categoryQuestions = assessment.FilteredAssessment?.Questions!.Where(
+                categoryQuestion => jobCategoryRequiredTraits?.Contains(categoryQuestion.TraitCode!) == true).ToList();
+
+            var allFilteringQuestionsForCategoryAnswered =
+                !string.IsNullOrEmpty(assessment.FilteredAssessment?.CurrentFilterAssessmentCode) &&
+                categoryQuestions?.All(x => x.Answer != null) == true;
 
             return new GetAssessmentResponse
             {
@@ -238,6 +250,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 RecordedAnswersCount = assessment.Questions.Count(x => x.Answer != null),
                 ReferenceCode = sessionId,
                 AtLeastOneAnsweredFilterQuestion = atLeastOneAnsweredFilterQuestion,
+                AllFilteringQuestionsForCategoryAnswered = allFilteringQuestionsForCategoryAnswered,
             };
         }
 

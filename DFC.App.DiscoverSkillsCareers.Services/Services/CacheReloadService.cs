@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Helpers;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
@@ -14,7 +15,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {

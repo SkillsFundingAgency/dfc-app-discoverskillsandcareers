@@ -31,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 MaxQuestionsCount = 2,
                 RecordedAnswersCount = 2,
                 JobCategorySafeUrl = "sports",
+                AllFilteringQuestionsForCategoryAnswered = true,
                 AtLeastOneAnsweredFilterQuestion = true,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
@@ -41,6 +42,29 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/results/roles/sports", redirectResult.Url);
+        }
+
+        [Fact]
+        public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndIsCompletedThenRedirectedToExplicitResultsPage()
+        {
+            var assessmentResponse = new GetAssessmentResponse
+            {
+                IsFilterAssessment = true,
+                MaxQuestionsCount = 2,
+                RecordedAnswersCount = 2,
+                JobCategorySafeUrl = "sports",
+                AllFilteringQuestionsForCategoryAnswered = true,
+                AtLeastOneAnsweredFilterQuestion = true,
+                CurrentFilterAssessmentCode = "ABC",
+            };
+            A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
+
+            var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
+
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/results/roles/ABC", redirectResult.Url);
         }
 
         [Fact]

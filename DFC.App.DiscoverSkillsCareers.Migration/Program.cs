@@ -64,6 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
                 .AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
+                .AddDocumentServices<DysacJobProfileCategoryContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
                 .AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, true, cosmosRetryOptions)
@@ -79,7 +80,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             logger.LogDebug("Starting application");
 
-            var questionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacTraitContentModel>>();
+            var traitDocumentService = serviceProvider.GetService<IDocumentService<DysacTraitContentModel>>();
+            var jobCategoryDocumentService = serviceProvider.GetService<IDocumentService<DysacJobProfileCategoryContentModel>>();
             var filteringQuestionDocumentService = serviceProvider.GetService<IDocumentService<DysacFilteringQuestionContentModel>>();
             var dysacQuestionSetDocumentService = serviceProvider.GetService<IDocumentService<DysacQuestionSetContentModel>>();
             var userSessionDocumentService = serviceProvider.GetService<IDocumentClient>();
@@ -95,7 +97,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 });
 
             var migrationService = new MigrationService(
-                questionSetDocumentService,
+                traitDocumentService,
+                jobCategoryDocumentService,
                 filteringQuestionDocumentService,
                 userSessionDocumentService,
                 dysacQuestionSetDocumentService,

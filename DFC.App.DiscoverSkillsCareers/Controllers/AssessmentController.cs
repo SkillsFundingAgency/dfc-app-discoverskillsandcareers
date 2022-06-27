@@ -390,6 +390,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (assessment.IsFilterComplete)
                 {
+                    if (!string.IsNullOrEmpty(assessment.CurrentFilterAssessmentCode))
+                    {
+                        return RedirectTo($"results/roles/{assessment.CurrentFilterAssessmentCode}");
+                    }
+
                     return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
 
