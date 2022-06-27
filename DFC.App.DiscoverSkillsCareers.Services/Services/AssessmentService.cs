@@ -239,7 +239,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 CurrentQuestionNumber = questionNumber + 1,
                 IsFilterAssessment = assessment.Questions.All(x => x != null)
                     && assessment.ShortQuestionResult != null
-                    && assessment.FilteredAssessment != null,
+                    && assessment.FilteredAssessment != null
+                    && atLeastOneAnsweredFilterQuestion,
                 JobCategorySafeUrl = string.Empty,
                 MaxQuestionsCount = assessment.Questions.Count(),
                 QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,
