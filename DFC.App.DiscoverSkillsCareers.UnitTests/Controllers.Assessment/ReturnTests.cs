@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 MaxQuestionsCount = 2,
                 RecordedAnswersCount = 2,
                 JobCategorySafeUrl = "sports",
-                AtLeastOneAnsweredFilterQuestion = true,
+                AllFilteringQuestionsForCategoryAnswered = true,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
             A.CallTo(() => Session.HasValidSession()).Returns(true);
