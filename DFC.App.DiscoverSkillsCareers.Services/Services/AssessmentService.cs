@@ -220,7 +220,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 assessment.FilteredAssessment?.Questions?.Any(q => q.Answer != null) == true;
 
             var jobCategoryRequiredTraits = assessment.FilteredAssessment?.JobCategoryAssessments
-                .FirstOrDefault(trait => trait.JobCategory == assessment.FilteredAssessment?.CurrentFilterAssessmentCode) !
+                .FirstOrDefault(trait => trait.JobCategory == assessment.FilteredAssessment?.CurrentFilterAssessmentCode)?
                 .QuestionSkills
                 .Select(questionSkill => questionSkill.Key)
                 .ToList();
