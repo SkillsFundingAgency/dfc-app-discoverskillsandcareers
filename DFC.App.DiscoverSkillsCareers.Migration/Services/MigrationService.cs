@@ -316,7 +316,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                $"select value count(c) from c where c.id in ('9kx62ggwmg4e5y','3wg6r55r8752gw', 'yrxw49zx73kwx8', 'k7gkw82m26z437', '7ry6ezyxmrr3mw', 'e96yr8x64e9myg', '25z963rwkre668')",
+                $"select value count(c) from c",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
@@ -340,7 +340,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             
             var query = sourceDocumentClient.CreateDocumentQuery<Dictionary<string, object>>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                $"select c from c where c.id in ('9kx62ggwmg4e5y','3wg6r55r8752gw', 'yrxw49zx73kwx8', 'k7gkw82m26z437', '7ry6ezyxmrr3mw', 'e96yr8x64e9myg', '25z963rwkre668') order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}",
+                $"select c from c order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
