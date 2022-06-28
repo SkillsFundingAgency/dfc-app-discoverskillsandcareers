@@ -258,14 +258,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            return notificationService.SendEmail(domain, emailAddress, SessionHelper.FormatSessionId(sessionId));
+            return notificationService.SendEmail(domain, emailAddress, sessionId, SessionHelper.FormatSessionId(sessionId));
         }
 
         public async Task<SendSmsResponse> SendSms(string domain, string mobile)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
 
-            return notificationService.SendSms(domain, mobile, SessionHelper.FormatSessionId(sessionId));
+            return notificationService.SendSms(domain, mobile, sessionId, SessionHelper.FormatSessionId(sessionId));
         }
 
         public async Task<FilterAssessmentResponse> FilterAssessment(string jobCategory)
