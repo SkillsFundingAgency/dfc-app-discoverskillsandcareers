@@ -19,7 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.NotificationServiceTe
             var serviceToTest = new NotificationService(notificationClient, notificationOptions);
 
             // Act
-            var result = serviceToTest.SendEmail("somedomain.com", "test@gmail.com", "abcdefg1234213");
+            var result = serviceToTest.SendEmail("somedomain.com", "test@gmail.com", "abcdefg1234213", "abcdefg1234213");
 
             // Assert
             A.CallTo(() => notificationClient.SendEmail(A<string>.Ignored, A<string>.Ignored, A<Dictionary<string, dynamic>>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
@@ -34,7 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.NotificationServiceTe
             var serviceToTest = new NotificationService(notificationClient, notificationOptions);
 
             // Act
-            var result = serviceToTest.SendSms("somedomain.com", "07965463099", "abcdefg1234213");
+            var result = serviceToTest.SendSms("somedomain.com", "07965463099", "abcdefg1234213","abcdefg1234213");
 
             // Assert
             A.CallTo(() => notificationClient.SendSms(A<string>.Ignored, A<string>.Ignored, A<Dictionary<string, dynamic>>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();

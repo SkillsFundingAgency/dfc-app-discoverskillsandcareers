@@ -321,7 +321,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessmentService.SendSms("adomain.com", "07867564333");
 
             // Assert
-            A.CallTo(() => notificationService.SendSms(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => notificationService.SendSms(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -332,7 +332,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessmentService.SendEmail("adomain.com", "atest@gmail.com");
 
             // Assert
-            A.CallTo(() => notificationService.SendEmail(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => notificationService.SendEmail(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }
 }
