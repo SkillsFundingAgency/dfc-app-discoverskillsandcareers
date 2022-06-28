@@ -192,7 +192,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 }
             }
 
-            assessment.FilteredAssessment.CurrentFilterAssessmentCode = completed ? null : jobCategory;
+            assessment.FilteredAssessment.CurrentFilterAssessmentCode = jobCategory;
             await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
             if (completed)
@@ -225,7 +225,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 .Select(questionSkill => questionSkill.Key)
                 .ToList();
 
-            var categoryQuestions = assessment.FilteredAssessment?.Questions!.Where(
+            var categoryQuestions = assessment.FilteredAssessment?.Questions?.Where(
                 categoryQuestion => jobCategoryRequiredTraits?.Contains(categoryQuestion.TraitCode!) == true).ToList();
 
             var allFilteringQuestionsForCategoryAnswered =
@@ -362,7 +362,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             if (question == null)
             {
-                throw new Exception($"Cannot find next question by trait ({nextQuestionCode})");
+                throw new KeyNotFoundException($"Cannot find next question by trait ({nextQuestionCode})");
             }
 
             return new GetQuestionResponse
