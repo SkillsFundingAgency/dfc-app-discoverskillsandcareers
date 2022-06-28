@@ -415,40 +415,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return result;
         }
 
-        public async Task<GetAssessmentResponse> GetAssessment()
-        {
-            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var assessment = await GetCurrentAssessment().ConfigureAwait(false);
-
-            var question = assessment.Questions
-                .OrderBy(questionA => questionA.Ordinal)
-                .FirstOrDefault(questionA => questionA.Answer == null);
-
-            var questionNumber = question != null ? question.Ordinal!.Value : 0;
-            var atLeastOneAnsweredFilterQuestion =
-                assessment.FilteredAssessment?.Questions?.Any(q => q.Answer != null) == true;
-
-            return new GetAssessmentResponse
-            {
-                SessionId = sessionId,
-                CurrentFilterAssessmentCode = assessment.FilteredAssessment?.CurrentFilterAssessmentCode,
-                CurrentQuestionNumber = questionNumber + 1,
-                IsFilterAssessment = assessment.Questions.All(questionA => questionA != null)
-                                     && assessment.ShortQuestionResult != null
-                                     && assessment.FilteredAssessment != null
-                                     && atLeastOneAnsweredFilterQuestion,
-                JobCategorySafeUrl = string.Empty,
-                MaxQuestionsCount = assessment.Questions.Count(),
-                QuestionId = question != null ? question.Id!.Value.ToString() : string.Empty,
-                QuestionNumber = questionNumber + 1,
-                QuestionText = question != null ? question.QuestionText! : string.Empty,
-                StartedDt = assessment.StartedAt,
-                RecordedAnswersCount = assessment.Questions.Count(questionA => questionA.Answer != null),
-                ReferenceCode = sessionId,
-                AtLeastOneAnsweredFilterQuestion = atLeastOneAnsweredFilterQuestion,
-            };
-        }
-
         public async Task<DysacAssessment> GetAssessment(string sessionId)
         {
             return (await GetAssessment(sessionId, true).ConfigureAwait(false)) !;
