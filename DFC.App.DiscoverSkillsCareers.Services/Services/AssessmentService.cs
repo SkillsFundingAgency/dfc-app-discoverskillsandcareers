@@ -225,7 +225,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 .Select(questionSkill => questionSkill.Key)
                 .ToList();
 
-            var categoryQuestions = assessment.FilteredAssessment?.Questions!.Where(
+            var categoryQuestions = assessment.FilteredAssessment?.Questions?.Where(
                 categoryQuestion => jobCategoryRequiredTraits?.Contains(categoryQuestion.TraitCode!) == true).ToList();
 
             var allFilteringQuestionsForCategoryAnswered =
