@@ -88,13 +88,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!string.IsNullOrEmpty(id))
             {
-                var category = resultsByCategoryModel?.JobsInCategory?.FirstOrDefault(x => x.CategoryUrl == id);
+                var category = resultsByCategoryModel?.JobsInCategory?.FirstOrDefault(jobsInCategory => jobsInCategory.CategoryUrl == id);
 
                 if (category == null)
                 {
                     if (resultsByCategoryModel?.JobsInCategory != null)
                     {
-                        var ids = string.Join(',', resultsByCategoryModel.JobsInCategory.Select(x => x.CategoryUrl).ToArray());
+                        var ids = string.Join(',', resultsByCategoryModel.JobsInCategory
+                            .Select(jobsInCategory => jobsInCategory.CategoryUrl).ToArray());
+
                         logService.LogError(
                             $"Category is null - found {resultsByCategoryModel.JobsInCategory?.Count()} categories. Received {ids}. None which were {id}");
                     }

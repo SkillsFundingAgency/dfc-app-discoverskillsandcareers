@@ -72,12 +72,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerFilterQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await apiService.AnswerFilterQuestion(
+                viewModel.JobCategoryName,
+                viewModel.QuestionNumberReal,
+                viewModel.QuestionNumberCounter,
+                viewModel.Answer).ConfigureAwait(false);
 
             if (!answerResponse.IsSuccess)
             {
                 ModelState.AddModelError("Answer", "Unable to register answer");
                 var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
+
                 return View(response);
             }
 
@@ -92,12 +97,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public async Task<IActionResult> Complete(FilterQuestionsCompleteResponseViewModel viewModel)
         {
             var hasSessionId = await HasSessionId().ConfigureAwait(false);
-            if (!hasSessionId)
-            {
-                return RedirectToRoot();
-            }
-
-            return View(viewModel);
+            return !hasSessionId ? RedirectToRoot() : View(viewModel);
         }
 
         [HttpGet]
@@ -110,8 +110,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             resultsBodyTopViewModel.QuestionNumber -= 1;
-
-            this.logService.LogInformation($"{nameof(this.BodyTopQuestions)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.BodyTopQuestions)} generated the model and ready to pass to the view");
 
             return View(resultsBodyTopViewModel);
         }
@@ -125,14 +124,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var filtereredQuestion = await apiService.GetFilteredAssessmentQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var filteredQuestion = await apiService.GetFilteredAssessmentQuestion(assessment, questionNumber).ConfigureAwait(false);
             var response = new FilterQuestionIndexResponseViewModel
             {
-                Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),
+                Question = mapper.Map<QuestionGetResponseViewModel>(filteredQuestion),
                 JobCategoryName = assessment,
             };
 
-            this.logService.LogInformation($"{nameof(this.GetQuestion)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.GetQuestion)} generated the model and ready to pass to the view");
             return response;
         }
     }
