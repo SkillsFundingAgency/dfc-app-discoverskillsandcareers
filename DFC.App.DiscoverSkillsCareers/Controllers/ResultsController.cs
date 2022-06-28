@@ -6,6 +6,7 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -95,10 +96,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 {
                     if (resultsByCategoryModel?.JobsInCategory != null)
                     {
-                        var ids = string.Join(',', resultsByCategoryModel?.JobsInCategory.Select(x => x.CategoryUrl).ToArray());
- 
+                        var ids = string.Join(',', resultsByCategoryModel.JobsInCategory.Select(x => x.CategoryUrl).ToArray());
                         logService.LogError(
-                            $"Category is null - found {resultsByCategoryModel?.JobsInCategory?.Count()} categories. Received {ids}. None which were {id}");
+                            $"Category is null - found {resultsByCategoryModel.JobsInCategory.Count()} categories. Received {ids}. None which were {id}");
                     }
                 }
                 else
@@ -111,12 +111,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (resultsResponse?.JobCategories == null)
             {
-                throw new Exception("Job categories is null");
+                throw new NoNullAllowedException(nameof(resultsResponse.JobCategories));
             }
 
             if (resultsByCategoryModel == null)
             {
-                throw new Exception("Results by category model is null");
+                throw new NoNullAllowedException(nameof(resultsByCategoryModel));
             }
 
             foreach (var jobCategory in resultsResponse.JobCategories)
@@ -155,7 +155,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     {
                         Cname = jobProfileOverview.Title.Replace(" ", "-").Replace(",", string.Empty),
                         OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
-                        ReturnedStatusCode = System.Net.HttpStatusCode.OK
+                        ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                     }));
             }
 
@@ -171,6 +171,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [HttpGet]
         [Route("herobanner/results")]
+        [Route("herobanner/results/roles/")]
         [Route("herobanner/results/roles/{id}")]
         public async Task<IActionResult> HeroBanner(string id)
         {

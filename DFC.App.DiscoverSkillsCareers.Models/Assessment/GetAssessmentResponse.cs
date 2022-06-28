@@ -25,7 +25,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public bool IsFilterComplete
         {
-            get { return AtLeastOneAnsweredFilterQuestion && AllFilteringQuestionsForCategoryAnswered != false; }
+            get { return AtLeastOneAnsweredFilterQuestion &&
+                    (string.IsNullOrEmpty(CurrentFilterAssessmentCode) || AllFilteringQuestionsForCategoryAnswered != false);
+            }
         }
 
         public string? ReloadCode { get; set; }
