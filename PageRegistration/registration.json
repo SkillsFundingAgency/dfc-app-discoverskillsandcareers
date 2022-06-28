@@ -44,6 +44,9 @@
     ],
     "JavaScriptNames": {
       "/js/dfc-app-discoverskillsandcareers.min.js": null
+    },
+    "CssScriptNames": {
+      "/css/dysac.min.css": "Ze4TsRvILLVAQIGvDWOZvQ=="
     }
   }
 ]

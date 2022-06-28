@@ -31,7 +31,7 @@
                             <div>
                                 <div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
                                     <label class="govuk-label" for="mobileNumber">
-                                        Phone number
+                                        UK mobile number
                                     </label>
                                     <span asp-validation-for="Telephone" class="govuk-error-message" data-valmsg-replace="true"></span>
                                     <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" type="text" asp-for="Telephone" id="code" value="@(!ViewData.ModelState.IsValid ? "": "")" />
