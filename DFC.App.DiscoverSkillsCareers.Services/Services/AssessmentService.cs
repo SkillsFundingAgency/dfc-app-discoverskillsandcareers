@@ -362,7 +362,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
 
             if (question == null)
             {
-                throw new Exception($"Cannot find next question by trait ({nextQuestionCode})");
+                throw new KeyNotFoundException($"Cannot find next question by trait ({nextQuestionCode})");
             }
 
             return new GetQuestionResponse
