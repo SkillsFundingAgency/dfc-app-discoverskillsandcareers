@@ -192,7 +192,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Api
                 }
             }
 
-            assessment.FilteredAssessment.CurrentFilterAssessmentCode = completed ? null : jobCategory;
+            assessment.FilteredAssessment.CurrentFilterAssessmentCode = jobCategory;
             await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
 
             if (completed)

@@ -171,6 +171,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [HttpGet]
         [Route("herobanner/results")]
+        [Route("herobanner/results/roles/")]
         [Route("herobanner/results/roles/{id}")]
         public async Task<IActionResult> HeroBanner(string id)
         {
