@@ -4,7 +4,7 @@
         @if (Model.Results.JobCategories.Any())
         {
             <div class="app-results">
-                <h2 class="govuk-heading-l">@Model.Results.JobFamilyCount career areas that might interest you</h2>
+                <h2 class="govuk-heading-l">@Model.Results.JobFamilyCount career area@(Model.Results.JobFamilyCount == 0 || Model.Results.JobFamilyCount > 1 ? "s" : string.Empty) that might interest you</h2>
                 <partial name="_JobCategories" />
             </div>
             
