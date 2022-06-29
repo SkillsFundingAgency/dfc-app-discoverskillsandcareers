@@ -12,33 +12,48 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         private readonly ISessionStateService<DfcUserSession> sessionStateService;
         private readonly IHttpContextAccessor accessor;
 
-        public SessionService(ISessionStateService<DfcUserSession> sessionServiceClient, IHttpContextAccessor accessor)
+        public SessionService(ISessionStateService<DfcUserSession> sessionStateService, IHttpContextAccessor accessor)
         {
-            this.sessionStateService = sessionServiceClient;
+            this.sessionStateService = sessionStateService;
             this.accessor = accessor;
         }
 
         public async Task<SessionStateModel<DfcUserSession>?> GetCurrentSession()
         {
-            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
-            if (compositeSessionId.HasValue)
-            {
-                var sessionStateModel = await sessionStateService.GetAsync(compositeSessionId.Value).ConfigureAwait(false);
+            const string httpContextSessionKey = "DysacSession";
 
-                if (sessionStateModel != null)
-                {
-                    return sessionStateModel;
-                }
+            if (accessor.HttpContext.Items.ContainsKey(httpContextSessionKey))
+            {
+                return (SessionStateModel<DfcUserSession>?)accessor.HttpContext.Items[httpContextSessionKey];
             }
 
-            return null;
+            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
+
+            if (!compositeSessionId.HasValue)
+            {
+                return null;
+            }
+
+            var session = await sessionStateService.GetAsync(compositeSessionId.Value).ConfigureAwait(false);
+            accessor.HttpContext.Items.Add(httpContextSessionKey, session);
+
+            return session;
         }
 
-        public async Task CreateCookie(string sessionId)
+        public async Task CreateDysacSession(string sessionId)
         {
             var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
 
-            var dfcUserSession = new SessionStateModel<DfcUserSession> { Id = compositeSessionId!.Value, State = new DfcUserSession() { Salt = "ncs", SessionId = sessionId, CreatedDate = DateTime.UtcNow } };
+            var dfcUserSession = new SessionStateModel<DfcUserSession>
+            {
+                Id = compositeSessionId!.Value,
+                State = new DfcUserSession
+                {
+                    Salt = "ncs",
+                    SessionId = sessionId,
+                    CreatedDate = DateTime.UtcNow,
+                },
+            };
 
             await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
         }
@@ -47,9 +62,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         {
             var session = await GetCurrentSession().ConfigureAwait(false);
 
-            if (session != null && session.State!.SessionId != null)
+            if (session?.State?.SessionId != null)
             {
-                return session.State!.SessionId;
+                return session.State.SessionId;
             }
 
             throw new InvalidOperationException("SessionId is null or empty");
@@ -57,14 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 
         public async Task<bool> HasValidSession()
         {
-            var session = await GetCurrentSession().ConfigureAwait(false);
-
-            if (session != null)
-            {
-                return true;
-            }
-
-            return false;
+            return await GetCurrentSession().ConfigureAwait(false) != null;
         }
     }
 }

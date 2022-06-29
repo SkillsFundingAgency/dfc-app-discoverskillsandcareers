@@ -5,7 +5,9 @@ using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,15 +21,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
         private readonly ILogService logService;
+        private readonly IMemoryCache memoryCache;
 
-        public ResultsController(ILogService logService, IMapper mapper, ISessionService sessionService, IResultsService resultsService, IAssessmentService apiService, IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService)
-            : base(sessionService)
+        public ResultsController(
+            ILogService logService,
+            IMapper mapper,
+            ISessionService sessionService,
+            IResultsService resultsService,
+            IAssessmentService assessmentService,
+            IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService,
+            IMemoryCache memoryCache)
+                : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
-            this.assessmentService = apiService;
+            this.assessmentService = assessmentService;
             this.jobProfileOverviewDocumentService = jobProfileOverviewDocumentService;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -39,21 +50,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
-            if (assessmentResponse == null)
+            var resultsResponse = await resultsService.GetResults(true).ConfigureAwait(false);
+
+            if (resultsResponse.LastAssessmentCategory != null)
             {
-                logService.LogInformation("Assesment is null");
-                return RedirectTo("assessment/return");
-            }
-
-            logService.LogInformation("Assessment is not null");
-
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
-
-            var lastFilterCategory = resultsResponse.LastAssessmentCategory;
-
-            if (lastFilterCategory != null)
-            {
-                return RedirectTo($"results/roles/{lastFilterCategory}");
+                return RedirectTo($"results/roles/{resultsResponse.LastAssessmentCategory}");
             }
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
@@ -81,7 +82,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("assessment/return");
             }
 
-            logService.LogInformation("Assesment retrieved");
+            logService.LogInformation("Assessment retrieved");
 
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
@@ -90,15 +91,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!string.IsNullOrEmpty(id))
             {
-                var category = resultsByCategoryModel?.JobsInCategory?.FirstOrDefault(x => x.CategoryUrl == id);
+                var category = resultsByCategoryModel?.JobsInCategory?.FirstOrDefault(jobsInCategory => jobsInCategory.CategoryUrl == id);
 
                 if (category == null)
                 {
                     if (resultsByCategoryModel?.JobsInCategory != null)
                     {
-                        var ids = string.Join(',', resultsByCategoryModel.JobsInCategory.Select(x => x.CategoryUrl).ToArray());
+                        var ids = string.Join(',', resultsByCategoryModel.JobsInCategory
+                            .Select(jobsInCategory => jobsInCategory.CategoryUrl).ToArray());
+
                         logService.LogError(
-                            $"Category is null - found {resultsByCategoryModel.JobsInCategory.Count()} categories. Received {ids}. None which were {id}");
+                            $"Category is null - found {resultsByCategoryModel.JobsInCategory?.Count()} categories. Received {ids}. None which were {id}");
                     }
                 }
                 else
@@ -107,9 +110,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
             }
 
-            logService.LogInformation($"Looping through categories - {resultsResponse?.JobCategories?.Count()} available");
+            logService.LogInformation($"Looping through categories - {resultsResponse.JobCategories?.Count()} available");
 
-            if (resultsResponse?.JobCategories == null)
+            if (resultsResponse.JobCategories == null)
             {
                 throw new NoNullAllowedException(nameof(resultsResponse.JobCategories));
             }
@@ -121,7 +124,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                if (jobCategory?.JobProfiles.Any() != true)
+                if (!jobCategory.JobProfiles.Any())
                 {
                     logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
                     continue;
@@ -132,10 +135,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     .Select(jobProfileGroup => jobProfileGroup.First())
                     .Select(jobProfile => jobProfile?.Title?.ToLower());
 
-                var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
-                        x => x.PartitionKey == "JobProfileOverview"
-                             && jobProfileTitles.Contains(x.Title.ToLower()))
-                    .ConfigureAwait(false);
+                var jobProfileOverviews = (await GetJobProfileOverviews().ConfigureAwait(false))?
+                    .Where(document => jobProfileTitles.Contains(document.Title!.ToLower()))
+                    .ToList();
 
                 if (jobProfileOverviews == null)
                 {
@@ -145,15 +147,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     continue;
                 }
 
-                var category = resultsByCategoryModel.JobsInCategory
-                    .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl));
+                var category = resultsByCategoryModel.JobsInCategory!
+                    .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
 
                 category?.JobProfiles?.AddRange(jobProfileOverviews
                     .GroupBy(jobProfileOverview => jobProfileOverview.Title)
                     .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
                     .Select(jobProfileOverview => new ResultJobProfileOverViewModel
                     {
-                        Cname = jobProfileOverview.Title.Replace(" ", "-").Replace(",", string.Empty),
+                        Cname = jobProfileOverview.Title?.Replace(" ", "-").Replace(",", string.Empty),
                         OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
                         ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                     }));
@@ -180,11 +182,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
 
-            this.logService.LogInformation($"{nameof(this.HeroBanner)} generated the model and ready to pass to the view");
-
+            logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
         }
 
@@ -194,6 +195,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult BodyTop()
         {
             return View("BodyTopEmpty");
+        }
+
+        private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
+        {
+            if (memoryCache.TryGetValue(nameof(GetJobProfileOverviews), out var filteringQuestionsFromCache))
+            {
+                return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
+            }
+
+            var jobProfileOverviews = (await jobProfileOverviewDocumentService.GetAsync(
+                        document => document.PartitionKey == "JobProfileOverview")
+                    .ConfigureAwait(false)) !
+                .ToList();
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
+            memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
+
+            return jobProfileOverviews;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
         public DysacTraitContentProcessor(
             ICmsApiService cmsApiService,
-            AutoMapper.IMapper mapper,
+            IMapper mapper,
             IEventMessageService eventMessageService,
             IContentCacheService contentCacheService,
             ILogger<BaseContentProcessor> logger,

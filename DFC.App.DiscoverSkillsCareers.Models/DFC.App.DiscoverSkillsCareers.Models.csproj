@@ -31,11 +31,5 @@
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Core\DFC.App.DiscoverSkillsCareers.Core.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Session\" />
-    <Folder Include="Storage\" />
-  </ItemGroup>
 
 </Project>

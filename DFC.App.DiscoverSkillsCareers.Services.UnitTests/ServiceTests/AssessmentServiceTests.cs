@@ -3,7 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
-using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
@@ -13,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
@@ -41,8 +43,19 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             mapper = A.Fake<IMapper>();
             filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
             notificationService = A.Fake<INotificationService>();
+            var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
 
-            assessmentService = new AssessmentService(sessionIdToCodeConverter, sessionService, assessmentDocumentService, questionSetDocumentService, filteringQuestionDocumentService, mapper, notificationService);
+                assessmentService = new AssessmentService(
+                sessionIdToCodeConverter,
+                sessionService,
+                assessmentDocumentService,
+                questionSetDocumentService,
+                filteringQuestionDocumentService,
+                mapper,
+                notificationService,
+                fakeContextAccessor,
+                fakeMemoryCache);
         }
 
         [Fact]
@@ -64,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             var result = await assessmentService.NewSession(assessmentType);
 
-            A.CallTo(() => sessionService.CreateCookie(A<string>.Ignored)).MustHaveHappened();
+            A.CallTo(() => sessionService.CreateDysacSession(A<string>.Ignored)).MustHaveHappened();
             Assert.True(result);
         }
 
@@ -307,7 +320,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public void CheckWhetherAReferenceCodeExists()
         {
             var refCode = "dshh88228";
-
+            A.CallTo(() => sessionIdToCodeConverter.GetSessionId(refCode)).Returns(refCode);
+            
             var response = assessmentService.ReferenceCodeExists(refCode);
 
             Assert.True(response);

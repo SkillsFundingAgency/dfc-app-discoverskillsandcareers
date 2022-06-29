@@ -2,11 +2,11 @@ using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.App.DiscoverSkillsCareers.HostedServices;
+using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Api;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
@@ -28,19 +28,18 @@ using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Notify.Client;
+using Notify.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Notify.Interfaces;
-using Notify.Client;
 using System.Reflection;
-using DFC.App.DiscoverSkillsCareers.MappingProfiles;
-using Microsoft.Azure.Documents.Client;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -154,8 +153,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var policyRegistry = services.AddPolicyRegistry();
 
-            const string AppSettingsPolicies = "Policies";
-            var policyOptions = Configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
+            const string appSettingsPolicies = "Policies";
+            var policyOptions = Configuration.GetSection(appSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             AddPolicies(policyRegistry);
 
             services.AddPolicies(policyRegistry, "content", policyOptions);

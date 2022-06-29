@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DFC.Compui.Cosmos;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 using NHibernate.Mapping;
 using Xunit;
 
@@ -21,8 +22,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
     {
         private readonly IDocumentService<DysacTraitContentModel> traitDocumentService = A.Fake<IDocumentService<DysacTraitContentModel>>();
         private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService = A.Fake<IDocumentService<DysacJobProfileCategoryContentModel>>();
-        private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
+        private readonly AssessmentService assessmentService = A.Fake<AssessmentService>();
         private readonly IMapper mapper = A.Fake<IMapper>();
+        private readonly IMemoryCache memoryCache = A.Fake<IMemoryCache>();
 
         public AssessmentCalculationServiceTests()
         {
@@ -39,7 +41,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             var serviceToTest = new AssessmentCalculationService(
                 traitDocumentService,
                 jobProfileCategoryDocumentService,
-                filteringQuestionDocumentService,
+                assessmentService,
+                memoryCache,
                 mapper,
                 A.Fake<ILoggerFactory>());
 
@@ -100,7 +103,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             var serviceToTest = new AssessmentCalculationService(
                 traitDocumentService,
                 jobProfileCategoryDocumentService,
-                filteringQuestionDocumentService,
+                assessmentService,
+                memoryCache,
                 mapper,
                 A.Fake<ILoggerFactory>());
             
@@ -119,7 +123,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenMultipleQuestionPositiveReturnsMultipleJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, jobProfileCategoryDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(
+                traitDocumentService,
+                jobProfileCategoryDocumentService,
+                assessmentService,
+                memoryCache,                
+                mapper,
+                A.Fake<ILoggerFactory>());
+            
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
             assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
@@ -137,7 +148,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         public async Task AssessmentCalculationServiceWhenAllNegativeReturnsNoJobCategory()
         {
             // Arrange
-            var serviceToTest = new AssessmentCalculationService(traitDocumentService, jobProfileCategoryDocumentService, filteringQuestionDocumentService, mapper, A.Fake<ILoggerFactory>());
+            var serviceToTest = new AssessmentCalculationService(
+                traitDocumentService,
+                jobProfileCategoryDocumentService,
+                assessmentService, 
+                memoryCache,
+                mapper,
+                A.Fake<ILoggerFactory>());
+            
             var assessment = AssessmentHelpers.GetAssessment();
 
             // Act

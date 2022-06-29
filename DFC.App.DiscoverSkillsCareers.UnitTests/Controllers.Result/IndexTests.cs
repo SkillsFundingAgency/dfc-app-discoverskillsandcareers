@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
@@ -34,8 +35,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
             jobProfileOverviewDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService, fakeMemoryCache);
         }
 
         [Fact]
@@ -60,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 
             var resultsResponse = new GetResultsResponse() { JobCategories = GetJobCategories(category), LastAssessmentCategory = category };
 
-            A.CallTo(() => resultsService.GetResults()).Returns(resultsResponse);
+            A.CallTo(() => resultsService.GetResults(true)).Returns(resultsResponse);
 
             var actionResponse = await controller.Index(null).ConfigureAwait(false);
 

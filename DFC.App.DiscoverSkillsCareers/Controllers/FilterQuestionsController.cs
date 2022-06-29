@@ -3,7 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -46,7 +45,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             if (viewModel.QuestionNumber == 0)
             {
                 var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
-                return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
+
+                return RedirectTo(
+                    $"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
             }
 
             var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);
@@ -73,17 +74,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(response);
             }
 
-            var answerResponse = await apiService.AnswerFilterQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberReal, viewModel.QuestionNumberCounter, viewModel.Answer).ConfigureAwait(false);
-
-            if (answerResponse == null)
-            {
-                return BadRequest();
-            }
+            var answerResponse = await apiService.AnswerFilterQuestion(
+                viewModel.JobCategoryName,
+                viewModel.QuestionNumberReal,
+                viewModel.QuestionNumberCounter,
+                viewModel.Answer).ConfigureAwait(false);
 
             if (!answerResponse.IsSuccess)
             {
                 ModelState.AddModelError("Answer", "Unable to register answer");
                 var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
+
                 return View(response);
             }
 
@@ -98,12 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public async Task<IActionResult> Complete(FilterQuestionsCompleteResponseViewModel viewModel)
         {
             var hasSessionId = await HasSessionId().ConfigureAwait(false);
-            if (!hasSessionId)
-            {
-                return RedirectToRoot();
-            }
-
-            return View(viewModel);
+            return !hasSessionId ? RedirectToRoot() : View(viewModel);
         }
 
         [HttpGet]
@@ -116,8 +112,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             resultsBodyTopViewModel.QuestionNumber -= 1;
-
-            this.logService.LogInformation($"{nameof(this.BodyTopQuestions)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.BodyTopQuestions)} generated the model and ready to pass to the view");
 
             return View(resultsBodyTopViewModel);
         }
@@ -131,14 +126,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<FilterQuestionIndexResponseViewModel> GetQuestion(string assessment, int questionNumber)
         {
-            var filtereredQuestion = await apiService.GetFilteredAssessmentQuestion(assessment, questionNumber).ConfigureAwait(false);
+            var filteredQuestion = await apiService.GetFilteredAssessmentQuestion(assessment, questionNumber).ConfigureAwait(false);
             var response = new FilterQuestionIndexResponseViewModel
             {
-                Question = mapper.Map<QuestionGetResponseViewModel>(filtereredQuestion),
+                Question = mapper.Map<QuestionGetResponseViewModel>(filteredQuestion),
                 JobCategoryName = assessment,
             };
 
-            this.logService.LogInformation($"{nameof(this.GetQuestion)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.GetQuestion)} generated the model and ready to pass to the view");
             return response;
         }
     }
