@@ -449,7 +449,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public bool ReferenceCodeExists(string referenceCode)
         {
             var sessionId = sessionIdToCodeConverter.GetSessionId(referenceCode);
-            return string.IsNullOrWhiteSpace(sessionId);
+            return !string.IsNullOrWhiteSpace(sessionId);
         }
 
         public async Task UpdateAssessment(DysacAssessment assessment)

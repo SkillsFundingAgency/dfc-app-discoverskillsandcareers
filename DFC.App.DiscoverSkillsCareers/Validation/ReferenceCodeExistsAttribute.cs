@@ -24,13 +24,13 @@ namespace DFC.App.DiscoverSkillsCareers.Validation
         {
             if (value == null)
             {
-                throw new ArgumentNullException("Value cannot be null " + value);
+                throw new ArgumentNullException(nameof(value));
             }
 
             var services = this.httpContext.RequestServices;
             var assessment = (IAssessmentService)services.GetService(typeof(IAssessmentService));
 
-            return assessment.ReferenceCodeExists(value.ToString());
+            return assessment.ReferenceCodeExists(value.ToString() !);
         }
     }
 }
