@@ -179,8 +179,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .OrderByDescending(jobCategoryAssessment => jobCategoryAssessment.LastAnswer)
                     .FirstOrDefault()?
                     .JobCategory!,
-                JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!,
-                JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!.Count(),
+                JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories,
+                JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories?.Count(),
                 Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
                 SessionId = assessment.Id!,
                 AssessmentType = "short",
