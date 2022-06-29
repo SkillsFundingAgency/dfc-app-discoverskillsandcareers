@@ -35,7 +35,8 @@
         {
             <div id="showMoreCategories">
                 <h2 class="govuk-!-font-size-27">See @(Model.Results.JobCategories.Count() - Model.Results.JobCategoriesNumberToShow)
-                    other career @(Model.Results.JobFamilyCount == 0 || Model.Results.JobFamilyCount > 1 ? "areas" : "area") that might interest you</h2>
+                    other career @(Model.Results.JobCategories.Count() - Model.Results.JobCategoriesNumberToShow == 0 ||
+                                   Model.Results.JobCategories.Count() - Model.Results.JobCategoriesNumberToShow > 1 ? "areas" : "area") that might interest you</h2>
 
                 <a href="/discover-your-skills-and-careers/results/100">See matches</a>
             </div>
