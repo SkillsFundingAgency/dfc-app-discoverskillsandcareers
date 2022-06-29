@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
@@ -41,7 +42,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             testCategory = "testcategory";
             logService = A.Fake<ILogService>();
             jobProfileOverviewDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService);
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
+
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService, fakeMemoryCache);
         }
 
         [Fact]

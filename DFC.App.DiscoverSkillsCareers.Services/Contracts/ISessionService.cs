@@ -8,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     {
         public Task<string> GetSessionId();
 
-        public Task CreateCookie(string sessionId);
+        public Task CreateDysacSession(string sessionId);
 
         public Task<bool> HasValidSession();
 

@@ -45,7 +45,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             if (viewModel.QuestionNumber == 0)
             {
                 var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
-                return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
+
+                return RedirectTo(
+                    $"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/{filterAssessment.QuestionNumber}");
             }
 
             var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumber).ConfigureAwait(false);

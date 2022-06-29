@@ -5,7 +5,9 @@ using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
         private readonly ILogService logService;
+        private readonly IMemoryCache memoryCache;
 
         public ResultsController(
             ILogService logService,
@@ -26,7 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             ISessionService sessionService,
             IResultsService resultsService,
             IAssessmentService assessmentService,
-            IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService)
+            IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService,
+            IMemoryCache memoryCache)
                 : base(sessionService)
         {
             this.logService = logService;
@@ -34,6 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
             this.jobProfileOverviewDocumentService = jobProfileOverviewDocumentService;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -45,13 +50,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(true).ConfigureAwait(false);
 
-            var lastFilterCategory = resultsResponse.LastAssessmentCategory;
-
-            if (lastFilterCategory != null)
+            if (resultsResponse.LastAssessmentCategory != null)
             {
-                return RedirectTo($"results/roles/{lastFilterCategory}");
+                return RedirectTo($"results/roles/{resultsResponse.LastAssessmentCategory}");
             }
 
             var resultIndexResponseViewModel = new ResultIndexResponseViewModel
@@ -132,10 +135,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     .Select(jobProfileGroup => jobProfileGroup.First())
                     .Select(jobProfile => jobProfile?.Title?.ToLower());
 
-                var jobProfileOverviews = await jobProfileOverviewDocumentService.GetAsync(
-                        x => x.PartitionKey == "JobProfileOverview"
-                             && jobProfileTitles.Contains(x.Title.ToLower()))
-                    .ConfigureAwait(false);
+                var jobProfileOverviews = (await GetJobProfileOverviews().ConfigureAwait(false))?
+                    .Where(document => jobProfileTitles.Contains(document.Title!.ToLower()))
+                    .ToList();
 
                 if (jobProfileOverviews == null)
                 {
@@ -180,7 +182,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var resultsResponse = await resultsService.GetResults().ConfigureAwait(false);
+            var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
@@ -193,6 +195,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult BodyTop()
         {
             return View("BodyTopEmpty");
+        }
+
+        private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
+        {
+            if (memoryCache.TryGetValue(nameof(GetJobProfileOverviews), out var filteringQuestionsFromCache))
+            {
+                return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
+            }
+
+            var jobProfileOverviews = (await jobProfileOverviewDocumentService.GetAsync(
+                        document => document.PartitionKey == "JobProfileOverview")
+                    .ConfigureAwait(false)) !
+                .ToList();
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
+            memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
+
+            return jobProfileOverviews;
         }
     }
 }

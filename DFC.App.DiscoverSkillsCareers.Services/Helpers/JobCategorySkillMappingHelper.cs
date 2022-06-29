@@ -18,66 +18,72 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
             }
 
             var skills = jobProfiles
-                .SelectMany(jobProfile => jobProfile.Skills.Select(s => s.Title))
+                .SelectMany(jobProfile => jobProfile.Skills.Select(skill => skill.Title))
                 .Distinct();
 
-            var result = new Dictionary<string, IList<string>>();
+            var profilesBySkill = new Dictionary<string, IList<string>>();
 
             foreach (var skill in skills)
             {
-                if (!result.TryGetValue(skill, out var profiles))
+                if (!profilesBySkill.TryGetValue(skill!, out var profiles))
                 {
                     profiles = new List<string>();
-                    result[skill] = profiles;
+                    profilesBySkill[skill!] = profiles;
                 }
 
                 foreach (var jobProfile in jobProfiles)
                 {
-                    if (jobProfile.Skills.Any(s => skill.Equals(s.Title, StringComparison.InvariantCultureIgnoreCase)))
+                    if (jobProfile.Skills.Any(s => skill!.Equals(s.Title, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         profiles.Add(jobProfile.Title!);
                     }
                 }
             }
 
-            var commonSkills = result
-                .Where(k => (k.Value.Count / (double)jobProfiles.Count) >= percentage)
-                .Select(r => r.Key)
+            var commonSkills = profilesBySkill
+                .Where(skillGroup => skillGroup.Value.Count / (double)jobProfiles.Count >= percentage)
+                .Select(skillGroup => skillGroup.Key)
                 .ToList();
 
             return new HashSet<string>(commonSkills);
         }
 
         public static IEnumerable<SkillAttribute> GetSkillAttributes(
-            this IEnumerable<JobProfileContentItemModel> profiles,
+            this List<JobProfileContentItemModel> profiles,
             HashSet<string> prominentSkills,
             double maxProfileDistributionPercentage)
         {
-            var totalProfileCount = profiles.Count();
+            if (profiles == null)
+            {
+                throw new ArgumentNullException(nameof(profiles));
+            }
 
             var profilesBySkill =
                 profiles
-                    .SelectMany(y =>
-                        y.SkillsToCompare(prominentSkills).Select(s => new { Profile = y, Skill = s }))
+                    .SelectMany(jobProfileContentItemModel =>
+                        jobProfileContentItemModel.SkillsToCompare(prominentSkills)
+                            .Select(skillContentItemModel => new { Profile = jobProfileContentItemModel, Skill = skillContentItemModel }))
                     .GroupBy(s => s.Skill.Title).ToArray();
 
-            var profileSkillAttributes = profilesBySkill.Select(s =>
+            var profileSkillAttributes = profilesBySkill.Select(skillGroup =>
             {
-                var onetRank = s.Average(r => r.Skill.ONetRank ?? 0);
-                var ncsRank = s.Average(r => 20 - (r.Skill.Ordinal ?? 0));
-                var profileCount = (double)s.Count();
+                var onetRank = skillGroup.Average(profileAndSkill => profileAndSkill.Skill.ONetRank ?? 0);
+                var ncsRank = skillGroup.Average(profileAndSkill => 20 - (profileAndSkill.Skill.Ordinal ?? 0));
+                var profileCount = (double)skillGroup.Count();
                 var profilePercentage = Convert.ToDecimal(
-                    (1.0 - ((totalProfileCount - profileCount) / totalProfileCount)) * 100.0);
+                    (1.0 - ((profiles.Count - profileCount) / profiles.Count)) * 100.0);
 
                 return new SkillAttribute
                 {
-                    ONetAttribute = s.Key,
+                    ONetAttribute = skillGroup.Key,
                     CompositeRank = Convert.ToDouble(onetRank + (profilePercentage / 20.0m)),
                     ONetRank = Convert.ToDouble(onetRank),
                     NcsRank = ncsRank,
                     TotalProfilesWithSkill = (int)profileCount,
                     PercentageProfileWithSkill = Convert.ToDouble(profilePercentage),
-                    ProfilesWithSkill = new HashSet<string>(s.Select(p => p.Profile.Title!), StringComparer.InvariantCultureIgnoreCase),
+                    ProfilesWithSkill = new HashSet<string>(
+                        skillGroup
+                        .Select(profileAndSkill => profileAndSkill.Profile.Title!), StringComparer.InvariantCultureIgnoreCase),
                 };
             });
 
@@ -90,14 +96,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 
             // NOTE - This means any profile that has more then 5 skills won't be matched first time - and some questions
             // will never be asked - consider raising the number higher
-            var maxProfilesToTake = Math.Min(5, (int)Math.Log(totalProfileCount, 2) - 2);
+            var maxProfilesToTake = Math.Min(5, (int)Math.Log(profiles.Count, 2) - 2);
 
             return profileSkillAttributes
-                .OrderByDescending(a => a.PercentageProfileWithSkill)
-                .SkipWhile(a => a.PercentageProfileWithSkill < maxProfileDistributionPercentage)
-                .TakeWhile(a => a.PercentageProfileWithSkill > minProfileDistributionPercentage)
+                .OrderByDescending(skillAttribute => skillAttribute.PercentageProfileWithSkill)
+                .SkipWhile(skillAttribute => skillAttribute.PercentageProfileWithSkill < maxProfileDistributionPercentage)
+                .TakeWhile(skillAttribute => skillAttribute.PercentageProfileWithSkill > minProfileDistributionPercentage)
                 .Take(maxProfilesToTake)
-                .OrderByDescending(att => att.CompositeRank)
+                .OrderByDescending(skillAttribute => skillAttribute.CompositeRank)
                 .ToArray();
         }
     }

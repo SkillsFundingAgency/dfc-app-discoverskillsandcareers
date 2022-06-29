@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
@@ -34,8 +35,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessmentService = A.Fake<IAssessmentService>();
             jobProfileCategoryDocumentService = A.Fake<IDocumentService<DysacJobProfileCategoryContentModel>>();
             filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
             
-            resultsService = new ResultsService(sessionService, assessmentService, assessmentCalculationService, jobProfileCategoryDocumentService);
+            resultsService = new ResultsService(sessionService, assessmentService, assessmentCalculationService, jobProfileCategoryDocumentService, fakeMemoryCache);
 
             sessionId = "session1";
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
@@ -63,7 +65,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             resultsResponse.JobCategories = categories;
 
             //Act
-            var results = await resultsService.GetResults();
+            var results = await resultsService.GetResults(true);
 
             //Assert
             A.CallTo(() => assessmentCalculationService.ProcessAssessment(A<DysacAssessment>.Ignored)).MustHaveHappenedOnceExactly();

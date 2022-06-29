@@ -40,7 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
             return session;
         }
 
-        public async Task CreateCookie(string sessionId)
+        public async Task CreateDysacSession(string sessionId)
         {
             var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
 
@@ -62,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         {
             var session = await GetCurrentSession().ConfigureAwait(false);
 
-            if (session?.State!.SessionId != null)
+            if (session?.State?.SessionId != null)
             {
                 return session.State.SessionId;
             }
@@ -72,8 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 
         public async Task<bool> HasValidSession()
         {
-            var session = await GetCurrentSession().ConfigureAwait(false);
-            return session != null;
+            return await GetCurrentSession().ConfigureAwait(false) != null;
         }
     }
 }

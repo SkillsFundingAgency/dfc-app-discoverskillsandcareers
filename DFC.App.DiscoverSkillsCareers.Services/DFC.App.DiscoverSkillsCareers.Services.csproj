@@ -34,9 +34,5 @@
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Models\DFC.App.DiscoverSkillsCareers.Models.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Api\" />
-  </ItemGroup>
-
+  
 </Project>

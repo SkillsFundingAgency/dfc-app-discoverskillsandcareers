@@ -6,19 +6,15 @@ using Microsoft.Extensions.Logging.ApplicationInsights;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
-    public sealed class Program
+    public static class Program
     {
-        private Program()
-        {
-        }
-
         public static void Main(string[] args)
         {
             var webHost = CreateWebHostBuilder(args);
             webHost.Build().AddApplicationTelemetryInitializer().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((webHostBuilderContext, loggingBuilder) =>
                 {

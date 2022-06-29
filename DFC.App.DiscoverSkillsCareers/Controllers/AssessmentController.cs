@@ -56,8 +56,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
-            var assessment = await assessmentService.GetAssessment().ConfigureAwait(false);
-
             if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
                 return BadRequest();
@@ -67,6 +65,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 return RedirectTo("results");
             }
+
+            var assessment = await assessmentService.GetAssessment().ConfigureAwait(false);
 
             if (requestViewModel.QuestionNumber > assessment.CurrentQuestionNumber)
             {

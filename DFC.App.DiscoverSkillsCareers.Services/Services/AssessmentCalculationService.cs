@@ -52,8 +52,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
         {
-            var result = await RunShortAssessmentCalculation(assessment).ConfigureAwait(false);
-            return result;
+            return await RunShortAssessmentCalculation(assessment).ConfigureAwait(false);
         }
 
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
@@ -64,10 +63,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             var results = new List<JobCategoryResult>();
 
-            var topTraits = userTraits.OrderByDescending(userTrait => userTrait.TotalScore).Take(10);
+            var topTraits = userTraits
+                .OrderByDescending(userTrait => userTrait.TotalScore)
+                .Take(10);
 
-            var traitLookup = userTraits.Where(r => r.TotalScore > 0)
-                .ToDictionary(r => r.TraitCode, StringComparer.InvariantCultureIgnoreCase);
+            var traitLookup = userTraits
+                .Where(traitResult => traitResult.TotalScore > 0)
+                .ToDictionary(traitResult => traitResult.TraitCode, StringComparer.InvariantCultureIgnoreCase);
 
             logger.LogInformation("User Traits: {Data}", JsonConvert.SerializeObject(userTraits));
             logger.LogInformation("All Traits: {Data}", JsonConvert.SerializeObject(allTraits));
@@ -85,7 +87,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var trait in topTraits)
             {
-                var applicableTrait = allTraits.FirstOrDefault(x => x.Title == trait.TraitCode);
+                var applicableTrait = allTraits.FirstOrDefault(traitA => traitA.Title == trait.TraitCode);
 
                 if (applicableTrait == null)
                 {
@@ -95,27 +97,27 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
                     var fullJobCategory = allJobProfileCategories
-                        .First(x => x.Url == limitedJobCategory.Url);
+                        .First(jobProfileCategory => jobProfileCategory.Url == limitedJobCategory.Url);
 
                     var jobCategoryTraits = allTraits
-                        .Where(tr => tr.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
-                        .Select(tr => tr.Title)
+                        .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
+                        .Select(traitA => traitA.Title)
                         .ToList();
 
-                    if (!jobCategoryTraits.All(tc => traitLookup.ContainsKey(tc)))
+                    if (!jobCategoryTraits.All(jobCategoryTrait => traitLookup.ContainsKey(jobCategoryTrait)))
                     {
                         continue;
                     }
 
                     var jobProfiles = fullJobCategory.JobProfiles
-                        .GroupBy(jp => jp.Title)
-                        .Select(jpg => jpg.First())
+                        .GroupBy(jobProfile => jobProfile.Title)
+                        .Select(jobProfileGroup => jobProfileGroup.First())
                         .ToList();
 
                     var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles
-                        .Where(z => z.Skills.Any())
-                        .GroupBy(jp => jp.Title)
-                        .Select(jpg => jpg.First())
+                        .Where(jobProfile => jobProfile.Skills.Any())
+                        .GroupBy(jobProfile => jobProfile.Title)
+                        .Select(jobProfileGroup => jobProfileGroup.First())
                         .ToList();
 
                     var categorySkills = jobProfilesWithAtLeastOneSkill.GetSkillAttributes(
@@ -125,9 +127,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     logger.LogInformation("Job Category: {Data}", JsonConvert.SerializeObject(fullJobCategory));
                     logger.LogInformation("Category Skills: {Data}", JsonConvert.SerializeObject(categorySkills));
 
-                    if (results.Any(x => x.JobFamilyName == fullJobCategory.Title))
+                    if (results.Any(jobCategory => jobCategory.JobFamilyName == fullJobCategory.Title))
                     {
-                        var result = results.First(x => x.JobFamilyName == fullJobCategory.Title);
+                        var result = results.First(jobCategory => jobCategory.JobFamilyName == fullJobCategory.Title);
                         result.Total += trait.TotalScore;
 
                         continue;
@@ -136,8 +138,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     var skillQuestions = categorySkills
                         .Where(categorySkill =>
                             allFilteringQuestions.Any(applicableQuestion =>
-                                 applicableQuestion.Skills.Select(x => x.Title).Contains(categorySkill.ONetAttribute)))
-                        .Select(z => z.ONetAttribute!)
+                                 applicableQuestion.Skills.Select(skill => skill.Title).Contains(categorySkill.ONetAttribute)))
+                        .Select(skillAttribute => skillAttribute.ONetAttribute!)
                         .ToList();
 
                     results.Add(new JobCategoryResult
@@ -148,26 +150,26 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                             limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) - 1),
                         SkillQuestions = skillQuestions,
                         TraitValues = allTraits
-                            .Where(x => x.JobCategories.Any(y => y.ItemId == fullJobCategory.ItemId))
-                            .Select(p => new TraitValue
+                            .Where(traitA => traitA.JobCategories.Any(jobCategory => jobCategory.ItemId == fullJobCategory.ItemId))
+                            .Select(traitA => new TraitValue
                             {
-                                TraitCode = p.Title!.ToUpperInvariant(),
+                                TraitCode = traitA.Title!.ToUpperInvariant(),
                                 NormalizedTotal = trait.TotalScore,
                                 Total = trait.TotalScore,
                             }).ToList(),
                         Total = trait.TotalScore,
                         TotalQuestions = skillQuestions.Count,
-                        JobProfiles = jobProfiles.Select(x => mapper.Map<JobProfileResult>(x)),
+                        JobProfiles = jobProfiles.Select(jobProfile => mapper.Map<JobProfileResult>(jobProfile)),
                     });
                 }
             }
 
-            return results.OrderByDescending(t => t.Total);
+            return results.OrderByDescending(jobCategory => jobCategory.Total);
         }
 
         private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
         {
-            int traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
+            var traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
             return traitResult.Take(traitsTake);
         }
 
@@ -189,44 +191,50 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             // User traits
             var userTraits = assessment.Questions
-                .Select(x => new
+                .Select(question => new
                 {
-                    x.Trait,
-                    Score = !x.IsNegative ? AnswerMappings[x.Answer!.Value]
-                        : AnswerMappings[x.Answer!.Value] * -1,
+                    question.Trait,
+                    Score = !question.IsNegative ? AnswerMappings[question.Answer!.Value]
+                        : AnswerMappings[question.Answer!.Value] * -1,
                 })
-                .GroupBy(x => x.Trait)
-                .Select(g =>
+                .GroupBy(traitAndScore => traitAndScore.Trait)
+                .Select(trait =>
                 {
                     return new TraitResult
                     {
-                        TraitCode = g.Key!,
-                        TotalScore = g.Sum(x => x.Score),
-                        Text = allTraits.First(x => x.Title == g.Key!).Description!,
+                        TraitCode = trait.Key!,
+                        TotalScore = trait.Sum(traitAndScore => traitAndScore.Score),
+                        Text = allTraits.First(traitA => traitA.Title == trait.Key!).Description!,
                     };
                 })
-                .Where(x => x.TotalScore > 0)
-                .OrderByDescending(x => x.TotalScore)
+                .Where(traitResult => traitResult.TotalScore > 0)
+                .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
             var allJobCategories = await GetJobCategories().ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
-                userTraits, allTraits, allFilteringQuestions!, allJobCategories!);
+                userTraits,
+                allTraits,
+                allFilteringQuestions!,
+                allJobCategories!);
 
             var jobCategories = jobCategoryRelevance
-                .OrderByDescending(x => x.Total)
-                .ThenByDescending(x => x.SkillQuestions.Any())
+                .OrderByDescending(jobCategoryResult => jobCategoryResult.Total)
+                .ThenByDescending(jobCategoryResult => jobCategoryResult.SkillQuestions.Any())
                 .Take(10)
                 .ToArray();
 
-            var limitedTraits = LimitTraits(userTraits.Where(x => x.TotalScore > 0).ToArray());
+            var limitedTraits = LimitTraits(
+                userTraits
+                    .Where(traitResult => traitResult.TotalScore > 0)
+                    .ToArray());
 
             assessment.ShortQuestionResult = new ResultData
             {
                 Traits = userTraits,
                 JobCategories = jobCategories.ToList(),
-                TraitText = limitedTraits.Select(x => x.Text!),
+                TraitText = limitedTraits.Select(traitResult => traitResult.Text!),
             };
 
             return assessment;

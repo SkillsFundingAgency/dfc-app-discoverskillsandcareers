@@ -77,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             var result = await assessmentService.NewSession(assessmentType);
 
-            A.CallTo(() => sessionService.CreateCookie(A<string>.Ignored)).MustHaveHappened();
+            A.CallTo(() => sessionService.CreateDysacSession(A<string>.Ignored)).MustHaveHappened();
             Assert.True(result);
         }
 

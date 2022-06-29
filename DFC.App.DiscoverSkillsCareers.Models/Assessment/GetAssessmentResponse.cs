@@ -18,17 +18,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public int? NextQuestionNumber { get; set; }
 
-        public bool IsComplete
-        {
-            get { return MaxQuestionsCount == RecordedAnswersCount; }
-        }
+        public bool IsComplete => MaxQuestionsCount == RecordedAnswersCount;
 
-        public bool IsFilterComplete
-        {
-            get { return AtLeastOneAnsweredFilterQuestion &&
-                    (string.IsNullOrEmpty(CurrentFilterAssessmentCode) || AllFilteringQuestionsForCategoryAnswered != false);
-            }
-        }
+        public bool IsFilterComplete =>
+            AtLeastOneAnsweredFilterQuestion &&
+            (string.IsNullOrEmpty(CurrentFilterAssessmentCode) || AllFilteringQuestionsForCategoryAnswered != false);
 
         public string? ReloadCode { get; set; }
 

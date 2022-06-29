@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -18,25 +19,28 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IAssessmentService assessmentService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService;
+        private readonly IMemoryCache memoryCache;
 
         public ResultsService(
             ISessionService sessionService,
             IAssessmentService assessmentService,
             IAssessmentCalculationService assessmentCalculationService,
-            IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService)
+            IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService,
+            IMemoryCache memoryCache)
         {
             this.sessionService = sessionService;
             this.assessmentService = assessmentService;
             this.assessmentCalculationService = assessmentCalculationService;
             this.jobProfileCategoryDocumentService = jobProfileCategoryDocumentService;
+            this.memoryCache = memoryCache;
         }
 
-        public async Task<GetResultsResponse> GetResults()
+        public async Task<GetResultsResponse> GetResults(bool updateCollection)
         {
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var assessment = await assessmentService.GetAssessment(sessionId).ConfigureAwait(false);
 
-            return await ProcessAssessment(assessment).ConfigureAwait(false);
+            return await ProcessAssessment(assessment, updateCollection).ConfigureAwait(false);
         }
 
         public async Task<GetResultsResponse> GetResultsByCategory(string jobCategoryName)
@@ -46,7 +50,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             if (assessment.FilteredAssessment == null || assessment.ShortQuestionResult == null)
             {
-                throw new InvalidOperationException($"Assessment not in the correct state for results. Short State: {assessment.ShortQuestionResult}, Filtered State: {assessment.FilteredAssessment}, Assessment: {assessment.Id}");
+                throw new InvalidOperationException(
+                    $"Assessment not in the correct state for results. Short State: {assessment.ShortQuestionResult}, " +
+                    $"Filtered State: {assessment.FilteredAssessment}, Assessment: {assessment.Id}");
             }
 
             await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
@@ -59,10 +65,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var allFilteringQuestions = await assessmentService.GetFilteringQuestions().ConfigureAwait(false);
 
             var questionSkills = allFilteringQuestions!
-                .SelectMany(x => x.Skills)
-                .Select(x => x.Title)
-                .GroupBy(x => x)
-                .Select(x => x.First())
+                .SelectMany(filteringQuestion => filteringQuestion.Skills)
+                .Select(skill => skill.Title)
+                .GroupBy(skill => skill)
+                .Select(skillGroup => skillGroup.First())
                 .ToList();
 
             var allJobCategories = await GetJobCategories().ConfigureAwait(false);
@@ -83,12 +89,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .ToList();
 
                 var categorySkills = categoryJobProfiles
-                    .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title)).GetSkillAttributes(
+                    .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title))
+                    .ToList()
+                    .GetSkillAttributes(
                         prominentSkills,
                         75).ToList();
 
                 var categoryAnsweredQuestions = categorySkills
-                    .Where(categorySkill => answeredQuestions.Any(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode))
+                    .Where(categorySkill =>
+                        answeredQuestions.Any(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode))
                     .Select(categorySkill => (categorySkill.ONetAttribute,
                         answeredQuestions.First(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode).Value))
                     .ToList();
@@ -118,32 +127,39 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 }
 
                 assessment.ShortQuestionResult.JobCategories
-                    .First(x => x.JobFamilyNameUrl == category.JobFamilyNameUrl).JobProfiles = listOfJobProfiles;
+                    .First(jobCategoryResult => jobCategoryResult.JobFamilyNameUrl == category.JobFamilyNameUrl)
+                    .JobProfiles = listOfJobProfiles;
             }
 
             var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!.ToList(), jobCategoryName);
-
             return new GetResultsResponse { JobCategories = jobCategories };
         }
 
         private async Task UpdateJobCategoryCounts(DysacAssessment assessment)
         {
-            var answeredQuestions = assessment.FilteredAssessment!.Questions!.Where(z => z.Answer != null).Select(x => x.TraitCode).ToList();
+            var answeredQuestions = assessment.FilteredAssessment!.Questions!
+                .Where(filteredAssessmentQuestion => filteredAssessmentQuestion.Answer != null)
+                .Select(filteredAssessmentQuestion => filteredAssessmentQuestion.TraitCode)
+                .ToList();
 
             foreach (var jobCategory in assessment.FilteredAssessment.JobCategoryAssessments)
             {
-                var remainingJobCategoryQuestionsCount = jobCategory.QuestionSkills.Count(x => !answeredQuestions.Contains(x.Key));
+                var remainingJobCategoryQuestionsCount = jobCategory.QuestionSkills
+                    .Count(questionSkill => !answeredQuestions.Contains(questionSkill.Key));
 
-                if (assessment.ShortQuestionResult != null && assessment.ShortQuestionResult.JobCategories!.FirstOrDefault(x => x.JobFamilyNameUrl == jobCategory.JobCategory) != null)
+                if (assessment.ShortQuestionResult != null && assessment.ShortQuestionResult.JobCategories!
+                    .FirstOrDefault(jobCategoryResult => jobCategoryResult.JobFamilyNameUrl == jobCategory.JobCategory) != null)
                 {
-                    assessment.ShortQuestionResult.JobCategories!.First(x => x.JobFamilyNameUrl == jobCategory.JobCategory).TotalQuestions = remainingJobCategoryQuestionsCount;
+                    assessment.ShortQuestionResult.JobCategories!.
+                        First(jobCategoryResult => jobCategoryResult.JobFamilyNameUrl == jobCategory.JobCategory)
+                        .TotalQuestions = remainingJobCategoryQuestionsCount;
                 }
             }
 
             await assessmentService.UpdateAssessment(assessment).ConfigureAwait(false);
         }
 
-        private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment)
+        private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment, bool updateCollection)
         {
             var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
 
@@ -152,13 +168,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 throw new InvalidOperationException($"Assessment Calculation Response is null for {assessment.Id}");
             }
 
-            await assessmentService.UpdateAssessment(assessmentCalculationResponse).ConfigureAwait(false);
+            if (updateCollection)
+            {
+                await assessmentService.UpdateAssessment(assessmentCalculationResponse).ConfigureAwait(false);
+            }
 
             return new GetResultsResponse
             {
                 LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments
-                    .OrderByDescending(x => x.LastAnswer)
-                    .FirstOrDefault()?.JobCategory!,
+                    .OrderByDescending(jobCategoryAssessment => jobCategoryAssessment.LastAnswer)
+                    .FirstOrDefault()?
+                    .JobCategory!,
                 JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!,
                 JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories!.Count(),
                 Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
@@ -171,11 +191,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             var order = categories.Count;
 
-            foreach (var c in categories.OrderByDescending(x => x.JobProfiles.Count()))
+            foreach (var c in categories.OrderByDescending(jobCategoryResult => jobCategoryResult.JobProfiles.Count()))
             {
                 c.DisplayOrder = order;
 
-                if (!string.IsNullOrEmpty(selectedCategory) && c.JobFamilyNameUrl == selectedCategory.ToLower().Replace(" ", "-").Replace(",", string.Empty))
+                if (!string.IsNullOrEmpty(selectedCategory)
+                    && c.JobFamilyNameUrl == selectedCategory.ToLower().Replace(" ", "-").Replace(",", string.Empty))
                 {
                     c.DisplayOrder = 9999;
                 }
@@ -188,10 +209,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacJobProfileCategoryContentModel>?> GetJobCategories()
         {
-            // gTODO caching
-            return (await jobProfileCategoryDocumentService.GetAsync(
+            if (memoryCache.TryGetValue(nameof(GetJobCategories), out var filteringQuestionsFromCache))
+            {
+                return (List<DysacJobProfileCategoryContentModel>?)filteringQuestionsFromCache;
+            }
+
+            var jobCategories = (await jobProfileCategoryDocumentService.GetAsync(
                     document => document.PartitionKey == "JobProfileCategory")
-                .ConfigureAwait(false))?.ToList();
+                .ConfigureAwait(false))?
+                .ToList();
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
+            memoryCache.Set(nameof(GetJobCategories), jobCategories, cacheEntryOptions);
+
+            return jobCategories;
         }
     }
 }
