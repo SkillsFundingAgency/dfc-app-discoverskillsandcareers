@@ -320,7 +320,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         public void CheckWhetherAReferenceCodeExists()
         {
             var refCode = "dshh88228";
-
+            A.CallTo(() => sessionIdToCodeConverter.GetSessionId(refCode)).Returns(refCode);
+            
             var response = assessmentService.ReferenceCodeExists(refCode);
 
             Assert.True(response);
