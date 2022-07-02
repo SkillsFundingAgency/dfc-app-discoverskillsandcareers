@@ -44,6 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         IEnumerable<JobCategoryRoles> _expectedJobRoles;
         String[] _jobCategoryCategoriesInitial;
         IList<IWebElement> _jobCategoryCategoriesSubsequent;
+        IList<AnswerData> questionsAndAnswers;
 
         public DYSACSteps(ScenarioContext scenarioContext)
         {
@@ -567,12 +568,26 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourResultsPage.ClickSeeResultsForJobCatergory(jobCategory);
         }
 
+        [When(@"I view the ""(.*)"" job category")]
+        public void WhenIViewTheJobCategory(string jobCategory)
+        {
+            _answerMoreJobCategory = jobCategory;
+            _yourResultsPage.ClickSeeResultsForJobCatergory(jobCategory);
+        }
+
         [Given(@"I see the job roles")]
         [Then(@"I see the job roles")]
         public void ThenISeeTheJobRoles(Table table)
         {
             _expectedJobRoles = table.CreateSet<JobCategoryRoles>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyRoles(_expectedJobRoles, _answerMoreJobCategory), "Roles are incorrect for " + _answerMoreJobCategory + " job category.");
+        }
+
+        [Then(@"I see the following job roles")]
+        public void ThenISeeTheFollowingJobRoles(Table table)
+        {
+            _expectedJobRoles = table.CreateSet<JobCategoryRoles>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyRolesSeeResults(_expectedJobRoles, _answerMoreJobCategory), "Roles are incorrect for " + _answerMoreJobCategory + " job category.");
         }
 
         [Then(@"I see the job roles for the ""(.*)"" job category")]
@@ -594,6 +609,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourResultsPage.AnswerQuestionsFromJson(filePath + "DataSet.json");
         }
 
+        [When(@"I answer all the questions using the data file (.*)")]
+        [When(@"I answer all the questions using the data file ""(.*)""")]
         [Given(@"I answer all the questions using the data file ""(.*)""")]
         public void GivenIAnswerAllTheQuestionsUsingTheDataFile(string dataFile)
         {
@@ -601,11 +618,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _assessmentCompletePage.ClickSeeResults();
         }
 
-        [Given(@"I answer the next ""(.*)"" questions")]
-        public void GivenIAnswerTheNextQuestions(int numberOfQuestionsToAnswer)
-        {
+        //[Given(@"I answer the next ""(.*)"" questions")]
+        //public void GivenIAnswerTheNextQuestions(int numberOfQuestionsToAnswer)
+        //{
             
-        }
+        //}
 
         [Given(@"I decide to change my answers")]
         public void GivenIDecideToChangeMyAnswers()
@@ -658,6 +675,49 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void ThenTheJobCategoriesAreTheSameAsThoseNotedEarlier()
         {
             NUnit.Framework.Assert.IsTrue(_yourResultsPage.CompareBeforeAfterJobCategories(_jobCategoryCategoriesInitial), "Job categories are not the same as those noted earlier.");
+        }
+
+        [Then(@"I provide the corresponding answers to the following questions as they are displayed in turn")]
+        public void ThenIProvideTheCorrespondingAnswersToTheFollowingQuestionsAsTheyAreDisplayedInTurn(Table questionsAnswers)
+        {
+            questionsAndAnswers = questionsAnswers.CreateSet<AnswerData>().ToList();
+            NUnit.Framework.Assert.IsEmpty(questionsAndAnswers.Select(q => q.Question).ToArray().Except(_yesNoQuestionsPage.AnswerFilterQuestions(questionsAndAnswers).ToArray()), "Unspecified question(s) present.");
+        }
+
+        //[When(@"I answer all the questions using the data file AnswerSetTC(.*)")]
+        //public void WhenIAnswerAllTheQuestionsUsingTheDataFileAnswerSetTC(int p0)
+        //{
+            
+        //}
+
+        [Then(@"the job categories section is titled (.*) career areas\(s\) that might interest you")]
+        public void ThenTheJobCategoriesSectionIsTitledCareerAreasSThatMightInterestYou(int numberOfJobCategories)
+        {
+            if (numberOfJobCategories == 1)
+            {
+                NUnit.Framework.Assert.AreEqual(numberOfJobCategories + " career area that might interest you", _yourResultsPage.GetJobCategorySectionHeading(), "The main number of job categories text is incorrect.");
+            }
+            else if (numberOfJobCategories > 1)
+            {
+                NUnit.Framework.Assert.AreEqual(numberOfJobCategories + " career areas that might interest you", _yourResultsPage.GetJobCategorySectionHeading(), "The main number of job categories text is incorrect.");
+            }
+        }
+
+        [Then(@"the other careers areas section is titled See (.*) other career area\(s\) that might interest you")]
+        public void ThenTheOtherCareersAreasSectionIsTitledSeeOtherCareerAreaSThatMightInterestYou(int numberOfMoreJobCategories)
+        {
+            if (numberOfMoreJobCategories == 0)
+            {
+
+            }
+            else if (numberOfMoreJobCategories == 1)
+            {
+                NUnit.Framework.Assert.AreEqual("See " + numberOfMoreJobCategories + " other career area that might interest you", _yourResultsPage.GetMoreJobCategorySectionHeading(), "The lower number of job categories text is incorrect.");
+            }
+            else if (numberOfMoreJobCategories > 1)
+            {
+                NUnit.Framework.Assert.AreEqual("See " + numberOfMoreJobCategories + " other career areas that might interest you", _yourResultsPage.GetMoreJobCategorySectionHeading(), "The lower number of job categories text is incorrect.");
+            }
         }
     }
 }

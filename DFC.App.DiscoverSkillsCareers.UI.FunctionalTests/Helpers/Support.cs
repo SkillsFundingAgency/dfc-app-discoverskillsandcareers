@@ -29,5 +29,12 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers
 
             return allText;
         }
+
+        public static void ScrollIntoViewJavaScript(IWebDriver driver, IWebElement elementLocator)
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            //js.ExecuteScript("arguments[0].scrollIntoView();", locator);
+            js.ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", elementLocator);
+        }
     }
 }

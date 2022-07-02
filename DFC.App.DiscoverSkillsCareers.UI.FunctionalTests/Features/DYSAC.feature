@@ -365,6 +365,7 @@ Scenario: TC12 - All question radio button options are usable
 	And I am able to select the "Strongly disagree" option for the "fifth" question	
 
 @DYSAC
+@ignore
 Scenario Outline: TC13 - Initial and all suggested job categories
 	And I click on Assessment
 	And I answer all questions selecting the <Answer option> option
@@ -977,15 +978,13 @@ Scenario: TC25 - Leader-Driver
 	| Job category | Number of answer more questions |
 	| Managerial   | 4                               |
 	When I click the Answer "4" more questions button for "Managerial"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?" 
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you able to read well?                                                            | Yes    |
+	| Are you comfortable working in a team with other people?                              | Yes    |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	| Are you good at thinking of new ways to do something without being told?              | Yes    |
+	When I click See results button
 	Then there are "19" roles I might be interested in
 	And I see the job roles
 	| Job roles                         |
@@ -1063,15 +1062,13 @@ Scenario: TC26 - Leader-Driver-Influencer
 	| Job category | Number of answer more questions |
 	| Managerial   | 4                               |
 	When I click the Answer "4" more questions button for "Managerial"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?" 
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	| Are you comfortable working in a team with other people?                              | Yes    |
+	| Are you good at thinking of new ways to do something without being told?              | Yes    |
+	| Are you able to read well?                                                            | Yes    |
+	When I click See results button
 	Then there are "19" roles I might be interested in
 	And I see the job roles
 	| Job roles                         |
@@ -1153,15 +1150,13 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Retail and sales     | 4                               |
 	| Social care          | 3                               |
 	When I click the Answer "4" more questions button for "Managerial"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	| Are you comfortable working in a team with other people?                              | Yes    |
+	| Are you good at thinking of new ways to do something without being told?              | Yes    |
+	| Are you able to read well?                                                            | Yes    |
+	When I click See results button
 	Then there are "19" roles I might be interested in
 	And I see the job roles
 	| Job roles                         |
@@ -1184,13 +1179,12 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Construction contracts manager    |
 	| Public relations director         |
 	| Security Service personnel        |
-	#And the job roles appear in the same order as in the data table above
 	When I go back and click the Answer "2" more questions button for "Hospitality and food"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable working in a team with other people?                              | Yes    |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	When I click See results button
 	Then there are "19" roles I might be interested in
 	And I see the job roles
 	| Job roles                    |
@@ -1213,17 +1207,14 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Barista                      |
 	| Wedding planner              |
 	| Food manufacturing inspector |
-	#And the job roles appear in the same order as in the data table above
 	When I go back and click the Answer "4" more questions button for "Retail and sales"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	| Are you comfortable working in a team with other people?                              | Yes    |
+	| Are you able to control your emotions even in difficult situations?                   | Yes    |
+	| Do you think you are good at staying calm under pressure?                             | Yes    |
+	When I click See results button
 	Then there are "28" roles I might be interested in
 	And I see the job roles
 	| Job roles                            |
@@ -1255,15 +1246,13 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Telephonist                          |
 	| Tourist information centre assistant |
 	| Builders' merchant                   |
-	#And the job roles appear in the same order as in the data table above
 	When I go back and click the Answer "3" more questions button for "Social care"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                                                     | Answer |
+	| Are you able to control your emotions even in difficult situations?                                          | Yes    |
+	| Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings? | Yes    |
+	| Are you comfortable talking through things with other people so that they understand?                        | Yes    |
+	When I click See results button
 	Then there are "48" roles I might be interested in
 	And I see the job roles
 	| Job roles                                  |
@@ -1315,7 +1304,6 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Dramatherapist                             |
 	| Care escort                                |
 	| Art therapist                              |
-	#And the job roles appear in the same order as in the data table above
 
 Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	And I click on Assessment
@@ -1381,79 +1369,75 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	| Home services                  | 3                               |
 	| Managerial                     | 4                               |
 	When I click the Answer "3" more questions button for "Business and finance"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you confident solving maths problems using statistics, algebra and arithmetic?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "No" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | No     |
+	| Are you confident solving maths problems using statistics, algebra and arithmetic?    | No     |
+	| Are you able to read well?                                                            | No     |
+	When I click See results button
 	Then there are "1" roles I might be interested in
 	And I see the job roles
 	| Job roles       |
 	| Chief executive |
 	When I go back and click the Answer "3" more questions button for "Emergency and uniform services"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you able to control your emotions even in difficult situations?                   | No     |
+	| Do you think you are good at staying calm under pressure?                             | No     |
+	| Are you comfortable talking through things with other people so that they understand? | No     |
+	When I click See results button
 	Then the following message is displayed; "No careers were found that might interest you based on your responses."
 	When I go back and click the Answer "3" more questions button for "Law and legal"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	| Do you think you are good at staying calm under pressure?                             | No     |
+	| Are you able to control your emotions even in difficult situations?                   | No     |
+	When I click See results button
 	Then there are "2" roles I might be interested in
 	And I see the job roles
 	| Job roles           |
 	| Court legal adviser |
 	| Proofreader         |
 	When I go back and click the Answer "3" more questions button for "Teaching and education"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | No     |
+	| Are you able to control your emotions even in difficult situations?                   | No     |
+	| Are you comfortable working in a team with other people?                              | Yes    |
+	When I click See results button
 	Then there are "1" roles I might be interested in
 	And I see the job roles
 	| Job roles            |
 	| Education technician |
 	When I go back and click the Answer "2" more questions button for "Travel and tourism"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you able to control your emotions even in difficult situations?                   | Yes    |
+	| Are you comfortable talking through things with other people so that they understand? | No     |
+	When I click See results button
 	Then there are "2" roles I might be interested in
 	And I see the job roles
 	| Job roles      |
 	| Airline pilot  |
 	| Port operative |
 	When I go back and click the Answer "2" more questions button for "Animal care"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you able to control your emotions even in difficult situations?                   | No     |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	When I click See results button
 	Then there are "2" roles I might be interested in
 	And I see the job roles
 	| Job roles          |
 	| Countryside ranger |
 	| Biologist          |
 	When I go back and click the Answer "2" more questions button for "Delivery and storage"
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                            | Answer |
+	| Are you comfortable working in a team with other people?            | Yes    |
+	| Are you able to control your emotions even in difficult situations? | Yes    |
+	When I click See results button
 	Then there are "16" roles I might be interested in
 	And I see the job roles
 	| Job roles                  |
@@ -1474,15 +1458,13 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	| Builders' merchant         |
 	| Port operative             |
 	When I go back and click the Answer "4" more questions button for "Healthcare"
-	Then the following question is displayed; "Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                                                     | Answer |
+	| Would you be comfortable in a job where you would need to be sensitive to other people's needs and feelings? | Yes    |
+	| Are you able to control your emotions even in difficult situations?                                          | Yes    |
+	| Are you comfortable working in a team with other people?                                                     | No     |
+	| Are you comfortable talking through things with other people so that they understand?                        | No     |
+	When I click See results button
 	Then there are "5" roles I might be interested in
 	And I see the job roles
 	| Job roles         |
@@ -1492,13 +1474,12 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	| Naturopath        |
 	| Homeopath         |
 	When I go back and click the Answer "3" more questions button for "Home services"
-	Then the following question is displayed; "Are you able to control your emotions even in difficult situations?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Do you think you are good at staying calm under pressure?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                            | Answer |
+	| Are you able to control your emotions even in difficult situations? | Yes    |
+	| Are you comfortable working in a team with other people?            | No     |
+	| Do you think you are good at staying calm under pressure?           | Yes    |
+	When I click See results button
 	Then there are "4" roles I might be interested in
 	And I see the job roles
 	| Job roles                         |
@@ -1507,15 +1488,13 @@ Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	| Caretaker                         |
 	| British Sign Language interpreter |
 	When I go back and click the Answer "4" more questions button for "Managerial"
-	Then the following question is displayed; "Are you comfortable talking through things with other people so that they understand?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you comfortable working in a team with other people?"
-	When I select "No" answer and proceed to the next question
-	Then the following question is displayed; "Are you good at thinking of new ways to do something without being told?"
-	When I select "Yes" answer and proceed to the next question
-	Then the following question is displayed; "Are you able to read well?"
-	When I select "Yes" answer and proceed
-	And I click See results button
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | No     |
+	| Are you comfortable working in a team with other people?                              | No     |
+	| Are you good at thinking of new ways to do something without being told?              | Yes    |
+	| Are you able to read well?                                                            | Yes    |
+	When I click See results button
 	Then there are "1" roles I might be interested in
 	And I see the job roles
 	| Job roles           |
@@ -1849,8 +1828,8 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer - user journey
 	| Media researcher             |
 	| Vlogger                      |
 	| Market research data analyst |
-	And I view the "Administration" job category
-	And there are "3" roles I might be interested in
+	When I view the "Administration" job category
+	Then there are "3" roles I might be interested in
 	And I see the job roles
 	| Job roles            |
 	| Trade union official |
@@ -1866,8 +1845,8 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer - user journey
 	And I see the job roles
 	| Job roles   |
 	| Drone pilot |
-	And I view the "Delivery and storage" job category
-	And there are "1" roles I might be interested in
+	When I view the "Delivery and storage" job category
+	Then there are "1" roles I might be interested in
 	And I see the job roles
 	| Job roles |
 	| Roadie    |
@@ -1882,8 +1861,8 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer - user journey
 	| Industrial cleaner                |
 	| Caretaker                         |
 	| British Sign Language interpreter |
-	And I view the "Government services" job category
-	And there are "33" roles I might be interested in
+	When I view the "Government services" job category
+	Then there are "33" roles I might be interested in
 	And I see the job roles
 	| Job roles                                                     |
 	| Civil enforcement officer                                     |
@@ -1919,13 +1898,6 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer - user journey
 	| Child protection officer                                      |
 	| School crossing patrol                                        |
 	| Diver                                                         |
-	And I view the "Transport" job category
-	And there are "3" roles I might be interested in
-	And I see the job roles
-	| Job roles              |
-	| Fishing vessel skipper |
-	| Airline pilot          |
-	| Tractor driver         |
 	When I click the Answer "2" more questions button for "Computing, technology and digital"
 	Then the following question is displayed; "Are you comfortable analysing information to solve problems?"
 	When I select "No" answer and proceed to the next question
@@ -1937,8 +1909,8 @@ Scenario: TC31 - Analyst-Creator-Organiser-Doer - user journey
 	| Job roles        |
 	| Technical author |
 	| Vlogger          |
-	And I view the "Environment and land" job category
-	And there are "2" roles I might be interested in
+	When I view the "Environment and land" job category
+	Then there are "2" roles I might be interested in
 	And I see the job roles
 	| Job roles   |
 	| Gamekeeper  |
@@ -2120,7 +2092,7 @@ Scenario: TC33 - Organiser-Doer - user journey
 	| Airline pilot          |
 	| Tractor driver         |
 	When I click the Answer "1" more questions button for "Government services"
-	When I select "No" answer and proceed
+	And I select "No" answer and proceed
 	And I click See results button
 	Then I see the job roles
 	| Job roles                  |
@@ -2356,7 +2328,7 @@ Scenario: TC35 - Leader-Driver-Influencer-Creator-Organiser-Doer - user journey
 	And I see the job roles
 	| Job roles         |
 	| Company secretary |
-	And I view the "Government services" job category
+	When I view the "Government services" job category
 	Then there are "5" roles I might be interested in
 	And I see the job roles
 	| Job roles                  |
@@ -2373,21 +2345,21 @@ Scenario: TC35 - Leader-Driver-Influencer-Creator-Organiser-Doer - user journey
 	And I see the job roles
 	| Job roles |
 	| Roadie    |
-	And I view the "Transport" job category
-	And I see the job roles
+	When I view the "Transport" job category
+	Then I see the job roles
 	| Job roles                 |
 	| Driving instructor        |
 	| Helicopter engineer       |
 	| Air accident investigator |
-	And I view the "Administration" job category
-	And there are "3" roles I might be interested in
+	When I view the "Administration" job category
+	Then there are "3" roles I might be interested in
 	And I see the job roles
 	| Job roles            |
 	| Trade union official |
 	| Insurance broker     |
 	| Interpreter          |
-	And I view the "Home services" job category
-	And there are "2" roles I might be interested in
+	When I view the "Home services" job category
+	Then there are "2" roles I might be interested in
 	And I see the job roles
 	| Job roles     |
 	| Cleaner       |
@@ -2579,3 +2551,139 @@ Scenario: TC41 - I want to be able to use a reference code to see my results
 	When I use the reference code to return to my assessment from the Dysac home page
 	Then I am at the page noted earlier
 	And the job categories are the same as those noted earlier
+
+Scenario: TC42 - All options selected
+	And I click on Assessment
+	And I provide the following answers to the resultant questions
+	| Percent progress | Question                                                             | Answer            |
+	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
+	| 2                | I make decisions quickly                                             | Agree             |
+	| 5                | I like to take control of situations                                 | It depends        |
+	| 7                | I prefer to follow what other people are doing                       | Disagree          |
+	| 10               | I like taking responsibility for other people                        | Strongly disagree |
+	| 12               | I set myself targets when I have things to do, and usually meet them | Strongly agree    |
+	| 15               | I like to see things through to the end                              | Agree             |
+	| 17               | I think I am a competitive person                                    | It depends        |
+	| 20               | Doing well in a career motivates me                                  | Disagree          |
+	| 22               | I set myself goals in life                                           | Strongly disagree |
+	| 25               | I am comfortable talking people around to my way of thinking         | Strongly agree    |
+	| 27               | I am good at coming to an agreement with other people                | Agree             |
+	| 30               | I am comfortable talking in front of a group of people               | It depends        |
+	| 32               | I like meeting new people                                            | Disagree          |
+	| 35               | I find it hard to understand other people's point of view            | Strongly disagree |
+	| 37               | I like to help other people                                          | Strongly agree    |
+	| 40               | I enjoy working with other people around me                          | Agree             |
+	| 42               | I want to make things better for people                              | It depends        |
+	| 45               | I will get involved if I think I can help                            | Disagree          |
+	| 47               | I am comfortable hearing other people's problems                     | Strongly disagree |
+	| 50               | I like to work out complicated things                                | Strongly agree    |
+	| 52               | I like to get to the centre of the issue                             | Agree             |
+	| 55               | I like working with facts                                            | It depends        |
+	| 57               | I like working with numbers                                          | Disagree          |
+	| 60               | I enjoy learning new things                                          | Strongly disagree |
+	| 62               | I enjoy coming up with new ways of doing things                      | Strongly agree    |
+	| 65               | I try to think differently to others                                 | Agree             |
+	| 67               | I like to use my imagination to create new things                    | It depends        |
+	| 70               | I like to try new things                                             | Disagree          |
+	| 72               | I enjoy creative activities                                          | Strongly disagree |
+	| 75               | I like to focus on details                                           | Strongly agree    |
+	| 77               | I plan my day so I can use my time best                              | Agree             |
+	| 80               | I like doing things in a careful order                               | It depends        |
+	| 82               | I like to follow rules and processes                                 | Disagree          |
+	| 85               | I feel restricted when I have to follow a routine                    | Strongly disagree |
+	| 87               | I like to see the results of the work I do                           | Strongly agree    |
+	| 90               | I like to get involved in making things                              | Agree             |
+	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
+	| 95               | I like working with my hands or tools                                | Disagree          |
+	| 97               | I enjoy planning a task more than actually doing it                  | Strongly disagree |
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                               |
+	| you are sociable and find it easy to understand people   |
+	| you like to plan things and are well organised           |
+	| you are a practical person and enjoy getting things done |
+	And the traits appear in the same order as in the data table above
+	And the following job categories with their corresponding number of answer more questions are displayed
+	| Job category                | Number of answer more questions |
+	| Delivery and storage        | 2                               |
+	| Home services               | 3                               |
+	| Transport                   | 3                               |
+	| Government services         | 3                               |
+	| Engineering and maintenance | 5                               |
+	| Administration              | 3                               |
+	| Environment and land        | 4                               |
+
+Scenario Outline: TC43 - Checks for Your result headings
+	And I click on Assessment
+	When I answer all the questions using the data file <Answer set>
+	Then the job categories section is titled <no. of Careers areas> career areas(s) that might interest you 
+	And the other careers areas section is titled See <no. of Other careers areas> other career area(s) that might interest you 
+	Examples: 
+	| no. | Answer set            | no. of Careers areas | no. of Other careers areas |
+	| 1   | AnswerSetTC36         | 4                    | 1                          |
+	| 2   | AnswerSetTC38         | 10                   | 7                          |
+	| 3   | AnswerSetCompareIII   | 10                   | 7                          |
+	| 4   | AnswerSetTC25         | 1                    | 0                          |
+	| 5   | AnswerSetTC29Capture5 | 2                    | 0                          |
+	| 6   | AnswerSetTC30Capture6 | 6                    | 3                          |
+
+Scenario Outline: TC44 - Dataflow example
+	And I click on Assessment
+	And I answer all questions selecting the <Answer option> option
+	And I click See results button
+	When I click See matches in order to view the other career areas that might interest you
+	Then the What you told us section of the Your results page displays the following traits
+	| Trait text                                                                                     |
+	| you are motivated, set yourself personal goals and are comfortable competing with other people |
+	| you enjoy helping and listening to other people                                                |
+	| you like dealing with complicated problems or working with numbers                             |
+	| you are a creative person and enjoy coming up with new ways of doing things                    |
+	And the following are the job categories suggested and their number of answer more questions
+	| Job category                   | Number of answer more questions |
+	| Sports and leisure             | 3                               |
+	| Manufacturing                  | 4                               |
+	| Creative and media             | 5                               |
+	| Construction and trades        | 4                               |
+	| Science and research           | 4                               |
+	| Business and finance           | 3                               |
+	| Emergency and uniform services | 3                               |
+	| Law and legal                  | 3                               |
+	| Teaching and education         | 3                               |
+	| Travel and tourism             | 2                               |
+	When I click the Answer "4" more questions button for "Manufacturing"
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                            | Answer |
+	| Do you think you are good at using words to describe ideas?         | Yes    |
+	| Are you comfortable working in a team with other people?            | Yes    |
+	| Are you able to control your emotions even in difficult situations? | Yes    |
+	| Are you able to do detailed, intricate work with your hands?        | Yes    |
+	When I click See results button
+	Then there are "10" roles I might be interested in
+	And I see the job roles
+	| Job roles                         |
+	| Production worker (manufacturing) |
+	| Leather technologist              |
+	| Pattern cutter                    |
+	| Dressmaker                        |
+	| Foundry mould maker               |
+	| Foundry process operator          |
+	| Food packaging operative          |
+	| Garment technologist              |
+	| Bottler                           |
+	| Quarry worker                     |
+	When I click the Answer "4" more questions button for "Creative and media"
+	Then I provide the corresponding answers to the following questions as they are displayed in turn
+	| Question                                                                              | Answer |
+	| Are you comfortable talking through things with other people so that they understand? | Yes    |
+	| Are you good at thinking of new ways to do something without being told?              | No     |
+	| Are you comfortable doing a variety of tasks in a job and open to things changing?    | No     |
+	| Are you able to read well?                                                            | Yes    |
+	When I click See results button
+	Then there are "2" roles I might be interested in
+	And I see the job roles
+	| Job roles        |
+	| Art valuer       |
+	| Technical author |
+
+	Examples: 
+	| Answer option  |
+	| Strongly agree |

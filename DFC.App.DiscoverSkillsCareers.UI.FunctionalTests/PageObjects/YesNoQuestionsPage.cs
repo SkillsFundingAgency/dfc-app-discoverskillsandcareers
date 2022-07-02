@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TechTalk.SpecFlow;
+using static DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers.QuestionsAnswers;
 
 namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects
 {
@@ -26,6 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects
 
         public string GetYesNoQuestion()
         {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
             return question.Text.Trim();
         }
 
@@ -55,6 +57,39 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.PageObjects
         public void ClickGetAReferenceCode()
         {
             optionReferenceCode.Click();
+        }
+
+        public List<string> AnswerFilterQuestions(IList<AnswerData> filterQuestionsAndAnswers)
+        {
+            List<string> questions = new List<string> { };
+
+            for (int i = 0; i < filterQuestionsAndAnswers.Count; i++)
+            {
+                for (int j = 0; j < filterQuestionsAndAnswers.Count; j++)
+                {
+                    WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+
+                    if (question.Text == filterQuestionsAndAnswers[j].Question)
+                    {
+                        questions.Add(question.Text);
+
+                        if (filterQuestionsAndAnswers[j].Answer == "Yes")
+                        {
+                            answerYes.Click();
+                        }
+                        else if (filterQuestionsAndAnswers[j].Answer == "No")
+                        {
+                            answerNo.Click();
+                        }
+
+                        next.Click();
+
+                        break;
+                    }
+                }
+            }
+
+            return questions;
         }
     }
 }
