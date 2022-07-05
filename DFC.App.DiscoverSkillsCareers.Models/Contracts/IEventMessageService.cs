@@ -17,7 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Contracts
         Task<HttpStatusCode> UpdateAsync<TModel>(TModel upsertDocumentModel)
             where TModel : class, IDocumentModel;
 
-        Task<HttpStatusCode> DeleteAsync<TModel>(Guid id)
+        Task<HttpStatusCode> DeleteAsync<TModel>(Guid id, string partitionKey)
              where TModel : class, IDocumentModel;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -19,9 +19,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMapper mapper;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
-        private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
         private readonly ILogService logService;
         private readonly IMemoryCache memoryCache;
+        private readonly IDocumentStore documentStore;
 
         public ResultsController(
             ILogService logService,
@@ -29,7 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             ISessionService sessionService,
             IResultsService resultsService,
             IAssessmentService assessmentService,
-            IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService,
+            IDocumentStore documentStore,
             IMemoryCache memoryCache)
                 : base(sessionService)
         {
@@ -37,8 +37,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
-            this.jobProfileOverviewDocumentService = jobProfileOverviewDocumentService;
             this.memoryCache = memoryCache;
+
+            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
         }
 
         [HttpGet]
@@ -222,10 +223,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
             }
 
-            var jobProfileOverviews = (await jobProfileOverviewDocumentService.GetAsync(
-                        document => document.PartitionKey == "JobProfileOverview")
-                    .ConfigureAwait(false)) !
-                .ToList();
+            var jobProfileOverviews = await documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>(
+                "JobProfileOverview").ConfigureAwait(false);
+
+            if (!jobProfileOverviews.Any())
+            {
+                return jobProfileOverviews;
+            }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
             memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);

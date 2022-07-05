@@ -11,7 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
     public interface IWebhooksService
     {
-        Task<HttpStatusCode> DeleteContentAsync<TModel>(TModel destinationType, Guid contentId)
+        Task<HttpStatusCode> DeleteContentAsync<TModel>(TModel destinationType, Guid contentId, string partitionKey)
             where TModel : class, IDysacContentModel;
 
         Task<HttpStatusCode> DeleteContentItemAsync<TModel>(TModel destinationType, Guid contentItemId, IEnumerable<ContentCacheResult> contentCacheStatuses)

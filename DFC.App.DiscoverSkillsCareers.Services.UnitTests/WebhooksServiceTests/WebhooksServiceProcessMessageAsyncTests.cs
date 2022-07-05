@@ -65,7 +65,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var result = await service.ProcessMessageAsync(Models.Enums.WebhookCacheOperation.Delete, Guid.NewGuid(), ContentIdForCreate, "http://somewhere.com/somewherelese/resource1", DysacConstants.ContentTypePersonalityQuestionSet).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -83,7 +83,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var result = await service.ProcessMessageAsync(Models.Enums.WebhookCacheOperation.Delete, Guid.NewGuid(), ContentIdForCreate, "http://somewhere.com/somewherelese/resource1", DysacConstants.ContentTypePersonalityQuestionSet).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentItemAsync(A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }

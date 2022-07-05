@@ -1,6 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using System;
 using System.Net;
@@ -11,23 +11,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
     public class JobProfileOverviewContentProcessor : IContentProcessor
     {
         private readonly IJobProfileOverviewApiService jobProfileOverviewApiService;
-        private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileDocumentService;
+        private readonly IDocumentStore documentStore;
 
-        public JobProfileOverviewContentProcessor(IJobProfileOverviewApiService jobProfileOverviewApiService, IDocumentService<DysacJobProfileOverviewContentModel> jobProfileDocumentService)
+        public JobProfileOverviewContentProcessor(
+            IJobProfileOverviewApiService jobProfileOverviewApiService,
+            IDocumentStore documentStore)
         {
             this.jobProfileOverviewApiService = jobProfileOverviewApiService;
-            this.jobProfileDocumentService = jobProfileDocumentService;
+            this.documentStore = documentStore;
         }
 
         public string Type => nameof(DysacJobProfileOverviewContentModel);
 
-        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, string partitionKey)
         {
-            var result = await jobProfileDocumentService.DeleteAsync(contentId).ConfigureAwait(false);
+            var result = await documentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(contentId, partitionKey).ConfigureAwait(false);
             return result ? HttpStatusCode.OK : HttpStatusCode.BadRequest;
         }
 
-        public Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId)
+        public Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId, string partitionKey)
         {
             return Task.FromResult(HttpStatusCode.BadRequest);
         }
@@ -41,13 +43,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
 
             var jobProfile = await jobProfileOverviewApiService.GetOverview(url).ConfigureAwait(false);
 
-            var existingJobProfile = await jobProfileDocumentService.GetByIdAsync(contentId).ConfigureAwait(false);
+            var existingJobProfile = await documentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(contentId, "JobProfileOverview").ConfigureAwait(false);
 
             if (existingJobProfile != null)
             {
                 existingJobProfile.Html = jobProfile.Html;
                 existingJobProfile.LastCached = DateTime.UtcNow;
-                var result = await jobProfileDocumentService.UpsertAsync(existingJobProfile).ConfigureAwait(false);
+                var result = await documentStore.UpdateContentAsync(existingJobProfile).ConfigureAwait(false);
                 return result;
             }
 
@@ -58,7 +60,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
                 Html = jobProfile.Html,
             };
 
-            var resut = await jobProfileDocumentService.UpsertAsync(jobProfileOverview).ConfigureAwait(false);
+            var resut = await documentStore.UpdateContentAsync(jobProfileOverview).ConfigureAwait(false);
             return resut;
         }
 

@@ -1,6 +1,5 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Migration.Contacts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
@@ -14,6 +13,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Migration.Models;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using Microsoft.Azure.Documents.Linq;
 using MoreLinq.Extensions;
 using Newtonsoft.Json.Linq;
@@ -22,10 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 {
     public class MigrationService : IMigrationService
     {
-        private readonly IDocumentService<DysacTraitContentModel> dysacTraitDocumentService;
-        private readonly IDocumentService<DysacJobProfileCategoryContentModel> dysacJobProfileCategoryDocumentService;
-        private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService;
-        private readonly IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService;
+        private readonly IDocumentStore documentStore;
         private readonly IDocumentClient sourceDocumentClient;
         private readonly IDocumentClient destinationDocumentClient;
         
@@ -42,20 +39,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private readonly List<string> erroredSessions = new List<string>();
         
         public MigrationService(
-            IDocumentService<DysacTraitContentModel> dysacTraitDocumentService,
-            IDocumentService<DysacJobProfileCategoryContentModel> dysacJobProfileCategoryDocumentService,
-            IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionDocumentService,
+            IDocumentStore documentStore,
             IDocumentClient sourceDocumentClient,
-            IDocumentService<DysacQuestionSetContentModel> dysacQuestionSetDocumentService,
             IDocumentClient destinationDocumentClient,
             string destinationDatabaseId,
             string destinationCollectionId,
             int cosmosDbDestinationRUs)
         {
-            this.dysacTraitDocumentService = dysacTraitDocumentService;
-            this.dysacJobProfileCategoryDocumentService = dysacJobProfileCategoryDocumentService;
-            this.dysacFilteringQuestionDocumentService = dysacFilteringQuestionDocumentService;
-            this.dysacQuestionSetDocumentService = dysacQuestionSetDocumentService;
+            this.documentStore = documentStore;
             this.sourceDocumentClient = sourceDocumentClient;
             this.destinationDocumentClient = destinationDocumentClient;
             this.destinationDatabaseId = destinationDatabaseId;
@@ -247,8 +238,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             WriteAndLog($"Started fetching all job categories from traits - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
-            var allTraits = await dysacTraitDocumentService
-                .GetAsync(document => document.PartitionKey == "Trait");
+            var allTraits = await documentStore
+                .GetAllContentAsync<DysacTraitContentModel>("Trait");
 
             allJobCategories = allTraits?
                 .SelectMany(trait => trait.JobCategories)
@@ -257,8 +248,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 .ToList();
             
             var fullCategories =
-                await dysacJobProfileCategoryDocumentService
-                    .GetAsync(document => document.PartitionKey == "JobProfileCategory");
+                await documentStore
+                    .GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory");
 
             allJobProfiles = fullCategories!
                 .SelectMany(jobCategory => jobCategory.JobProfiles)
@@ -275,8 +266,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             WriteAndLog($"Started fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
-            filteringQuestions = (await dysacFilteringQuestionDocumentService
-                .GetAsync(document => document.PartitionKey == "FilteringQuestion"))!
+            filteringQuestions = (await documentStore
+                .GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion"))!
                 .ToList();
             
             WriteAndLog($"Finished fetching filtering questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
@@ -288,8 +279,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             WriteAndLog($"Started fetching short questions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             
-            var questionSets = await dysacQuestionSetDocumentService
-                .GetAsync(document => document.PartitionKey == "QuestionSet");
+            var questionSets = await documentStore
+                .GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet");
 
             shortQuestions = questionSets?
                 .FirstOrDefault()?

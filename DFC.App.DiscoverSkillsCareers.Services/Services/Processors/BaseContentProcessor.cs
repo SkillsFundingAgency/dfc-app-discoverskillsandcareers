@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
@@ -16,15 +15,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
     public class BaseContentProcessor
     {
         private readonly ILogger<BaseContentProcessor> logger;
-        private readonly IDocumentServiceFactory documentServiceFactory;
         private readonly IMappingService mappingService;
         private readonly IEventMessageService eventMessageService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IDocumentStore documentStore;
 
-        public BaseContentProcessor(ILogger<BaseContentProcessor> logger, IDocumentServiceFactory documentServiceFactory, IMappingService mappingService, IEventMessageService eventMessageService, IContentCacheService contentCacheService)
+        public BaseContentProcessor(ILogger<BaseContentProcessor> logger, IDocumentStore documentStore, IMappingService mappingService, IEventMessageService eventMessageService, IContentCacheService contentCacheService)
         {
             this.logger = logger;
-            this.documentServiceFactory = documentServiceFactory;
+            this.documentStore = documentStore;
             this.mappingService = mappingService;
             this.eventMessageService = eventMessageService;
             this.contentCacheService = contentCacheService;
@@ -52,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
         public async Task<HttpStatusCode> ProcessContentItem<TModel>(Guid parentId, Guid contentItemId, IBaseContentItemModel apiItem)
             where TModel : class, IDocumentModel, IDysacContentModel
         {
-            var contentPageModel = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(parentId).ConfigureAwait(false);
+            var contentPageModel = await documentStore.GetContentByIdAsync<TModel>(parentId, apiItem.ContentType!).ConfigureAwait(false);
 
             if (contentPageModel != null)
             {
@@ -98,10 +97,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return contentResult;
         }
 
-        public async Task<HttpStatusCode> RemoveContentItem<TModel>(Guid contentId, Guid contentItemId)
+        public async Task<HttpStatusCode> RemoveContentItem<TModel>(Guid contentId, Guid contentItemId, string partitionKey)
              where TModel : class, IDocumentModel, IDysacContentModel
         {
-            var model = await documentServiceFactory.GetDocumentService<TModel>().GetByIdAsync(contentId).ConfigureAwait(false);
+            var model = await documentStore.GetContentByIdAsync<TModel>(contentId, partitionKey).ConfigureAwait(false);
 
             if (model != null)
             {
@@ -119,10 +118,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return HttpStatusCode.NotFound;
         }
 
-        public async Task<HttpStatusCode> RemoveContent<TModel>(Guid contentId)
+        public async Task<HttpStatusCode> RemoveContent<TModel>(Guid contentId, string partitionKey)
             where TModel : class, IDocumentModel
         {
-            var result = await eventMessageService.DeleteAsync<TModel>(contentId).ConfigureAwait(false);
+            var result = await eventMessageService.DeleteAsync<TModel>(contentId, partitionKey).ConfigureAwait(false);
 
             return result;
         }

@@ -19,10 +19,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             var service = BuildWebhooksService();
 
             // Act
-            var result = await service.DeleteContentAsync(new DysacQuestionSetContentModel(), ContentIdForDelete).ConfigureAwait(false);
+            var result = await service.DeleteContentAsync(new DysacQuestionSetContentModel(), ContentIdForDelete, string.Empty).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored, string.Empty)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -34,15 +34,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             const HttpStatusCode expectedResponse = HttpStatusCode.NotFound;
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var service = BuildWebhooksService();
-            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored, string.Empty)).Returns(HttpStatusCode.NotFound);
 
             // Assert
 
             // Act
-            var result = await service.DeleteContentAsync(new DysacQuestionSetContentModel(), ContentIdForDelete).ConfigureAwait(false);
+            var result = await service.DeleteContentAsync(new DysacQuestionSetContentModel(), ContentIdForDelete, string.Empty).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored, string.Empty)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }

@@ -13,8 +13,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<HttpStatusCode> ProcessContentItem(Guid contentId, Guid contentItemId, IBaseContentItemModel apiItem);
 
-        Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId);
+        Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId, string partitionKey);
 
-        Task<HttpStatusCode> DeleteContentAsync(Guid contentId);
+        Task<HttpStatusCode> DeleteContentAsync(Guid contentId, string partitionKey);
     }
 }
