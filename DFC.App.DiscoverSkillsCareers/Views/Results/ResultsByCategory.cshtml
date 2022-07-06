@@ -1,13 +1,6 @@
 ﻿@model ResultsByCategoryModel
 
-@if (Model.JobsInCategory.Count() == 1)
-{
-    <h2 class="govuk-heading-l">1 career area that might interest you</h2>    
-}
-else
-{
-    <h2 class="govuk-heading-l">@Model.JobsInCategory.Count() career areas that might interest you</h2>
-}
+<h2 class="govuk-heading-l">Careers that might interest you</h2>
 
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
     <div class="app-results">
@@ -19,7 +12,6 @@ else
                         <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
                         @if (jobCategory.AnswerMoreQuestions == 0)
                         {
-
                             if (@jobCategory.JobProfiles.Count() > 0)
                             {
                                 <p class="text-light">@jobCategory.JobProfiles.Count() role@{if (@jobCategory.JobProfiles.Count() > 1)@("s")} you might be interested in</p>
