@@ -3,12 +3,14 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
+    [ExcludeFromCodeCoverage]
     public class CosmosDbService : IDocumentStore
     {
         private const string GetAllSql = "SELECT * FROM c";
