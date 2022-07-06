@@ -4,14 +4,13 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers;
-using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
@@ -22,8 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
     {
         private readonly IResultsService resultsService;
         private readonly ISessionService sessionService;
-        private readonly IDocumentService<DysacFilteringQuestionContentModel> filteringQuestionDocumentService;
-        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService;
+        private readonly IDocumentStore documentStore;
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IAssessmentService assessmentService;
         private readonly string sessionId;
@@ -33,11 +31,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             sessionService = A.Fake<ISessionService>();
             assessmentCalculationService = A.Fake<IAssessmentCalculationService>();
             assessmentService = A.Fake<IAssessmentService>();
-            jobProfileCategoryDocumentService = A.Fake<IDocumentService<DysacJobProfileCategoryContentModel>>();
-            filteringQuestionDocumentService = A.Fake<IDocumentService<DysacFilteringQuestionContentModel>>();
+            documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
             
-            resultsService = new ResultsService(sessionService, assessmentService, assessmentCalculationService, jobProfileCategoryDocumentService, fakeMemoryCache);
+            resultsService = new ResultsService(
+                sessionService,
+                assessmentService,
+                assessmentCalculationService, 
+                documentStore,
+                fakeMemoryCache);
 
             sessionId = "session1";
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
@@ -458,11 +460,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 }
             };
             
-            A.CallTo(() => jobProfileCategoryDocumentService.GetAsync(A<Expression<Func<DysacJobProfileCategoryContentModel, bool>>>.Ignored)).Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory"))
+                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
 
             var category = "ACategory";
-            var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
+            var resultsResponse = new GetResultsResponse { SessionId = sessionId };
             
             List<JobProfileResult> profiles = new List<JobProfileResult>
             {
@@ -495,7 +498,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } } } } };
 
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
-            A.CallTo(() => filteringQuestionDocumentService.GetAsync(A<Expression<Func<DysacFilteringQuestionContentModel, bool>>>.Ignored))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion"))
                 .Returns(new List<DysacFilteringQuestionContentModel>
                 {
                     new DysacFilteringQuestionContentModel
@@ -536,7 +539,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 }
             };
             
-            A.CallTo(() => jobProfileCategoryDocumentService.GetAsync(A<Expression<Func<DysacJobProfileCategoryContentModel, bool>>>.Ignored)).Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory"))
+                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
             
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };

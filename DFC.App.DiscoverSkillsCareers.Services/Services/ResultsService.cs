@@ -4,12 +4,12 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
-using DFC.Compui.Cosmos.Contracts;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -18,20 +18,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
-        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService;
+        private readonly IDocumentStore documentStore;
         private readonly IMemoryCache memoryCache;
 
         public ResultsService(
             ISessionService sessionService,
             IAssessmentService assessmentService,
             IAssessmentCalculationService assessmentCalculationService,
-            IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService,
+            IDocumentStore documentStore,
             IMemoryCache memoryCache)
         {
             this.sessionService = sessionService;
             this.assessmentService = assessmentService;
             this.assessmentCalculationService = assessmentCalculationService;
-            this.jobProfileCategoryDocumentService = jobProfileCategoryDocumentService;
+
+            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.memoryCache = memoryCache;
         }
 
@@ -196,7 +197,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 c.DisplayOrder = order;
 
                 if (!string.IsNullOrEmpty(selectedCategory)
-                    && c.JobFamilyNameUrl == selectedCategory.ToLower().Replace(" ", "-").Replace(",", string.Empty))
+                    && c.JobFamilyNameUrl == selectedCategory
+                        .ToLower()
+                        .Replace(" ", "-")
+                        .Replace(",", string.Empty))
                 {
                     c.DisplayOrder = 9999;
                 }
@@ -214,10 +218,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacJobProfileCategoryContentModel>?)filteringQuestionsFromCache;
             }
 
-            var jobCategories = (await jobProfileCategoryDocumentService.GetAsync(
-                    document => document.PartitionKey == "JobProfileCategory")
-                .ConfigureAwait(false))?
-                .ToList();
+            var jobCategories = await documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>(
+                "JobProfileCategory").ConfigureAwait(false);
+
+            if (!jobCategories?.Any() != true)
+            {
+                return jobCategories;
+            }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
             memoryCache.Set(nameof(GetJobCategories), jobCategories, cacheEntryOptions);

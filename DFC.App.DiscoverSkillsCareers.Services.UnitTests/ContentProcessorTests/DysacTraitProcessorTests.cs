@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
@@ -20,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Arrange
             A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacTraitContentModel>(A<DysacTraitContentModel>.Ignored)).Returns(HttpStatusCode.OK);
-            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
@@ -41,7 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacTraitContentModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => FakeEventMessageService.CreateAsync(A<DysacTraitContentModel>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
@@ -60,14 +61,26 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
+            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacTraitContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+                .Returns(new DysacTraitContentModel
+                {
+                    JobCategories = new List<JobCategoryContentItemModel>
+                    {
+                        new JobCategoryContentItemModel
+                        {
+                            ItemId = TraitItemId
+                        }
+                    }
+                });
+            
             //Act
             var result = await processor.ProcessContentItem(TraitId, TraitItemId, new ApiTrait());
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacTraitContentModel>.Ignored)).MustHaveHappened();
-            A.CallTo(() => FakeDysacTraitDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappened();
+            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacTraitContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -78,14 +91,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
-            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacTraitContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
+            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
+            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacTraitContentModel>(A<Guid>.Ignored, string.Empty)).Returns(HttpStatusCode.OK);
 
             //Act
-            var result = await processor.DeleteContentAsync(TraitId);
+            var result = await processor.DeleteContentAsync(TraitId, string.Empty);
 
             //Assert
-            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacTraitContentModel>(A<Guid>.Ignored)).MustHaveHappened();
+            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacTraitContentModel>(A<Guid>.Ignored, string.Empty)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -96,11 +109,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
             A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacTraitContentModel>(A<DysacTraitContentModel>.Ignored)).Returns(HttpStatusCode.OK);
 
             //Act
-            var result = await processor.DeleteContentItemAsync(TraitId, TraitItemId);
+            var result = await processor.DeleteContentItemAsync(TraitId, TraitItemId, "PartitionKey");
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync<DysacTraitContentModel>(A<DysacTraitContentModel>.Ignored)).MustHaveHappened();

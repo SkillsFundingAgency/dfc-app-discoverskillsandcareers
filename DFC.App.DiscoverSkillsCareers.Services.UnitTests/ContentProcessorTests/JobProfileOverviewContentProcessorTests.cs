@@ -3,26 +3,25 @@ using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.UnitTests.FakeHttpHandlers;
-using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 {
     public class JobProfileOverviewContentProcessorTests : BaseContentProcessorTests
     {
-        private readonly IDocumentService<DysacJobProfileOverviewContentModel> fakeDocumentService;
+        private readonly IDocumentStore fakeDocumentStore;
         private readonly IJobProfileOverviewApiService fakeJobProfileApiOverviewService;
 
         public JobProfileOverviewContentProcessorTests()
         {
-            fakeDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
+            fakeDocumentStore = A.Fake<IDocumentStore>();
             fakeJobProfileApiOverviewService = A.Fake<IJobProfileOverviewApiService>();
         }
 
@@ -38,15 +37,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(JsonConvert.SerializeObject(new DysacJobProfileOverviewContentModel { Html = "<h1>A Job Profile</h1>", Id = Guid.NewGuid(), Title = "A Test Job Profile Overview" })) };
 
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
-            A.CallTo(() => fakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(apiModel);
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).Returns(HttpStatusCode.OK);
-            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(apiModel);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).Returns(HttpStatusCode.OK);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
 
             //Assert
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeJobProfileApiOverviewService.GetOverview(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -62,15 +61,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Arrange
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
-            A.CallTo(() => fakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(apiModel);
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).Returns(HttpStatusCode.OK);
-            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(apiModel);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).Returns(HttpStatusCode.OK);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
 
             //Assert
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeJobProfileApiOverviewService.GetOverview(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -83,7 +82,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
 
-            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
 
             //Act
             var result = await processor.ProcessContentItem(Guid.NewGuid(), Guid.NewGuid(), new ApiJobProfileOverview()).ConfigureAwait(false);
@@ -98,14 +97,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentService);
-            A.CallTo(() => fakeDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(true);
+            var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(true);
 
             //Act
-            var result = await processor.DeleteContentAsync(Guid.NewGuid());
+            var result = await processor.DeleteContentAsync(Guid.NewGuid(), string.Empty);
 
             //Assert
-            A.CallTo(() => fakeDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappened();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -114,11 +113,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         public async Task JobProfileOverviewProcessorRemoveContentItemAsyncCreateReturnsOk()
         {
             //Arrange
-            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             //Assert
-            await Assert.ThrowsAsync<NotImplementedException>(async () => await processor.DeleteContentItemAsync(Guid.NewGuid(), Guid.NewGuid()).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<NotImplementedException>(async () => await processor.DeleteContentItemAsync(Guid.NewGuid(), Guid.NewGuid(), string.Empty).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

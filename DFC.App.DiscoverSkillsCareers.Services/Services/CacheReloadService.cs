@@ -258,7 +258,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 logger.LogInformation($"Deleting cache with {staleContentPage.Id}");
 
-                var deletionResult = await eventMessageService.DeleteAsync<TModel>(staleContentPage.Id).ConfigureAwait(false);
+                var deletionResult = await eventMessageService
+                    .DeleteAsync<TModel>(staleContentPage.Id, staleContentPage.PartitionKey!).ConfigureAwait(false);
 
                 if (deletionResult == HttpStatusCode.OK)
                 {
@@ -380,7 +381,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                 foreach (var profile in jobProfiles)
                 {
-                    await eventMessageService.DeleteAsync<DysacJobProfileOverviewContentModel>(profile.Id).ConfigureAwait(false);
+                    await eventMessageService.DeleteAsync<DysacJobProfileOverviewContentModel>(profile.Id, profile.PartitionKey!).ConfigureAwait(false);
                 }
             }
         }

@@ -3,9 +3,9 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -21,9 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
         private readonly ISessionService sessionService;
-        private readonly IDocumentService<DysacAssessment> assessmentDocumentService;
-        private readonly IDocumentService<DysacQuestionSetContentModel> questionSetDocumentService;
-        private readonly IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionService;
+        private readonly IDocumentStore documentStore;
         private readonly IMapper mapper;
         private readonly INotificationService notificationService;
         private readonly IHttpContextAccessor accessor;
@@ -32,9 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public AssessmentService(
             ISessionIdToCodeConverter sessionIdToCodeConverter,
             ISessionService sessionService,
-            IDocumentService<DysacAssessment> assessmentDocumentService,
-            IDocumentService<DysacQuestionSetContentModel> questionSetDocumentService,
-            IDocumentService<DysacFilteringQuestionContentModel> dysacFilteringQuestionService,
+            IDocumentStore documentStore,
             IMapper mapper,
             INotificationService notificationService,
             IHttpContextAccessor accessor,
@@ -42,9 +38,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
-            this.assessmentDocumentService = assessmentDocumentService;
-            this.questionSetDocumentService = questionSetDocumentService;
-            this.dysacFilteringQuestionService = dysacFilteringQuestionService;
+
+            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.mapper = mapper;
             this.notificationService = notificationService;
             this.accessor = accessor;
@@ -272,14 +267,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
             }
 
-            var assessments = (await assessmentDocumentService
-                .GetAsync(document => document.Id == sessionId).ConfigureAwait(false))?.ToList();
+            var assessment = await documentStore.GetAssessmentAsync(sessionId)
+                .ConfigureAwait(false);
 
-            if (assessments?.Any() == true)
+            if (assessment != null)
             {
-                var assessment = assessments.First();
                 accessor.HttpContext.Items.Add(HttpContextAssessmentKey, assessment);
-
                 return assessment;
             }
 
@@ -454,7 +447,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task UpdateAssessment(DysacAssessment assessment)
         {
-            await assessmentDocumentService.UpsertAsync(assessment).ConfigureAwait(false);
+            await documentStore.UpdateAssessmentAsync(assessment).ConfigureAwait(false);
             accessor.HttpContext.Items[HttpContextAssessmentKey] = assessment;
         }
 
@@ -465,10 +458,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacFilteringQuestionContentModel>?)filteringQuestionsFromCache;
             }
 
-            var filteringQuestions = (await dysacFilteringQuestionService
-                .GetAsync(document => document.PartitionKey == "FilteringQuestion")
-                .ConfigureAwait(false))?
-                .ToList();
+            var filteringQuestions = await documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>(
+                "FilteringQuestion").ConfigureAwait(false);
+
+            if (!filteringQuestions?.Any() != true)
+            {
+                return filteringQuestions;
+            }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
             memoryCache.Set(nameof(GetFilteringQuestions), filteringQuestions, cacheEntryOptions);
@@ -483,8 +479,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacQuestionSetContentModel>?)filteringQuestionsFromCache;
             }
 
-            var questionSets = (await questionSetDocumentService
-                .GetAsync(document => document.PartitionKey == "QuestionSet").ConfigureAwait(false))?.ToList();
+            var questionSets = await documentStore.GetAllContentAsync<DysacQuestionSetContentModel>(
+                "QuestionSet").ConfigureAwait(false);
+
+            if (!questionSets?.Any() != true)
+            {
+                return questionSets;
+            }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
             memoryCache.Set(nameof(GetQuestionSets), questionSets, cacheEntryOptions);
@@ -517,7 +518,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return;
             }
 
-            var missingQuestions = questionSets!
+            var missingQuestions = questionSets
                 .First()
                 .ShortQuestions!
                 .Where(shortQuestion => assessment.Questions.All(assessmentQuestion => assessmentQuestion.Ordinal != shortQuestion.Ordinal));

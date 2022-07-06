@@ -13,7 +13,6 @@ using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
-using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Sessionstate;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
@@ -28,7 +27,6 @@ using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -121,19 +119,23 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
 
-            var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
-            var cosmosDbConnectionContent = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
-            services.AddDocumentServices<DysacQuestionSetContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
-            services.AddDocumentServices<DysacTraitContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
-            services.AddDocumentServices<DysacSkillContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
-            services.AddDocumentServices<DysacFilteringQuestionContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
-            services.AddDocumentServices<DysacJobProfileOverviewContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
-            services.AddDocumentServices<DysacJobProfileCategoryContentModel>(cosmosDbConnectionContent, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddSingleton<IDocumentStore, CosmosDbService>(serviceProvider =>
+            {
+                var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+                var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
 
-            var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
-            services.AddDocumentServices<DysacAssessment>(cosmosDbConnectionAssessment, env.IsDevelopment(), cosmosRetryOptions);
+                var cosmosDbConnectionContent1 = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
+                var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent1.EndpointUrl};AccountKey={cosmosDbConnectionContent1.AccessKey};";
 
-            services.AddTransient<IDocumentServiceFactory, DocumentServiceFactory>();
+                return new CosmosDbService(
+                    connectionStringAssessment,
+                    cosmosDbConnectionAssessment.DatabaseId!,
+                    cosmosDbConnectionAssessment.CollectionId!,
+                    connectionStringContent,
+                    cosmosDbConnectionContent1.DatabaseId!,
+                    cosmosDbConnectionContent1.CollectionId!);
+            });
+
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();
 
@@ -142,15 +144,12 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
             services.AddTransient<IJobProfileOverviewApiService, JobProfileOverviewApiService>();
-
             services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
 
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
             services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
-
-            services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
             var policyRegistry = services.AddPolicyRegistry();
 
             const string appSettingsPolicies = "Policies";

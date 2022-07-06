@@ -22,9 +22,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             IEventMessageService eventMessageService,
             IContentCacheService contentCacheService,
             ILogger<BaseContentProcessor> logger,
-            IDocumentServiceFactory documentService,
+            IDocumentStore documentStore,
             IMappingService mappingService)
-            : base(logger, documentService, mappingService, eventMessageService, contentCacheService)
+            : base(logger, documentStore, mappingService, eventMessageService, contentCacheService)
         {
             this.cmsApiService = cmsApiService;
             this.mapper = mapper;
@@ -45,14 +45,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services.Processors
             return await ProcessContentItem<DysacQuestionSetContentModel>(contentId, contentItemId, apiItem).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId)
+        public async Task<HttpStatusCode> DeleteContentItemAsync(Guid contentId, Guid contentItemId, string partitionKey)
         {
-            return await RemoveContentItem<DysacQuestionSetContentModel>(contentId, contentItemId).ConfigureAwait(false);
+            return await RemoveContentItem<DysacQuestionSetContentModel>(contentId, contentItemId, partitionKey).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, string partitionKey)
         {
-            return await RemoveContent<DysacQuestionSetContentModel>(contentId).ConfigureAwait(false);
+            return await RemoveContent<DysacQuestionSetContentModel>(contentId, partitionKey).ConfigureAwait(false);
         }
     }
 }

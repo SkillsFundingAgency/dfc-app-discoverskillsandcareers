@@ -10,27 +10,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DFC.Compui.Cosmos;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
-using NHibernate.Mapping;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculationServiceTests
 {
     public class AssessmentCalculationServiceTests
     {
-        private readonly IDocumentService<DysacTraitContentModel> traitDocumentService = A.Fake<IDocumentService<DysacTraitContentModel>>();
-        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService = A.Fake<IDocumentService<DysacJobProfileCategoryContentModel>>();
+        private readonly IDocumentStore documentStore = A.Fake<IDocumentStore>();
         private readonly AssessmentService assessmentService = A.Fake<AssessmentService>();
         private readonly IMapper mapper = A.Fake<IMapper>();
         private readonly IMemoryCache memoryCache = A.Fake<IMemoryCache>();
 
         public AssessmentCalculationServiceTests()
         {
-            A.CallTo(() => traitDocumentService.GetAsync(A<Expression<Func<DysacTraitContentModel, bool>>>.Ignored)).Returns(AssessmentHelpers.GetTraits());
-            A.CallTo(() => traitDocumentService.GetAllAsync(A<string>.Ignored)).Returns(AssessmentHelpers.GetTraits());
-            A.CallTo(() => jobProfileCategoryDocumentService.GetAsync(A<Expression<Func<DysacJobProfileCategoryContentModel, bool>>>.Ignored))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacTraitContentModel>("Trait"))
+                .Returns(AssessmentHelpers.GetTraits());
+
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory"))
                 .Returns(AssessmentHelpers.GetAllJobCategories());
         }
 
@@ -39,8 +38,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         {
             // Arrange
             var serviceToTest = new AssessmentCalculationService(
-                traitDocumentService,
-                jobProfileCategoryDocumentService,
+                documentStore,
                 assessmentService,
                 memoryCache,
                 mapper,
@@ -101,8 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         {
             // Arrange
             var serviceToTest = new AssessmentCalculationService(
-                traitDocumentService,
-                jobProfileCategoryDocumentService,
+                documentStore,
                 assessmentService,
                 memoryCache,
                 mapper,
@@ -124,8 +121,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         {
             // Arrange
             var serviceToTest = new AssessmentCalculationService(
-                traitDocumentService,
-                jobProfileCategoryDocumentService,
+                documentStore,
                 assessmentService,
                 memoryCache,                
                 mapper,
@@ -149,9 +145,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         {
             // Arrange
             var serviceToTest = new AssessmentCalculationService(
-                traitDocumentService,
-                jobProfileCategoryDocumentService,
-                assessmentService, 
+                documentStore,
+                assessmentService,
                 memoryCache,
                 mapper,
                 A.Fake<ILoggerFactory>());
@@ -164,7 +159,5 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             // Assert
             Assert.Empty(result.ShortQuestionResult!.JobCategories);
         }
-
-       
     }
 }

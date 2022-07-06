@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Arrange
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacSkillContentModel>.Ignored)).Returns(HttpStatusCode.OK);
-            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
@@ -42,7 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacSkillContentModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => FakeEventMessageService.CreateAsync(A<DysacSkillContentModel>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
@@ -59,7 +59,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         public async Task DysacSkillProcessorProcessContentItemAsyncCreateReturnsOk()
         {
             //Arrange
-            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             //Assert
@@ -72,14 +72,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             base.Setup();
 
             //Arrange
-            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
-            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacSkillContentModel>(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
+            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
+            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacSkillContentModel>(A<Guid>.Ignored, string.Empty)).Returns(HttpStatusCode.OK);
 
             //Act
-            var result = await processor.DeleteContentAsync(Guid.NewGuid());
+            var result = await processor.DeleteContentAsync(Guid.NewGuid(), string.Empty);
 
             //Assert
-            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacSkillContentModel>(A<Guid>.Ignored)).MustHaveHappened();
+            A.CallTo(() => FakeEventMessageService.DeleteAsync<DysacSkillContentModel>(A<Guid>.Ignored, string.Empty)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -88,11 +88,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
         public async Task DysacSkillProcessorRemoveContentItemAsyncCreateReturnsOk()
         {
             //Arrange
-            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentServiceFactory, FakeMappingService);
+            var processor = new DysacSkillContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
             //Act
             //Assert
-            await Assert.ThrowsAsync<NotImplementedException>(async () => await processor.DeleteContentItemAsync(Guid.NewGuid(), Guid.NewGuid()).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<NotImplementedException>(
+                async () => await processor.DeleteContentItemAsync(
+                    Guid.NewGuid(), Guid.NewGuid(), "Skill").ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

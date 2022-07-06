@@ -5,7 +5,6 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -27,23 +27,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             { Answer.StronglyAgree, 2 },
         };
 
-        private readonly IDocumentService<DysacTraitContentModel> traitDocumentService;
-        private readonly IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService;
+        private readonly IDocumentStore documentStore;
         private readonly IMapper mapper;
         private readonly ILogger<AssessmentCalculationService> logger;
         private readonly IAssessmentService assessmentService;
         private readonly IMemoryCache memoryCache;
 
         public AssessmentCalculationService(
-            IDocumentService<DysacTraitContentModel> traitDocumentService,
-            IDocumentService<DysacJobProfileCategoryContentModel> jobProfileCategoryDocumentService,
+            IDocumentStore documentStore,
             IAssessmentService assessmentService,
             IMemoryCache memoryCache,
             IMapper mapper,
             ILoggerFactory loggerFactory)
         {
-            this.traitDocumentService = traitDocumentService;
-            this.jobProfileCategoryDocumentService = jobProfileCategoryDocumentService;
+            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
+
             this.assessmentService = assessmentService;
             this.memoryCache = memoryCache;
             this.mapper = mapper;
@@ -247,9 +245,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacJobProfileCategoryContentModel>?)filteringQuestionsFromCache;
             }
 
-            var jobCategories = (await jobProfileCategoryDocumentService.GetAsync(
-                    document => document.PartitionKey == "JobProfileCategory")
-                .ConfigureAwait(false))?.ToList();
+            var jobCategories = await documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>(
+                "JobProfileCategory").ConfigureAwait(false);
+
+            if (!jobCategories?.Any() != true)
+            {
+                return jobCategories;
+            }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
             memoryCache.Set(nameof(GetJobCategories), jobCategories, cacheEntryOptions);
@@ -264,9 +266,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacTraitContentModel>?)filteringQuestionsFromCache;
             }
 
-            var traits = (await traitDocumentService.GetAsync(
-                document => document.PartitionKey == "Trait")
-                .ConfigureAwait(false))?.ToList();
+            var traits = await documentStore.GetAllContentAsync<DysacTraitContentModel>(
+                "Trait").ConfigureAwait(false);
+
+            if (!traits?.Any() != true)
+            {
+                return traits;
+            }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
             memoryCache.Set(nameof(GetTraits), traits, cacheEntryOptions);

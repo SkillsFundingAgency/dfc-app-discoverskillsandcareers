@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
         private readonly ILogService logService;
-        private readonly IDocumentService<DysacJobProfileOverviewContentModel> jobProfileOverviewDocumentService;
+        private readonly IDocumentStore documentStore;
 
         public BodyTopTests()
         {
@@ -28,10 +27,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
-            jobProfileOverviewDocumentService = A.Fake<IDocumentService<DysacJobProfileOverviewContentModel>>();
+            documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, jobProfileOverviewDocumentService, fakeMemoryCache);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache);
         }
 
         [Fact]
