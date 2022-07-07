@@ -1,12 +1,27 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.Framework;
+using DFC.App.DiscoverSkillsCareers.HostedServices;
+using DFC.App.DiscoverSkillsCareers.MappingProfiles;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
-using DFC.App.DiscoverSkillsCareers.Services.Api;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
+using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Sessionstate;
+using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
+using DFC.Compui.Telemetry;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
+using DFC.Content.Pkg.Netcore.Extensions;
+using DFC.Logger.AppInsights.Contracts;
+using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
 using Dfc.Session.Models;
 using Microsoft.AspNetCore.Builder;
@@ -15,23 +30,26 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Notify.Client;
+using Notify.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using DFC.Logger.AppInsights.Contracts;
-using DFC.App.DiscoverSkillsCareers.Framework;
-using DFC.Logger.AppInsights.Extensions;
+using System.Reflection;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         private IConfiguration Configuration { get; }
@@ -59,8 +77,10 @@ namespace DFC.App.DiscoverSkillsCareers
                     name: "default",
                     pattern: RouteName.Prefix + "/{controller=Home}/{action=Index}/{id?}");
 
+                MapRoute(endpoints, "results", RouteName.Prefix + "/results/{countToShow}", "Results", "Index");
+                MapRoute(endpoints, "assessmentNew", RouteName.Prefix + "/assessment/{assessmentType}/new", "Assessment", "New");
                 MapRoute(endpoints, "assessment", RouteName.Prefix + "/assessment/{assessmentType}/{questionNumber}", "Assessment", "Index");
-                MapRoute(endpoints, "assessment", RouteName.Prefix + "/reload", "Assessment", "Reload");
+                MapRoute(endpoints, "assessmentReload", RouteName.Prefix + "/reload", "Assessment", "Reload");
                 MapRoute(endpoints, "filterQuestionsComplete", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/complete", "FilterQuestions", "Complete");
                 MapRoute(endpoints, "filterQuestions", RouteName.Prefix + "/{assessmentType}/filterquestions/{jobCategoryName}/{questionNumber}", "FilterQuestions", "Index");
                 MapRoute(endpoints, "testLoadSession", RouteName.Prefix + "/loadsession", "Test", "LoadSession");
@@ -79,7 +99,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(DysacProfile)), Assembly.GetAssembly(typeof(DefaultProfile)));
+            services.AddApplicationInsightsTelemetry();
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
@@ -89,44 +110,68 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
-            services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
+            services.AddSingleton(Configuration.GetSection(nameof(DysacOptions)).Get<DysacOptions>() ?? new DysacOptions());
+            services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddSingleton(Configuration.GetSection(nameof(JobProfileOverviewServiceOptions)).Get<JobProfileOverviewServiceOptions>() ?? new JobProfileOverviewServiceOptions());
+            services.AddTransient<ICacheReloadService, CacheReloadService>();
+            services.AddTransient<IEventMessageService, EventMessageService>();
+            services.AddTransient<INotificationService, NotificationService>();
 
-            services.AddDFCLogging(this.Configuration["ApplicationInsights:InstrumentationKey"]);
-            var dysacClientOptions = Configuration.GetSection("DysacClientOptions").Get<DysacClientOptions>();
+            services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
+
+            services.AddSingleton<IDocumentStore, CosmosDbService>(serviceProvider =>
+            {
+                var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+                var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
+
+                var cosmosDbConnectionContent1 = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
+                var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent1.EndpointUrl};AccountKey={cosmosDbConnectionContent1.AccessKey};";
+
+                return new CosmosDbService(
+                    connectionStringAssessment,
+                    cosmosDbConnectionAssessment.DatabaseId!,
+                    cosmosDbConnectionAssessment.CollectionId!,
+                    connectionStringContent,
+                    cosmosDbConnectionContent1.DatabaseId!,
+                    cosmosDbConnectionContent1.CollectionId!);
+            });
+
+            services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IMappingService, MappingService>();
+
+            services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
+            services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
+
+            services.AddTransient<IJobProfileOverviewApiService, JobProfileOverviewApiService>();
+            services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
+
+            var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
+            services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
+
+            services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
             var policyRegistry = services.AddPolicyRegistry();
+
+            const string appSettingsPolicies = "Policies";
+            var policyOptions = Configuration.GetSection(appSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             AddPolicies(policyRegistry);
 
-            services.AddHttpClient<IResultsApiService, ResultsApiService>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = dysacClientOptions.ResultsApiBaseAddress;
-                    httpClient.Timeout = dysacClientOptions.Timeout;
-                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
+            services.AddPolicies(policyRegistry, "content", policyOptions);
+            services.AddHostedServiceTelemetryWrapper();
+            services.AddSubscriptionBackgroundService(Configuration);
+            services.AddHostedService<CacheReloadBackgroundService>();
 
-            services.AddHttpClient<IAssessmentApiService, AssessmentApiService>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = dysacClientOptions.AssessmentApiBaseAddress;
-                    httpClient.Timeout = dysacClientOptions.Timeout;
-                    httpClient.DefaultRequestHeaders.Add(HeaderName.OcpApimSubscriptionKey, dysacClientOptions.OcpApimSubscriptionKey);
-                }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-                .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
+            services.AddApiServices(Configuration, policyRegistry);
+            services.AddLinkDetailsConverter(new CustomLinkDetailConverter());
 
-            var jobProfileOverViewClientOptions = Configuration.GetSection("JobProfileOverViewClientOptions").Get<JobProfileOverViewClientOptions>();
-
-            services.AddHttpClient<IJpOverviewApiService, JpOverviewApiService>(httpClient =>
-            {
-                httpClient.Timeout = jobProfileOverViewClientOptions.Timeout;
-                httpClient.BaseAddress = jobProfileOverViewClientOptions.BaseAddress;
-            }).AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpRetry))
-            .AddPolicyHandlerFromRegistry(nameof(PolicyOptions.HttpCircuitBreaker));
+            services
+             .AddPolicies(policyRegistry, nameof(JobProfileOverviewServiceOptions), policyOptions)
+             .AddHttpClient<IJobProfileOverviewApiService, JobProfileOverviewApiService, JobProfileOverviewServiceOptions>(nameof(JobProfileOverviewServiceOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
         {
-            var policyOptions = new PolicyOptions() { HttpRetry = new RetryPolicyOptions(), HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
+            var policyOptions = new PolicyOptions { HttpRetry = new RetryPolicyOptions(), HttpCircuitBreaker = new CircuitBreakerPolicyOptions() };
             policyRegistry.Add(nameof(PolicyOptions.HttpRetry), HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(policyOptions.HttpRetry.Count, retryAttempt => TimeSpan.FromSeconds(Math.Pow(policyOptions.HttpRetry.BackoffPower, retryAttempt))));
             policyRegistry.Add(nameof(PolicyOptions.HttpCircuitBreaker), HttpPolicyExtensions.HandleTransientHttpError().CircuitBreakerAsync(policyOptions.HttpCircuitBreaker.ExceptionsAllowedBeforeBreaking, policyOptions.HttpCircuitBreaker.DurationOfBreak));
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace DFC.App.DiscoverSkillsCareers.Models.Result
 {
@@ -9,37 +10,38 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
         public JobCategoryResult()
         {
             TraitValues = new List<TraitValue>();
-            FilterAssessment = new FilterAssessmentResult();
+            JobProfilesOverviews = new List<JobProfileOverView>();
+            JobProfiles = new List<JobProfileResult>();
+            SkillQuestions = new List<string>();
         }
 
-        public string JobFamilyCode { get; set; }
+        [JsonIgnore]
+        public string? JobFamilyCode { get; set; }
 
-        public string JobFamilyName { get; set; }
+        public string? JobFamilyName { get; set; }
 
-        public string JobFamilyText { get; set; }
-
-        public string JobFamilyUrl { get; set; }
-
-        public int TraitsTotal { get; set; }
+        [JsonIgnore]
+        public string? JobFamilyUrl { get; set; }
 
         public decimal Total { get; set; }
 
-        public decimal NormalizedTotal { get; set; }
-
-        public IEnumerable<TraitValue> TraitValues { get; set; }
-
-        public FilterAssessmentResult FilterAssessment { get; set; }
+        public List<TraitValue> TraitValues { get; set; }
 
         public int TotalQuestions { get; set; }
 
+        [JsonIgnore]
         public bool ResultsShown { get; set; }
 
-        public string JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-");
+        public string? JobFamilyNameUrl => JobFamilyName?.ToLower()?.Replace(" ", "-").Replace(",", string.Empty);
 
+        [JsonIgnore]
         public int? DisplayOrder { get; set; }
 
-        public int NumberOfMatchedJobProfile { get; set; }
-
+        [JsonIgnore]
         public IEnumerable<JobProfileOverView> JobProfilesOverviews { get; set; }
+
+        public IEnumerable<JobProfileResult> JobProfiles { get; set; }
+
+        public IEnumerable<string> SkillQuestions { get; set; }
     }
 }

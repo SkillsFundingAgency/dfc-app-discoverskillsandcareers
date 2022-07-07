@@ -10,7 +10,7 @@ resources:
   - repository: dfc-devops
     type: github
     name: SkillsFundingAgency/dfc-devops
-    ref: refs/tags/v1.11.1
+    ref: refs/tags/v1.11.2
     endpoint: 'GitHub (ESFA)'
 
 stages:
@@ -58,3 +58,15 @@ stages:
         TestSuffix: UnitTests
         DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
+
+  #Build Test Suite Tests
+  - job: Builduifunctionaltests
+    displayName: Build UI TestSuite
+    steps:
+  # Build all UI Functional Tests that ends with TestSuite
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+      parameters:
+        SolutionBaseName: $(SolutionBaseName).UI.FunctionalTests
+        BuildPlatform: $(BuildPlatform)
+        BuildConfiguration: $(BuildConfiguration)
+        DotNetCoreVersion: 3.1.100

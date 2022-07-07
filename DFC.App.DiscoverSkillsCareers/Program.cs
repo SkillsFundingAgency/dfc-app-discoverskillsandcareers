@@ -10,19 +10,14 @@ namespace DFC.App.DiscoverSkillsCareers
     [ExcludeFromCodeCoverage]
     public sealed class Program
     {
-        private Program()
-        {
-        }
-
         public static void Main(string[] args)
         {
             var webHost = CreateWebHostBuilder(args);
             webHost.Build().AddApplicationTelemetryInitializer().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
                 .ConfigureLogging((webHostBuilderContext, loggingBuilder) =>
                 {
                     // This filter is for app insights only

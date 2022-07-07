@@ -2,13 +2,9 @@
 {
     public interface IQuestion
     {
-        string QuestionId { get; set; }
+        string? QuestionId { get; set; }
 
         int CurrentQuestionNumber { get; set; }
-
-        string QuestionSetName { get; set; }
-
-        string QuestionSetVersion { get; set; }
 
         int? PreviousQuestionNumber { get; set; }
 

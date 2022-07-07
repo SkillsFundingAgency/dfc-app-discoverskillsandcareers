@@ -8,6 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
         public string GetCode(string value)
         {
             var result = new StringBuilder();
+
             if (!string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim().ToUpper();
@@ -32,6 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
             if (!string.IsNullOrWhiteSpace(code))
             {
                 code = code.ToLower();
+
                 foreach (var c in code)
                 {
                     if (c != ' ')

@@ -1,61 +1,78 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using Dfc.Session;
+using DFC.Compui.Sessionstate;
 using Dfc.Session.Models;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.SessionHelpers
 {
     public class SessionService : ISessionService
     {
-        private readonly ISessionClient sessionServiceClient;
+        private readonly ISessionStateService<DfcUserSession> sessionStateService;
+        private readonly IHttpContextAccessor accessor;
 
-        public SessionService(ISessionClient sessionServiceClient)
+        public SessionService(ISessionStateService<DfcUserSession> sessionStateService, IHttpContextAccessor accessor)
         {
-            this.sessionServiceClient = sessionServiceClient;
+            this.sessionStateService = sessionStateService;
+            this.accessor = accessor;
         }
 
-        public void CreateCookie(string sessionIdAndPartionKey)
+        public async Task<SessionStateModel<DfcUserSession>?> GetCurrentSession()
         {
-            var sessionIdAndPartitionKeyDetails = GetSessionAndPartitionKey(sessionIdAndPartionKey);
-            var dfcUserSession = new DfcUserSession() { Salt = "ncs", PartitionKey = sessionIdAndPartitionKeyDetails.Item1, SessionId = sessionIdAndPartitionKeyDetails.Item2 };
-            
-            sessionServiceClient.CreateCookie(dfcUserSession, false);
+            const string httpContextSessionKey = "DysacSession";
+
+            if (accessor.HttpContext.Items.ContainsKey(httpContextSessionKey))
+            {
+                return (SessionStateModel<DfcUserSession>?)accessor.HttpContext.Items[httpContextSessionKey];
+            }
+
+            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
+
+            if (!compositeSessionId.HasValue)
+            {
+                return null;
+            }
+
+            var session = await sessionStateService.GetAsync(compositeSessionId.Value).ConfigureAwait(false);
+            accessor.HttpContext.Items.Add(httpContextSessionKey, session);
+
+            return session;
+        }
+
+        public async Task CreateDysacSession(string sessionId)
+        {
+            var compositeSessionId = accessor.HttpContext.Request.CompositeSessionId();
+
+            var dfcUserSession = new SessionStateModel<DfcUserSession>
+            {
+                Id = compositeSessionId!.Value,
+                State = new DfcUserSession
+                {
+                    Salt = "ncs",
+                    SessionId = sessionId,
+                    CreatedDate = DateTime.UtcNow,
+                },
+            };
+
+            await sessionStateService.SaveAsync(dfcUserSession).ConfigureAwait(false);
         }
 
         public async Task<string> GetSessionId()
         {
-            var result = await sessionServiceClient.TryFindSessionCode().ConfigureAwait(false);
-            if (string.IsNullOrWhiteSpace(result))
+            var session = await GetCurrentSession().ConfigureAwait(false);
+
+            if (session?.State?.SessionId != null)
             {
-                throw new InvalidOperationException("SessionId is null or empty");
+                return session.State.SessionId;
             }
 
-            return result;
+            throw new InvalidOperationException("SessionId is null or empty");
         }
 
         public async Task<bool> HasValidSession()
         {
-            var result = await sessionServiceClient.TryFindSessionCode().ConfigureAwait(false);
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static Tuple<string, string> GetSessionAndPartitionKey(string value)
-        {
-            var result = new Tuple<string, string>(string.Empty, string.Empty);
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                var segments = value.Split("-", StringSplitOptions.RemoveEmptyEntries);
-                result = new Tuple<string, string>(segments.ElementAtOrDefault(0), segments.ElementAtOrDefault(1));
-            }
-
-            return result;
+            return await GetCurrentSession().ConfigureAwait(false) != null;
         }
     }
 }

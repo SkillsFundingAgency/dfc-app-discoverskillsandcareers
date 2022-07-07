@@ -5,8 +5,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
     public interface IResultsService
     {
-        Task<GetResultsResponse> GetResults();
+        Task<GetResultsResponse> GetResults(bool updateCollection);
 
-        Task<GetResultsResponse> GetResultsByCategory(string jobCategory);
+        Task<GetResultsResponse> GetResultsByCategory(string jobCategoryName);
     }
 }

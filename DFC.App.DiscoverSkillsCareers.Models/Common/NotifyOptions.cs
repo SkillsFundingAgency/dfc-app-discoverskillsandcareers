@@ -2,10 +2,10 @@
 {
     public class NotifyOptions
     {
-        public string EmailTemplateId { get; set; }
+        public string? EmailTemplateId { get; set; }
 
-        public string SmsTemplateId { get; set; }
+        public string? SmsTemplateId { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
     }
 }

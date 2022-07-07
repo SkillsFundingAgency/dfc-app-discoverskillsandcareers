@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using DFC.Compui.Sessionstate;
+using Dfc.Session.Models;
+using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
@@ -6,8 +8,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     {
         public Task<string> GetSessionId();
 
-        public void CreateCookie(string sessionIdAndPartionKey);
+        public Task CreateDysacSession(string sessionId);
 
         public Task<bool> HasValidSession();
+
+        public Task<SessionStateModel<DfcUserSession>?> GetCurrentSession();
     }
 }

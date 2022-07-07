@@ -32,17 +32,14 @@
         "aspSize": {
             "value": "__aspSize__"
         },
-        "sharedAppServicePlanName": {
-            "value": "__sharedAppServicePlanName__"
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "value": "__appSharedResourceGroup__"
-        },
         "JobProfileOverViewUrl": {
             "value": "__JobProfileOverView__"
         },
         "CdnUrl": {
             "value": "__CdnUrl__"
+        },
+        "NotifyApiKey": {
+            "value": "__NotifyApiKey__"
         },
         "NotifyEmailTemplateId": {
             "value": "__NotifyEmailTemplateId__"
@@ -58,6 +55,33 @@
         },
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
+        },
+        "DysacUrl": {
+            "value": "__DysacUrl__"
+        },
+        "DysacUrl2": {
+            "value": "__DysacUrl2__"
+        },
+        "jobProfUrl": {
+            "value": "__jobProfUrl__"
+        },
+        "cosmosDbName": {
+            "value": "__appSharedCosmosDBName__"
+        },
+        "cosmosDbKey": {
+            "value": "__appSharedCosmosPrimaryKey__"
+        },
+        "CosmosDbResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "dysacAppDatabaseNeedsCreation": {
+            "value": __CosmosDbDatabaseDoesntExist__
+        },
+        "dysacAppDatabaseThroughput": {
+            "value": __dysacAppDatabaseThroughput__
+        },
+        "SubscriptionApiEndpointUrl": {
+            "value": "__SubscriptionApiEndpointUrl__"
         }
     }
 }

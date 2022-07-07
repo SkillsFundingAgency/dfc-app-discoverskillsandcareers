@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var responseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+                var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
 
                 return View(responseViewModel);
             }
@@ -44,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             else
             {
                 ModelState.AddModelError("ReferenceCode", "The reference could not be found");
-                var responseViewModel = new HomeIndexResponseViewModel() { ReferenceCode = viewModel.ReferenceCode };
+                var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
                 ViewData["Title"] = "Error";
                 return View(responseViewModel);
             }

@@ -1,0 +1,1561 @@
+{
+  "partitionKey": "session4",
+  "id": "996w9e3394m8m9",
+  "languageCode": "en",
+  "salt": "ncs",
+  "assessmentState": {
+    "questionSetVersion": "short-201901-23",
+    "currentQuestion": 40,
+    "maxQuestions": 40,
+    "recordedAnswers": [
+      {
+        "questionId": "short-201901-23-1",
+        "questionNumber": 1,
+        "questionText": "I am comfortable telling people what they need to do.",
+        "traitCode": "LEADER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:09:21.6285695Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-2",
+        "questionNumber": 2,
+        "questionText": "I make decisions quickly",
+        "traitCode": "LEADER",
+        "selectedOption": 1,
+        "answeredDt": "2020-04-06T13:09:24.8055002Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-3",
+        "questionNumber": 3,
+        "questionText": "I like to take control of situations",
+        "traitCode": "LEADER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:09:27.007218Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-4",
+        "questionNumber": 4,
+        "questionText": "I prefer to follow what other people are doing",
+        "traitCode": "LEADER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:09:29.6557907Z",
+        "isNegative": true,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-5",
+        "questionNumber": 5,
+        "questionText": "I like taking responsibility for other people",
+        "traitCode": "LEADER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:09:32.5806844Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-6",
+        "questionNumber": 6,
+        "questionText": "I set myself targets when I have things to do, and usually meet them",
+        "traitCode": "DRIVER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:09:35.0024984Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-7",
+        "questionNumber": 7,
+        "questionText": "I like to see things through to the end",
+        "traitCode": "DRIVER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:09:37.3183319Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-8",
+        "questionNumber": 8,
+        "questionText": "I think I am a competitive person",
+        "traitCode": "DRIVER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:09:39.7906769Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-9",
+        "questionNumber": 9,
+        "questionText": "Doing well in a career motivates me",
+        "traitCode": "DRIVER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:09:43.2887208Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-10",
+        "questionNumber": 10,
+        "questionText": "I set myself goals in life",
+        "traitCode": "DRIVER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:09:45.4019252Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-11",
+        "questionNumber": 11,
+        "questionText": "I am comfortable talking people around to my way of thinking",
+        "traitCode": "INFLUENCER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:09:47.9477951Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-12",
+        "questionNumber": 12,
+        "questionText": "I am good at coming to an agreement with other people",
+        "traitCode": "INFLUENCER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:09:50.6907767Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-13",
+        "questionNumber": 13,
+        "questionText": "I am comfortable talking in front of a group of people",
+        "traitCode": "INFLUENCER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:09:53.3307882Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-14",
+        "questionNumber": 14,
+        "questionText": "I like meeting new people",
+        "traitCode": "INFLUENCER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:09:55.5799654Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-15",
+        "questionNumber": 15,
+        "questionText": "I find it hard to understand other people's point of view",
+        "traitCode": "INFLUENCER",
+        "selectedOption": 1,
+        "answeredDt": "2020-04-06T13:09:57.9958048Z",
+        "isNegative": true,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-16",
+        "questionNumber": 16,
+        "questionText": "I like to help other people",
+        "traitCode": "HELPER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:00.0555874Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-17",
+        "questionNumber": 17,
+        "questionText": "I enjoy working with other people around me",
+        "traitCode": "HELPER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:01.8359332Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-18",
+        "questionNumber": 18,
+        "questionText": "I want to make things better for people",
+        "traitCode": "HELPER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:04.3028949Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-19",
+        "questionNumber": 19,
+        "questionText": "I will get involved if I think I can help",
+        "traitCode": "HELPER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:05.7105168Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-20",
+        "questionNumber": 20,
+        "questionText": "I am comfortable hearing other people's problems",
+        "traitCode": "HELPER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:07.0034016Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-21",
+        "questionNumber": 21,
+        "questionText": "I like to work out complicated things",
+        "traitCode": "ANALYST",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:08.0669519Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-22",
+        "questionNumber": 22,
+        "questionText": "I like to get to the centre of the issue",
+        "traitCode": "ANALYST",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:09.3313615Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-23",
+        "questionNumber": 23,
+        "questionText": "I like working with facts",
+        "traitCode": "ANALYST",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:10.4872007Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-24",
+        "questionNumber": 24,
+        "questionText": "I like working with numbers",
+        "traitCode": "ANALYST",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:11.6781531Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-25",
+        "questionNumber": 25,
+        "questionText": "I enjoy learning new things",
+        "traitCode": "ANALYST",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:13.0184643Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-26",
+        "questionNumber": 26,
+        "questionText": "I enjoy coming up with new ways of doing things",
+        "traitCode": "CREATOR",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:15.7439285Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-27",
+        "questionNumber": 27,
+        "questionText": "I try to think differently to others",
+        "traitCode": "CREATOR",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:16.9227341Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-28",
+        "questionNumber": 28,
+        "questionText": "I like to use my imagination to create new things",
+        "traitCode": "CREATOR",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:18.088249Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-29",
+        "questionNumber": 29,
+        "questionText": "I like to try new things",
+        "traitCode": "CREATOR",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:19.3196276Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-30",
+        "questionNumber": 30,
+        "questionText": "I enjoy creative activities",
+        "traitCode": "CREATOR",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:20.4964344Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-31",
+        "questionNumber": 31,
+        "questionText": "I like to focus on details",
+        "traitCode": "ORGANISER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:21.7926982Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-32",
+        "questionNumber": 32,
+        "questionText": "I plan my day so I can use my time best",
+        "traitCode": "ORGANISER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:23.1546808Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-33",
+        "questionNumber": 33,
+        "questionText": "I like doing things in a careful order",
+        "traitCode": "ORGANISER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:24.4026394Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-34",
+        "questionNumber": 34,
+        "questionText": "I like to follow rules and processes",
+        "traitCode": "ORGANISER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:26.0466086Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-35",
+        "questionNumber": 35,
+        "questionText": "I feel restricted when I have to follow a routine",
+        "traitCode": "ORGANISER",
+        "selectedOption": 2,
+        "answeredDt": "2020-04-06T13:10:27.3416921Z",
+        "isNegative": true,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-36",
+        "questionNumber": 36,
+        "questionText": "I like to see the results of the work I do",
+        "traitCode": "DOER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:10:28.5395789Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-37",
+        "questionNumber": 37,
+        "questionText": "I like to get involved in making things",
+        "traitCode": "DOER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:29.8815135Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-38",
+        "questionNumber": 38,
+        "questionText": "I enjoy getting involved in practical tasks",
+        "traitCode": "DOER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:10:31.4282174Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-39",
+        "questionNumber": 39,
+        "questionText": "I like working with my hands or tools",
+        "traitCode": "DOER",
+        "selectedOption": 3,
+        "answeredDt": "2020-04-06T13:18:40.2945705Z",
+        "isNegative": false,
+        "questionSetVersion": "short-201901-23"
+      },
+      {
+        "questionId": "short-201901-23-40",
+        "questionNumber": 40,
+        "questionText": "I enjoy planning a task more than actually doing it",
+        "traitCode": "DOER",
+        "selectedOption": 4,
+        "answeredDt": "2020-04-06T13:35:16.8304098Z",
+        "isNegative": true,
+        "questionSetVersion": "short-201901-23"
+      }
+    ],
+    "completeDt": "2020-04-06T13:35:16.8304495Z"
+  },
+  "filteredAssessmentState": {
+    "jobCategories": [
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Stress Tolerance",
+            "QuestionId": "filtered-default-67-47",
+            "QuestionNumber": 3
+          }
+        ],
+        "jobCategoryName": "Sports and leisure",
+        "jobCategoryCode": "SAL",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Cooperation",
+            "QuestionId": "filtered-default-67-8",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Adaptability/Flexibility",
+            "QuestionId": "filtered-default-67-3",
+            "QuestionNumber": 3
+          },
+          {
+            "Skill": "Initiative",
+            "QuestionId": "filtered-default-67-15",
+            "QuestionNumber": 4
+          },
+          {
+            "Skill": "Reading Comprehension",
+            "QuestionId": "filtered-default-67-85",
+            "QuestionNumber": 5
+          }
+        ],
+        "jobCategoryName": "Creative and media",
+        "jobCategoryCode": "CAM",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Cooperation",
+            "QuestionId": "filtered-default-67-8",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Initiative",
+            "QuestionId": "filtered-default-67-15",
+            "QuestionNumber": 3
+          },
+          {
+            "Skill": "Fine Manipulative Abilities",
+            "QuestionId": "filtered-default-67-12",
+            "QuestionNumber": 4
+          }
+        ],
+        "jobCategoryName": "Construction and trades",
+        "jobCategoryCode": "CAT",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Analytical Thinking",
+            "QuestionId": "filtered-default-67-4",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Reading Comprehension",
+            "QuestionId": "filtered-default-67-85",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Initiative",
+            "QuestionId": "filtered-default-67-15",
+            "QuestionNumber": 3
+          }
+        ],
+        "jobCategoryName": "Computing, technology and digital",
+        "jobCategoryCode": "CTAD",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Stress Tolerance",
+            "QuestionId": "filtered-default-67-47",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 3
+          }
+        ],
+        "jobCategoryName": "Emergency and uniform services",
+        "jobCategoryCode": "EAUS",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Cooperation",
+            "QuestionId": "filtered-default-67-8",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 2
+          }
+        ],
+        "jobCategoryName": "Hospitality and food",
+        "jobCategoryCode": "HAF",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Cooperation",
+            "QuestionId": "filtered-default-67-8",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 3
+          },
+          {
+            "Skill": "Stress Tolerance",
+            "QuestionId": "filtered-default-67-47",
+            "QuestionNumber": 4
+          }
+        ],
+        "jobCategoryName": "Retail and sales",
+        "jobCategoryCode": "RAS",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Cooperation",
+            "QuestionId": "filtered-default-67-8",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 3
+          }
+        ],
+        "jobCategoryName": "Animal care",
+        "jobCategoryCode": "AC",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Concern for Others",
+            "QuestionId": "filtered-default-67-6",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 2
+          },
+          {
+            "Skill": "Cooperation",
+            "QuestionId": "filtered-default-67-8",
+            "QuestionNumber": 3
+          },
+          {
+            "Skill": "Reading Comprehension",
+            "QuestionId": "filtered-default-67-85",
+            "QuestionNumber": 4
+          }
+        ],
+        "jobCategoryName": "Healthcare",
+        "jobCategoryCode": "HEALT",
+        "currentQuestion": 1
+      },
+      {
+        "questionSetVersion": "filtered-default-67",
+        "questions": [
+          {
+            "Skill": "Self Control",
+            "QuestionId": "filtered-default-67-42",
+            "QuestionNumber": 1
+          },
+          {
+            "Skill": "Speaking, Verbal Abilities",
+            "QuestionId": "filtered-default-67-46",
+            "QuestionNumber": 2
+          }
+        ],
+        "jobCategoryName": "Beauty and wellbeing",
+        "jobCategoryCode": "BAW",
+        "currentQuestion": 1
+      }
+    ],
+    "recordedAnswers": [
+      {
+        "questionId": "filtered-default-67-42",
+        "questionNumber": 42,
+        "questionText": "Are you able to control your emotions even in difficult situations?",
+        "traitCode": "self control",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-06T13:54:56.2414158Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      },
+      {
+        "questionId": "filtered-default-67-47",
+        "questionNumber": 47,
+        "questionText": "Do you think you are good at staying calm under pressure?",
+        "traitCode": "stress tolerance",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-06T13:55:09.3478143Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      },
+      {
+        "questionId": "filtered-default-67-46",
+        "questionNumber": 46,
+        "questionText": "Are you comfortable talking through things with other people so that they understand?",
+        "traitCode": "speaking, verbal abilities",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-06T14:07:01.168591Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      },
+      {
+        "questionId": "filtered-default-67-8",
+        "questionNumber": 8,
+        "questionText": "Are you comfortable working in a team with other people?",
+        "traitCode": "cooperation",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-06T14:07:04.051205Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      },
+      {
+        "questionId": "filtered-default-67-3",
+        "questionNumber": 3,
+        "questionText": "Are you comfortable doing a variety of tasks in a job and open to things changing?",
+        "traitCode": "adaptability/flexibility",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-06T14:56:41.5857272Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      },
+      {
+        "questionId": "filtered-default-67-15",
+        "questionNumber": 15,
+        "questionText": "Are you good at thinking of new ways to do something without being told?",
+        "traitCode": "initiative",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-06T15:08:33.132534Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      },
+      {
+        "questionId": "filtered-default-67-85",
+        "questionNumber": 85,
+        "questionText": "Are you able to read well?",
+        "traitCode": "reading comprehension",
+        "selectedOption": 5,
+        "answeredDt": "2020-04-14T06:51:26.8671703Z",
+        "isNegative": false,
+        "questionSetVersion": "filtered-default-67"
+      }
+    ],
+    "currentFilterAssessmentCode": "CAM",
+    "completeDt": "2020-04-06T13:55:09.3478274Z"
+  },
+  "resultData": {
+    "traits": [
+      {
+        "traitCode": "HELPER",
+        "traitName": "Helper",
+        "traitText": "you enjoy helping and listening to other people",
+        "totalScore": 7
+      },
+      {
+        "traitCode": "CREATOR",
+        "traitName": "Creator",
+        "traitText": "you are a creative person and enjoy coming up with new ways of doing things",
+        "totalScore": 7
+      },
+      {
+        "traitCode": "DRIVER",
+        "traitName": "Driver",
+        "traitText": "you are motivated, set yourself personal goals and are comfortable competing with other people",
+        "totalScore": 6
+      },
+      {
+        "traitCode": "ANALYST",
+        "traitName": "Analyst",
+        "traitText": "you like dealing with complicated problems or working with numbers",
+        "totalScore": 6
+      },
+      {
+        "traitCode": "INFLUENCER",
+        "traitName": "Influencer",
+        "traitText": "you are sociable and find it easy to understand people",
+        "totalScore": 5
+      },
+      {
+        "traitCode": "DOER",
+        "traitName": "Doer",
+        "traitText": "you are a practical person and enjoy getting things done",
+        "totalScore": 3
+      },
+      {
+        "traitCode": "LEADER",
+        "traitName": "Leader",
+        "traitText": "you like to lead other people and are good at taking control of situations",
+        "totalScore": 2
+      }
+    ],
+    "jobFamilies": [
+      {
+        "jobFamilyCode": "SAL",
+        "jobFamilyName": "Sports and leisure",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "sports-and-leisure",
+        "traitsTotal": 19,
+        "total": 19,
+        "normalizedTotal": 6.33333333333333,
+        "TraitValues": [
+          {
+            "traitCode": "CREATOR",
+            "total": 7,
+            "normalizedTotal": 2.33333333333333
+          },
+          {
+            "traitCode": "ANALYST",
+            "total": 6,
+            "normalizedTotal": 2
+          },
+          {
+            "traitCode": "DRIVER",
+            "total": 6,
+            "normalizedTotal": 2
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Sports and leisure",
+          "createdDt": "2020-04-14T06:51:26.9357008Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 3,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-42",
+              "questionNumber": 42,
+              "questionText": "Are you able to control your emotions even in difficult situations?",
+              "traitCode": "self control",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:54:56.2414158Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-47",
+              "questionNumber": 47,
+              "questionText": "Do you think you are good at staying calm under pressure?",
+              "traitCode": "stress tolerance",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:55:09.3478143Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Athlete",
+            "Betting shop cashier",
+            "Bingo caller",
+            "Bookmaker",
+            "Boxer",
+            "Cricketer",
+            "Croupier",
+            "Diver",
+            "Events manager",
+            "Football referee",
+            "Footballer",
+            "Hotel room attendant",
+            "Jockey",
+            "Leisure centre assistant",
+            "Leisure centre manager",
+            "Racehorse trainer",
+            "Sport and exercise psychologist",
+            "Sports commentator",
+            "Sports professional",
+            "Tourist information centre assistant",
+            "Visitor attraction general manager"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": true
+      },
+      {
+        "jobFamilyCode": "CAM",
+        "jobFamilyName": "Creative and media",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "creative-and-media",
+        "traitsTotal": 16,
+        "total": 16,
+        "normalizedTotal": 5.33333333333333,
+        "TraitValues": [
+          {
+            "traitCode": "CREATOR",
+            "total": 7,
+            "normalizedTotal": 2.33333333333333
+          },
+          {
+            "traitCode": "DOER",
+            "total": 3,
+            "normalizedTotal": 1
+          },
+          {
+            "traitCode": "ANALYST",
+            "total": 6,
+            "normalizedTotal": 2
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Creative and media",
+          "createdDt": "2020-04-14T06:51:26.9748735Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 5,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-8",
+              "questionNumber": 8,
+              "questionText": "Are you comfortable working in a team with other people?",
+              "traitCode": "cooperation",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:04.051205Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-3",
+              "questionNumber": 3,
+              "questionText": "Are you comfortable doing a variety of tasks in a job and open to things changing?",
+              "traitCode": "adaptability/flexibility",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:56:41.5857272Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-15",
+              "questionNumber": 15,
+              "questionText": "Are you good at thinking of new ways to do something without being told?",
+              "traitCode": "initiative",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T15:08:33.132534Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-85",
+              "questionNumber": 85,
+              "questionText": "Are you able to read well?",
+              "traitCode": "reading comprehension",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-14T06:51:26.8671703Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Actor",
+            "Advertising copywriter",
+            "Animator",
+            "Art editor",
+            "Circus performer",
+            "Commissioning editor",
+            "Copy editor",
+            "Editorial assistant",
+            "Entertainer",
+            "Market researcher",
+            "Newspaper or magazine editor",
+            "Public relations director",
+            "Stunt performer",
+            "Sub-editor",
+            "Video editor",
+            "Web content editor"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": true
+      },
+      {
+        "jobFamilyCode": "CAT",
+        "jobFamilyName": "Construction and trades",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "construction-and-trades",
+        "traitsTotal": 16,
+        "total": 16,
+        "normalizedTotal": 5.33333333333333,
+        "TraitValues": [
+          {
+            "traitCode": "CREATOR",
+            "total": 7,
+            "normalizedTotal": 2.33333333333333
+          },
+          {
+            "traitCode": "DOER",
+            "total": 3,
+            "normalizedTotal": 1
+          },
+          {
+            "traitCode": "ANALYST",
+            "total": 6,
+            "normalizedTotal": 2
+          }
+        ],
+        "filterAssessment": null,
+        "totalQuestions": 1,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "CTAD",
+        "jobFamilyName": "Computing, technology and digital",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "computing-technology-and-digital",
+        "traitsTotal": 13,
+        "total": 13,
+        "normalizedTotal": 6.5,
+        "TraitValues": [
+          {
+            "traitCode": "CREATOR",
+            "total": 7,
+            "normalizedTotal": 3.5
+          },
+          {
+            "traitCode": "ANALYST",
+            "total": 6,
+            "normalizedTotal": 3
+          }
+        ],
+        "filterAssessment": null,
+        "totalQuestions": 1,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "EAUS",
+        "jobFamilyName": "Emergency and uniform services",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "emergency-and-uniform-services",
+        "traitsTotal": 12,
+        "total": 12,
+        "normalizedTotal": 4,
+        "TraitValues": [
+          {
+            "traitCode": "HELPER",
+            "total": 7,
+            "normalizedTotal": 2.33333333333333
+          },
+          {
+            "traitCode": "DOER",
+            "total": 3,
+            "normalizedTotal": 1
+          },
+          {
+            "traitCode": "LEADER",
+            "total": 2,
+            "normalizedTotal": 0.666666666666667
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Emergency and uniform services",
+          "createdDt": "2020-04-14T06:51:27.0197068Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 3,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-42",
+              "questionNumber": 42,
+              "questionText": "Are you able to control your emotions even in difficult situations?",
+              "traitCode": "self control",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:54:56.2414158Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-47",
+              "questionNumber": 47,
+              "questionText": "Do you think you are good at staying calm under pressure?",
+              "traitCode": "stress tolerance",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:55:09.3478143Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Aid worker",
+            "Army officer",
+            "Bodyguard",
+            "Bomb disposal technician",
+            "Border Force officer",
+            "Chief inspector",
+            "Civil enforcement officer",
+            "Diver",
+            "Dog handler",
+            "Door supervisor",
+            "Fingerprint officer",
+            "Immigration officer",
+            "Neighbourhood warden",
+            "Paramedic",
+            "Police community support officer",
+            "Police officer",
+            "Prison governor",
+            "Prison officer",
+            "Private investigator",
+            "RAF airman or airwoman",
+            "RAF non-commissioned aircrew",
+            "RAF officer",
+            "Royal Marines commando",
+            "Royal Marines officer",
+            "Royal Navy officer",
+            "Royal Navy rating",
+            "Scenes of crime officer",
+            "Security manager",
+            "Security officer",
+            "Security Service personnel",
+            "Soldier",
+            "Store detective"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "HAF",
+        "jobFamilyName": "Hospitality and food",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "hospitality-and-food",
+        "traitsTotal": 12,
+        "total": 12,
+        "normalizedTotal": 6,
+        "TraitValues": [
+          {
+            "traitCode": "HELPER",
+            "total": 7,
+            "normalizedTotal": 3.5
+          },
+          {
+            "traitCode": "INFLUENCER",
+            "total": 5,
+            "normalizedTotal": 2.5
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Hospitality and food",
+          "createdDt": "2020-04-14T06:51:27.0733872Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 2,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-8",
+              "questionNumber": 8,
+              "questionText": "Are you comfortable working in a team with other people?",
+              "traitCode": "cooperation",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:04.051205Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Baker",
+            "Bar person",
+            "Barista",
+            "Butcher",
+            "Butler",
+            "Cake decorator",
+            "Catering manager",
+            "Chef",
+            "Counter service assistant",
+            "Fish frier",
+            "Fishmonger",
+            "Food manufacturing inspector",
+            "Head chef",
+            "Kitchen assistant",
+            "Kitchen porter",
+            "Publican",
+            "Restaurant manager",
+            "School lunchtime supervisor",
+            "Street food trader",
+            "Wedding planner"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "RAS",
+        "jobFamilyName": "Retail and sales",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "retail-and-sales",
+        "traitsTotal": 12,
+        "total": 12,
+        "normalizedTotal": 6,
+        "TraitValues": [
+          {
+            "traitCode": "HELPER",
+            "total": 7,
+            "normalizedTotal": 3.5
+          },
+          {
+            "traitCode": "INFLUENCER",
+            "total": 5,
+            "normalizedTotal": 2.5
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Retail and sales",
+          "createdDt": "2020-04-14T06:51:27.1137214Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 4,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-8",
+              "questionNumber": 8,
+              "questionText": "Are you comfortable working in a team with other people?",
+              "traitCode": "cooperation",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:04.051205Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-42",
+              "questionNumber": 42,
+              "questionText": "Are you able to control your emotions even in difficult situations?",
+              "traitCode": "self control",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:54:56.2414158Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-47",
+              "questionNumber": 47,
+              "questionText": "Do you think you are good at staying calm under pressure?",
+              "traitCode": "stress tolerance",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:55:09.3478143Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Airline customer service agent",
+            "Airport information assistant",
+            "Art valuer",
+            "Bar person",
+            "Barista",
+            "Betting shop cashier",
+            "Bookmaker",
+            "Builders' merchant",
+            "Butcher",
+            "Cabin crew",
+            "Call centre operator",
+            "Car rental agent",
+            "Checkout operator",
+            "Conference and exhibition manager",
+            "Construction plant hire adviser",
+            "Customer service assistant",
+            "Customer services manager",
+            "Emergency medical dispatcher",
+            "Events manager",
+            "Franchise owner",
+            "Leisure centre assistant",
+            "Petrol station sales assistant",
+            "Pharmacist",
+            "Pharmacy assistant",
+            "Pharmacy technician",
+            "Retail manager",
+            "Shelf filler",
+            "Shopkeeper",
+            "Stock control assistant",
+            "Telephonist",
+            "Tourist information centre assistant",
+            "Train station worker"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "AC",
+        "jobFamilyName": "Animal care",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "animal-care",
+        "traitsTotal": 10,
+        "total": 10,
+        "normalizedTotal": 5,
+        "TraitValues": [
+          {
+            "traitCode": "HELPER",
+            "total": 7,
+            "normalizedTotal": 3.5
+          },
+          {
+            "traitCode": "DOER",
+            "total": 3,
+            "normalizedTotal": 1.5
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Animal care",
+          "createdDt": "2020-04-14T06:51:27.152956Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 3,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-42",
+              "questionNumber": 42,
+              "questionText": "Are you able to control your emotions even in difficult situations?",
+              "traitCode": "self control",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:54:56.2414158Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-8",
+              "questionNumber": 8,
+              "questionText": "Are you comfortable working in a team with other people?",
+              "traitCode": "cooperation",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:04.051205Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Agricultural inspector",
+            "Animal care worker",
+            "Assistance dog trainer",
+            "Dog groomer",
+            "Dog handler",
+            "Fish farmer",
+            "Horse groom",
+            "Kennel worker",
+            "Pet behaviour counsellor",
+            "Pet shop assistant",
+            "Racehorse trainer",
+            "Riding holiday leader",
+            "RSPCA inspector",
+            "Veterinary nurse",
+            "Zookeeper"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "HEALT",
+        "jobFamilyName": "Healthcare",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "healthcare",
+        "traitsTotal": 10,
+        "total": 10,
+        "normalizedTotal": 5,
+        "TraitValues": [
+          {
+            "traitCode": "HELPER",
+            "total": 7,
+            "normalizedTotal": 3.5
+          },
+          {
+            "traitCode": "DOER",
+            "total": 3,
+            "normalizedTotal": 1.5
+          }
+        ],
+        "filterAssessment": null,
+        "totalQuestions": 1,
+        "resultsShown": false
+      },
+      {
+        "jobFamilyCode": "BAW",
+        "jobFamilyName": "Beauty and wellbeing",
+        "jobFamilyText": "",
+        "jobFamilyUrl": "beauty-and-wellbeing",
+        "traitsTotal": 9,
+        "total": 9,
+        "normalizedTotal": 4.5,
+        "TraitValues": [
+          {
+            "traitCode": "DOER",
+            "total": 3,
+            "normalizedTotal": 1.5
+          },
+          {
+            "traitCode": "DRIVER",
+            "total": 6,
+            "normalizedTotal": 3
+          }
+        ],
+        "filterAssessment": {
+          "jobFamilyName": "Beauty and wellbeing",
+          "createdDt": "2020-04-14T06:51:27.1864089Z",
+          "questionSetVersion": "filtered-default-67",
+          "recordedAnswerCount": 2,
+          "maxQuestions": 5,
+          "recordedAnswers": [
+            {
+              "questionId": "filtered-default-67-42",
+              "questionNumber": 42,
+              "questionText": "Are you able to control your emotions even in difficult situations?",
+              "traitCode": "self control",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T13:54:56.2414158Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            },
+            {
+              "questionId": "filtered-default-67-46",
+              "questionNumber": 46,
+              "questionText": "Are you comfortable talking through things with other people so that they understand?",
+              "traitCode": "speaking, verbal abilities",
+              "selectedOption": 5,
+              "answeredDt": "2020-04-06T14:07:01.168591Z",
+              "isNegative": false,
+              "questionSetVersion": "filtered-default-67"
+            }
+          ],
+          "suggestedJobProfiles": [
+            "Acupuncturist",
+            "Alexander Technique teacher",
+            "Aromatherapist",
+            "Art therapist",
+            "Barber",
+            "Beauty consultant",
+            "Beauty therapist",
+            "Body piercer",
+            "Chiropractor",
+            "Colon hydrotherapist",
+            "Colour therapist",
+            "Counsellor",
+            "Dance movement psychotherapist",
+            "Dramatherapist",
+            "Hairdresser",
+            "Health play specialist",
+            "Massage therapist",
+            "Music therapist",
+            "Nail technician",
+            "Nutritional therapist",
+            "Osteopath",
+            "Pilates teacher",
+            "Reflexologist",
+            "Reiki healer"
+          ],
+          "whatYouToldUs": []
+        },
+        "totalQuestions": 0,
+        "resultsShown": true
+      }
+    ],
+    "traitsscores": [
+      {
+        "traitCode": "HELPER",
+        "traitName": "Helper",
+        "traitText": "you enjoy helping and listening to other people",
+        "totalScore": 7
+      },
+      {
+        "traitCode": "CREATOR",
+        "traitName": "Creator",
+        "traitText": "you are a creative person and enjoy coming up with new ways of doing things",
+        "totalScore": 7
+      },
+      {
+        "traitCode": "DRIVER",
+        "traitName": "Driver",
+        "traitText": "you are motivated, set yourself personal goals and are comfortable competing with other people",
+        "totalScore": 6
+      },
+      {
+        "traitCode": "ANALYST",
+        "traitName": "Analyst",
+        "traitText": "you like dealing with complicated problems or working with numbers",
+        "totalScore": 6
+      },
+      {
+        "traitCode": "INFLUENCER",
+        "traitName": "Influencer",
+        "traitText": "you are sociable and find it easy to understand people",
+        "totalScore": 5
+      },
+      {
+        "traitCode": "DOER",
+        "traitName": "Doer",
+        "traitText": "you are a practical person and enjoy getting things done",
+        "totalScore": 3
+      },
+      {
+        "traitCode": "LEADER",
+        "traitName": "Leader",
+        "traitText": "you like to lead other people and are good at taking control of situations",
+        "totalScore": 2
+      },
+      {
+        "traitCode": "ORGANISER",
+        "traitName": "Organiser",
+        "traitText": "you like to plan things and are well organised",
+        "totalScore": 0
+      }
+    ]
+  },
+  "startedDt": "2020-04-06T13:09:18.1873021+00:00",
+  "assessmentType": "short",
+  "lastUpdatedDt": "2020-04-30T11:57:48.4848806Z",
+  "completeDt": "2020-04-06T13:55:09.3478274Z",
+  "_rid": "RYgPALF7vUK8OgAAAAAAAA==",
+  "_self": "dbs/RYgPAA==/colls/RYgPALF7vUI=/docs/RYgPALF7vUK8OgAAAAAAAA==/",
+  "_etag": "\"7900b8cf-0000-0d00-0000-5eaabd3c0000\"",
+  "_attachments": "attachments/",
+  "_ts": 1588247868
+}

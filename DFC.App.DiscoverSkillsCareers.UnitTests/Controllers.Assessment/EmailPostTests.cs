@@ -6,6 +6,7 @@ using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
@@ -19,7 +20,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             A.CallTo(() => Session.HasValidSession()).Returns(true);
             AssessmentController.ModelState.AddModelError("Key1", "Some Error");
 
-            var actionResponse = await AssessmentController.Email(assessmentEmailPostRequest).ConfigureAwait(false);
+            var controller = AssessmentController;
+            controller.ObjectValidator = A.Fake<IObjectModelValidator>();
+            A.CallTo(() => controller.ObjectValidator.Validate(
+                A<ActionContext>.Ignored,
+                A<ValidationStateDictionary>.Ignored,
+                A<string>.Ignored,
+                A<object>.Ignored)).DoesNothing();
+
+            var actionResponse = await controller.Email(assessmentEmailPostRequest).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }
@@ -43,7 +52,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var viewModel = new AssessmentEmailPostRequest() { Email = "someemail@gmail.com" };
             A.CallTo(() => ApiService.SendEmail(A<string>.Ignored, viewModel.Email)).Returns(sendEmailResponse);
 
-            var actionResponse = await AssessmentController.Email(viewModel).ConfigureAwait(false);
+            var controller = AssessmentController;
+            controller.ObjectValidator = A.Fake<IObjectModelValidator>();
+            A.CallTo(() => controller.ObjectValidator.Validate(
+                A<ActionContext>.Ignored,
+                A<ValidationStateDictionary>.Ignored,
+                A<string>.Ignored,
+                A<object>.Ignored)).DoesNothing();
+
+            var actionResponse = await controller.Email(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }
@@ -59,7 +76,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var viewModel = new AssessmentEmailPostRequest() { Email = "someemail@gmail.com" };
             A.CallTo(() => ApiService.SendEmail(A<string>.Ignored, viewModel.Email)).Returns(sendEmailResponse);
 
-            var actionResponse = await AssessmentController.Email(viewModel).ConfigureAwait(false);
+            var controller = AssessmentController;
+            controller.ObjectValidator = A.Fake<IObjectModelValidator>();
+            A.CallTo(() => controller.ObjectValidator.Validate(
+                A<ActionContext>.Ignored,
+                A<ValidationStateDictionary>.Ignored,
+                A<string>.Ignored,
+                A<object>.Ignored)).DoesNothing();
+
+            var actionResponse = await controller.Email(viewModel).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;

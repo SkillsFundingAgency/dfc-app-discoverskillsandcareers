@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
@@ -9,6 +9,7 @@ using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,6 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly string testCategory;
         private readonly ILogService logService;
+        private readonly IDocumentStore documentStore;
 
         public HeroBannerTests()
         {
@@ -32,8 +34,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             testCategory = "testCategory";
             logService = A.Fake<ILogService>();
+            documentStore = A.Fake<IDocumentStore>();
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache);
         }
 
         [Fact]
@@ -53,7 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 
         [Theory]
         [InlineData(null, true)]
-        [InlineData("ACategory", false)]
+        [InlineData("ACategory", true)]
         public async Task ShowsHeroBanner(string category, bool expectedCategory)
         {
             // Setup

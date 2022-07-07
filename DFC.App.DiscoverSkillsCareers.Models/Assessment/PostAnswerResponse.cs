@@ -9,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public bool IsComplete { get; set; }
 
-        public string JobCategorySafeUrl { get; set; }
+        public string? JobCategorySafeUrl { get; set; }
 
         public bool IsFilterAssessment { get; set; }
 

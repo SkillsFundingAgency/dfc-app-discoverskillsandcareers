@@ -1,12 +1,17 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.MappingProfiles;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Common;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,17 +26,23 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly string testCategory;
         private readonly ILogService logService;
+        private readonly IDocumentStore documentStore;
 
         public RolesTests()
         {
-            mapper = A.Fake<IMapper>();
+            var profile = new ResultProfileOverviewsProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            mapper = new Mapper(configuration);
+
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
-            testCategory = "testCategory";
+            testCategory = "testcategory";
             logService = A.Fake<ILogService>();
+            documentStore = A.Fake<IDocumentStore>();
+            var fakeMemoryCache = A.Fake<IMemoryCache>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache);
         }
 
         [Fact]
@@ -65,8 +76,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
 
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>(A<string>.Ignored)).Returns(new List<DysacJobProfileOverviewContentModel>() { new DysacJobProfileOverviewContentModel { Html = "<h1>Chemist</h1>", Title = "Chemist" } });
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => resultsService.GetResultsByCategory(A<string>.Ignored)).Returns(new GetResultsResponse { JobCategories = new List<JobCategoryResult> { new JobCategoryResult { JobFamilyName = "testcategory", JobFamilyUrl = "testcategory", JobProfiles = new List<JobProfileResult>() { new JobProfileResult { Title = "Chemist" } } } } });
 
             var actionResponse = await controller.Roles(testCategory).ConfigureAwait(false);
 

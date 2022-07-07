@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -15,24 +16,28 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class AssessmentController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IAssessmentService apiService;
+        private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
-        public AssessmentController(ILogService logService, IMapper mapper, IAssessmentService apiService, 
-            ISessionService sessionService, NotifyOptions notifyOptions)
-            : base(sessionService)
+        public AssessmentController(
+            ILogService logService,
+            IMapper mapper,
+            IAssessmentService assessmentService,
+            ISessionService sessionService,
+            NotifyOptions notifyOptions)
+                : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
-            this.apiService = apiService;
+            this.assessmentService = assessmentService;
             this.notifyOptions = notifyOptions;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(QuestionGetRequestViewModel requestViewModel)
         {
-            this.logService.LogInformation($"{nameof(this.Index)} started");
+            logService.LogInformation($"{nameof(this.Index)} started");
 
             if (requestViewModel == null)
             {
@@ -46,14 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var questionResponse = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
-
             if (questionResponse == null)
-            {
-                return BadRequest();
-            }
-
-            var assessment = await apiService.GetAssessment().ConfigureAwait(false);
-            if (assessment == null)
             {
                 return BadRequest();
             }
@@ -68,13 +66,28 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectTo("results");
             }
 
+            var assessment = await assessmentService.GetAssessment().ConfigureAwait(false);
+
             if (requestViewModel.QuestionNumber > assessment.CurrentQuestionNumber)
             {
                 return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
             }
 
+            var hasGoneBackOneOrMoreQuestions = requestViewModel.QuestionNumber + 1 <= assessment.CurrentQuestionNumber;
+
+            if (hasGoneBackOneOrMoreQuestions)
+            {
+                assessment.CurrentQuestionNumber = requestViewModel.QuestionNumber;
+
+                var completed = (int)((assessment.CurrentQuestionNumber - 1) / (decimal)assessment.MaxQuestionsCount * 100M);
+                assessment.PercentComplete = completed;
+                questionResponse.PercentComplete = assessment.PercentComplete;
+
+                await assessmentService.UpdateQuestionNumber(assessment.CurrentQuestionNumber).ConfigureAwait(false);
+            }
+
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
-            this.logService.LogInformation($"{nameof(this.Index)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.Index)} generated the model and ready to pass to the view");
 
             return View(responseViewModel);
         }
@@ -106,7 +119,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return View(result);
             }
 
-            var answerResponse = await apiService.AnswerQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber, requestViewModel.QuestionNumber, requestViewModel.Answer).ConfigureAwait(false);
+            var answerResponse = await assessmentService.AnswerQuestion(
+                requestViewModel.AssessmentType,
+                requestViewModel.QuestionNumber,
+                requestViewModel.QuestionNumber,
+                requestViewModel.Answer).ConfigureAwait(false);
 
             if (answerResponse.IsSuccess)
             {
@@ -114,40 +131,35 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 {
                     return RedirectTo("assessment/complete");
                 }
-                else
-                {
-                    var assessmentTypeName = GetAssessmentTypeName(requestViewModel.AssessmentType);
-                    return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
-                }
+
+                var assessmentTypeName = GetAssessmentTypeName(requestViewModel.AssessmentType);
+                return RedirectTo($"assessment/{assessmentTypeName}/{answerResponse.NextQuestionNumber}");
             }
-            else
-            {
-                ModelState.AddModelError("Answer", "Failed to record answer");
-                return View(result);
-            }
+
+            ModelState.AddModelError("Answer", "Failed to record answer");
+            return View(result);
         }
 
+        [HttpGet]
         [HttpPost]
         public async Task<IActionResult> New(string assessmentType)
         {
-            this.logService.LogInformation($"{nameof(this.New)} started");
+            logService.LogInformation($"{nameof(New)} started");
 
             if (string.IsNullOrEmpty(assessmentType))
             {
                 return BadRequest();
             }
 
-            await apiService.NewSession(assessmentType).ConfigureAwait(false);
-
-            this.logService.LogInformation($"{nameof(this.New)} generated the model and ready to pass to the view");
+            await assessmentService.NewSession(assessmentType).ConfigureAwait(false);
+            logService.LogInformation($"{nameof(New)} generated the model and ready to pass to the view");
 
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
         }
 
         public IActionResult Complete()
         {
-            this.logService.LogInformation($"{nameof(this.Complete)} generated the model and ready to pass to the view");
-
+            logService.LogInformation($"{nameof(Complete)} generated the model and ready to pass to the view");
             return View();
         }
 
@@ -160,8 +172,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var assessment = await GetAssessment().ConfigureAwait(false);
-
-            this.logService.LogInformation($"{nameof(this.Return)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(Return)} generated the model and ready to pass to the view");
 
             return NavigateTo(assessment);
         }
@@ -174,7 +185,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            this.logService.LogInformation($"{nameof(this.Save)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.Save)} generated the model and ready to pass to the view");
             return View();
         }
 
@@ -195,14 +206,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 return RedirectTo("assessment/email");
             }
-            else if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Reference)
+
+            if (viewModel.AssessmentReturnTypeId == AssessmentReturnType.Reference)
             {
                 return RedirectTo("assessment/reference");
             }
-            else
-            {
-                return View();
-            }
+
+            return View();
         }
 
         public async Task<IActionResult> Email()
@@ -213,11 +223,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
-            var viewReponse = new AssessmentEmailPostRequest();
+            var viewResponse = new AssessmentEmailPostRequest();
 
-            this.logService.LogInformation($"{nameof(this.Email)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.Email)} generated the model and ready to pass to the view");
 
-            return View(viewReponse);
+            return View(viewResponse);
         }
 
         [HttpPost]
@@ -228,33 +238,39 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return BadRequest();
             }
 
+            SanitiseEmail(request);
+
             if (!ModelState.IsValid)
             {
-                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
-                return View(viewReponse);
+                return View(new AssessmentEmailPostRequest { Email = request.Email });
             }
 
-            var emailResponse = await apiService.SendEmail(notifyOptions.ReturnUrl, request.Email).ConfigureAwait(false);
-            if (emailResponse.IsSuccess)
+            try
             {
-                if (TempData != null)
+                var emailResponse = await assessmentService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
+
+                if (emailResponse.IsSuccess)
                 {
-                    TempData["SentEmail"] = request.Email;
-                }
+                    if (TempData != null)
+                    {
+                        TempData["SentEmail"] = request.Email;
+                    }
 
-                return RedirectTo("assessment/emailsent");
+                    return RedirectTo("assessment/emailsent");
+                }
             }
-            else
+            catch (Exception exception)
             {
-                ModelState.AddModelError("Email", "There was a problem sending email");
-                var viewReponse = new AssessmentEmailPostRequest() { Email = request.Email };
-                return View(viewReponse);
+                logService.LogError(exception.Message);
             }
+
+            ModelState.AddModelError("Email", "There was a problem sending email");
+            return View(new AssessmentEmailPostRequest { Email = request.Email });
         }
 
         public IActionResult EmailSent()
         {
-            this.logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
 
             return View();
         }
@@ -269,7 +285,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
 
-            this.logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
             return View(responseViewModel);
         }
 
@@ -285,18 +301,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 if (TempData != null)
                 {
-                    var key = "Telephone";
+                    const string key = "Telephone";
                     TempData.Remove(key);
                     TempData.Add(key, request.Telephone);
                 }
 
-                await apiService.SendSms(GetDomainUrl(), request.Telephone).ConfigureAwait(false);
+                await assessmentService.SendSms(notifyOptions.ReturnUrl!, request.Telephone).ConfigureAwait(false);
 
                 return RedirectTo("assessment/referencesent");
             }
 
             var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
-            this.logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
+            logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
 
             return View(responseViewModel);
         }
@@ -309,22 +325,21 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("head/reload")]
         public async Task<IActionResult> Reload(string sessionId)
         {
-            var reloadResponseSuccess = await apiService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
-            if (reloadResponseSuccess)
-            {
-                this.logService.LogInformation($"{nameof(this.Reload)} generated the model and ready to pass to the view");
+            var reloadResponseSuccess = await assessmentService.ReloadUsingSessionId(sessionId).ConfigureAwait(false);
 
-                return RedirectTo("assessment/return");
-            }
-            else
+            if (!reloadResponseSuccess)
             {
                 return RedirectToRoot();
             }
+
+            logService.LogInformation($"{nameof(this.Reload)} generated the model and ready to pass to the view");
+            return RedirectTo("assessment/return");
         }
 
         private static string GetAssessmentTypeName(string value)
         {
             var result = string.Empty;
+
             if (Enum.TryParse<AssessmentItemType>(value, true, out var assessmentItemType))
             {
                 result = assessmentItemType.ToString().ToLower();
@@ -333,13 +348,21 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return result;
         }
 
+        private void SanitiseEmail(AssessmentEmailPostRequest request)
+        {
+            request.Email = request.Email?.ToLower();
+            ModelState.Clear();
+
+            TryValidateModel(request);
+        }
+
         private async Task<AssessmentReferenceGetResponse> GetAssessmentViewModel()
         {
             var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
 
             var result = new AssessmentReferenceGetResponse
             {
-                ReferenceCode = getAssessmentResponse.ReferenceCode,
+                ReferenceCode = SessionHelper.FormatSessionId(getAssessmentResponse.ReferenceCode!),
                 AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard),
             };
 
@@ -348,14 +371,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
-            var question = await apiService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
-            return question;
+            return await assessmentService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
         {
-            var getAssessmentResponse = await apiService.GetAssessment().ConfigureAwait(false);
-            return getAssessmentResponse;
+            return await assessmentService.GetAssessment().ConfigureAwait(false);
         }
 
         private IActionResult NavigateTo(GetAssessmentResponse assessment)
@@ -367,31 +388,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (assessment.IsFilterAssessment)
             {
-                if (assessment.IsComplete)
+                if (assessment.IsFilterComplete)
                 {
+                    if (!string.IsNullOrEmpty(assessment.CurrentFilterAssessmentCode))
+                    {
+                        return RedirectTo($"results/roles/{assessment.CurrentFilterAssessmentCode}");
+                    }
+
                     return RedirectTo($"results/roles/{assessment.JobCategorySafeUrl}");
                 }
-                else
-                {
-                    return RedirectTo($"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.JobCategorySafeUrl}/{assessment.CurrentQuestionNumber}");
-                }
-            }
-            else
-            {
-                if (assessment.IsComplete)
-                {
-                    return RedirectTo("results");
-                }
-                else
-                {
-                    return RedirectTo($"assessment/{assessment.QuestionSetName}/{assessment.CurrentQuestionNumber}");
-                }
-            }
-        }
 
-        private string GetDomainUrl()
-        {
-            return $"https://{Request.Host.Value}/{RouteName.Prefix}/assessment";
+                return RedirectTo(
+                    $"{AssessmentItemType.Short.ToString().ToLower()}/filterquestions/{assessment.CurrentFilterAssessmentCode}/{assessment.CurrentQuestionNumber}");
+            }
+
+            return RedirectTo(assessment.IsComplete ?
+                "results" :
+                $"assessment/short/{assessment.CurrentQuestionNumber}");
         }
     }
 }

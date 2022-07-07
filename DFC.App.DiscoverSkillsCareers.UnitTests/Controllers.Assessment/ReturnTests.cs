@@ -25,12 +25,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndIsCompletedThenRedirectedToResultsPage()
         {
-            var assessmentResponse = new GetAssessmentResponse()
+            var assessmentResponse = new GetAssessmentResponse
             {
                 IsFilterAssessment = true,
                 MaxQuestionsCount = 2,
                 RecordedAnswersCount = 2,
                 JobCategorySafeUrl = "sports",
+                AllFilteringQuestionsForCategoryAnswered = true,
+                AtLeastOneAnsweredFilterQuestion = true,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
             A.CallTo(() => Session.HasValidSession()).Returns(true);
@@ -43,6 +45,29 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
         }
 
         [Fact]
+        public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndIsCompletedThenRedirectedToExplicitResultsPage()
+        {
+            var assessmentResponse = new GetAssessmentResponse
+            {
+                IsFilterAssessment = true,
+                MaxQuestionsCount = 2,
+                RecordedAnswersCount = 2,
+                JobCategorySafeUrl = "sports",
+                AllFilteringQuestionsForCategoryAnswered = true,
+                AtLeastOneAnsweredFilterQuestion = true,
+                CurrentFilterAssessmentCode = "ABC",
+            };
+            A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
+
+            var actionResponse = await AssessmentController.Return().ConfigureAwait(false);
+
+            Assert.IsType<RedirectResult>(actionResponse);
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/results/roles/ABC", redirectResult.Url);
+        }
+
+        [Fact]
         public async Task WhenReturningToAssessmentAndAssessmentIsFilterAssessmentAndNotCompletedThenRedirectedToCurrentQuestion()
         {
             var assessmentResponse = new GetAssessmentResponse()
@@ -50,7 +75,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
                 IsFilterAssessment = true,
                 MaxQuestionsCount = 3,
                 RecordedAnswersCount = 2,
-                JobCategorySafeUrl = "sports",
+                CurrentFilterAssessmentCode = "sports",
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
@@ -88,7 +113,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             {
                 MaxQuestionsCount = 4,
                 RecordedAnswersCount = 2,
-                QuestionSetName = "short",
                 CurrentQuestionNumber = 3,
             };
             A.CallTo(() => ApiService.GetAssessment()).Returns(assessmentResponse);
