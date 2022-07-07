@@ -3,10 +3,12 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
-    public static class Program
+    [ExcludeFromCodeCoverage]
+    public sealed class Program
     {
         public static void Main(string[] args)
         {
