@@ -50,7 +50,20 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             Console.WriteLine("Cosmos Db destination RUs: Please enter the RUs for the destination container.");
             var cosmosDbDestinationRUs = int.Parse(Console.ReadLine()!.Trim());
 
-            var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+            Console.WriteLine("Use recovery bookmark: Whether or not to restart from the bookmark if a previous run failed (yes or no)");
+            var useBookmark = 'y' == Console.ReadLine()!.Trim().ToLower()[0];
+            
+            Console.WriteLine("Cut off date: The date to take assessments up to (useful for a 'catch up' run of the tool - in format yyyy-MM-dd hh:mm:ss)");
+            var cutoffDateTimeString = Console.ReadLine()!.Trim();
+
+            DateTime? cutoffDateTime = null;
+            if (DateTime.TryParse(cutoffDateTimeString, out var cutoffDateTimeTemp))
+            {
+                cutoffDateTime = cutoffDateTimeTemp;
+            }
+            
+            var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment")
+                .Get<CosmosDbConnection>();
             
             Console.WriteLine();
             Console.WriteLine("Summary:");
@@ -62,11 +75,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             Console.WriteLine($"Source sessions endpoint: {cosmosDbConnectionLegacyUserSessions.EndpointUrl} {cosmosDbConnectionLegacyUserSessions.DatabaseId} {cosmosDbConnectionLegacyUserSessions.CollectionId}");
             Console.WriteLine($"Destination sessions endpoint: {cosmosDbConnectionAssessment.EndpointUrl} {cosmosDbConnectionAssessment.DatabaseId} {cosmosDbConnectionAssessment.CollectionId}");
             Console.WriteLine($"Content endpoint: {cosmosDbConnectionAssessment.EndpointUrl} {cosmosDbConnectionAssessment.DatabaseId} {cosmosDbConnectionAssessment.CollectionId}");
+            Console.WriteLine($"Use recovery bookmark: {useBookmark}");
+            Console.WriteLine($"Cut off date: {cutoffDateTime}");
             Console.WriteLine();
 
             Console.WriteLine("Press any key to proceed.");
             Console.ReadKey();
-            Console.WriteLine("Press any key to proceed.");
             
             if (inputMode.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -125,7 +139,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 destinationDocumentClient,
                 cosmosDbConnectionAssessment.DatabaseId,
                 cosmosDbConnectionAssessment.CollectionId,
-                cosmosDbDestinationRUs);
+                cosmosDbDestinationRUs,
+                useBookmark,
+                cutoffDateTime);
             
             Console.Write(@"Please check and confirm the indexing strategy for the cosmos destination is set as per the below, or the import may fail.;
 

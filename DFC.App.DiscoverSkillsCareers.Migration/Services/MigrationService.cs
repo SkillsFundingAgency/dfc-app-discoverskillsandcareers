@@ -34,6 +34,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private readonly string destinationDatabaseId;
         private readonly string destinationCollectionId;
         private readonly int cosmosDbDestinationRUs;
+        private readonly bool useBookmark;
+        private readonly DateTime? cutoffDateTime;
 
         private int saveCount;
         private readonly List<string> erroredSessions = new List<string>();
@@ -44,7 +46,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             IDocumentClient destinationDocumentClient,
             string destinationDatabaseId,
             string destinationCollectionId,
-            int cosmosDbDestinationRUs)
+            int cosmosDbDestinationRUs,
+            bool useBookmark,
+            DateTime? cutoffDateTime)
         {
             this.documentStore = documentStore;
             this.sourceDocumentClient = sourceDocumentClient;
@@ -52,6 +56,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             this.destinationDatabaseId = destinationDatabaseId;
             this.destinationCollectionId = destinationCollectionId;
             this.cosmosDbDestinationRUs = cosmosDbDestinationRUs;
+            this.useBookmark = useBookmark;
+            this.cutoffDateTime = cutoffDateTime;
         }
 
         public async Task Start()
@@ -74,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 var index = 1;
                 var outerForeachCount = 0;
 
-                if (File.Exists(bookmarkPath))
+                if (useBookmark && File.Exists(bookmarkPath))
                 {
                     outerForeachCount = int.Parse(File.ReadAllText(bookmarkPath));
                 }
@@ -241,7 +247,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var allTraits = await documentStore
                 .GetAllContentAsync<DysacTraitContentModel>("Trait");
 
-            allJobCategories = allTraits?
+            allJobCategories = allTraits
                 .SelectMany(trait => trait.JobCategories)
                 .GroupBy(jobCategory => jobCategory.Title)
                 .Select(jobCategoryGroup => jobCategoryGroup.First())
@@ -282,7 +288,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var questionSets = await documentStore
                 .GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet");
 
-            shortQuestions = questionSets?
+            shortQuestions = questionSets
                 .FirstOrDefault()?
                 .ShortQuestions?
                 .Select(shortQuestion => new ShortQuestion
@@ -304,10 +310,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         {
             WriteAndLog($"Started fetching session count - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
+            var cutoffDateTimeString = cutoffDateTime?.ToString("u");
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                $"select value count(c) from c",
+                cutoffDateTime != null ?
+                    $"select value count(c) from c where c.startedDt > '{cutoffDateTimeString}'"
+                    : "select value count(c) from c",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
@@ -326,12 +335,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         {
             WriteAndLog($"Started fetching sessions - {startNumber} to {startNumber + batchSize} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
-
+            var cutoffDateTimeString = cutoffDateTime?.ToString("u");
+            
             var returnList = new List<Dictionary<string, object>>();
             
             var query = sourceDocumentClient.CreateDocumentQuery<Dictionary<string, object>>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                $"select c from c order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}",
+                cutoffDateTime != null ?
+                    $"select c from c where c.startedDt > '{cutoffDateTimeString}' order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}"
+                    : $"select c from c order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
@@ -476,7 +488,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                         }
                     }
 
-                    jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion?.Skills.First().Ordinal.Value ?? 0);
+                    jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion?.Skills.First().Ordinal ?? 0);
                     jobCategoryAssessments.Add(jobCategoryAssessment);
                 }
             }
@@ -607,7 +619,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 shortQuestion.Answer = new QuestionAnswer
                 {
                     AnsweredAt = (DateTime?)recordedAnswer["answeredDt"],
-                    Value = (Core.Enums.Answer)(long)recordedAnswer["selectedOption"]
+                    Value = (Answer)(long)recordedAnswer["selectedOption"]
                 };
 
                 listOfQuestions.Add(shortQuestion);
