@@ -82,6 +82,15 @@
         },
         "SubscriptionApiEndpointUrl": {
             "value": "__SubscriptionApiEndpointUrl__"
+        },
+        "dysacContentCollectionName": {
+            "value": "__dysacContentCollectionName__"
+        },
+        "dysacAssessmentCollectionName": {
+            "value": "__dysacAssessmentCollectionName__"
+        },
+        "sessionStateCollectionName": {
+            "value": "__sessionStateCollectionName__"
         }
     }
 }
