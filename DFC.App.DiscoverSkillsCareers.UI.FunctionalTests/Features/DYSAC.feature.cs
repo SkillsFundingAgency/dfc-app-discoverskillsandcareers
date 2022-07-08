@@ -4841,12 +4841,13 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer", Skip="Ignored")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
         [Xunit.TraitAttribute("Description", "TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer")]
         public void TC28_Leader_Driver_Influencer_Helper_Organiser_Doer()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "ignore"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 1308
@@ -8990,14 +8991,14 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="TC42 - All options selected")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC42 - All answer options used")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
-        [Xunit.TraitAttribute("Description", "TC42 - All options selected")]
-        public void TC42_AllOptionsSelected()
+        [Xunit.TraitAttribute("Description", "TC42 - All answer options used")]
+        public void TC42_AllAnswerOptionsUsed()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC42 - All options selected", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC42 - All answer options used", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 2555
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -9276,15 +9277,13 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableTheoryAttribute(DisplayName="TC44 - Dataflow example")]
+        [Xunit.SkippableFactAttribute(DisplayName="TC44 - Dataflow example")]
         [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
         [Xunit.TraitAttribute("Description", "TC44 - Dataflow example")]
-        [Xunit.InlineDataAttribute("Strongly agree", new string[0])]
-        public void TC44_DataflowExample(string answerOption, string[] exampleTags)
+        public void TC44_DataflowExample()
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("Answer option", answerOption);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC44 - Dataflow example", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 2629
 this.ScenarioInitialize(scenarioInfo);
@@ -9303,7 +9302,7 @@ this.FeatureBackground();
  testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 2631
- testRunner.And(string.Format("I answer all questions selecting the {0} option", answerOption), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I answer all questions selecting the \"Strongly agree\" option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 2632
  testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

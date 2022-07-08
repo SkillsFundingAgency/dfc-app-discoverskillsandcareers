@@ -81,6 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             }
             else
             {
+                ClickSeeMatches();
                 return _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
             }
         }
@@ -143,6 +144,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
             try
             {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+                //Thread.Sleep(1500);
+                var element = _scenarioContext.GetWebDriver().FindElement(By.CssSelector("#exitbtn > h5"));
+                Support.ClickWithJavaScript(_scenarioContext.GetWebDriver(), element);
                 lnkSeeMatches.Click();
             }
             catch (NoSuchElementException)
@@ -292,8 +297,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickAnswerMoreQuestionsButton(string noOfMoreQuestions, string jobCategories)
         {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+
             try
             {
+                //var elementB = _scenarioContext.GetWebDriver().FindElement(By.LinkText("See matches"));
+                //Support.ScrollIntoViewJavaScript(_scenarioContext.GetWebDriver(), elementB);
                 lnkSeeMatches.Click();
             }
             catch (NoSuchElementException)
@@ -540,6 +549,24 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             else
             {
                 return _scenarioContext.GetWebDriver().FindElement(By.CssSelector("#showMoreCategories > h2")).Text;
+            }
+        }
+
+        public void ClosePopupSurvey()
+        {
+            try
+            {
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+                //Thread.Sleep(1500);
+                _scenarioContext.GetWebDriver().FindElement(By.CssSelector("#exitbtn > h5")).Click();
+            }
+            catch (NoSuchElementException)
+            {
+
+            }
+            catch (ElementNotInteractableException)
+            {
+
             }
         }
     }

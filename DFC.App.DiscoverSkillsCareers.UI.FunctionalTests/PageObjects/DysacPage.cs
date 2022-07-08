@@ -53,8 +53,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void AcceptAllCookies()
         {
-            //WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-button--start"));
-            //btnAcceptAllCookies.Click();
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
+            btnAcceptAllCookies.Click();
         }
 
         public string GetQuestionText()
@@ -270,6 +270,25 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
                 AnswerOptionClick(answerOption);
                 btnNextQuestion.Click();
             }
+        }
+
+        public int ButtonDisplayed(string button)
+        {
+            int buttonCount = 1;
+
+            switch (button)
+            {
+                case "Accept all cookies":
+                    buttonCount = _scenarioContext.GetWebDriver().FindElements(By.Id("accept-all-cookies")).Count();
+                    break;
+            }
+
+            return buttonCount;
+        }
+
+        public void DeleteCookies()
+        {
+            _scenarioContext.GetWebDriver().Manage().Cookies.DeleteAllCookies();
         }
     }
 }

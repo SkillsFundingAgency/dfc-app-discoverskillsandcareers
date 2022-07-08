@@ -218,7 +218,7 @@ Scenario: TC04 - Saving progress and selecting reference code to return to the a
 	And I select reference code to return to the assessment
 	And I click continue
 	Then The reference code is displayed
-
+@smoke
 @DYSAC
 Scenario: TC05 - Progress bar displays correctly on each question
 	And I click on Assessment
@@ -354,7 +354,7 @@ Scenario: TC11 - Email field validation and population
 	Then I am at the question where I left off
 	When I go Back and I click the Back to start link
 	Then I am navigate to the Dysac home page 
-
+@smoke
 @DYSAC
 Scenario: TC12 - All question radio button options are usable
 	When I click on Assessment
@@ -1304,7 +1304,7 @@ Scenario: TC27 - Leader-Driver-Influencer-Helper
 	| Dramatherapist                             |
 	| Care escort                                |
 	| Art therapist                              |
-
+@ignore
 Scenario: TC28 - Leader-Driver-Influencer-Helper-Organiser-Doer
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -2004,7 +2004,7 @@ Scenario: TC32 - Helper-Analyst-Creator - user journey
 	| Operational researcher     |
 	| Business analyst           |
 	| Robotics engineer          |
-
+@smoke
 Scenario: TC33 - Organiser-Doer - user journey
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
@@ -2420,7 +2420,7 @@ Scenario: TC36 - I want to save my progress during yes no questions
 	And I make a note of the reference code
 	When I use the reference code to return to my assessment from the Dysac home page
 	Then I am at the question noted earlier before I saved progress
-
+@smoke
 Scenario: TC37 - I want to change my answers after initial job category suggestion
 	And I click on Assessment
 	And I answer all the questions using the data file "AnswerSetTC36"
@@ -2534,13 +2534,13 @@ Scenario: TC39 - I want to change my answers after initial job category suggesti
 	| Business development manager |
 	| Quantity surveyor            |
 	| Marketing manager            |
-
+@smoke
 Scenario: TC40 - I want to check that descriptive texts match suggested job categories
 	And I click on Assessment
 	And I answer all the questions using the data file "AnswerSetTC38"
 	When I check the description text beneath each suggested job category
 	Then each job category is mentioned as part of the narration of its corresponding descriptive text
-
+@smoke
 Scenario: TC41 - I want to be able to use a reference code to see my results
 	And I click on Assessment
 	And I answer all the questions using the data file "AnswerSetTC38"
@@ -2552,7 +2552,7 @@ Scenario: TC41 - I want to be able to use a reference code to see my results
 	Then I am at the page noted earlier
 	And the job categories are the same as those noted earlier
 
-Scenario: TC42 - All options selected
+Scenario: TC42 - All answer options used
 	And I click on Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
@@ -2611,7 +2611,7 @@ Scenario: TC42 - All options selected
 	| Engineering and maintenance | 5                               |
 	| Administration              | 3                               |
 	| Environment and land        | 4                               |
-
+@smoke
 Scenario Outline: TC43 - Checks for Your result headings
 	And I click on Assessment
 	When I answer all the questions using the data file <Answer set>
@@ -2626,9 +2626,9 @@ Scenario Outline: TC43 - Checks for Your result headings
 	| 5   | AnswerSetTC29Capture5 | 2                    | 0                          |
 	| 6   | AnswerSetTC30Capture6 | 6                    | 3                          |
 
-Scenario Outline: TC44 - Dataflow example
+Scenario: TC44 - Dataflow example
 	And I click on Assessment
-	And I answer all questions selecting the <Answer option> option
+	And I answer all questions selecting the "Strongly agree" option
 	And I click See results button
 	When I click See matches in order to view the other career areas that might interest you
 	Then the What you told us section of the Your results page displays the following traits
@@ -2683,7 +2683,3 @@ Scenario Outline: TC44 - Dataflow example
 	| Job roles        |
 	| Art valuer       |
 	| Technical author |
-
-	Examples: 
-	| Answer option  |
-	| Strongly agree |

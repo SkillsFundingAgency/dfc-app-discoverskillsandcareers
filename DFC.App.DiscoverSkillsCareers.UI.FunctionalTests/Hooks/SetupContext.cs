@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Gherkin.Model;
 using AventStack.ExtentReports.Reporter;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
-
+using DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects;
 using TechTalk.SpecFlow;
 
 namespace DFC.App.DiscoverSkillsCareers.TestSuite.Hooks
@@ -123,6 +124,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Hooks
         public void IntialiseWebDriver()
         {
             _scenarioContext.SetWebDriver(WebDriverContainer.Instance.GetWebDriver(FindDriverService(), _WebdriverTimeoutSeconds));
+            _scenarioContext.GetWebDriver().Manage().Cookies.DeleteAllCookies();
+            Thread.Sleep(7000);
             _scenarioContext.GetWebDriver().Manage().Window.Maximize();
         }
 

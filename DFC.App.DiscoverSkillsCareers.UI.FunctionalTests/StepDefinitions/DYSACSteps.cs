@@ -64,7 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void GivenILoadTheDYSACPage()
         {
             _scenarioContext.GetWebDriver().Navigate().GoToUrl(_scenarioContext.GetEnv().DYSACApiBaseUrl);
-            _dysacPage.AcceptAllCookies();
+            //_dysacPage.AcceptAllCookies();
         }
 
         [Given(@"I click on Assessment")]
@@ -443,6 +443,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobCategories(initialJobCategories), "'3 job categories that might suit you' list is incorrect");
         }
 
+        [Given(@"I answer all questions selecting the ""(.*)"" option")]
         [Given(@"I answer all questions selecting the (.*) option")]
         public void GivenIAnswerAllQuestionsSelectingTheOption(string questionOption)
         {
@@ -526,6 +527,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void WhenIClickTheAnswerMoreQuestionsButtonFor(string numberOfQuestions, string jobCategory)
         {
             _answerMoreJobCategory = jobCategory;
+            _yourResultsPage.ClosePopupSurvey();
             _yourResultsPage.ClickAnswerMoreQuestionsButton(numberOfQuestions, jobCategory);
         }
 
@@ -660,6 +662,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Given(@"I make a note of the suggested job categories")]
         public void GivenIMakeANoteOfTheSuggestedJobCategories()
         {
+            _yourResultsPage.ClosePopupSurvey();
             _yourResultsPage.ClickSeeMatches();
             _jobCategoryCategoriesInitial  = _yourResultsPage.GetIWebElementText();
         }

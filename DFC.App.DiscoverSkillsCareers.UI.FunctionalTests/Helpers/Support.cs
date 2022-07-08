@@ -36,5 +36,11 @@ namespace DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers
             //js.ExecuteScript("arguments[0].scrollIntoView();", locator);
             js.ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", elementLocator);
         }
+
+        public static void ClickWithJavaScript(IWebDriver driver, IWebElement elementLocator)
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("arguments[0].click();", elementLocator);
+        }
     }
 }
