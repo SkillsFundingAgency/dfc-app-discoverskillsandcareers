@@ -99,6 +99,15 @@
         },
         "SubscriptionApiEndpointUrl": {
             "type": "string"
+        },
+        "dysacContentCollectionName": {
+            "type": "string"
+        },
+        "dysacAssessmentCollectionName": {
+            "type": "string"
+        },
+        "sessionStateCollectionName": {
+            "type": "string"
         }
     },
     "variables": {
