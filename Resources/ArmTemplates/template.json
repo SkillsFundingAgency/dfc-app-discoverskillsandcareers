@@ -119,9 +119,6 @@
         "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
         "cosmosDbCollectionPartitionKey": "/PartitionKey",
         "cosmosDbDatabaseName": "dfc-app-dysac",
-        "dysacContentCollectionName": "content",
-        "dysacAssessmentCollectionName": "assessment",
-        "sessionStateCollectionName": "session-state",
         "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
     "resources": [
