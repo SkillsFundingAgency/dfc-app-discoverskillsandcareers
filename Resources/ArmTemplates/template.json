@@ -154,7 +154,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('dysacContentCollectionName')]",
+            "name": "[parameters('dysacContentCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -171,7 +171,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('dysacContentCollectionName')]"
+                        "value": "[parameters('dysacContentCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -187,7 +187,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('sessionStateCollectionName')]",
+            "name": "[parameters('sessionStateCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -204,7 +204,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('sessionStateCollectionName')]"
+                        "value": "[parameters('sessionStateCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -220,7 +220,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('dysacAssessmentCollectionName')]",
+            "name": "[parameters('dysacAssessmentCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -237,7 +237,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('dysacAssessmentCollectionName')]"
+                        "value": "[parameters('dysacAssessmentCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
