@@ -497,7 +497,7 @@
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacContent__CollectionId",
-                                "value": "[variables('dysacContentCollectionName')]"
+                                "value": "[parameters('dysacContentCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacContent__PartitionKey",
@@ -517,7 +517,7 @@
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__CollectionId",
-                                "value": "[variables('sessionStateCollectionName')]"
+                                "value": "[parameters('sessionStateCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__PartitionKey",
@@ -537,7 +537,7 @@
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacAssessment__CollectionId",
-                                "value": "[variables('dysacAssessmentCollectionName')]"
+                                "value": "[parameters('dysacAssessmentCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacAssessment__PartitionKey",
