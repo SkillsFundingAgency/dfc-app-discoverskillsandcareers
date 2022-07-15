@@ -100,10 +100,10 @@
         "SubscriptionApiEndpointUrl": {
             "type": "string"
         },
-        "dysacContentCollectionName": {
+        "dysacAssessmentCollectionName": {
             "type": "string"
         },
-        "dysacAssessmentCollectionName": {
+        "dysacContentCollectionName": {
             "type": "string"
         },
         "sessionStateCollectionName": {
