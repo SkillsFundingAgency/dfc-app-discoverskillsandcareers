@@ -100,10 +100,10 @@
         "SubscriptionApiEndpointUrl": {
             "type": "string"
         },
-        "dysacContentCollectionName": {
+        "dysacAssessmentCollectionName": {
             "type": "string"
         },
-        "dysacAssessmentCollectionName": {
+        "dysacContentCollectionName": {
             "type": "string"
         },
         "sessionStateCollectionName": {
@@ -119,9 +119,6 @@
         "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
         "cosmosDbCollectionPartitionKey": "/PartitionKey",
         "cosmosDbDatabaseName": "dfc-app-dysac",
-        "dysacContentCollectionName": "content",
-        "dysacAssessmentCollectionName": "assessment",
-        "sessionStateCollectionName": "session-state",
         "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
     "resources": [
@@ -157,7 +154,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('dysacContentCollectionName')]",
+            "name": "[parameters('dysacContentCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -174,7 +171,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('dysacContentCollectionName')]"
+                        "value": "[parameters('dysacContentCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -190,7 +187,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('sessionStateCollectionName')]",
+            "name": "[parameters('sessionStateCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -207,7 +204,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('sessionStateCollectionName')]"
+                        "value": "[parameters('sessionStateCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -223,7 +220,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('dysacAssessmentCollectionName')]",
+            "name": "[parameters('dysacAssessmentCollectionName')]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
             "properties": {
@@ -240,7 +237,7 @@
                         "value": "[variables('cosmosDbDatabaseName')]"
                     },
                     "collectionName": {
-                        "value": "[variables('dysacAssessmentCollectionName')]"
+                        "value": "[parameters('dysacAssessmentCollectionName')]"
                     },
                     "provisionRequestUnits": {
                         "value": false
@@ -500,7 +497,7 @@
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacContent__CollectionId",
-                                "value": "[variables('dysacContentCollectionName')]"
+                                "value": "[parameters('dysacContentCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacContent__PartitionKey",
@@ -520,7 +517,7 @@
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__CollectionId",
-                                "value": "[variables('sessionStateCollectionName')]"
+                                "value": "[parameters('sessionStateCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__SessionState__PartitionKey",
@@ -540,7 +537,7 @@
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacAssessment__CollectionId",
-                                "value": "[variables('dysacAssessmentCollectionName')]"
+                                "value": "[parameters('dysacAssessmentCollectionName')]"
                             },
                             {
                                 "name": "Configuration__CosmosDbConnections__DysacAssessment__PartitionKey",

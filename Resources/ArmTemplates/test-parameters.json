@@ -78,13 +78,13 @@
             "value": "not-a-real-url"
         },
         "dysacContentCollectionName": {
-            "value": "not-a-real-variable"
+            "value": "dysacContentCollectionName"
         },
         "dysacAssessmentCollectionName": {
-            "value": "not-a-real-variable"
+            "value": "dysacAssessmentCollectionName"
         },
         "sessionStateCollectionName": {
-            "value": "not-a-real-variable"
+            "value": "sessionStateCollectionName"
         }
     }
 }
