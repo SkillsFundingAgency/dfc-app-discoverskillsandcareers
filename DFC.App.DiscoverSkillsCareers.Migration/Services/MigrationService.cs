@@ -63,20 +63,24 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         public async Task Start()
         {
             var startTime = DateTime.Now;
-            const int readBatchSize = 1000;
+            const int readBatchSize = 300;
             const string bookmarkPath = "bookmark.txt";
             
             try
             {
-                var fetchingSessions = FetchSessionsToMigrate(0, readBatchSize);
-                var totalSessionsToMigrateCountTask = GetSessionIdentifiersCount();
+                var fetchingSessionsIds = GetSessionIdentifiers();
                 
                 await Task.WhenAll(
                     LoadJobCategoriesFromTraits(),
                     LoadFilteringQuestions(),
                     LoadShortQuestionsFromQuestionSet());
 
-                var totalSessionsCount = await totalSessionsToMigrateCountTask;
+                var sessionsIds = await fetchingSessionsIds;
+                var fetchingSessions = FetchSessionsToMigrate(
+                    sessionsIds.Take(readBatchSize).ToList());
+                
+                var totalSessionsCount = sessionsIds.Count;
+                
                 var index = 1;
                 var outerForeachCount = 0;
 
@@ -95,7 +99,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     var writingBookmark = File.WriteAllTextAsync(bookmarkPath, outerForeachCount + string.Empty);
                     
                     var sessions = await fetchingSessions;
-                    fetchingSessions = FetchSessionsToMigrate(readBatchSize * (outerForeachCount + 1), readBatchSize);
+                    fetchingSessions = FetchSessionsToMigrate(
+                        sessionsIds.Skip(readBatchSize * (outerForeachCount + 1)).Take(readBatchSize).ToList());
 
                     var sessionsToWriteSimultaneouslyGroups = sessions.Batch(writeBatchSize);
 
@@ -306,44 +311,63 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 $"{(DateTime.Now - start).TotalSeconds} seconds");            
         }
 
-        private async Task<int> GetSessionIdentifiersCount()
+        private async Task<List<(string id, string partitionKey)>> GetSessionIdentifiers()
         {
             WriteAndLog($"Started fetching session count - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             var cutoffDateTimeString = cutoffDateTime?.ToString("u");
+
+            var returnList = new List<(string id, string partitionKey)>();
             
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
                 cutoffDateTime != null ?
-                    $"select value count(c) from c where c.startedDt > '{cutoffDateTimeString}'"
-                    : "select value count(c) from c",
+                    $"select c.id, c.partitionKey from c where c.startedDt > '{cutoffDateTimeString}'"
+                    : "select c.id, c.partitionKey from c",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
                     MaxItemCount = -1
                 }).AsDocumentQuery();
 
-            var count = (await query.ExecuteNextAsync<int>()).First();
+            while (query.HasMoreResults)
+            {
+                returnList.AddRange((await query.ExecuteNextAsync<Dictionary<string, object>>())
+                    .Select(dyn => (dyn["id"] as string, dyn["partitionKey"] as string))
+                    .ToList());
+            }
 
-            WriteAndLog($"Finished fetching session count ({count}) - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - took " +
-                $"{(DateTime.Now - start).TotalSeconds} seconds");
-            
-            return count;
+            WriteAndLog($"Finished fetching sessions. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+                $"took {(DateTime.Now - start).TotalSeconds} seconds");
+
+            return returnList;
         }
 
-        private async Task<List<Dictionary<string, object>>> FetchSessionsToMigrate(int startNumber, int batchSize)
+        private async Task<List<Dictionary<string, object>>> FetchSessionsToMigrate(
+            List<(string id, string partitionKey)> sessionIds)
         {
-            WriteAndLog($"Started fetching sessions - {startNumber} to {startNumber + batchSize} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            var logStr = string.Join(", ", sessionIds.Select(x => x.id + "|" + x.partitionKey));
+            
+            WriteAndLog($"Started fetching sessions for {logStr} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             var cutoffDateTimeString = cutoffDateTime?.ToString("u");
             
             var returnList = new List<Dictionary<string, object>>();
-            
-            var query = sourceDocumentClient.CreateDocumentQuery<Dictionary<string, object>>(
+            var sql = cutoffDateTime != null
+                ? $"select c from c where c.startedDt > '{cutoffDateTimeString}'" +
+                  " and ("
+                  + string.Join(" OR ",
+                      sessionIds.Select(session =>
+                          $"(c.id='{session.id}' and c.partitionKey='{session.partitionKey}')"))
+                  + ")"
+                : "select c from c where "
+                  + string.Join(" OR ",
+                      sessionIds.Select(session =>
+                          $"(c.id='{session.id}' and c.partitionKey='{session.partitionKey}')"));
+
+                var query = sourceDocumentClient.CreateDocumentQuery<Dictionary<string, object>>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
-                cutoffDateTime != null ?
-                    $"select c from c where c.startedDt > '{cutoffDateTimeString}' order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}"
-                    : $"select c from c order by c._ts asc OFFSET {startNumber} LIMIT {batchSize}",
+                sql,
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
@@ -357,7 +381,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     .ToList());
             }
 
-            WriteAndLog($"Finished fetching sessions - {startNumber} to {startNumber + batchSize}. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+            WriteAndLog($"Finished fetching sessions - {logStr}. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
