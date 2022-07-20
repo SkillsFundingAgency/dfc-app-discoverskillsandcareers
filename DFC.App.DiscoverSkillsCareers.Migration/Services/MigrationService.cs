@@ -313,7 +313,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         private async Task<List<(string id, string partitionKey)>> GetSessionIdentifiers()
         {
-            WriteAndLog($"Started fetching session count - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching session identifiers - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             var cutoffDateTimeString = cutoffDateTime?.ToString("u");
 
@@ -335,9 +335,11 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 returnList.AddRange((await query.ExecuteNextAsync<Dictionary<string, object>>())
                     .Select(dyn => (dyn["id"] as string, dyn["partitionKey"] as string))
                     .ToList());
+                
+                WriteAndLog($"Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             }
 
-            WriteAndLog($"Finished fetching sessions. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+            WriteAndLog($"Finished fetching session identifiers. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
