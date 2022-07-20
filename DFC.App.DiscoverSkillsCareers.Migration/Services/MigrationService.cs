@@ -322,8 +322,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             var query = sourceDocumentClient.CreateDocumentQuery<int>(
                 UriFactory.CreateDocumentCollectionUri("DiscoverMySkillsAndCareers", "UserSessions"),
                 cutoffDateTime != null ?
-                    $"select c.id, c.partitionKey from c where c.startedDt > '{cutoffDateTimeString}'"
-                    : "select c.id, c.partitionKey from c",
+                    $"select c.id, c.partitionKey from c where c.startedDt > '{cutoffDateTimeString}' order by c._ts asc"
+                    : "select c.id, c.partitionKey from c order by c._ts asc",
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
@@ -346,9 +346,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private async Task<List<Dictionary<string, object>>> FetchSessionsToMigrate(
             List<(string id, string partitionKey)> sessionIds)
         {
-            var logStr = string.Join(", ", sessionIds.Select(x => x.id + "|" + x.partitionKey));
-            
-            WriteAndLog($"Started fetching sessions for {logStr} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+            WriteAndLog($"Started fetching sessions - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             var start = DateTime.Now;
             var cutoffDateTimeString = cutoffDateTime?.ToString("u");
             
@@ -381,7 +379,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     .ToList());
             }
 
-            WriteAndLog($"Finished fetching sessions - {logStr}. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
+            WriteAndLog($"Finished fetching sessions. Found {returnList.Count} - {DateTime.Now:yyyy-MM-dd hh:mm:ss} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
