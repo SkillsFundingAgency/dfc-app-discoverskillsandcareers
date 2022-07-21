@@ -89,8 +89,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     outerForeachCount = int.Parse(File.ReadAllText(bookmarkPath));
                 }
 
-                const int ruCostPerItem = 140; //98 to 185
-                int writeBatchSize = cosmosDbDestinationRUs / ruCostPerItem;
+                const int ruCostPerItem = 185;
+                int writeBatchSize = (int)Math.Ceiling(cosmosDbDestinationRUs / (ruCostPerItem * 1.5));
 
                 WriteAndLog($"Writes per second attempting is {writeBatchSize}");
 
