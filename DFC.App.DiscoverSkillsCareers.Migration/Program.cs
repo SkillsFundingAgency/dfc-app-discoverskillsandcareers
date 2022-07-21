@@ -64,6 +64,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             
             var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment")
                 .Get<CosmosDbConnection>();
+
+            var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent")
+                .Get<CosmosDbConnection>();
             
             Console.WriteLine();
             Console.WriteLine("Summary:");
@@ -74,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             Console.WriteLine($"Destination RUs: {cosmosDbDestinationRUs}");
             Console.WriteLine($"Source sessions endpoint: {cosmosDbConnectionLegacyUserSessions.EndpointUrl} {cosmosDbConnectionLegacyUserSessions.DatabaseId} {cosmosDbConnectionLegacyUserSessions.CollectionId}");
             Console.WriteLine($"Destination sessions endpoint: {cosmosDbConnectionAssessment.EndpointUrl} {cosmosDbConnectionAssessment.DatabaseId} {cosmosDbConnectionAssessment.CollectionId}");
-            Console.WriteLine($"Content endpoint: {cosmosDbConnectionAssessment.EndpointUrl} {cosmosDbConnectionAssessment.DatabaseId} {cosmosDbConnectionAssessment.CollectionId}");
+            Console.WriteLine($"Content endpoint: {cosmosDbConnectionContent.EndpointUrl} {cosmosDbConnectionContent.DatabaseId} {cosmosDbConnectionContent.CollectionId}");
             Console.WriteLine($"Use recovery bookmark: {useBookmark}");
             Console.WriteLine($"Cut off date: {cutoffDateTime}");
             Console.WriteLine();
@@ -100,8 +103,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             services.AddSingleton<IDocumentStore, CosmosDbService>(_ =>
             {
                 var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
-
-                var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
                 var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent.EndpointUrl};AccountKey={cosmosDbConnectionContent.AccessKey};";
 
                 return new CosmosDbService(
@@ -120,7 +121,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             logger.LogDebug("Starting application");
 
-            var documentStore = serviceProvider.GetService<IDocumentStore>();
+            var contentService = serviceProvider.GetService<IDocumentStore>();
             var userSessionDocumentClient = serviceProvider.GetService<IDocumentClient>();
 
             var destinationDocumentClient = new DocumentClient(
@@ -134,7 +135,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 });
 
             var migrationService = new MigrationService(
-                documentStore,
+                contentService,
                 userSessionDocumentClient,
                 destinationDocumentClient,
                 cosmosDbConnectionAssessment.DatabaseId,
