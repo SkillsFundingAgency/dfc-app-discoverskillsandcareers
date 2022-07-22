@@ -3,15 +3,15 @@ using DFC.App.DiscoverSkillsCareers.Migration.Models;
 using DFC.App.DiscoverSkillsCareers.Migration.Services;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.Compui.Cosmos.Contracts;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using Microsoft.Azure.Cosmos;
 
 namespace DFC.App.DiscoverSkillsCareers.Migration
 {
@@ -64,6 +64,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             
             var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment")
                 .Get<CosmosDbConnection>();
+
+            var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent")
+                .Get<CosmosDbConnection>();
             
             Console.WriteLine();
             Console.WriteLine("Summary:");
@@ -74,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             Console.WriteLine($"Destination RUs: {cosmosDbDestinationRUs}");
             Console.WriteLine($"Source sessions endpoint: {cosmosDbConnectionLegacyUserSessions.EndpointUrl} {cosmosDbConnectionLegacyUserSessions.DatabaseId} {cosmosDbConnectionLegacyUserSessions.CollectionId}");
             Console.WriteLine($"Destination sessions endpoint: {cosmosDbConnectionAssessment.EndpointUrl} {cosmosDbConnectionAssessment.DatabaseId} {cosmosDbConnectionAssessment.CollectionId}");
-            Console.WriteLine($"Content endpoint: {cosmosDbConnectionAssessment.EndpointUrl} {cosmosDbConnectionAssessment.DatabaseId} {cosmosDbConnectionAssessment.CollectionId}");
+            Console.WriteLine($"Content endpoint: {cosmosDbConnectionContent.EndpointUrl} {cosmosDbConnectionContent.DatabaseId} {cosmosDbConnectionContent.CollectionId}");
             Console.WriteLine($"Use recovery bookmark: {useBookmark}");
             Console.WriteLine($"Cut off date: {cutoffDateTime}");
             Console.WriteLine();
@@ -92,16 +95,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 .AddLogging()
                 .AddSingleton(configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ??
                               new MigrationOptions())
-                .AddSingleton<IDocumentClient>(
-                    new DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl,
+                .AddSingleton<Microsoft.Azure.Documents.IDocumentClient>(
+                    new Microsoft.Azure.Documents.Client.DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                         cosmosDbConnectionLegacyUserSessions.AccessKey))
                 .AddAutoMapper(typeof(Program));
 
             services.AddSingleton<IDocumentStore, CosmosDbService>(_ =>
             {
                 var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
-
-                var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
                 var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent.EndpointUrl};AccountKey={cosmosDbConnectionContent.AccessKey};";
 
                 return new CosmosDbService(
@@ -120,21 +121,25 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             logger.LogDebug("Starting application");
 
-            var documentStore = serviceProvider.GetService<IDocumentStore>();
-            var userSessionDocumentClient = serviceProvider.GetService<IDocumentClient>();
+            var contentService = serviceProvider.GetService<IDocumentStore>();
+            var userSessionDocumentClient = serviceProvider.GetService<Microsoft.Azure.Documents.IDocumentClient>();
 
-            var destinationDocumentClient = new DocumentClient(
-                cosmosDbConnectionAssessment.EndpointUrl,
-                cosmosDbConnectionAssessment.AccessKey,
-                new ConnectionPolicy
+            ServicePointManager.DefaultConnectionLimit = 1000;
+            
+            var connectionStringDestination = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
+            
+            var destinationDocumentClient = new CosmosClient(
+                connectionStringDestination,
+                new CosmosClientOptions
                 {
-                    MaxConnectionLimit = 1000,
+                    MaxRequestsPerTcpConnection = 1000,
+                    MaxTcpConnectionsPerEndpoint = 1000,
                     ConnectionMode = connectionMode,
-                    ConnectionProtocol = Protocol.Tcp
+                    AllowBulkExecution = true,
                 });
 
             var migrationService = new MigrationService(
-                documentStore,
+                contentService,
                 userSessionDocumentClient,
                 destinationDocumentClient,
                 cosmosDbConnectionAssessment.DatabaseId,
@@ -188,14 +193,14 @@ Press y to proceed if you are happy this has been done.
 
         private static async Task PopulateTestData(CosmosDbConnection cosmosDbConnectionLegacyUserSessions, ConnectionMode connectionMode, int cosmosDbDestinationRUs)
         {
-            var sourceDocumentClient = new DocumentClient(
+            var sourceDocumentClient = new Microsoft.Azure.Documents.Client.DocumentClient(
                 cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                 cosmosDbConnectionLegacyUserSessions.AccessKey,
-                new ConnectionPolicy
+                new Microsoft.Azure.Documents.Client.ConnectionPolicy
                 {
                     MaxConnectionLimit = 1000,
-                    ConnectionMode = connectionMode,
-                    ConnectionProtocol = Protocol.Tcp
+                    ConnectionMode = connectionMode == ConnectionMode.Direct ? Microsoft.Azure.Documents.Client.ConnectionMode.Direct : Microsoft.Azure.Documents.Client.ConnectionMode.Gateway,
+                    ConnectionProtocol = Microsoft.Azure.Documents.Client.Protocol.Tcp
                 });
                 
             var migrationService = new PopulateTestDataService(sourceDocumentClient, cosmosDbDestinationRUs);
