@@ -15,7 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
             Questions = new List<ShortQuestion>();
         }
 
-        public override string? PartitionKey { get; set; } = "/Assessment";
+        public override string? PartitionKey { get; set; }
 
         public IEnumerable<ShortQuestion> Questions { get; set; }
 

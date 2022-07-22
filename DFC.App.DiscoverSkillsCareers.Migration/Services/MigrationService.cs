@@ -14,9 +14,12 @@ using DFC.App.DiscoverSkillsCareers.Migration.Models;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents.Linq;
 using MoreLinq.Extensions;
 using Newtonsoft.Json.Linq;
+using PartitionKey = Microsoft.Azure.Cosmos.PartitionKey;
+using RequestOptions = Microsoft.Azure.Documents.Client.RequestOptions;
 
 namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 {
@@ -24,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
     {
         private readonly IDocumentStore documentStore;
         private readonly IDocumentClient sourceDocumentClient;
-        private readonly IDocumentClient destinationDocumentClient;
+        private readonly Container destinationDocumentContainer;
         
         private List<JobCategoryContentItemModel> allJobCategories = new List<JobCategoryContentItemModel>();
         private List<JobProfileContentItemModel> allJobProfiles = new List<JobProfileContentItemModel>();
@@ -43,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         public MigrationService(
             IDocumentStore documentStore,
             IDocumentClient sourceDocumentClient,
-            IDocumentClient destinationDocumentClient,
+            CosmosClient destinationDocumentClient,
             string destinationDatabaseId,
             string destinationCollectionId,
             int cosmosDbDestinationRUs,
@@ -52,7 +55,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         {
             this.documentStore = documentStore;
             this.sourceDocumentClient = sourceDocumentClient;
-            this.destinationDocumentClient = destinationDocumentClient;
+            this.destinationDocumentContainer =
+                destinationDocumentClient.GetContainer(destinationDatabaseId, destinationCollectionId);
             this.destinationDatabaseId = destinationDatabaseId;
             this.destinationCollectionId = destinationCollectionId;
             this.cosmosDbDestinationRUs = cosmosDbDestinationRUs;
@@ -93,7 +97,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     sessionsIds.Skip(readBatchSize * (outerForeachCount + 1)).Take(readBatchSize).ToList());
                 
                 var totalSessionsCount = sessionsIds.Count;
-                var index = 1;
+                var index = readBatchSize * (outerForeachCount + 1) + 1;
 
                 const int ruCostPerItem = 185;
                 int writeBatchSize = (int)Math.Ceiling(cosmosDbDestinationRUs / (ruCostPerItem * 1.3));
@@ -123,7 +127,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                             {
                                 var migratedAssessment = new DysacAssessmentForCreate
                                 {
-                                    id = sessionId
+                                    id = sessionId,
+                                    PartitionKey = ((DateTime)session["lastUpdatedDt"]).ToUniversalTime().ToString("yyyy-MM-dd")
                                 };
 
                                 var recordedAnswers = ((session["assessmentState"] as JObject)!
@@ -229,22 +234,18 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
             try
             {
-                var resourceResponse = await destinationDocumentClient.CreateDocumentAsync(
-                    UriFactory.CreateDocumentCollectionUri(destinationDatabaseId, destinationCollectionId),
+                var requestOptions = new ItemRequestOptions { EnableContentResponseOnWrite = false };
+                
+                var resourceResponse = await destinationDocumentContainer.UpsertItemAsync(
                     migratedAssessment,
-                    new RequestOptions());
+                    new PartitionKey(migratedAssessment.PartitionKey),
+                    requestOptions);
 
                 saveCount += 1;
                 charge = resourceResponse.RequestCharge;
             }
             catch (Exception exception)
             {
-                if (exception.Message.Contains("already exists"))
-                {
-                    WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Skipping assessment {index} of {count} ({migratedAssessment.id}) as already exits");
-                    return;
-                }
-                
                 WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Error creating {index} of {count} ({migratedAssessment.id}) - {exception.Message}");
                 erroredSessions.Add(migratedAssessment.id);
 
@@ -338,7 +339,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
-                    MaxItemCount = -1
+                    MaxItemCount = 20000
                 }).AsDocumentQuery();
 
             while (query.HasMoreResults)
@@ -347,7 +348,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     .Select(dyn => (dyn["id"] as string, dyn["partitionKey"] as string))
                     .ToList());
                 
-                WriteAndLog($"Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             }
 
             WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Finished fetching session identifiers. Found {returnList.Count} - " + 
@@ -472,11 +473,11 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 if (filterQuestion == null)
                 {
-                    if (question.Key != "Persistence")
+                    if (question.Key != "Persistence" && question.Key != "Control Movement Abilities")
                     {
                         // NOTE - We didn't move many over for live - so remove this check
-                        //throw new InvalidOperationException(
-                        //    $"Filter question {question.Key} not found in Stax Filter Question Repository");
+                        throw new InvalidOperationException(
+                            $"Filter question {question.Key} not found in Stax Filter Question Repository");
                     }
                 }
 
@@ -517,7 +518,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                     if (skillQuestion == null)
                     {
-                        if (skill != "Persistence")
+                        if (skill != "Persistence" && skill != "Control Movement Abilities")
                         {
                             // NOTE - We didn't move many over for live - so remove this check
                             //throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");

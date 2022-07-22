@@ -10,8 +10,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
     {
         public static DysacAssessment GetAssessment()
         {
-            var assessmentToReturn = new DysacAssessment();
-            assessmentToReturn.Questions = GetShortQuestions();
+            var assessmentToReturn = new DysacAssessment
+            {
+                Questions = GetShortQuestions(),
+                PartitionKey = DateTime.UtcNow.ToString("yyyy-MM-dd")
+            };
 
             return assessmentToReturn;
         }
