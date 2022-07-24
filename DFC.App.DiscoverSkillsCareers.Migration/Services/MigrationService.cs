@@ -19,7 +19,6 @@ using Microsoft.Azure.Documents.Linq;
 using MoreLinq.Extensions;
 using Newtonsoft.Json.Linq;
 using PartitionKey = Microsoft.Azure.Cosmos.PartitionKey;
-using RequestOptions = Microsoft.Azure.Documents.Client.RequestOptions;
 
 namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 {
@@ -154,7 +153,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                                 WriteAndLog(
                                     $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Error processing {index} of {sessions.Count} - {exception.Message}");
 
-                                erroredSessions.Add(sessionId);
+                                erroredSessions.Add($"{sessionId}|{exception.Message}");
                             }
                             
                             index++;
@@ -247,8 +246,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             catch (Exception exception)
             {
                 WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Error creating {index} of {count} ({migratedAssessment.id}) - {exception.Message}");
-                erroredSessions.Add(migratedAssessment.id);
-
+                erroredSessions.Add($"{migratedAssessment.id}|{exception.Message}");
+                
                 return;
             }
             
@@ -325,7 +324,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         private async Task<List<(string id, string partitionKey)>> GetSessionIdentifiers()
         {
-            WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Started fetching session identifiers");
+            WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Started fetching session identifiers");
             var start = DateTime.Now;
             var cutoffDateTimeString = cutoffDateTime?.ToString("u");
 
@@ -348,10 +347,10 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     .Select(dyn => (dyn["id"] as string, dyn["partitionKey"] as string))
                     .ToList());
                 
-                WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             }
 
-            WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Finished fetching session identifiers. Found {returnList.Count} - " + 
+            WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Finished fetching session identifiers. Found {returnList.Count} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
@@ -473,12 +472,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 if (filterQuestion == null)
                 {
-                    if (question.Key != "Persistence" && question.Key != "Control Movement Abilities")
-                    {
-                        // NOTE - We didn't move many over for live - so remove this check
-                        throw new InvalidOperationException(
-                            $"Filter question {question.Key} not found in Stax Filter Question Repository");
-                    }
+                    throw new InvalidOperationException(
+                        $"Filter question {question.Key} not found in Stax Filter Question Repository");
                 }
 
                 filteredAssessmentQuestions.Add(new FilteredAssessmentQuestion
@@ -518,11 +513,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                     if (skillQuestion == null)
                     {
-                        if (skill != "Persistence" && skill != "Control Movement Abilities")
-                        {
-                            // NOTE - We didn't move many over for live - so remove this check
-                            //throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
-                        }
+                        throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
                     }
 
                     jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion?.Skills.First().Ordinal ?? int.MaxValue);
