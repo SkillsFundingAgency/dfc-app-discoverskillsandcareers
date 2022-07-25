@@ -19,7 +19,6 @@ using Microsoft.Azure.Documents.Linq;
 using MoreLinq.Extensions;
 using Newtonsoft.Json.Linq;
 using PartitionKey = Microsoft.Azure.Cosmos.PartitionKey;
-using RequestOptions = Microsoft.Azure.Documents.Client.RequestOptions;
 
 namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 {
@@ -34,14 +33,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
         private List<DysacFilteringQuestionContentModel> filteringQuestions = new List<DysacFilteringQuestionContentModel>();
         private List<ShortQuestion> shortQuestions = new List<ShortQuestion>();
         private readonly StringBuilder logger = new StringBuilder();
-        private readonly string destinationDatabaseId;
-        private readonly string destinationCollectionId;
         private readonly int cosmosDbDestinationRUs;
         private readonly bool useBookmark;
         private readonly DateTime? cutoffDateTime;
 
         private int saveCount;
-        private readonly List<string> erroredSessions = new List<string>();
+        private List<string> erroredSessions = new List<string>();
         
         public MigrationService(
             IDocumentStore documentStore,
@@ -57,8 +54,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             this.sourceDocumentClient = sourceDocumentClient;
             this.destinationDocumentContainer =
                 destinationDocumentClient.GetContainer(destinationDatabaseId, destinationCollectionId);
-            this.destinationDatabaseId = destinationDatabaseId;
-            this.destinationCollectionId = destinationCollectionId;
             this.cosmosDbDestinationRUs = cosmosDbDestinationRUs;
             this.useBookmark = useBookmark;
             this.cutoffDateTime = cutoffDateTime;
@@ -121,43 +116,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                         foreach (var session in sessionsToWriteSimultaneously)
                         {
-                            var sessionId = (string) session["id"];
-
-                            try
-                            {
-                                var migratedAssessment = new DysacAssessmentForCreate
-                                {
-                                    id = sessionId,
-                                    PartitionKey = ((DateTime)session["lastUpdatedDt"]).ToUniversalTime().ToString("yyyy-MM-dd")
-                                };
-
-                                var recordedAnswers = ((session["assessmentState"] as JObject)!
-                                        .ToObject<Dictionary<string, object>>()!
-                                        ["recordedAnswers"] as JArray)!
-                                    .Select(recordedAnswersObj => recordedAnswersObj.ToObject<Dictionary<string, object>>())
-                                    .ToList();
-
-                                migratedAssessment.Questions = ConvertToQuestions(recordedAnswers);
-
-                                migratedAssessment.ShortQuestionResult = ConvertToShortQuestionResult(
-                                    (session["resultData"] as JObject)?.ToObject<Dictionary<string, object>>());
-
-                                migratedAssessment.FilteredAssessment = ConvertToFilteredAssessment(
-                                    (session["filteredAssessmentState"] as JObject)
-                                    ?.ToObject<Dictionary<string, object>>(),
-                                    migratedAssessment.ShortQuestionResult!);
-
-                                creatingDocuments.Add(CreateDocument(migratedAssessment, index, totalSessionsCount));
-                            }
-                            catch (Exception exception)
-                            {
-                                WriteAndLog(
-                                    $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Error processing {index} of {sessions.Count} - {exception.Message}");
-
-                                erroredSessions.Add(sessionId);
-                            }
-                            
-                            index++;
+                            ProcessItem(session, index++, creatingDocuments, totalSessionsCount, sessions.Count);
                         }
 
                         await Task.WhenAll(creatingDocuments);
@@ -190,6 +149,26 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 allOkay = false;
             }
 
+            var originalErroredSessions = erroredSessions;
+            erroredSessions = new List<string>();
+
+            foreach (var errorSession in originalErroredSessions)
+            {
+                var sessionId = errorSession.Split('|')[0];
+                var partitionKey = errorSession.Split('|')[1];
+                
+                var list = new List<(string id, string partitionKey)>
+                {
+                    (sessionId, partitionKey)
+                };
+
+                var sessionsToMigrate = await FetchSessionsToMigrate(list);
+                var creatingDocuments = new List<Task>();
+                
+                ProcessItem(sessionsToMigrate.First(), -1, creatingDocuments, -1, -1);
+                await Task.WhenAll(creatingDocuments);
+            }
+
             var footerReport = new StringBuilder();
             footerReport.AppendLine("Results:");
             footerReport.Append($"{saveCount} items moved.\r\n\r\n");
@@ -212,6 +191,46 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             if (allOkay)
             {
                 File.Delete(bookmarkPath);
+            }
+        }
+
+        private void ProcessItem(Dictionary<string, object> session, int index, List<Task> creatingDocuments, int totalSessionsCount, int sessionsCount)
+        {
+            var sessionId = (string) session["id"];
+            var partitionKey = ((DateTime) session["lastUpdatedDt"]).ToUniversalTime().ToString("yyyy-MM-dd");
+
+            try
+            {
+                var migratedAssessment = new DysacAssessmentForCreate
+                {
+                    id = sessionId,
+                    PartitionKey = partitionKey
+                };
+
+                var recordedAnswers = ((session["assessmentState"] as JObject)!
+                        .ToObject<Dictionary<string, object>>()!
+                        ["recordedAnswers"] as JArray)!
+                    .Select(recordedAnswersObj => recordedAnswersObj.ToObject<Dictionary<string, object>>())
+                    .ToList();
+
+                migratedAssessment.Questions = ConvertToQuestions(recordedAnswers);
+
+                migratedAssessment.ShortQuestionResult = ConvertToShortQuestionResult(
+                    (session["resultData"] as JObject)?.ToObject<Dictionary<string, object>>());
+
+                migratedAssessment.FilteredAssessment = ConvertToFilteredAssessment(
+                    (session["filteredAssessmentState"] as JObject)
+                    ?.ToObject<Dictionary<string, object>>(),
+                    migratedAssessment.ShortQuestionResult!);
+
+                creatingDocuments.Add(CreateDocument(migratedAssessment, index, totalSessionsCount));
+            }
+            catch (Exception exception)
+            {
+                WriteAndLog(
+                    $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Error processing {index} of {sessionsCount} - {exception.Message}");
+
+                erroredSessions.Add($"{sessionId}|{partitionKey}|{exception.Message}");
             }
         }
         
@@ -247,8 +266,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             catch (Exception exception)
             {
                 WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Error creating {index} of {count} ({migratedAssessment.id}) - {exception.Message}");
-                erroredSessions.Add(migratedAssessment.id);
-
+                erroredSessions.Add($"{migratedAssessment.id}|{migratedAssessment.PartitionKey}|{exception.Message}");
+                
                 return;
             }
             
@@ -325,7 +344,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
         private async Task<List<(string id, string partitionKey)>> GetSessionIdentifiers()
         {
-            WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Started fetching session identifiers");
+            WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Started fetching session identifiers");
             var start = DateTime.Now;
             var cutoffDateTimeString = cutoffDateTime?.ToString("u");
 
@@ -348,10 +367,10 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                     .Select(dyn => (dyn["id"] as string, dyn["partitionKey"] as string))
                     .ToList());
                 
-                WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Fetched {returnList.Count} session identifiers so far - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             }
 
-            WriteAndLog($"{DateTime.Now:yyyy-MM-dd hh:mm:ss} - Finished fetching session identifiers. Found {returnList.Count} - " + 
+            WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Finished fetching session identifiers. Found {returnList.Count} - " + 
                 $"took {(DateTime.Now - start).TotalSeconds} seconds");
 
             return returnList;
@@ -441,7 +460,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             return filteredAssessment;
         }
 
-        private static void AddFilterAnswers(List<Dictionary<string, object>> recordedAnswers, List<FilteredAssessmentQuestion> questions)
+        private void AddFilterAnswers(List<Dictionary<string, object>> recordedAnswers, List<FilteredAssessmentQuestion> questions)
         {
             foreach (var recordedAnswer in recordedAnswers)
             {
@@ -449,9 +468,23 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 var answeredDate = (DateTime)recordedAnswer["answeredDt"];
                 var selectedAnswer = (Answer)(long)recordedAnswer["selectedOption"];
 
-                questions
-                    .First(question => string.Equals(question.TraitCode!, answerTraitAsString, StringComparison.InvariantCultureIgnoreCase))!
-                    .Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
+                var questionToUpdate = questions
+                    .FirstOrDefault(question => string.Equals(question.TraitCode!, answerTraitAsString, StringComparison.InvariantCultureIgnoreCase))!;
+
+                if (questionToUpdate == null)
+                {
+                    questionToUpdate = new FilteredAssessmentQuestion
+                    {
+                        QuestionText = (string)recordedAnswer["questionText"],
+                        Id = Guid.NewGuid(),
+                        TraitCode = answerTraitAsString,
+                    };
+                    
+                    questions.Add(questionToUpdate);
+                    WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Filter question '{questionToUpdate.QuestionText}' was missing from job category gleamed questions - adding");
+                }
+                
+                questionToUpdate.Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
             }
         }
 
@@ -473,12 +506,8 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 if (filterQuestion == null)
                 {
-                    if (question.Key != "Persistence" && question.Key != "Control Movement Abilities")
-                    {
-                        // NOTE - We didn't move many over for live - so remove this check
-                        throw new InvalidOperationException(
-                            $"Filter question {question.Key} not found in Stax Filter Question Repository");
-                    }
+                    throw new InvalidOperationException(
+                        $"Filter question {question.Key} not found in Stax Filter Question Repository");
                 }
 
                 filteredAssessmentQuestions.Add(new FilteredAssessmentQuestion
@@ -509,6 +538,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 foreach (var question in questions)
                 {
                     var jobCategoryName = (string)jobCategory["jobCategoryName"];
+
+                    if (!jobCategoryMappings.ContainsKey(jobCategoryName))
+                    {
+                        continue;
+                    }
+                    
                     jobCategoryAssessment.JobCategory = jobCategoryMappings[jobCategoryName];
 
                     var skill = (string)question["Skill"];
@@ -518,11 +553,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                     if (skillQuestion == null)
                     {
-                        if (skill != "Persistence" && skill != "Control Movement Abilities")
-                        {
-                            // NOTE - We didn't move many over for live - so remove this check
-                            //throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
-                        }
+                        throw new InvalidOperationException($"Filter question {skill} not found in Stax Filter Question Repository");
                     }
 
                     jobCategoryAssessment.QuestionSkills.Add(skill, skillQuestion?.Skills.First().Ordinal ?? int.MaxValue);
