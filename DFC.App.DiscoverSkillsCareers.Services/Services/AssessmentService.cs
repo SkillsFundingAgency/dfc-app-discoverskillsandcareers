@@ -53,6 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var assessmentCode = SessionIdHelper.GenerateSessionId("ncs");
             var assessment = new DysacAssessment
             {
+                PartitionKey = DateTime.UtcNow.ToString("yyyy-MM-dd"),
                 StartedAt = DateTime.UtcNow,
                 Questions = questionSets?.Any() == true ?
                     questionSets

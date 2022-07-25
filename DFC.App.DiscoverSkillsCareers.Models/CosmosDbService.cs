@@ -69,7 +69,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
             var results = await BaseQuery<DysacAssessment>(
                 true,
-                "/Assessment",
                 new QueryDefinition(sql).WithParameter("@sessionId", sessionId))
                 .ConfigureAwait(false);
 
@@ -112,6 +111,20 @@ namespace DFC.App.DiscoverSkillsCareers.Models
                 {
                     PartitionKey = new PartitionKey(partitionKey),
                 });
+
+            var returnList = new List<T>();
+            while (iterator.HasMoreResults)
+            {
+                returnList.AddRange(await iterator.ReadNextAsync().ConfigureAwait(false));
+            }
+
+            return returnList;
+        }
+
+        private async Task<List<T>> BaseQuery<T>(bool isAssessment, QueryDefinition query)
+            where T : class
+        {
+            using var iterator = (isAssessment ? AssessmentContainer : ContentContainer).GetItemQueryIterator<T>(query);
 
             var returnList = new List<T>();
             while (iterator.HasMoreResults)

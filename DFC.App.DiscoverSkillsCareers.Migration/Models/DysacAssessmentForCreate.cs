@@ -18,7 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Models
             Questions = new List<ShortQuestion>();
         }
 
-        public string? PartitionKey { get; set; } = "/Assessment";
+        public string? PartitionKey { get; set; }
 
         public IEnumerable<ShortQuestion> Questions { get; set; }
 
