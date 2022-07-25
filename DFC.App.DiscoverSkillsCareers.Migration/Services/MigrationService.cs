@@ -440,7 +440,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             return filteredAssessment;
         }
 
-        private static void AddFilterAnswers(List<Dictionary<string, object>> recordedAnswers, List<FilteredAssessmentQuestion> questions)
+        private void AddFilterAnswers(List<Dictionary<string, object>> recordedAnswers, List<FilteredAssessmentQuestion> questions)
         {
             foreach (var recordedAnswer in recordedAnswers)
             {
@@ -448,9 +448,23 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 var answeredDate = (DateTime)recordedAnswer["answeredDt"];
                 var selectedAnswer = (Answer)(long)recordedAnswer["selectedOption"];
 
-                questions
-                    .First(question => string.Equals(question.TraitCode!, answerTraitAsString, StringComparison.InvariantCultureIgnoreCase))!
-                    .Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
+                var questionToUpdate = questions
+                    .FirstOrDefault(question => string.Equals(question.TraitCode!, answerTraitAsString, StringComparison.InvariantCultureIgnoreCase))!;
+
+                if (questionToUpdate == null)
+                {
+                    questionToUpdate = new FilteredAssessmentQuestion
+                    {
+                        QuestionText = (string)recordedAnswer["questionText"],
+                        Id = Guid.NewGuid(),
+                        TraitCode = answerTraitAsString,
+                    };
+                    
+                    questions.Add(questionToUpdate);
+                    WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Filter question '{questionToUpdate.QuestionText}' was missing from job category gleamed questions - adding");
+                }
+                
+                questionToUpdate.Answer = new QuestionAnswer { AnsweredAt = answeredDate, Value = selectedAnswer };
             }
         }
 
@@ -504,6 +518,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
                 foreach (var question in questions)
                 {
                     var jobCategoryName = (string)jobCategory["jobCategoryName"];
+
+                    if (!jobCategoryMappings.ContainsKey(jobCategoryName))
+                    {
+                        continue;
+                    }
+                    
                     jobCategoryAssessment.JobCategory = jobCategoryMappings[jobCategoryName];
 
                     var skill = (string)question["Skill"];
