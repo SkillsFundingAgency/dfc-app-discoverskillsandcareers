@@ -42,9 +42,7 @@
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/herobanner"
       }
     ],
-    "JavaScriptNames": {
-      "/js/dfc-app-discoverskillsandcareers.min.js": null
-    },
+    "JavaScriptNames": {},
     "CssScriptNames": {
       "/css/dysac.min.css": "Ze4TsRvILLVAQIGvDWOZvQ=="
     }
