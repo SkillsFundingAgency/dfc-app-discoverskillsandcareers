@@ -8,6 +8,10 @@
 <body>
     @RenderBody()
     @RenderSection("Scripts", required: false)
+    @if (ViewContext.RouteData.Values["controller"] == "Results")
+    {
+        <script src="https://www.googleoptimize.com/optimize.js?id=OPT-MVR8F6S"></script>
+    }
     <partial name="_ValidationScriptsPartial" />
 </body>
 </html>
