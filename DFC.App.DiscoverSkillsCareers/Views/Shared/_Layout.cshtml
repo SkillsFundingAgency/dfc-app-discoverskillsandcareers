@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - DFC.App.DiscoverSkillsCareers</title>
-    @if (ViewContext.RouteData.Values["controller"] == "Results")
+    @if (ViewContext.RouteData.Values["controller"].ToString().ToLower() == "results")
     {
         <script src="https://www.googleoptimize.com/optimize.js?id=OPT-MVR8F6S"></script>
     }
