@@ -374,14 +374,14 @@ Scenario Outline: TC13 - Initial and all suggested job categories
 	| Job category       |
 	| Sports and leisure |
 	| Manufacturing      |
-	| Creative and media |
+	| Science and research |
 	When I click See matches to See 7 other career areas that might interest you
 	Then the job categories suggestions are <All job categories> in number
 	And all the job categories dispalyed are
 	| Job category                   |
 	| Sports and leisure             |
 	| Manufacturing                  |
-	| Creative and media             |
+	| Science and research           |
 	| Construction and trades        |
 	| Science and research           |
 	| Business and finance           |
@@ -853,12 +853,13 @@ Scenario: TC23 - Real user interaction 1
 	| Science and research | 4                               |
 	| Travel and tourism   | 2                               |
 	| Business and finance | 3                               |
-	| Law and Legal        | 3                               |
-	| Animal care          | 2                               |
-	| Deliver and storage  | 2                               |
+	| Law and legal        | 3                               |
+	| Animal care          | 3                               |
 	| Healthcare           | 4                               |
+	| Deliver and storage  | 2                               |
 	| Home services        | 3                               |
 	| Transport            | 3                               |
+
 
 @DYSAC
 Scenario: TC24 - Real user interaction 2
