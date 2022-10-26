@@ -376,8 +376,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Where(question => question.Answer != null)
                 .Select(question => question.TraitCode);
 
-            var nextQuestionCode = categoryQuestions
-                .FirstOrDefault(categoryQuestion => !answeredQuestions.Contains(categoryQuestion.Key)).Key;
+            var nextQuestionCode = categoryQuestions[questionNumber - 1].Key;
 
             if (questionNumber == 1 && categoryQuestions.All(categoryQuestion => answeredQuestions.Contains(categoryQuestion.Key)))
             {
