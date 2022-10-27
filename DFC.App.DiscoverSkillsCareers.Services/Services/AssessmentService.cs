@@ -415,6 +415,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 QuestionNumber = questionNumber,
                 QuestionText = question.QuestionText!,
                 StartedDt = DateTime.Now,
+                RecordedAnswer = question.Answer,
                 TraitCode = question.TraitCode!,
             };
         }
