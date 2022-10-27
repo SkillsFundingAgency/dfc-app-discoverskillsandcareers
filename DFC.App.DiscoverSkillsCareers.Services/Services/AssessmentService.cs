@@ -113,19 +113,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             };
         }
 
-        public async Task UpdateQuestionNumber(int questionNumber)
-        {
-            var assessment = await GetCurrentAssessment().ConfigureAwait(false);
-            //var questions = assessment.Questions.ToList();
-
-            //for (int idx = questionNumber - 1, len = questions.Count; idx < len; idx++)
-            //{
-            //    questions[idx].Answer = null;
-            //}
-
-            await UpdateAssessment(assessment).ConfigureAwait(false);
-        }
-
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer)
         {
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
