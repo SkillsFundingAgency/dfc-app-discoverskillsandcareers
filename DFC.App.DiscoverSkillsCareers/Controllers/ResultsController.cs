@@ -86,6 +86,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             logService.LogInformation("Assessment retrieved");
 
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
+            if (resultsResponse == null)
+            {
+                logService.LogError("InvalidOperation exception thrown. Regenerating the results.");
+                return RedirectTo("results");
+            }
+
             var resultsByCategoryModel = mapper.Map<ResultsByCategoryModel>(resultsResponse);
 
             logService.LogInformation("Got results by category");
