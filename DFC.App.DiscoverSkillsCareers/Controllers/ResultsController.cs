@@ -88,7 +88,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
             if (resultsResponse == null)
             {
-                logService.LogError("InvalidOperation exception thrown. Regenerating the results.");
+                logService.LogError("List of all job profiles doesn't contain profile referenced in the assessment. Regenerating the results.");
                 return RedirectTo("results");
             }
 

@@ -84,13 +84,17 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
             {
-                try
-                {
                     var listOfJobProfiles = new List<JobProfileResult>();
                     var categoryJobProfiles = category.JobProfiles
                         .Where(jobProfile => jobProfile.SkillCodes != null && jobProfile.SkillCodes.Any())
                         .ToList();
 
+
+                    if (categoryJobProfiles.Select(jobProfile => allJobProfiles.SingleOrDefault(ajp => ajp.Title == jobProfile.Title))
+                       .ToList().Contains(null))
+                    {
+                        return null;
+                    }
                     var categorySkills = categoryJobProfiles
                         .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title))
                         .ToList()
@@ -132,11 +136,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     assessment.ShortQuestionResult.JobCategories
                         .First(jobCategoryResult => jobCategoryResult.JobFamilyNameUrl == category.JobFamilyNameUrl)
                         .JobProfiles = listOfJobProfiles;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return null;
-                }
             }
 
             var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!.ToList(), jobCategoryName);
