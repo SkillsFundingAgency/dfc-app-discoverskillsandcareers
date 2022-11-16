@@ -29,6 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<GetResultsResponse, ResultsHeroBannerViewModel>()
             .ForMember(d => d.NumberOfCategories, s => s.MapFrom(a => a.JobCategories.Count()))
+            .ForMember(d => d.WasRegenerated, s => s.MapFrom(a => a.WasRegenerated))
             .ForMember(d => d.IsCategoryBanner, s => s.Ignore());
         }
     }
