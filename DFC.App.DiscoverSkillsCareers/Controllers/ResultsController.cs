@@ -86,7 +86,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             logService.LogInformation("Assessment retrieved");
 
             var resultsResponse = await resultsService.GetResultsByCategory(id).ConfigureAwait(false);
-            if (resultsResponse == null)
+            if (!resultsResponse.AllJobProfilesMatchWithAssessmentProfiles)
             {
                 logService.LogError("List of all job profiles doesn't contain profile referenced in the assessment. Regenerating the results.");
                 return RedirectTo("results");

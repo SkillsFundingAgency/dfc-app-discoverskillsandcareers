@@ -90,11 +90,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         .ToList();
 
 
-                    if (categoryJobProfiles.Select(jobProfile => allJobProfiles.SingleOrDefault(ajp => ajp.Title == jobProfile.Title))
-                       .ToList().Contains(null))
+                    var notMatchingJobProfiles = categoryJobProfiles
+                        .Where(jobProfile => allJobProfiles.All(ajp => ajp.Title != jobProfile.Title));
+
+                    if (notMatchingJobProfiles.Any())
                     {
-                        return null;
+                        return new GetResultsResponse { AllJobProfilesMatchWithAssessmentProfiles = false};
                     }
+
+
                     var categorySkills = categoryJobProfiles
                         .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title))
                         .ToList()
