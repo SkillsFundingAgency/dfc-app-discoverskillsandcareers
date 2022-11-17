@@ -172,19 +172,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment, bool updateCollection)
         {
-            var lastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments
-                .OrderByDescending(jobCategoryAssessment => jobCategoryAssessment.LastAnswer)
-                .FirstOrDefault()?
-                .JobCategory!;
-            if (lastAssessmentCategory != null)
-            {
-                var getCategoryResponse = await GetResultsByCategory(lastAssessmentCategory).ConfigureAwait(false);
-                if (getCategoryResponse == null)
-                {
-                    assessment.WasRegenerated = true;
-                }
-            }
-
             var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
 
             if (assessmentCalculationResponse == null)
@@ -203,7 +190,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .OrderByDescending(jobCategoryAssessment => jobCategoryAssessment.LastAnswer)
                     .FirstOrDefault()?
                     .JobCategory!,
-                WasRegenerated = assessment.WasRegenerated,
                 JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories,
                 JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories?.Count(),
                 Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,

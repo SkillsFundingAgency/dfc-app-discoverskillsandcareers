@@ -13,7 +13,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
             WhatYouToldUs = new List<string>();
             Traits = new List<string>();
         }
-        public bool? WasRegenerated { get; set; }
 
         public bool AllJobProfilesMatchWithAssessmentProfiles { get; set; } = true;
 

@@ -17,8 +17,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Assessment
 
         public override string? PartitionKey { get; set; }
 
-        public bool? WasRegenerated { get; set; }
-
         public IEnumerable<ShortQuestion> Questions { get; set; }
 
         [JsonProperty(Order = -30, PropertyName = "id")]

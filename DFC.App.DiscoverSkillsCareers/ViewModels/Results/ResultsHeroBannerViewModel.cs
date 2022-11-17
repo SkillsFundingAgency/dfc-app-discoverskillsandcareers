@@ -8,8 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     {
         public IEnumerable<string> Traits { get; set; }
 
-        public bool? WasRegenerated { get; set; }
-
         public bool IsCategoryBanner { get; set; } = true;
 
         public int NumberOfCategories { get; set; }
