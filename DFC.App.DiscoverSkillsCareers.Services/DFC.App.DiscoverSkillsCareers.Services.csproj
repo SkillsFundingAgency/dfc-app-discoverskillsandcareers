@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="DFC.Compui.Sessionstate" Version="1.0.15" />
     <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.106" />
     <PackageReference Include="DFC.Notify290" Version="0.1.9" />
