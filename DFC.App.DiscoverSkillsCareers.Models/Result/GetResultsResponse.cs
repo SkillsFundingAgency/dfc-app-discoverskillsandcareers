@@ -14,7 +14,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
             Traits = new List<string>();
         }
 
-        public bool AllJobProfilesMatchWithAssessmentProfiles { get; set; } = true;
+        public bool JobProfilesMissMatchWithAssessmentProfiles { get; set; }
 
         public string? SessionId { get; set; }
 

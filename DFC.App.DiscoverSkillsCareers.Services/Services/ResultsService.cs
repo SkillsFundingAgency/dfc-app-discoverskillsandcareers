@@ -95,7 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
                     if (notMatchingJobProfiles.Any())
                     {
-                        return new GetResultsResponse { AllJobProfilesMatchWithAssessmentProfiles = false};
+                        return new GetResultsResponse { JobProfilesMissMatchWithAssessmentProfiles = true};
                     }
 
 

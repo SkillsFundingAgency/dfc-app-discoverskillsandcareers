@@ -977,7 +977,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => assessmentService.UpdateAssessment(A<DysacAssessment>.Ignored))
                 .MustHaveHappenedOnceExactly();
 
-            Assert.False(results.AllJobProfilesMatchWithAssessmentProfiles);
+            Assert.True(results.JobProfilesMissMatchWithAssessmentProfiles);
         }
     }
 }
