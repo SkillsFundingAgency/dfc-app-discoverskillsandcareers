@@ -18,8 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<FilterAssessmentResult, FilterAssessmentResultViewModel>();
 
-            CreateMap<GetResultsResponse, ResultsIndexResponseViewModel>()
-                .ForSourceMember(s => s.JobProfilesMissMatchWithAssessmentProfiles, opt => opt.DoNotValidate());
+            CreateMap<GetResultsResponse, ResultsIndexResponseViewModel>();
 
             CreateMap<GetQuestionResponse, QuestionGetResponseViewModel>()
                 .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer!.Value))

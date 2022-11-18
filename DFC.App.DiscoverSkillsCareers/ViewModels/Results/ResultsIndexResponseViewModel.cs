@@ -14,6 +14,8 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
             WhatYouToldUs = new List<string>();
         }
 
+        public bool JobProfilesMissMatchWithAssessmentProfiles { get; set; }
+
         public IEnumerable<JobCategoryResultViewModel> JobCategories { get; set; }
 
         public int JobCategoriesNumberToShow { get; set; }
