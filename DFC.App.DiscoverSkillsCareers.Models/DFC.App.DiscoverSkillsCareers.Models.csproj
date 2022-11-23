@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <ProjectGuid>9B0E6965-EEA8-4149-BDE3-5D797EFBFB89</ProjectGuid>
     <Nullable>enable</Nullable>
   </PropertyGroup>
