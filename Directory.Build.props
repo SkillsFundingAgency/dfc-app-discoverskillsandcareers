@@ -1,6 +1,6 @@
 <Project>
-    <PropertyGroup>
-        <RollForward>Minor</RollForward>
-	<TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
+	<PropertyGroup>
+		<RollForward>Minor</RollForward>
+		<RuntimeFrameworkVersion>6.0</RuntimeFrameworkVersion>
+	</PropertyGroup>
 </Project>
