@@ -9,18 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="runtimeconfig.template.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="runtimeconfig.template.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ExtentReports.Core" Version="1.0.3" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.17.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
