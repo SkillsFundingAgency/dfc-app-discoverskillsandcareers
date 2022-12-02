@@ -108,21 +108,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 QuestionNumber = currentQuestionNumber.Value,
                 QuestionText = question.QuestionText!,
                 StartedDt = DateTime.Now,
+                RecordedAnswer = question.Answer,
                 RecordedAnswersCount = assessment.Questions.Count(questionA => questionA.Answer != null),
             };
-        }
-
-        public async Task UpdateQuestionNumber(int questionNumber)
-        {
-            var assessment = await GetCurrentAssessment().ConfigureAwait(false);
-            var questions = assessment.Questions.ToList();
-
-            for (int idx = questionNumber - 1, len = questions.Count; idx < len; idx++)
-            {
-                questions[idx].Answer = null;
-            }
-
-            await UpdateAssessment(assessment).ConfigureAwait(false);
         }
 
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer)
@@ -376,8 +364,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Where(question => question.Answer != null)
                 .Select(question => question.TraitCode);
 
-            var nextQuestionCode = categoryQuestions
-                .FirstOrDefault(categoryQuestion => !answeredQuestions.Contains(categoryQuestion.Key)).Key;
+            var nextQuestionCode = categoryQuestions[questionNumber - 1].Key;
 
             if (questionNumber == 1 && categoryQuestions.All(categoryQuestion => answeredQuestions.Contains(categoryQuestion.Key)))
             {
@@ -416,6 +403,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 QuestionNumber = questionNumber,
                 QuestionText = question.QuestionText!,
                 StartedDt = DateTime.Now,
+                RecordedAnswer = question.Answer,
                 TraitCode = question.TraitCode!,
             };
         }
