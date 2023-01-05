@@ -7,18 +7,12 @@
 
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
-    <None Remove="appsettings.template.json" />
     <None Remove="TestData\ExampleLegacyData.json" />
     <None Remove="TestData\ExampleLegacyData2.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="appsettings.template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
