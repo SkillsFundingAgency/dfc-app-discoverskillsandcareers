@@ -77,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
             try
             {
                 //choose run from error list file modified on 04-01-2023
-                var fetchingSessionsIds= Task.FromResult(new List<(string id, string partitionKey)>());
+                var fetchingSessionsIds = Task.FromResult(new List<(string id, string partitionKey)>());
                 if (runfromerrorfileonly)
                 {
                     fetchingSessionsIds = GetSessionIdentifiersfromErrorListOnly();
@@ -123,7 +123,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration.Services
 
                 WriteAndLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Writes per second attempting is {writeBatchSize}");
 
-                while (outerForeachCount * readBatchSize < totalSessionsCount)
+                while (outerForeachCount * readBatchSize < (totalSessionsCount + readBatchSize))
                 {
                     var writingBookmark = File.WriteAllTextAsync(bookmarkPath, outerForeachCount + string.Empty);
 

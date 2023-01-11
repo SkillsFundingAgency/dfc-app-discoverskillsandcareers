@@ -331,3 +331,6 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /DFC.App.DiscoverSkillsCareers/Properties/launchSettings.json
+
+# Migration report files
+*-report.txt
