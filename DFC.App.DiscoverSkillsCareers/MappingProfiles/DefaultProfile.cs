@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<GetResultsResponse, ResultsIndexResponseViewModel>();
 
             CreateMap<GetQuestionResponse, QuestionGetResponseViewModel>()
-                .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer))
+                .ForMember(d => d.Answer, s => s.MapFrom(a => a.RecordedAnswer!.Value))
                 .ForMember(d => d.Started, s => s.MapFrom(a => a.StartedDt))
                 .ForMember(d => d.PercentageComplete, s => s.MapFrom(a => a.PercentComplete))
                 .ForMember(d => d.AvailableQuestionsCount, s => s.MapFrom(a => a.MaxQuestionsCount))

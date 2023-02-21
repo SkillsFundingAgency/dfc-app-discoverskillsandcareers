@@ -23,6 +23,20 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.Extensions
 
         }
 
+        public static bool CloseBanner(this IWebDriver driver)
+        {
+            try
+            {
+                driver.FindElement(By.XPath("//p[contains(text(),'⛌ Close')]")).Click();
+                return true;
+
+
+
+            }
+            catch { return false; }
+
+        }
+
         public static IWebElement WaitUntilElementFound(this IWebDriver driver, By elementId)
         {
             var wait = new WebDriverWait(driver, maxWaitTime);
