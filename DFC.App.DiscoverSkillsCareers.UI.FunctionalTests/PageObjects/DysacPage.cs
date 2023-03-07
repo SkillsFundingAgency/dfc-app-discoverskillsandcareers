@@ -42,8 +42,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickStartAssessment()
         {
+            WebDriverExtension.CloseBanner(_scenarioContext.GetWebDriver());
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-button--start"));
             btnStartAssessment.Click();
+
         }
 
         public string GetQuestionText()
