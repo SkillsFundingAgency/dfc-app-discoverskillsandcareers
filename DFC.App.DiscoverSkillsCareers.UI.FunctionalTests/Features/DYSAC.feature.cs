@@ -1426,7 +1426,7 @@ this.FeatureBackground();
                 table2.AddRow(new string[] {
                             "Manufacturing"});
                 table2.AddRow(new string[] {
-                            "Creative and media"});
+                            "Science and research"});
 #line 373
  testRunner.And("the initial job categories dispalyed are", ((string)(null)), table2, "And ");
 #line hidden
@@ -1443,7 +1443,7 @@ this.FeatureBackground();
                 table3.AddRow(new string[] {
                             "Manufacturing"});
                 table3.AddRow(new string[] {
-                            "Creative and media"});
+                            "Science and research"});
                 table3.AddRow(new string[] {
                             "Construction and trades"});
                 table3.AddRow(new string[] {
@@ -3388,17 +3388,17 @@ this.FeatureBackground();
                             "Business and finance",
                             "3"});
                 table15.AddRow(new string[] {
-                            "Law and Legal",
+                            "Law and legal",
                             "3"});
                 table15.AddRow(new string[] {
                             "Animal care",
-                            "2"});
-                table15.AddRow(new string[] {
-                            "Deliver and storage",
-                            "2"});
+                            "3"});
                 table15.AddRow(new string[] {
                             "Healthcare",
                             "4"});
+                table15.AddRow(new string[] {
+                            "Deliver and storage",
+                            "2"});
                 table15.AddRow(new string[] {
                             "Home services",
                             "3"});
@@ -3423,7 +3423,7 @@ this.FeatureBackground();
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC24 - Real user interaction 2", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 864
+#line 865
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -3436,7 +3436,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 4
 this.FeatureBackground();
 #line hidden
-#line 865
+#line 866
  testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
@@ -3603,7 +3603,7 @@ this.FeatureBackground();
                             "97",
                             "I enjoy planning a task more than actually doing it",
                             "It depends"});
-#line 866
+#line 867
  testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table16, "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
@@ -3615,7 +3615,7 @@ this.FeatureBackground();
                             "you enjoy helping and listening to other people"});
                 table17.AddRow(new string[] {
                             "you are a practical person and enjoy getting things done"});
-#line 908
+#line 909
  testRunner.Then("the What you told us section of the Your results page displays the following trai" +
                         "ts", ((string)(null)), table17, "Then ");
 #line hidden
@@ -3652,7 +3652,7 @@ this.FeatureBackground();
                 table18.AddRow(new string[] {
                             "Teaching and education",
                             "3"});
-#line 913
+#line 914
  testRunner.And("the following job categories with their corresponding number of answer more quest" +
                         "ions are displayed", ((string)(null)), table18, "And ");
 #line hidden

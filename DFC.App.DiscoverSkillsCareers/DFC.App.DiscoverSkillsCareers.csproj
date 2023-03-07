@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ProjectGuid>37CBD763-5D8F-4DDC-90F9-8457F3D48293</ProjectGuid>
   </PropertyGroup>
     
@@ -25,16 +25,16 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="DFC.Compui.Subscriptions" Version="1.0.96" />
     <PackageReference Include="DFC.Compui.Telemetry" Version="1.0.31" />
-    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="1.0.106" />
+    <PackageReference Include="DFC.Content.Pkg.Netcore" Version="2.0.0" />
     <PackageReference Include="DFC.Logger.AppInsights" Version="1.0.7" />
     <PackageReference Include="Dfc.Session" Version="0.3.5" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

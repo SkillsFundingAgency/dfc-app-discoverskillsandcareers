@@ -15,6 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("head")]
+        [Route("head/assessment/new")]
         public IActionResult Index()
         {
             var vm = CreateViewModel(PageTitle.Home);
