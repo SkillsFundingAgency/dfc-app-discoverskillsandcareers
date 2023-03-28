@@ -281,8 +281,8 @@ Scenario Outline: TC06 - Return to assessment using reference code
 	Then I am at the question where I left off
 Examples: 
 	| Percentage completed |
-	| 70                   |
-	| 2                    |
+	| 2                  |
+	| 70                    |
 	| 30                   |
 
 @DYSAC
@@ -305,7 +305,7 @@ Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 	And I proceed with answering questions up to "62" percent
 	And I save progress
 	And I choose the "Get a reference code" option of returning to assessment
-	When I supply phone number "07424037362"
+	When I supply phone number "07585082797"
 	Then the phone number appears on the Check your phone page
 	When I click the Return to assessment button
 	Then I am at the question where I left off
@@ -344,7 +344,7 @@ Scenario: TC11 - Email field validation and population
 	And I go forward
 	When I click Send on the resultant page without providing an email address
 	Then validation messages are displayed for the "email address" field
-	When I provide email address "victor.abegunde@methods.co.uk"
+	When I provide email address "gordon.wilson@education.gov.uk"
 	Then I am navigated to the "Check your email" page
 	And the email address used is present in the text on the page
 	When I click the Back link from the "Check your email" page
@@ -374,14 +374,14 @@ Scenario Outline: TC13 - Initial and all suggested job categories
 	| Job category       |
 	| Sports and leisure |
 	| Manufacturing      |
-	| Creative and media |
+	| Science and research |
 	When I click See matches to See 7 other career areas that might interest you
 	Then the job categories suggestions are <All job categories> in number
 	And all the job categories dispalyed are
 	| Job category                   |
 	| Sports and leisure             |
 	| Manufacturing                  |
-	| Creative and media             |
+	| Science and research           |
 	| Construction and trades        |
 	| Science and research           |
 	| Business and finance           |
@@ -853,12 +853,13 @@ Scenario: TC23 - Real user interaction 1
 	| Science and research | 4                               |
 	| Travel and tourism   | 2                               |
 	| Business and finance | 3                               |
-	| Law and Legal        | 3                               |
+	| Law and legal        | 3                               |
 	| Animal care          | 2                               |
-	| Deliver and storage  | 2                               |
 	| Healthcare           | 4                               |
+	| Delivery and storage  | 2                               |
 	| Home services        | 3                               |
 	| Transport            | 3                               |
+
 
 @DYSAC
 Scenario: TC24 - Real user interaction 2
@@ -907,18 +908,18 @@ Scenario: TC24 - Real user interaction 2
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
 	Then the What you told us section of the Your results page displays the following traits
 	| Trait text                                                                                     |
-	| you are motivated, set yourself personal goals and are comfortable competing with other people |
-	| you enjoy helping and listening to other people                                                |
-	| you are a practical person and enjoy getting things done                                       |
+	| you enjoy helping and listening to other people												 |
+	| you like dealing with complicated problems or working with numbers		                     |
+	| you like to plan things and are well organised                                                 |
 	And the following job categories with their corresponding number of answer more questions are displayed
 	| Job category                   | Number of answer more questions |
-	| Business and finance           | 3                               |
-	| Emergency and uniform services | 3                               |
-	| Law and legal                  | 3                               |
-	| Travel and tourism             | 2                               |
-	| Sports and leisure             | 3                               |
-	| Manufacturing                  | 4                               |
-	| Creative and media             | 5                               |
-	| Construction and trades        | 4                               |
-	| Science and research           | 4                               |
-	| Teaching and education         | 3                               |
+	| Manufacturing        | 4                               |
+	| Science and research | 4                               |
+	| Travel and tourism   | 2                               |
+	| Business and finance | 3                               |
+	| Law and legal        | 3                               |
+	| Animal care          | 2                               |
+	| Healthcare           | 4                               |
+	| Delivery and storage  | 2                               |
+	| Home services        | 3                               |
+	| Transport            | 3                               |

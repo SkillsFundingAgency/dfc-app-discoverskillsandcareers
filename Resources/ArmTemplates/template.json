@@ -336,6 +336,14 @@
                                 "value": "1"
                             },
                             {
+                                "name" : "DOTNET_ROLL_FORWARD",
+                                "value" : "Minor"
+                            },
+                            {
+                                "name" : "DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX",
+                                "value" : 1
+                            },
+                            {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                                 "value": "[reference(variables('AppServiceAppInsightsName')).outputs.InstrumentationKey.value]"
                             },
