@@ -108,5 +108,27 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
             var redirectResult = actionResponse as RedirectResult;
             Assert.Equal($"~/{RouteName.Prefix}/assessment/name1/1", redirectResult.Url);
         }
+
+        [Fact]
+        public async Task PercentageCompletePropertyGetsUpdatedWhenGoesBackToPreviousQuestion()
+        {
+            var expectedPercentageComplete = 33;
+            var viewModel = new QuestionGetRequestViewModel() { QuestionNumber = 2, AssessmentType = "name1" };
+            var expectedQuestion = new GetQuestionResponse() { MaxQuestionsCount = 3, QuestionNumber = 1 };
+            var expectedAssessment = new GetAssessmentResponse() { CurrentQuestionNumber = 3, MaxQuestionsCount = 3 };
+
+            A.CallTo(() => Session.HasValidSession()).Returns(true);
+            A.CallTo(() => ApiService.GetQuestion(viewModel.AssessmentType, viewModel.QuestionNumber)).Returns(expectedQuestion);
+            A.CallTo(() => ApiService.GetAssessment()).Returns(expectedAssessment);
+            A.CallTo(() => Mapper.Map<QuestionGetResponseViewModel>(expectedQuestion)).Returns(new QuestionGetResponseViewModel { PercentageComplete = expectedPercentageComplete });
+
+            var actionResponse = await AssessmentController.Index(viewModel).ConfigureAwait(false);
+            Assert.IsType<ViewResult>(actionResponse);
+
+            var viewResult = actionResponse as ViewResult;
+            var model = viewResult.Model as QuestionGetResponseViewModel;
+
+            Assert.Equal(expectedPercentageComplete, model.PercentageComplete);
+        }
     }
 }

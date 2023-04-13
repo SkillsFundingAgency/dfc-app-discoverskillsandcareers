@@ -82,8 +82,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var completed = (int)((assessment.CurrentQuestionNumber - 1) / (decimal)assessment.MaxQuestionsCount * 100M);
                 assessment.PercentComplete = completed;
                 questionResponse.PercentComplete = assessment.PercentComplete;
-
-                await assessmentService.UpdateQuestionNumber(assessment.CurrentQuestionNumber).ConfigureAwait(false);
             }
 
             var responseViewModel = mapper.Map<QuestionGetResponseViewModel>(questionResponse);
