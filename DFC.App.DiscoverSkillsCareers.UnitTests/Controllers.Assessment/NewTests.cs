@@ -10,10 +10,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Assessment
     public class NewTests : AssessmentTestBase
     {
         [Fact]
-        public async Task IfAssessmentTypeIsNullReturnsBadRequest()
+        public async Task IfAssessmentTypeIsNullReturnsNoContent()
         {
             var actionResponse = await AssessmentController.New(null).ConfigureAwait(false);
-            Assert.IsType<BadRequestResult>(actionResponse);
+            Assert.IsType<NoContentResult>(actionResponse);
         }
 
         [Fact]
