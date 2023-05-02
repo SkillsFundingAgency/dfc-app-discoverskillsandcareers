@@ -84,52 +84,62 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             foreach (var category in assessment.ShortQuestionResult.JobCategories!)
             {
-                var listOfJobProfiles = new List<JobProfileResult>();
-                var categoryJobProfiles = category.JobProfiles
-                    .Where(jobProfile => jobProfile.SkillCodes != null && jobProfile.SkillCodes.Any())
-                    .ToList();
-
-                var categorySkills = categoryJobProfiles
-                    .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title))
-                    .ToList()
-                    .GetSkillAttributes(
-                        prominentSkills,
-                        75).ToList();
-
-                var categoryAnsweredQuestions = categorySkills
-                    .Where(categorySkill =>
-                        answeredQuestions.Any(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode))
-                    .Select(categorySkill => (categorySkill.ONetAttribute,
-                        answeredQuestions.First(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode).Value))
-                    .ToList();
-
-                foreach (var jobProfile in categoryJobProfiles)
-                {
-                    var fullJobProfile = allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title);
-
-                    var relevantSkills = fullJobProfile
-                        .SkillsToCompare(prominentSkills)
-                        .Select(s => s.Title)
-                        .Where(skillCode => questionSkills.Contains(skillCode))
-                        .Where(skillCode => categorySkills.Any(categorySkill => categorySkill.ONetAttribute == skillCode))
+                    var listOfJobProfiles = new List<JobProfileResult>();
+                    var categoryJobProfiles = category.JobProfiles
+                        .Where(jobProfile => jobProfile.SkillCodes != null && jobProfile.SkillCodes.Any())
                         .ToList();
 
-                    var profileAnswers = categoryAnsweredQuestions
-                        .Select(categoryAnsweredQuestion => (categoryAnsweredQuestion.ONetAttribute,
-                            relevantSkills.Contains(categoryAnsweredQuestion.ONetAttribute) ? Answer.Yes : Answer.No))
-                        .ToList();
 
-                    var canAddJobProfile = categoryAnsweredQuestions.SequenceEqual(profileAnswers);
+                    var notMatchingJobProfiles = categoryJobProfiles
+                        .Where(jobProfile => allJobProfiles.All(ajp => ajp.Title != jobProfile.Title));
 
-                    if (canAddJobProfile)
+                    if (notMatchingJobProfiles.Any())
                     {
-                        listOfJobProfiles.Add(jobProfile);
+                        return new GetResultsResponse { AllJobProfilesMatchWithAssessmentProfiles = false};
                     }
-                }
 
-                assessment.ShortQuestionResult.JobCategories
-                    .First(jobCategoryResult => jobCategoryResult.JobFamilyNameUrl == category.JobFamilyNameUrl)
-                    .JobProfiles = listOfJobProfiles;
+
+                    var categorySkills = categoryJobProfiles
+                        .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title))
+                        .ToList()
+                        .GetSkillAttributes(
+                            prominentSkills,
+                            75).ToList();
+
+                    var categoryAnsweredQuestions = categorySkills
+                        .Where(categorySkill =>
+                            answeredQuestions.Any(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode))
+                        .Select(categorySkill => (categorySkill.ONetAttribute,
+                            answeredQuestions.First(answeredQuestion => categorySkill.ONetAttribute == answeredQuestion.TraitCode).Value))
+                        .ToList();
+
+                    foreach (var jobProfile in categoryJobProfiles)
+                    {
+                        var fullJobProfile = allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title);
+
+                        var relevantSkills = fullJobProfile
+                            .SkillsToCompare(prominentSkills)
+                            .Select(s => s.Title)
+                            .Where(skillCode => questionSkills.Contains(skillCode))
+                            .Where(skillCode => categorySkills.Any(categorySkill => categorySkill.ONetAttribute == skillCode))
+                            .ToList();
+
+                        var profileAnswers = categoryAnsweredQuestions
+                            .Select(categoryAnsweredQuestion => (categoryAnsweredQuestion.ONetAttribute,
+                                relevantSkills.Contains(categoryAnsweredQuestion.ONetAttribute) ? Answer.Yes : Answer.No))
+                            .ToList();
+
+                        var canAddJobProfile = categoryAnsweredQuestions.SequenceEqual(profileAnswers);
+
+                        if (canAddJobProfile)
+                        {
+                            listOfJobProfiles.Add(jobProfile);
+                        }
+                    }
+
+                    assessment.ShortQuestionResult.JobCategories
+                        .First(jobCategoryResult => jobCategoryResult.JobFamilyNameUrl == category.JobFamilyNameUrl)
+                        .JobProfiles = listOfJobProfiles;
             }
 
             var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!.ToList(), jobCategoryName);
