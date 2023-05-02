@@ -91,6 +91,9 @@
         },
         "sessionStateCollectionName": {
             "value": "__sessionStateCollectionName__"
-        }
+        },
+        "appInsightsInstrumentationKey": {
+          "value": "__appInsightsInstrumentationKey__" 
+        }  
     }
 }
