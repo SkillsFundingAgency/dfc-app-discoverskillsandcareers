@@ -22,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string InitialPercentComplete { get; set; }
 
-        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-button--start"));
+        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-button ncs-button__primary"));
         IWebElement question => _scenarioContext.GetWebDriver().FindElement(By.Id("question-heading"));
         IWebElement answerOption => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-radios__label"));
         IWebElement btnNextQuestion => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
         IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
-        IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button app-button']"));
+        IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button ncs-button__primary app-button']"));
         IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
         IWebElement answer => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
         IWebElement enterYourReference => _scenarioContext.GetWebDriver().FindElement(By.Id("code"));
@@ -43,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public void ClickStartAssessment()
         {
             WebDriverExtension.CloseBanner(_scenarioContext.GetWebDriver());
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-button--start"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-button ncs-button__primary"));
             btnStartAssessment.Click();
 
         }
@@ -123,7 +123,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickSeeResults()
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button app-button']"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button ncs-button__primary app-button']"));
             btnSeeResults.Click();
         }
 
