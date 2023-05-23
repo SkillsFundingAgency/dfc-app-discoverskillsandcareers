@@ -146,7 +146,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (string.IsNullOrEmpty(assessmentType))
             {
-                return BadRequest();
+                return NoContent();
             }
 
             await assessmentService.NewSession(assessmentType).ConfigureAwait(false);
