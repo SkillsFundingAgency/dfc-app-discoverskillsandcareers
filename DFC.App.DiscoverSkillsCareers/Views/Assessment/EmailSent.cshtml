@@ -5,7 +5,7 @@
                 <h1 class="govuk-heading-xl">Check your email</h1>
                 <p>An email has been sent to  @TempData.Peek("SentEmail")</p>
                 <p>Click on the link in the email to return to your assessment.</p>
-                <a asp-controller="assessment" class="govuk-button ncs-button__secondary" asp-action="return">Return to assessment</a>
+                <a asp-controller="assessment" class="govuk-button ncs-button__primary" asp-action="return">Return to assessment</a>
                 <p><a href="@($"/{RouteName.Prefix}")">Back to start</a></p>
             </div>
         </div>
