@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "appInsightsInstrumentationKey": {
+            "value": "__appInsightsInstrumentationKey__"
+        },
         "ApimRoot": {
             "value": "__ApimRoot__"
         },
@@ -52,9 +55,6 @@
         },
         "Environment": {
             "value": "__ReleaseEnvironmentName__"
-        },
-        "enableAlerts": {
-            "value": __EnableAzureMonitorAlerting__
         },
         "DysacUrl": {
             "value": "__DysacUrl__"

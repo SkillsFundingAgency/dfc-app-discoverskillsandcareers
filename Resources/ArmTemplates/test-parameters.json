@@ -47,9 +47,6 @@
         "aspInstances": {
             "value": 2
         },
-        "enableAlerts": {
-            "value": false
-        },
         "DysacUrl": {
             "value": "https://dummydysac.com"
         },
@@ -85,6 +82,9 @@
         },
         "sessionStateCollectionName": {
             "value": "sessionStateCollectionName"
+        },
+        "appInsightsInstrumentationKey": {
+            "value": "appInsightsInstrumentationKey"
         }
     }
 }
