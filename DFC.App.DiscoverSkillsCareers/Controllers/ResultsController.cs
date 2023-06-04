@@ -45,8 +45,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(ResultsGetRequestViewModel requestViewModel)
         {
+            logService.LogInformation($"ResultsController HttpGet Index");
             if (!await HasSessionId().ConfigureAwait(false))
             {
+                logService.LogInformation($"ResultsController HttpGet Index RedirectToRoot");
                 return RedirectToRoot();
             }
 
@@ -55,6 +57,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (resultsResponse.LastAssessmentCategory != null)
             {
+                logService.LogInformation($"ResultsController HttpGet Index resultsResponse.LastAssessmentCategory {resultsResponse.LastAssessmentCategory}");
                 return RedirectTo($"results/roles/{resultsResponse.LastAssessmentCategory}");
             }
 
@@ -72,14 +75,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> Roles(string id)
         {
+            logService.LogInformation($"ResultsController Roles id{id}");
+
             if (!await HasSessionId().ConfigureAwait(false))
-            {
+             {
+                logService.LogInformation($"ResultsController Roles id{id} RedirectToRoot");
                 return RedirectToRoot();
             }
 
             var assessmentResponse = await assessmentService.GetAssessment().ConfigureAwait(false);
             if (!assessmentResponse.IsComplete && !assessmentResponse.IsFilterAssessment)
             {
+                logService.LogInformation($"ResultsController Roles assessment/return");
                 return RedirectTo("assessment/return");
             }
 
@@ -202,8 +209,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("herobanner/results/roles/{id}")]
         public async Task<IActionResult> HeroBanner(string id)
         {
+            logService.LogInformation($"HeroBanner id {id}");
             if (!await HasSessionId().ConfigureAwait(false))
             {
+
+                logService.LogInformation($"HeroBanner id {id} RedirectToRoot");
                 return RedirectToRoot();
             }
 
@@ -219,11 +229,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("bodytop/results/roles/{category}")]
         public IActionResult BodyTop()
         {
+            logService.LogInformation($"BodyTop BodyTopEmpty");
             return View("BodyTopEmpty");
         }
 
         private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
         {
+            logService.LogInformation($"GetJobProfileOverviews");
             if (memoryCache.TryGetValue(nameof(GetJobProfileOverviews), out var filteringQuestionsFromCache))
             {
                 return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;

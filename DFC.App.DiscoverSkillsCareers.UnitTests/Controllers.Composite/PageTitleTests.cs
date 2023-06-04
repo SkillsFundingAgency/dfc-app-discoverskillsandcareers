@@ -4,6 +4,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
@@ -16,7 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         public PageTitleTests()
         {
             sessionService = A.Fake<ISessionService>();
-            controller = new CompositeController(sessionService);
+            controller = new CompositeController(sessionService, A.Fake<ILogger>());
         }
 
         [Fact]
