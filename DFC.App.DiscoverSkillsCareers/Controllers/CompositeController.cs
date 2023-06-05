@@ -11,17 +11,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private const string ViewName = "Index";
         private readonly ILogService logService;
-        private ILogger logger;
 
         public CompositeController(ISessionService sessionService,  ILogService logService)
             : base(sessionService)
         {
             this.logService = logService;
-        }
-
-        public CompositeController(ISessionService sessionService, ILogger logger) : base(sessionService)
-        {
-            this.logger = logger;
         }
 
         [Route("head")]
