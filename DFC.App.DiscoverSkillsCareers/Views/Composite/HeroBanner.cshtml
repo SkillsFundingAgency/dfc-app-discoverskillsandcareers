@@ -1,16 +1,14 @@
-﻿
-
-
+﻿@inject IConfiguration configuration
 <div class="ncs-hero page-hero">
 
     <!-- Desktop image -->
     <div class="d-only">
-        <img src="https://lab-cdn.nationalcareersservice.org.uk/media/headers/page-header.jpg" alt="" />
+        <img src="@configuration["AssetsCdn"]media/headers/page-header.jpg" alt="" />
     </div>
 
     <!-- Mobile image -->
     <div class="m-only">
-        <img src="https://lab-cdn.nationalcareersservice.org.uk/media/headers/page-mobile-header.jpg" alt="" />
+        <img src="@configuration["AssetsCdn"]media/headers/page-mobile-header.jpg" alt="" />
     </div>
 
     <div class="content govuk-width-container">
