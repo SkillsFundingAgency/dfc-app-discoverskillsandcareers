@@ -1,13 +1,14 @@
-﻿<div class="ncs-hero page-hero">
+﻿@inject IConfiguration configuration
+<div class="ncs-hero page-hero">
 
     <!-- Desktop image -->
     <div class="d-only">
-        <img src="https://lab-cdn.nationalcareersservice.org.uk/media/headers/page-header.jpg" alt="" />
+        <img src="@configuration["AssetsCdn"]media/headers/dysac-desktop-header.png" alt="DYSAC desktop" />
     </div>
 
     <!-- Mobile image -->
     <div class="m-only">
-        <img src="https://lab-cdn.nationalcareersservice.org.uk/media/headers/page-mobile-header.jpg" alt="" />
+        <img src="@configuration["AssetsCdn"]media/headers/dysac-mobile-header.png" alt="DYSAC mobile" />
     </div>
 
     <div class="content govuk-width-container">
