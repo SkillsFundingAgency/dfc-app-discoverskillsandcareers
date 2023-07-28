@@ -1,8 +1,26 @@
-﻿<div class="primary-hero">
-    <div class="govuk-width-container">
+﻿@inject IConfiguration configuration
+<div class="ncs-hero page-hero">
+
+    <!-- Desktop image -->
+    <div class="d-only">
+        <img src="@configuration["AssetsCdn"]media/headers/your-results-desktop-header.png" alt="a young woman sat on a sofa with a laptop as she discusses her results with an older woman." />
+    </div>
+
+    <!-- Mobile image -->
+    <div class="m-only">
+        <img src="@configuration["AssetsCdn"]media/headers/your-results-mobile-header.png" alt="a young woman sat on a sofa with a laptop as she discusses her results with an older woman." />
+    </div>
+
+    <div class="content govuk-width-container">
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
-                <h1 class="govuk-heading-xl app-masthead__title">Your results</h1>
+
+            <div class="govuk-grid-column-two-thirds">
+
+                <h1 class="govuk-heading-xl">
+                    <div class="block ncs">
+                        <span>Your results</span>
+                    </div>
+                </h1>
             </div>
         </div>
     </div>
