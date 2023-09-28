@@ -1,8 +1,28 @@
-﻿<div class="primary-hero">
-    <div class="govuk-width-container">
+﻿@inject IConfiguration configuration
+<div class="ncs-hero page-hero">
+
+    <!-- Desktop image -->
+    <div class="d-only">
+        <img src="@configuration["AssetsCdn"]media/headers/dysac-desktop-header.png" alt="a young person with downs syndrome discovering her skills as she gets training on the computer in an office." />
+    </div>
+
+    <!-- Mobile image -->
+    <div class="m-only">
+        <img src="@configuration["AssetsCdn"]media/headers/dysac-mobile-header.png" alt="a young person with downs syndrome discovering her skills as she gets training on the computer in an office." />
+    </div>
+
+    <div class="content govuk-width-container">
         <div class="govuk-grid-row">
+
             <div class="govuk-grid-column-two-thirds">
-                <h1 class="govuk-heading-xl">Discover your skills and careers</h1>
+
+                <h1 class="govuk-heading-xl">
+                    <div class="block ncs">
+                        <span>Discover your</span>
+                        <span>skills and </span>
+                        <span>careers</span>
+                    </div>
+                </h1>
             </div>
         </div>
     </div>

@@ -41,28 +41,34 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (requestViewModel == null)
             {
+                logService.LogInformation($"BadRequest {requestViewModel}");
                 return BadRequest();
             }
 
             var hasSessionId = await HasSessionId().ConfigureAwait(false);
             if (!hasSessionId)
             {
+                logService.LogInformation($"RedirectToRoot hasSessionId {hasSessionId}");
                 return RedirectToRoot();
             }
 
             var questionResponse = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (questionResponse == null)
             {
+                logService.LogInformation($"questionResponse {questionResponse} BadRequest ");
                 return BadRequest();
             }
 
             if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
+                logService.LogInformation($"questionResponse {questionResponse} requestViewModel.QuestionNumber {requestViewModel.QuestionNumber} BadRequest ");
                 return BadRequest();
             }
 
             if (questionResponse.IsComplete)
             {
+                logService.LogInformation($"questionResponse {questionResponse} IsComplete redirecting to resulsts ");
+
                 return RedirectTo("results");
             }
 
@@ -70,6 +76,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (requestViewModel.QuestionNumber > assessment.CurrentQuestionNumber)
             {
+                logService.LogInformation($"QuestionNumber>CurrentQuestionNumber assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
+
                 return RedirectTo($"assessment/{requestViewModel.AssessmentType}/{assessment.CurrentQuestionNumber}");
             }
 
@@ -77,10 +85,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (hasGoneBackOneOrMoreQuestions)
             {
+                logService.LogInformation($"hasGoneBackOneOrMoreQuestions {hasGoneBackOneOrMoreQuestions}");
+
                 assessment.CurrentQuestionNumber = requestViewModel.QuestionNumber;
 
                 var completed = (int)((assessment.CurrentQuestionNumber - 1) / (decimal)assessment.MaxQuestionsCount * 100M);
                 assessment.PercentComplete = completed;
+
+                logService.LogInformation($"assessment.PercentComplete {assessment.PercentComplete}");
+
                 questionResponse.PercentComplete = assessment.PercentComplete;
             }
 
@@ -95,18 +108,21 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (requestViewModel == null)
             {
+                logService.LogInformation($"Index requestviewmodel is null BadRequest");
                 return BadRequest();
             }
 
             var hasSessionId = await HasSessionId().ConfigureAwait(false);
             if (!hasSessionId)
             {
+                logService.LogInformation($"hasSessionId {hasSessionId} RedirectToRoot");
                 return RedirectToRoot();
             }
 
             var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (question == null)
             {
+                logService.LogInformation($"question {hasSessionId} RedirectToRoot");
                 return BadRequest();
             }
 
