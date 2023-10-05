@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
@@ -12,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -187,7 +187,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var allFilteringQuestions = await assessmentService.GetFilteringQuestions().ConfigureAwait(false);
 
-            // User traits
             var userTraits = assessment.Questions
                 .Select(question => new
                 {
@@ -209,7 +208,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
-            var allJobCategories = await GetJobCategories().ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,
@@ -238,27 +237,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return assessment;
         }
 
-        private async Task<List<DysacJobProfileCategoryContentModel>?> GetJobCategories()
-        {
-            if (memoryCache.TryGetValue(nameof(GetJobCategories), out var filteringQuestionsFromCache))
-            {
-                return (List<DysacJobProfileCategoryContentModel>?)filteringQuestionsFromCache;
-            }
-
-            var jobCategories = await documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>(
-                "JobProfileCategory").ConfigureAwait(false);
-
-            if (!jobCategories?.Any() != true)
-            {
-                return jobCategories;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetJobCategories), jobCategories, cacheEntryOptions);
-
-            return jobCategories;
-        }
-
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
             if (memoryCache.TryGetValue(nameof(GetTraits), out var filteringQuestionsFromCache))
@@ -269,7 +247,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var traits = await documentStore.GetAllContentAsync<DysacTraitContentModel>(
                 "Trait").ConfigureAwait(false);
 
-            if (!traits?.Any() != true)
+            if (traits == null)
             {
                 return traits;
             }
