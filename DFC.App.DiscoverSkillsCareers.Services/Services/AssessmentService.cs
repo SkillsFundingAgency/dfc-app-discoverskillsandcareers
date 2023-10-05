@@ -38,7 +38,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
-
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.mapper = mapper;
             this.notificationService = notificationService;
@@ -108,21 +107,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 QuestionNumber = currentQuestionNumber.Value,
                 QuestionText = question.QuestionText!,
                 StartedDt = DateTime.Now,
+                RecordedAnswer = question.Answer,
                 RecordedAnswersCount = assessment.Questions.Count(questionA => questionA.Answer != null),
             };
-        }
-
-        public async Task UpdateQuestionNumber(int questionNumber)
-        {
-            var assessment = await GetCurrentAssessment().ConfigureAwait(false);
-            var questions = assessment.Questions.ToList();
-
-            for (int idx = questionNumber - 1, len = questions.Count; idx < len; idx++)
-            {
-                questions[idx].Answer = null;
-            }
-
-            await UpdateAssessment(assessment).ConfigureAwait(false);
         }
 
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer)
@@ -172,10 +159,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .ToList();
 
             assessment.FilteredAssessment.JobCategoryAssessments
-                .FirstOrDefault(jobCategoryAssessment => jobCategoryAssessment.JobCategory == jobCategory) !.LastAnswer = DateTime.UtcNow;
+                .FirstOrDefault(jobCategoryAssessment => jobCategoryAssessment.JobCategory == jobCategory)!.LastAnswer = DateTime.UtcNow;
 
             var jobCategoryRequiredTraits = assessment.FilteredAssessment.JobCategoryAssessments
-                .FirstOrDefault(jobCategoryAssessment => jobCategoryAssessment.JobCategory == jobCategory) !
+                .FirstOrDefault(jobCategoryAssessment => jobCategoryAssessment.JobCategory == jobCategory)!
                 .QuestionSkills
                 .Select(questionSkill => questionSkill.Key)
                 .ToList();
@@ -258,7 +245,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<DysacAssessment> GetAssessment(string sessionId)
         {
-            return (await GetAssessment(sessionId, true).ConfigureAwait(false)) !;
+            return (await GetAssessment(sessionId, true).ConfigureAwait(false))!;
         }
 
         public async Task<DysacAssessment?> GetAssessment(string sessionId, bool throwErrorWhenNotFound)
@@ -376,8 +363,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Where(question => question.Answer != null)
                 .Select(question => question.TraitCode);
 
-            var nextQuestionCode = categoryQuestions
-                .FirstOrDefault(categoryQuestion => !answeredQuestions.Contains(categoryQuestion.Key)).Key;
+            var nextQuestionCode = categoryQuestions[questionNumber - 1].Key;
 
             if (questionNumber == 1 && categoryQuestions.All(categoryQuestion => answeredQuestions.Contains(categoryQuestion.Key)))
             {
@@ -416,6 +402,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 QuestionNumber = questionNumber,
                 QuestionText = question.QuestionText!,
                 StartedDt = DateTime.Now,
+                RecordedAnswer = question.Answer,
                 TraitCode = question.TraitCode!,
             };
         }
@@ -459,10 +446,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacFilteringQuestionContentModel>?)filteringQuestionsFromCache;
             }
 
-            var filteringQuestions = await documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>(
-                "FilteringQuestion").ConfigureAwait(false);
+            var filteringQuestions = await documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion").ConfigureAwait(false);
 
-            if (!filteringQuestions?.Any() != true)
+            if (filteringQuestions == null)
             {
                 return filteringQuestions;
             }
@@ -480,10 +466,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return (List<DysacQuestionSetContentModel>?)filteringQuestionsFromCache;
             }
 
-            var questionSets = await documentStore.GetAllContentAsync<DysacQuestionSetContentModel>(
-                "QuestionSet").ConfigureAwait(false);
+            var questionSets = await documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet").ConfigureAwait(false);
 
-            if (!questionSets?.Any() != true)
+            if (questionSets == null)
             {
                 return questionSets;
             }

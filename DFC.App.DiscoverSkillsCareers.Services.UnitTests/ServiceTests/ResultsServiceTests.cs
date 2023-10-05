@@ -564,5 +564,420 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             Assert.Single(results.JobCategories);
             Assert.Single(results.JobCategories.Single().JobProfiles);
         }
+
+        [Fact]
+        public async Task GetResultsByCategory_ReturnsNotAllJobProfilesMatchingPropertyAsTrue_WhenNotAllAssessmentJobProfilesMatchWithStaxJobProfiles()
+        {
+            //Arrange
+            var assessment = AssessmentHelpers.GetAssessment();
+            assessment.ShortQuestionResult = new ResultData
+            {
+                JobCategories = new List<JobCategoryResult>()
+                {
+                    new JobCategoryResult
+                    {
+                        JobFamilyName = "delivery and storage",
+                        JobProfiles = new List<JobProfileResult>
+                        {
+                            new JobProfileResult
+                            {
+                                Title = "Profile19",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile2",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile3",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile4",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile5",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile6",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile7",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5"
+                                }
+                            },
+                            new JobProfileResult
+                            {
+                                Title = "Profile8",
+                                SkillCodes = new List<string>
+                                {
+                                    "Self Control1",
+                                    "Self Control2",
+                                    "Self Control3",
+                                    "Self Control4",
+                                    "Self Control5",
+                                    "Self Control"
+                                }
+                            }
+                        }
+                    }
+                },
+                Traits = new List<TraitResult>
+                {
+                    new TraitResult
+                    {
+                        Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER"
+                    }
+                },
+                TraitText = new List<string>
+                {
+                    "you'd be good working in place a", "you might do well in place b", "you're really a at b"
+                }
+            };
+
+            assessment.FilteredAssessment = new FilteredAssessment
+            {
+                Questions = new List<FilteredAssessmentQuestion>
+                {
+                    new FilteredAssessmentQuestion
+                    {
+                        Ordinal = 0,
+                        QuestionText = "A filtered question?",
+                        TraitCode = "Self Control",
+                        Id = Guid.NewGuid(),
+                        Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes }
+                    },
+                    new FilteredAssessmentQuestion
+                    {
+                        Ordinal = 0,
+                        QuestionText = "A filtered question 2?",
+                        TraitCode = "Self Motivation",
+                        Id = Guid.NewGuid(),
+                        Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes }
+                    }
+                },
+                JobCategoryAssessments = new List<JobCategoryAssessment>
+                {
+                    new JobCategoryAssessment
+                    {
+                        JobCategory = "delivery-and-storage",
+                        LastAnswer = DateTime.MinValue,
+                        QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } }
+                    }
+                }
+            };
+
+            var jobCategory = new DysacJobProfileCategoryContentModel
+            {
+                JobProfiles = new List<JobProfileContentItemModel>
+                {
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile1",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile2",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile3",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile4",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile5",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile6",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile7",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            }
+                        }
+                    },
+                    new JobProfileContentItemModel
+                    {
+                        Title = "Profile8",
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control1"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control2"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control3"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control4"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control5"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control"
+                            }
+                        }
+                    }
+                }
+            };
+
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory"))
+                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
+            A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
+
+            var category = "ACategory";
+            var resultsResponse = new GetResultsResponse { SessionId = sessionId };
+
+            List<JobProfileResult> profiles = new List<JobProfileResult>
+            {
+                new JobProfileResult()
+            };
+            resultsResponse.JobProfiles = profiles;
+
+            List<JobCategoryResult> categories = new List<JobCategoryResult>
+            {
+                new JobCategoryResult { JobFamilyName = category, JobFamilyUrl = category }
+            };
+            resultsResponse.JobCategories = categories;
+
+            //Act
+            var results = await resultsService.GetResultsByCategory(category);
+
+            // Assert
+            A.CallTo(() => assessmentService.UpdateAssessment(A<DysacAssessment>.Ignored))
+                .MustHaveHappenedOnceExactly();
+
+            Assert.False(results.AllJobProfilesMatchWithAssessmentProfiles);
+        }
     }
 }

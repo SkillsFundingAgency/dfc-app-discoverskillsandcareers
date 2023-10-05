@@ -971,8 +971,8 @@ this.FeatureBackground();
         [Xunit.TraitAttribute("Description", "TC06 - Return to assessment using reference code")]
         [Xunit.TraitAttribute("Category", "smoke")]
         [Xunit.TraitAttribute("Category", "DYSAC")]
-        [Xunit.InlineDataAttribute("70", new string[0])]
         [Xunit.InlineDataAttribute("2", new string[0])]
+        [Xunit.InlineDataAttribute("70", new string[0])]
         [Xunit.InlineDataAttribute("30", new string[0])]
         public void TC06_ReturnToAssessmentUsingReferenceCode(string percentageCompleted, string[] exampleTags)
         {
@@ -1129,7 +1129,7 @@ this.FeatureBackground();
  testRunner.And("I choose the \"Get a reference code\" option of returning to assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 308
- testRunner.When("I supply phone number \"07424037362\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I supply phone number \"07585082797\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 309
  testRunner.Then("the phone number appears on the Check your phone page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -1297,7 +1297,7 @@ this.FeatureBackground();
  testRunner.Then("validation messages are displayed for the \"email address\" field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 347
- testRunner.When("I provide email address \"victor.abegunde@methods.co.uk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I provide email address \"gordon.wilson@education.gov.uk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 348
  testRunner.Then("I am navigated to the \"Check your email\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -1426,7 +1426,7 @@ this.FeatureBackground();
                 table2.AddRow(new string[] {
                             "Manufacturing"});
                 table2.AddRow(new string[] {
-                            "Creative and media"});
+                            "Science and research"});
 #line 373
  testRunner.And("the initial job categories dispalyed are", ((string)(null)), table2, "And ");
 #line hidden
@@ -1443,7 +1443,7 @@ this.FeatureBackground();
                 table3.AddRow(new string[] {
                             "Manufacturing"});
                 table3.AddRow(new string[] {
-                            "Creative and media"});
+                            "Science and research"});
                 table3.AddRow(new string[] {
                             "Construction and trades"});
                 table3.AddRow(new string[] {
@@ -3388,17 +3388,17 @@ this.FeatureBackground();
                             "Business and finance",
                             "3"});
                 table15.AddRow(new string[] {
-                            "Law and Legal",
+                            "Law and legal",
                             "3"});
                 table15.AddRow(new string[] {
                             "Animal care",
                             "2"});
                 table15.AddRow(new string[] {
-                            "Deliver and storage",
-                            "2"});
-                table15.AddRow(new string[] {
                             "Healthcare",
                             "4"});
+                table15.AddRow(new string[] {
+                            "Delivery and storage",
+                            "2"});
                 table15.AddRow(new string[] {
                             "Home services",
                             "3"});
@@ -3423,7 +3423,7 @@ this.FeatureBackground();
                     "DYSAC"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC24 - Real user interaction 2", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 864
+#line 865
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -3436,7 +3436,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 4
 this.FeatureBackground();
 #line hidden
-#line 865
+#line 866
  testRunner.And("I click on Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
@@ -3603,19 +3603,18 @@ this.FeatureBackground();
                             "97",
                             "I enjoy planning a task more than actually doing it",
                             "It depends"});
-#line 866
+#line 867
  testRunner.And("I provide the following answers to the resultant questions", ((string)(null)), table16, "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
                             "Trait text"});
                 table17.AddRow(new string[] {
-                            "you are motivated, set yourself personal goals and are comfortable competing with" +
-                                " other people"});
-                table17.AddRow(new string[] {
                             "you enjoy helping and listening to other people"});
                 table17.AddRow(new string[] {
-                            "you are a practical person and enjoy getting things done"});
-#line 908
+                            "you like dealing with complicated problems or working with numbers"});
+                table17.AddRow(new string[] {
+                            "you like to plan things and are well organised"});
+#line 909
  testRunner.Then("the What you told us section of the Your results page displays the following trai" +
                         "ts", ((string)(null)), table17, "Then ");
 #line hidden
@@ -3623,36 +3622,36 @@ this.FeatureBackground();
                             "Job category",
                             "Number of answer more questions"});
                 table18.AddRow(new string[] {
-                            "Business and finance",
-                            "3"});
-                table18.AddRow(new string[] {
-                            "Emergency and uniform services",
-                            "3"});
-                table18.AddRow(new string[] {
-                            "Law and legal",
-                            "3"});
-                table18.AddRow(new string[] {
-                            "Travel and tourism",
-                            "2"});
-                table18.AddRow(new string[] {
-                            "Sports and leisure",
-                            "3"});
-                table18.AddRow(new string[] {
                             "Manufacturing",
-                            "4"});
-                table18.AddRow(new string[] {
-                            "Creative and media",
-                            "5"});
-                table18.AddRow(new string[] {
-                            "Construction and trades",
                             "4"});
                 table18.AddRow(new string[] {
                             "Science and research",
                             "4"});
                 table18.AddRow(new string[] {
-                            "Teaching and education",
+                            "Travel and tourism",
+                            "2"});
+                table18.AddRow(new string[] {
+                            "Business and finance",
                             "3"});
-#line 913
+                table18.AddRow(new string[] {
+                            "Law and legal",
+                            "3"});
+                table18.AddRow(new string[] {
+                            "Animal care",
+                            "2"});
+                table18.AddRow(new string[] {
+                            "Healthcare",
+                            "4"});
+                table18.AddRow(new string[] {
+                            "Delivery and storage",
+                            "2"});
+                table18.AddRow(new string[] {
+                            "Home services",
+                            "3"});
+                table18.AddRow(new string[] {
+                            "Transport",
+                            "3"});
+#line 914
  testRunner.And("the following job categories with their corresponding number of answer more quest" +
                         "ions are displayed", ((string)(null)), table18, "And ");
 #line hidden

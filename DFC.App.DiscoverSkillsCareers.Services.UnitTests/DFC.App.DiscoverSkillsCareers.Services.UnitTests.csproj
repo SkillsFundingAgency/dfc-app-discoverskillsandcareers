@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ProjectGuid>353F0B5D-1639-4D97-A24F-E36418A82608</ProjectGuid>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="DFC.Notify290" Version="0.1.9" />
     <PackageReference Include="FakeItEasy" Version="6.0.0" />
-    <PackageReference Include="FluentAssertions" Version="5.10.2" />
+    <PackageReference Include="FluentAssertions" Version="6.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="6.0.0" />

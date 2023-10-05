@@ -56,7 +56,6 @@ stages:
         BuildPlatform: 'any cpu'
         BuildConfiguration: 'release'
         TestSuffix: UnitTests
-        DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
 
   #Build Test Suite Tests
@@ -69,4 +68,3 @@ stages:
         SolutionBaseName: $(SolutionBaseName).UI.FunctionalTests
         BuildPlatform: $(BuildPlatform)
         BuildConfiguration: $(BuildConfiguration)
-        DotNetCoreVersion: 3.1.100

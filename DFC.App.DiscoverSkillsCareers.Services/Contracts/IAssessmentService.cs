@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Models;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 {
@@ -22,8 +22,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions();
 
         Task UpdateAssessment(DysacAssessment assessment);
-
-        Task UpdateQuestionNumber(int questionNumber);
 
         Task<SendEmailResponse> SendEmail(string domain, string emailAddress);
 

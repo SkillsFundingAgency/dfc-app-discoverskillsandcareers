@@ -29,7 +29,7 @@
 
             <form method="post" asp-action="new" asp-controller="assessment">
                 <input type="hidden" id="assessmentType" name="assessmentType" value="short"/>
-                <button role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+                <button role="button" draggable="false" class="govuk-button ncs-button__primary" data-module="govuk-button">
                     Start assessment
                     <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
                         <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
@@ -48,7 +48,7 @@
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
                         <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code" aria-label="Reference-Code" value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
-                    <button type="submit" class="govuk-button app-button" id="dysac-submit-button">
+                    <button type="submit" class="govuk-button ncs-button__primary app-button" id="dysac-submit-button">
                         Continue
                     </button>
                 </form>

@@ -27,14 +27,14 @@ namespace DFC.App.DiscoverSkillsCareers.HostedServices
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("Cache reload started");
+            logger.LogInformation($"StartAsync Cache reload started cancellationToken {cancellationToken}");
 
             return base.StartAsync(cancellationToken);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("Cache reload stopped");
+            logger.LogInformation($"StopAsync Cache reload stopped  cancellationToken {cancellationToken}");
 
             return base.StopAsync(cancellationToken);
         }
@@ -43,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.HostedServices
         {
             if (cmsApiClientOptions.BaseAddress != null)
             {
-                logger.LogInformation("Cache reload executing");
+                logger.LogInformation($"ExecuteAsync Cache reload executing stoppingToken {stoppingToken}");
 
                 var task = hostedServiceTelemetryWrapper.Execute(() => cacheReloadService.Reload(stoppingToken), nameof(CacheReloadBackgroundService));
 

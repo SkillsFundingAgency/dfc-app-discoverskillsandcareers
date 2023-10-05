@@ -24,26 +24,32 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(FilterQuestionIndexRequestViewModel viewModel)
         {
+            logService.LogInformation($"FilterQuestionsController HttpGet Index");
             if (viewModel == null)
             {
+                logService.LogInformation($"FilterQuestionsController Index BadRequest");
                 return BadRequest();
             }
 
             var hasSessionId = await HasSessionId().ConfigureAwait(false);
-
+            logService.LogInformation($"FilterQuestionsController hasSessionId {hasSessionId}");
             if (!hasSessionId)
             {
+                logService.LogInformation($"FilterQuestionsController no hasSessionId RedirectToRoot");
                 return RedirectToRoot();
             }
 
             var assessment = await apiService.GetAssessment().ConfigureAwait(false);
+            logService.LogInformation($"FilterQuestionsController assessment {assessment}");
             if (!assessment.IsComplete && !assessment.IsFilterAssessment)
             {
+                logService.LogInformation($"FilterQuestionsController assessment not complete");
                 return RedirectTo("assessment/return");
             }
 
             if (viewModel.QuestionNumber == 0)
             {
+                logService.LogInformation($"FilterQuestionsController viewModel.QuestionNumber {viewModel.QuestionNumber}");
                 var filterAssessment = await apiService.FilterAssessment(viewModel.JobCategoryName).ConfigureAwait(false);
 
                 return RedirectTo(
@@ -57,19 +63,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(FilterQuestionPostRequestViewModel viewModel)
         {
+            logService.LogInformation($"FilterQuestionsController HttpPost Index");
             if (viewModel == null)
             {
+                logService.LogInformation($"FilterQuestionsController HttpPost Index BadRequest");
                 return BadRequest();
             }
 
             var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            logService.LogInformation($"FilterQuestionsController HttpPost Index hasSessionId {hasSessionId}");
             if (!hasSessionId)
             {
+                logService.LogInformation($"FilterQuestionsController HttpPost Index hasSessionId {hasSessionId} RedirectToRoot");
                 return RedirectToRoot();
             }
 
             if (!ModelState.IsValid)
             {
+                logService.LogInformation($"FilterQuestionsController HttpPost Index !ModelState.IsValid" );
                 var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
                 return View(response);
             }
@@ -80,8 +91,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 viewModel.QuestionNumberCounter,
                 viewModel.Answer).ConfigureAwait(false);
 
+            logService.LogInformation($"FilterQuestionsController HttpPost Index answerResponse {answerResponse}");
+
             if (!answerResponse.IsSuccess)
             {
+                logService.LogInformation($"FilterQuestionsController HttpPost Index !answerResponse.IsSuccess");
+
                 ModelState.AddModelError("Answer", "Unable to register answer");
                 var response = await GetQuestion(viewModel.JobCategoryName, viewModel.QuestionNumberCounter).ConfigureAwait(false);
 
@@ -90,6 +105,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (answerResponse.IsComplete)
             {
+                logService.LogInformation($"FilterQuestionsController HttpPost Index answerResponse.IsCompleted");
                 return RedirectTo($"{viewModel.AssessmentType}/filterquestions/{viewModel.JobCategoryName}/complete");
             }
 
@@ -106,8 +122,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/{QuestionNumber}")]
         public IActionResult BodyTopQuestions(FilterBodyTopViewModel resultsBodyTopViewModel)
         {
+            logService.LogInformation($"FilterQuestionsController HttpGet BodyTopQuestions");
+
             if (resultsBodyTopViewModel == null)
             {
+                logService.LogInformation($"FilterQuestionsController HttpGet BodyTopQuestions BadRequest");
                 return BadRequest();
             }
 
@@ -121,6 +140,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("bodytop/{assessmentType}/filterquestions/{jobCategoryName}/complete")]
         public IActionResult BodyTopComplete()
         {
+            logService.LogInformation($"FilterQuestionsController HttpGet BodyTopComplete BodyTopEmpty");
             return View("BodyTopEmpty");
         }
 

@@ -16,7 +16,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             _scenarioContext = context;
         }
 
-        IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-button.app-button"));
+        IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-button.ncs-button__primary.app-button"));
 
         public void ClickSeeResults()
         {

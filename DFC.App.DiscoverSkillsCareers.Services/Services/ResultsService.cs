@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
@@ -9,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -72,7 +72,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Select(skillGroup => skillGroup.First())
                 .ToList();
 
-            var allJobCategories = await GetJobCategories().ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
 
             var allJobProfiles = allJobCategories!
                 .SelectMany(jobCategory => jobCategory.JobProfiles)
@@ -88,6 +88,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 var categoryJobProfiles = category.JobProfiles
                     .Where(jobProfile => jobProfile.SkillCodes != null && jobProfile.SkillCodes.Any())
                     .ToList();
+
+
+                var notMatchingJobProfiles = categoryJobProfiles
+                    .Where(jobProfile => allJobProfiles.All(ajp => ajp.Title != jobProfile.Title));
+
+                if (notMatchingJobProfiles.Any())
+                {
+                    return new GetResultsResponse { AllJobProfilesMatchWithAssessmentProfiles = false };
+                }
 
                 var categorySkills = categoryJobProfiles
                     .Select(jobProfile => allJobProfiles.Single(ajp => ajp.Title == jobProfile.Title))
@@ -209,27 +218,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return categories;
-        }
-
-        private async Task<List<DysacJobProfileCategoryContentModel>?> GetJobCategories()
-        {
-            if (memoryCache.TryGetValue(nameof(GetJobCategories), out var filteringQuestionsFromCache))
-            {
-                return (List<DysacJobProfileCategoryContentModel>?)filteringQuestionsFromCache;
-            }
-
-            var jobCategories = await documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>(
-                "JobProfileCategory").ConfigureAwait(false);
-
-            if (!jobCategories?.Any() != true)
-            {
-                return jobCategories;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetJobCategories), jobCategories, cacheEntryOptions);
-
-            return jobCategories;
         }
     }
 }
