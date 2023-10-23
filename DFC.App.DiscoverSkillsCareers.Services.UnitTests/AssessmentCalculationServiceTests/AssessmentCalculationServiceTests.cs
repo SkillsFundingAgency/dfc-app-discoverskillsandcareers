@@ -26,10 +26,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
 
         public AssessmentCalculationServiceTests()
         {
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacTraitContentModel>("Trait"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacTraitContentModel>("Trait", "Test"))
                 .Returns(AssessmentHelpers.GetTraits());
 
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", "Test"))
                 .Returns(AssessmentHelpers.GetAllJobCategories());
         }
 

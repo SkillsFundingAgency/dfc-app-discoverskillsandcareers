@@ -78,7 +78,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             logService.LogInformation($"ResultsController Roles id{id}");
 
             if (!await HasSessionId().ConfigureAwait(false))
-             {
+            {
                 logService.LogInformation($"ResultsController Roles id{id} RedirectToRoot");
                 return RedirectToRoot();
             }
@@ -241,8 +241,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
             }
 
-            var jobProfileOverviews = await documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>(
-                "JobProfileOverview").ConfigureAwait(false);
+            var jobProfileOverviews = await documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>("JobProfileOverview", "GetJobProfileOverviews").ConfigureAwait(false);
 
             if (!jobProfileOverviews.Any())
             {

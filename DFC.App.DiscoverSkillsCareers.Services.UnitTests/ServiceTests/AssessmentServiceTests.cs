@@ -73,8 +73,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var questionNumber = 1;
             var expectedQuestion = new GetQuestionResponse { NextQuestionNumber = 2 };
 
-            A.CallTo(() => sessionService.GetCurrentSession()).Returns(new SessionStateModel<DfcUserSession> { State = new DfcUserSession { SessionId = sessionId}});
-            A.CallTo(() => documentStore.GetAssessmentAsync("session1"))
+            A.CallTo(() => sessionService.GetCurrentSession()).Returns(new SessionStateModel<DfcUserSession> { State = new DfcUserSession { SessionId = sessionId } });
+            A.CallTo(() => documentStore.GetAssessmentAsync("session1", "Test"))
                 .Returns(new DysacAssessment { Questions = new List<ShortQuestion> { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } });
 
             var response = await assessmentService.GetQuestion(assessmentType, questionNumber);
@@ -92,7 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             answerResponse.IsSuccess = true;
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(new DysacAssessment { Questions = new List<ShortQuestion> { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } });
 
             var response = await assessmentService.AnswerQuestion(assessmentType, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
@@ -117,9 +117,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             answerResponse.IsSuccess = true;
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(assessment);
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", "Test"))
                 .Returns(new List<DysacQuestionSetContentModel>
                 {
                     new DysacQuestionSetContentModel
@@ -127,7 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                         ShortQuestions = new List<DysacShortQuestionContentItemModel>()
                     }
                 });
-            
+
             var response = await assessmentService.AnswerFilterQuestion(jobCategory, questionResponse.QuestionNumber, questionResponse.QuestionNumber, answerRequest.SelectedOption);
             Assert.Equal(answerResponse.IsSuccess, response.IsSuccess);
         }
@@ -150,9 +150,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             answerResponse.IsSuccess = true;
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(assessment);
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", "Test"))
                 .Returns(new List<DysacQuestionSetContentModel>
                 {
                     new DysacQuestionSetContentModel
@@ -187,9 +187,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             answerResponse.IsSuccess = true;
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(assessment);
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", "Test"))
                 .Returns(new List<DysacQuestionSetContentModel>
                 {
                     new DysacQuestionSetContentModel
@@ -203,7 +203,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             Assert.Equal(sessionId, response.SessionId);
             Assert.Equal(shortQuestion1.Id.ToString(), response.QuestionId);
         }
-        
+
         [Fact]
         public async Task GetAssessmentReturnsAssessmentVariation2()
         {
@@ -223,9 +223,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             answerResponse.IsSuccess = true;
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(assessment);
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", "Test"))
                 .Returns(new List<DysacQuestionSetContentModel>
             {
                 new DysacQuestionSetContentModel
@@ -256,7 +256,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             };
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(assessment);
 
             var result = await assessmentService.ReloadUsingReferenceCode(sessionId);
@@ -281,7 +281,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             };
 
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(assessment);
 
             var result = await assessmentService.ReloadUsingSessionId(sessionId);
@@ -296,11 +296,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var jobCategory = "sports";
             var filterResponse = new FilterAssessmentResponse() { SessionId = sessionId };
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion", "Test"))
                 .Returns(new List<DysacFilteringQuestionContentModel>() { new DysacFilteringQuestionContentModel { Id = Guid.NewGuid(), Ordinal = 0, Text = "A question", Skills = new List<DysacSkillContentItemModel> { new DysacSkillContentItemModel { Title = "A skill" } } } });
-            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored))
+            A.CallTo(() => documentStore.GetAssessmentAsync(A<string>.Ignored, "Test"))
                 .Returns(new DysacAssessment { ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult> { new JobCategoryResult { } } }, Questions = new List<ShortQuestion>() { new ShortQuestion { Ordinal = 0, Id = Guid.NewGuid() }, new ShortQuestion { Ordinal = 1, Id = Guid.NewGuid() } } });
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet"))
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", "Test"))
                 .Returns(new List<DysacQuestionSetContentModel>
             {
                 new DysacQuestionSetContentModel
@@ -308,10 +308,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                     ShortQuestions = new List<DysacShortQuestionContentItemModel>()
                 }
             });
-            
+
             var response = await assessmentService.FilterAssessment(jobCategory);
 
-            A.CallTo(() => documentStore.GetAssessmentAsync("session1"))
+            A.CallTo(() => documentStore.GetAssessmentAsync("session1", "Test"))
                 .MustHaveHappenedOnceExactly();
             Assert.Equal(sessionId, response.SessionId);
         }
@@ -321,7 +321,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             var refCode = "dshh88228";
             A.CallTo(() => sessionIdToCodeConverter.GetSessionId(refCode)).Returns(refCode);
-            
+
             var response = assessmentService.ReferenceCodeExists(refCode);
 
             Assert.True(response);

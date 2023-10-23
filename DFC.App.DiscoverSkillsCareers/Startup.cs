@@ -1,4 +1,6 @@
 using AutoMapper;
+using Dfc.Session;
+using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.App.DiscoverSkillsCareers.HostedServices;
@@ -22,14 +24,15 @@ using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
-using Dfc.Session;
-using Dfc.Session.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Notify.Client;
 using Notify.Interfaces;
 using Polly;
@@ -100,7 +103,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetAssembly(typeof(DysacProfile)), Assembly.GetAssembly(typeof(DefaultProfile)));
-            services.AddApplicationInsightsTelemetry();
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
@@ -116,8 +118,9 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IEventMessageService, EventMessageService>();
             services.AddTransient<INotificationService, NotificationService>();
-
             services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
+
+            services.AddTransient<CosmosDbAppInsightsRequestHandler>();
 
             services.AddSingleton<IDocumentStore, CosmosDbService>(serviceProvider =>
             {
@@ -127,13 +130,24 @@ namespace DFC.App.DiscoverSkillsCareers
                 var cosmosDbConnectionContent1 = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
                 var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent1.EndpointUrl};AccountKey={cosmosDbConnectionContent1.AccessKey};";
 
+                services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
+                var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbService>>();
+                var telemetryClient = serviceProvider.GetRequiredService<TelemetryClient>();
+                var assessmentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
+                var contentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
+
                 return new CosmosDbService(
-                    connectionStringAssessment,
-                    cosmosDbConnectionAssessment.DatabaseId!,
-                    cosmosDbConnectionAssessment.CollectionId!,
-                    connectionStringContent,
-                    cosmosDbConnectionContent1.DatabaseId!,
-                    cosmosDbConnectionContent1.CollectionId!);
+                connectionStringAssessment,
+                cosmosDbConnectionAssessment.DatabaseId!,
+                cosmosDbConnectionAssessment.CollectionId!,
+                connectionStringContent,
+                cosmosDbConnectionContent1.DatabaseId!,
+                cosmosDbConnectionContent1.CollectionId!,
+                logger,
+                telemetryClient,
+                assessmentRequestHandler,
+                contentRequestHandler
+                );
             });
 
             services.AddTransient<IWebhooksService, WebhooksService>();
