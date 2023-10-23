@@ -222,8 +222,27 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             {
                 logger.LogInformation($"CallerMemberName: {callerMemberName}, Container: {containerName}, QueryType: {queryType}, Query: {query}, QueryParameter: {queryParameter}, RequestCharge: {requestCharge}, PartitionKey: {partitionKey}, ElapsedTime: {elapsedTime}");
 
-                var queryData = new Dictionary<string, string>
-                {
+                LogMetrics(requestCharge, elapsedTime, queryType, containerName, partitionKey, callerMemberName, query, queryParameter);
+
+            }
+            catch (Exception exception)
+            {
+                logger.LogError($"Error occurred while logging. Exception: {exception}");
+            }
+        }
+
+        private void LogMetrics(
+            double requestCharge,
+            TimeSpan elapsedTime,
+            QueryTypes queryType,
+            ContainerName containerName,
+            string partitionKey,
+            string callerMemberName,
+            string query,
+            string queryParameter)
+        {
+            var queryData = new Dictionary<string, string>
+            {
                     { "CallerMemberName", callerMemberName },
                     { "Container", containerName.ToString() },
                     { "QueryType", queryType.ToString() },
@@ -232,14 +251,9 @@ namespace DFC.App.DiscoverSkillsCareers.Models
                     { "RequestCharge", requestCharge.ToString() },
                     { "PartitionKey", partitionKey },
                     { "ElapsedTime", elapsedTime.ToString() },
-                };
+            };
 
-                telemetryClient.TrackMetric(callerMemberName, 0, queryData);
-            }
-            catch (Exception exception)
-            {
-                logger.LogError($"Error occurred while logging. Exception: {exception}");
-            }
+            telemetryClient.TrackMetric(callerMemberName, 0, queryData);
         }
     }
 }

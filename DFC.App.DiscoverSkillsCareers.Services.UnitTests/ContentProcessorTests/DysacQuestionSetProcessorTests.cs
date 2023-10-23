@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             //Arrange
             var processor = new DysacQuestionSetContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
-            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, "Test"))
+            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(new DysacQuestionSetContentModel
                 {
                     ShortQuestions = new List<DysacShortQuestionContentItemModel>
@@ -81,7 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappened();
-            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, "Test"))
+            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);

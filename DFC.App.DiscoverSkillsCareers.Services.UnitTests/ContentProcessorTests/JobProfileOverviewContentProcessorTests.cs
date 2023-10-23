@@ -37,15 +37,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(JsonConvert.SerializeObject(new DysacJobProfileOverviewContentModel { Html = "<h1>A Job Profile</h1>", Id = Guid.NewGuid(), Title = "A Test Job Profile Overview" })) };
 
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, "Test")).Returns(apiModel);
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, "Test")).Returns(HttpStatusCode.OK);
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(apiModel);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, A<string>.Ignored)).Returns(HttpStatusCode.OK);
             var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
 
             //Assert
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, "Test")).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeJobProfileApiOverviewService.GetOverview(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -61,15 +61,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Arrange
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, "Test")).Returns(apiModel);
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, "Test")).Returns(HttpStatusCode.OK);
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(apiModel);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, A<string>.Ignored)).Returns(HttpStatusCode.OK);
             var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
 
             //Act
             var result = await processor.ProcessContent(new Uri("http://somewhere.com/somewhereelse/aresource"), Guid.NewGuid());
 
             //Assert
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, "Test")).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacJobProfileOverviewContentModel>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeJobProfileApiOverviewService.GetOverview(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(HttpStatusCode.OK, result);
         }
@@ -98,13 +98,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Arrange
             var processor = new JobProfileOverviewContentProcessor(fakeJobProfileApiOverviewService, fakeDocumentStore);
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, "Test")).Returns(true);
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(true);
 
             //Act
             var result = await processor.DeleteContentAsync(Guid.NewGuid(), string.Empty);
 
             //Assert
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, "Test")).MustHaveHappened();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacJobProfileOverviewContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }
