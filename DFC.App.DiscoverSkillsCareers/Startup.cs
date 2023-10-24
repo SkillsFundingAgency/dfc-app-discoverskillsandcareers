@@ -132,7 +132,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
                 services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
                 var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbService>>();
-                var telemetryClient = serviceProvider.GetRequiredService<TelemetryClient>();
                 var assessmentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
                 var contentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
 
@@ -144,7 +143,6 @@ namespace DFC.App.DiscoverSkillsCareers
                 cosmosDbConnectionContent1.DatabaseId!,
                 cosmosDbConnectionContent1.CollectionId!,
                 logger,
-                telemetryClient,
                 assessmentRequestHandler,
                 contentRequestHandler
                 );

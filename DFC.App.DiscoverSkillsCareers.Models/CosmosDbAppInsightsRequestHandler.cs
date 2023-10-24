@@ -1,11 +1,13 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Cosmos;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Models
 {
+    [ExcludeFromCodeCoverage]
     public class CosmosDbAppInsightsRequestHandler : RequestHandler
     {
         private readonly TelemetryClient telemetryClient;

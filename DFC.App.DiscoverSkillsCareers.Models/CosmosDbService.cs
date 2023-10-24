@@ -1,7 +1,6 @@
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Enums;
-using Microsoft.ApplicationInsights;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +19,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         private const string GetAllSql = "SELECT * FROM c";
         private static readonly QueryDefinition GetAllQuery = new QueryDefinition(GetAllSql);
         private readonly ILogger<CosmosDbService> logger;
-        private readonly TelemetryClient telemetryClient;
 
         public CosmosDbService(
             string assessmentConnectionString,
@@ -30,7 +28,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             string contentDatabaseName,
             string contentCollectionName,
             ILogger<CosmosDbService> logger,
-            TelemetryClient telemetryClient,
             CosmosDbAppInsightsRequestHandler assessmentRequestHandler,
             CosmosDbAppInsightsRequestHandler contentRequestHandler)
         {
@@ -53,7 +50,6 @@ namespace DFC.App.DiscoverSkillsCareers.Models
                 .GetContainer(contentCollectionName);
 
             this.logger = logger;
-            this.telemetryClient = telemetryClient;
         }
 
         private Container AssessmentContainer { get; }
@@ -221,39 +217,11 @@ namespace DFC.App.DiscoverSkillsCareers.Models
             try
             {
                 logger.LogInformation($"CallerMemberName: {callerMemberName}, Container: {containerName}, QueryType: {queryType}, Query: {query}, QueryParameter: {queryParameter}, RequestCharge: {requestCharge}, PartitionKey: {partitionKey}, ElapsedTime: {elapsedTime}");
-
-                LogMetrics(requestCharge, elapsedTime, queryType, containerName, partitionKey, callerMemberName, query, queryParameter);
-
             }
             catch (Exception exception)
             {
                 logger.LogError($"Error occurred while logging. Exception: {exception}");
             }
-        }
-
-        private void LogMetrics(
-            double requestCharge,
-            TimeSpan elapsedTime,
-            QueryTypes queryType,
-            ContainerName containerName,
-            string partitionKey,
-            string callerMemberName,
-            string query,
-            string queryParameter)
-        {
-            var queryData = new Dictionary<string, string>
-            {
-                    { "CallerMemberName", callerMemberName },
-                    { "Container", containerName.ToString() },
-                    { "QueryType", queryType.ToString() },
-                    { "Query", query },
-                    { "QueryParameter", queryParameter},
-                    { "RequestCharge", requestCharge.ToString() },
-                    { "PartitionKey", partitionKey },
-                    { "ElapsedTime", elapsedTime.ToString() },
-            };
-
-            telemetryClient.TrackMetric(callerMemberName, 0, queryData);
         }
     }
 }

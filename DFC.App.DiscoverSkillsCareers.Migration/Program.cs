@@ -106,7 +106,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
                 var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent.EndpointUrl};AccountKey={cosmosDbConnectionContent.AccessKey};";
                 var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbService>>();
-                var telemetryClient = serviceProvider.GetRequiredService<TelemetryClient>();
                 services.AddTransient<CosmosDbAppInsightsRequestHandler>();
 
                 var assessmentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
@@ -120,7 +119,6 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                     cosmosDbConnectionContent.DatabaseId!,
                     cosmosDbConnectionContent.CollectionId!,
                     logger,
-                    telemetryClient,
                     assessmentRequestHandler,
                     contentRequestHandler);
             });
