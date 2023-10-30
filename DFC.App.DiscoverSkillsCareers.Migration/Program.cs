@@ -27,51 +27,61 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             var cosmosDbConnectionLegacyUserSessions = configuration.GetSection("Configuration:CosmosDbConnections:LegacySessions").Get<CosmosDbConnection>();
 
-            Console.WriteLine("Do you wish to populate test data in the old DYSAC or migrate data? Please enter either 'populatetest' or 'migrate'.");
-            var inputMode = Console.ReadLine();
-            
-            if (inputMode?.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase) != true
-                && inputMode?.Equals("migrate", StringComparison.InvariantCultureIgnoreCase) != true)
-            {
-                Console.WriteLine($"Input mode '{inputMode}' not understood. Quitting.");
-                return;
-            }
-            
-            Console.WriteLine("Cosmos Db Connection mode: Please enter the Cosmos Db connection mode to use (gateway or direct - defaults to gateway)");
-            var cosmosDbConnectionMode = Console.ReadLine()!.Trim();
-
-            if (!cosmosDbConnectionMode.Equals("direct", StringComparison.InvariantCultureIgnoreCase))
-            {
-                cosmosDbConnectionMode = "gateway";
-            }
-
-            var connectionMode = cosmosDbConnectionMode == "direct" ? ConnectionMode.Direct : ConnectionMode.Gateway;
-
-            Console.WriteLine("Cosmos Db destination RUs: Please enter the RUs for the destination container.");
-            var cosmosDbDestinationRUs = int.Parse(Console.ReadLine()!.Trim());
-
-            Console.WriteLine("Use recovery bookmark: Whether or not to restart from the bookmark if a previous run failed (yes or no)");
-            var useBookmark = 'y' == Console.ReadLine()!.Trim().ToLower()[0];
-            
-            Console.WriteLine("Cut off date: The date to take assessments up to (useful for a 'catch up' run of the tool - in format yyyy-MM-dd hh:mm:ss)");
-            var cutoffDateTimeString = Console.ReadLine()!.Trim();
-
+            //run only with error list file
+            Console.WriteLine("Use error list file to run (yes or no)");
+            var runfromerrorfileonly = 'y' == Console.ReadLine()!.Trim().ToLower()[0];
+            var inputMode = "migrate";
+            var connectionMode = ConnectionMode.Direct;
+            var cosmosDbDestinationRUs = 10000;
+            var cosmosDbConnectionMode = "direct";
+            var useBookmark = false;
             DateTime? cutoffDateTime = null;
-            if (DateTime.TryParse(cutoffDateTimeString, out var cutoffDateTimeTemp))
+            if (!runfromerrorfileonly)
             {
-                cutoffDateTime = cutoffDateTimeTemp;
+                Console.WriteLine("Do you wish to populate test data in the old DYSAC or migrate data? Please enter either 'populatetest' or 'migrate'.");
+                inputMode = Console.ReadLine();
+
+                if (inputMode?.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase) != true
+                    && inputMode?.Equals("migrate", StringComparison.InvariantCultureIgnoreCase) != true)
+                {
+                    Console.WriteLine($"Input mode '{inputMode}' not understood. Quitting.");
+                    return;
+                }
+
+                Console.WriteLine("Cosmos Db Connection mode: Please enter the Cosmos Db connection mode to use (gateway or direct - defaults to gateway)");
+                cosmosDbConnectionMode = Console.ReadLine()!.Trim();
+
+                if (!cosmosDbConnectionMode.Equals("direct", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    cosmosDbConnectionMode = "gateway";
+                }
+
+                connectionMode = cosmosDbConnectionMode == "direct" ? ConnectionMode.Direct : ConnectionMode.Gateway;
+
+                Console.WriteLine("Cosmos Db destination RUs: Please enter the RUs for the destination container.");
+                cosmosDbDestinationRUs = int.Parse(Console.ReadLine()!.Trim());
+
+                Console.WriteLine("Use recovery bookmark: Whether or not to restart from the bookmark if a previous run failed (yes or no)");
+                useBookmark = 'y' == Console.ReadLine()!.Trim().ToLower()[0];
+
+                Console.WriteLine("Cut off date: The date to take assessments up to (useful for a 'catch up' run of the tool - in format yyyy-MM-dd hh:mm:ss)");
+                var cutoffDateTimeString = Console.ReadLine()!.Trim();
+
+                if (DateTime.TryParse(cutoffDateTimeString, out var cutoffDateTimeTemp))
+                {
+                    cutoffDateTime = cutoffDateTimeTemp;
+                }
             }
-            
             var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment")
                 .Get<CosmosDbConnection>();
 
             var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent")
                 .Get<CosmosDbConnection>();
-            
+
             Console.WriteLine();
             Console.WriteLine("Summary:");
             Console.WriteLine();
-            
+
             Console.WriteLine($"Mode: {inputMode}");
             Console.WriteLine($"Connection mode: {cosmosDbConnectionMode}");
             Console.WriteLine($"Destination RUs: {cosmosDbDestinationRUs}");
@@ -84,7 +94,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             Console.WriteLine("Press any key to proceed.");
             Console.ReadKey();
-            
+
             if (inputMode.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase))
             {
                 await PopulateTestData(cosmosDbConnectionLegacyUserSessions, connectionMode, cosmosDbDestinationRUs);
@@ -92,13 +102,13 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             }
 
             var services = new ServiceCollection()
-                .AddLogging()
-                .AddSingleton(configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ??
-                              new MigrationOptions())
-                .AddSingleton<Microsoft.Azure.Documents.IDocumentClient>(
+                 .AddLogging()
+                 .AddSingleton(configuration.GetSection(nameof(MigrationOptions)).Get<MigrationOptions>() ??
+                               new MigrationOptions())
+                 .AddSingleton<Microsoft.Azure.Documents.IDocumentClient>(
                     new Microsoft.Azure.Documents.Client.DocumentClient(cosmosDbConnectionLegacyUserSessions.EndpointUrl,
                         cosmosDbConnectionLegacyUserSessions.AccessKey))
-                .AddAutoMapper(typeof(Program));
+                 .AddAutoMapper(typeof(Program));
 
             services.AddSingleton<IDocumentStore, CosmosDbService>(_ =>
             {
@@ -113,7 +123,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                     cosmosDbConnectionContent.DatabaseId!,
                     cosmosDbConnectionContent.CollectionId!);
             });
-            
+
             var serviceProvider = services.BuildServiceProvider();
 
             var logger = serviceProvider.GetService<ILoggerFactory>()
@@ -125,9 +135,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var userSessionDocumentClient = serviceProvider.GetService<Microsoft.Azure.Documents.IDocumentClient>();
 
             ServicePointManager.DefaultConnectionLimit = 1000;
-            
+
             var connectionStringDestination = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
-            
+
             var destinationDocumentClient = new CosmosClient(
                 connectionStringDestination,
                 new CosmosClientOptions
@@ -146,8 +156,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 cosmosDbConnectionAssessment.CollectionId,
                 cosmosDbDestinationRUs,
                 useBookmark,
-                cutoffDateTime);
-            
+                cutoffDateTime,
+                runfromerrorfileonly);
+
             Console.Write(@"Please check and confirm the indexing strategy for the cosmos destination is set as per the below, or the import may fail.;
 
 {
@@ -176,9 +187,9 @@ Please ensure you set it back after to;
 
 Press y to proceed if you are happy this has been done.
 ");
-            
+
             Console.ReadKey();
-            
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Please also confirm you are running standalone and not debugging - as that will make this process very slow. Press y to proceed");
@@ -186,7 +197,7 @@ Press y to proceed if you are happy this has been done.
 
             Console.WriteLine();
             Console.WriteLine();
-            
+
             Activity.Current = new Activity("Dysac assessment migration").Start();
             await migrationService.Start();
         }
@@ -202,7 +213,7 @@ Press y to proceed if you are happy this has been done.
                     ConnectionMode = connectionMode == ConnectionMode.Direct ? Microsoft.Azure.Documents.Client.ConnectionMode.Direct : Microsoft.Azure.Documents.Client.ConnectionMode.Gateway,
                     ConnectionProtocol = Microsoft.Azure.Documents.Client.Protocol.Tcp
                 });
-                
+
             var migrationService = new PopulateTestDataService(sourceDocumentClient, cosmosDbDestinationRUs);
 
             Activity.Current = new Activity("Dysac test data population").Start();
