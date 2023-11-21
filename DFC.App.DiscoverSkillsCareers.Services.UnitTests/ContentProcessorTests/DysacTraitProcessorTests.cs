@@ -63,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
             //Arrange
             var processor = new DysacTraitContentProcessor(FakeCmsApiService, FakeMapper, FakeEventMessageService, FakeContentCacheService, FakeLogger, FakeDocumentStore, FakeMappingService);
 
-            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacTraitContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacTraitContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(new DysacTraitContentModel
                 {
                     JobCategories = new List<JobCategoryContentItemModel>
@@ -80,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ContentProcessorTests
 
             //Assert
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<DysacTraitContentModel>.Ignored)).MustHaveHappened();
-            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacTraitContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappened();
+            A.CallTo(() => FakeDocumentStore.GetContentByIdAsync<DysacTraitContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappened();
 
             Assert.Equal(HttpStatusCode.OK, result);
         }
