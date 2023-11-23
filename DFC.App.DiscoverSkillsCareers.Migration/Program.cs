@@ -12,6 +12,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using Microsoft.Azure.Cosmos;
+using Microsoft.ApplicationInsights;
 
 namespace DFC.App.DiscoverSkillsCareers.Migration
 {
@@ -29,14 +30,14 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             Console.WriteLine("Do you wish to populate test data in the old DYSAC or migrate data? Please enter either 'populatetest' or 'migrate'.");
             var inputMode = Console.ReadLine();
-            
+
             if (inputMode?.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase) != true
                 && inputMode?.Equals("migrate", StringComparison.InvariantCultureIgnoreCase) != true)
             {
                 Console.WriteLine($"Input mode '{inputMode}' not understood. Quitting.");
                 return;
             }
-            
+
             Console.WriteLine("Cosmos Db Connection mode: Please enter the Cosmos Db connection mode to use (gateway or direct - defaults to gateway)");
             var cosmosDbConnectionMode = Console.ReadLine()!.Trim();
 
@@ -52,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             Console.WriteLine("Use recovery bookmark: Whether or not to restart from the bookmark if a previous run failed (yes or no)");
             var useBookmark = 'y' == Console.ReadLine()!.Trim().ToLower()[0];
-            
+
             Console.WriteLine("Cut off date: The date to take assessments up to (useful for a 'catch up' run of the tool - in format yyyy-MM-dd hh:mm:ss)");
             var cutoffDateTimeString = Console.ReadLine()!.Trim();
 
@@ -61,17 +62,17 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             {
                 cutoffDateTime = cutoffDateTimeTemp;
             }
-            
+
             var cosmosDbConnectionAssessment = configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment")
                 .Get<CosmosDbConnection>();
 
             var cosmosDbConnectionContent = configuration.GetSection("Configuration:CosmosDbConnections:DysacContent")
                 .Get<CosmosDbConnection>();
-            
+
             Console.WriteLine();
             Console.WriteLine("Summary:");
             Console.WriteLine();
-            
+
             Console.WriteLine($"Mode: {inputMode}");
             Console.WriteLine($"Connection mode: {cosmosDbConnectionMode}");
             Console.WriteLine($"Destination RUs: {cosmosDbDestinationRUs}");
@@ -84,7 +85,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
 
             Console.WriteLine("Press any key to proceed.");
             Console.ReadKey();
-            
+
             if (inputMode.Equals("populatetest", StringComparison.InvariantCultureIgnoreCase))
             {
                 await PopulateTestData(cosmosDbConnectionLegacyUserSessions, connectionMode, cosmosDbDestinationRUs);
@@ -100,10 +101,15 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                         cosmosDbConnectionLegacyUserSessions.AccessKey))
                 .AddAutoMapper(typeof(Program));
 
-            services.AddSingleton<IDocumentStore, CosmosDbService>(_ =>
+            services.AddSingleton<IDocumentStore, CosmosDbService>(serviceProvider =>
             {
                 var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
                 var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent.EndpointUrl};AccountKey={cosmosDbConnectionContent.AccessKey};";
+                var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbService>>();
+                services.AddTransient<CosmosDbAppInsightsRequestHandler>();
+
+                var assessmentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
+                var contentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
 
                 return new CosmosDbService(
                     connectionStringAssessment,
@@ -111,9 +117,12 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                     cosmosDbConnectionAssessment.CollectionId!,
                     connectionStringContent,
                     cosmosDbConnectionContent.DatabaseId!,
-                    cosmosDbConnectionContent.CollectionId!);
+                    cosmosDbConnectionContent.CollectionId!,
+                    logger,
+                    assessmentRequestHandler,
+                    contentRequestHandler);
             });
-            
+
             var serviceProvider = services.BuildServiceProvider();
 
             var logger = serviceProvider.GetService<ILoggerFactory>()
@@ -125,9 +134,9 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
             var userSessionDocumentClient = serviceProvider.GetService<Microsoft.Azure.Documents.IDocumentClient>();
 
             ServicePointManager.DefaultConnectionLimit = 1000;
-            
+
             var connectionStringDestination = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
-            
+
             var destinationDocumentClient = new CosmosClient(
                 connectionStringDestination,
                 new CosmosClientOptions
@@ -147,7 +156,7 @@ namespace DFC.App.DiscoverSkillsCareers.Migration
                 cosmosDbDestinationRUs,
                 useBookmark,
                 cutoffDateTime);
-            
+
             Console.Write(@"Please check and confirm the indexing strategy for the cosmos destination is set as per the below, or the import may fail.;
 
 {
@@ -176,9 +185,9 @@ Please ensure you set it back after to;
 
 Press y to proceed if you are happy this has been done.
 ");
-            
+
             Console.ReadKey();
-            
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Please also confirm you are running standalone and not debugging - as that will make this process very slow. Press y to proceed");
@@ -186,7 +195,7 @@ Press y to proceed if you are happy this has been done.
 
             Console.WriteLine();
             Console.WriteLine();
-            
+
             Activity.Current = new Activity("Dysac assessment migration").Start();
             await migrationService.Start();
         }
@@ -202,7 +211,7 @@ Press y to proceed if you are happy this has been done.
                     ConnectionMode = connectionMode == ConnectionMode.Direct ? Microsoft.Azure.Documents.Client.ConnectionMode.Direct : Microsoft.Azure.Documents.Client.ConnectionMode.Gateway,
                     ConnectionProtocol = Microsoft.Azure.Documents.Client.Protocol.Tcp
                 });
-                
+
             var migrationService = new PopulateTestDataService(sourceDocumentClient, cosmosDbDestinationRUs);
 
             Activity.Current = new Activity("Dysac test data population").Start();
