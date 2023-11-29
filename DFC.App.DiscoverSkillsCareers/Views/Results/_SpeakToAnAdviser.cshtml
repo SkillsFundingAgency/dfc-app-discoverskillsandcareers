@@ -1,9 +1,8 @@
 ﻿<div class="app-sidebar app-advisor-panel">
-    <h3 class="govuk-heading-m">Speak to an adviser</h3>
-    <p class="govuk-body"><strong>Call</strong> 0800 100 900 or <a href="/webchat/chat/" class="govuk-link govuk-link--no-visited-state">use webchat</a></p>
-
-    <ul class="govuk-list govuk-!-margin-top-5">
-        <li> 8am - 8pm Monday - Friday </li>
-        <li> 10am - 5pm Saturday </li>
-      </ul>
+    @if (Model.SpeakToAnAdviser != null)
+{
+    <div class="app-related-items">
+        @Html.Raw(Model.SpeakToAnAdviser.Content)
+    </div>
+}
 </div>

@@ -25,6 +25,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
                where TModel : class, IDysacContentModel
                where TSource : class, IBaseContentItemModel;
 
+        Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint);
+
         Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType);
     }
 }
