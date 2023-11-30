@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(HomeIndexRequestViewModel viewModel)
         {
-            if (viewModel == null)
+            if (viewModel == null || viewModel.ReferenceCode == null)
             {
                 return BadRequest();
             }
