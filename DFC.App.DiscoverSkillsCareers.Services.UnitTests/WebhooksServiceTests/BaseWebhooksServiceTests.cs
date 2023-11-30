@@ -1,11 +1,13 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Cosmos.Models;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -30,6 +32,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             FakeContentCacheService = A.Fake<IContentCacheService>();
             FakeContentProcessors = A.CollectionOfFake<IContentProcessor>(3);
+            FakeCmsApiClientOptions = A.Fake<CmsApiClientOptions>();
+            FakeSharedContentItemDocumentService = A.Fake< IDocumentService<StaticContentItemModel>>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -53,6 +57,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
         protected IContentPageService<ContentPageModel> FakeContentPageService { get; }
 
         protected IContentCacheService FakeContentCacheService { get; }
+
+        protected CmsApiClientOptions FakeCmsApiClientOptions { get; }
+
+        protected IDocumentService<StaticContentItemModel> FakeSharedContentItemDocumentService { get; }
 
         public IList<IContentProcessor> FakeContentProcessors { get; }
 
@@ -142,7 +150,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
         protected WebhooksService BuildWebhooksService()
         {
             SetupContentProcessors();
-            var service = new WebhooksService(Logger, FakeCmsApiService, FakeContentCacheService, FakeContentProcessors);
+            var service = new WebhooksService(Logger, FakeCmsApiService, FakeContentCacheService, FakeContentProcessors, FakeMapper, FakeCmsApiClientOptions, FakeSharedContentItemDocumentService);
 
             return service;
         }
