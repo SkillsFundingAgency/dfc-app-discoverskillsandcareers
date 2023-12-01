@@ -4,142 +4,142 @@
   "parameters": {
     "ApimRoot": {
       "type": "string",
-      "metadata": {
-        "description": "The APIM proxy address including the protocol and trailing slash. eg https://dev.api.nationalcareersservice.org.uk/"
+        "metadata": {
+          "description": "The APIM proxy address including the protocol and trailing slash. eg https://dev.api.nationalcareersservice.org.uk/"
+        }
+      },
+      "ApimDysacKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Ocp subscription key for DYSAC"
+        }
+      },
+      "resourcePrefix": {
+        "type": "string"
+      },
+      "appSharedResourceGroup": {
+        "type": "string"
+      },
+      "appSharedStorageAccountName": {
+        "type": "string"
+      },
+      "aseHostingEnvironmentName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "aseResourceGroup": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "aspInstances": {
+        "type": "int"
+      },
+      "aspSize": {
+        "type": "string"
+      },
+      "aspTier": {
+        "type": "string"
+      },
+      "JobProfileOverViewUrl": {
+        "type": "string"
+      },
+      "CdnUrl": {
+        "type": "string"
+      },
+      "NotifyApiKey": {
+        "type": "securestring"
+      },
+      "NotifyEmailTemplateId": {
+        "type": "string"
+      },
+      "NotifySmsTemplateId": {
+        "type": "string"
+      },
+      "NotifyReturnUrl": {
+        "type": "string"
+      },
+      "Environment": {
+        "type": "string"
+      },
+      "enableAlerts": {
+        "type": "bool",
+        "metadata": {
+          "description": "Enable or disable alerting"
+        }
+      },
+      "DysacUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URL for Dysac"
+        }
+      },
+      "DysacUrl2": {
+        "type": "string"
+      },
+      "jobProfUrl": {
+        "type": "string"
+      },
+      "cosmosDbName": {
+        "type": "string",
+        "metadata": {
+          "description": "cosmos db account"
+        }
+      },
+      "cosmosDbKey": {
+        "type": "securestring"
+      },
+      "dysacAppDatabaseNeedsCreation": {
+        "type": "bool"
+      },
+      "dysacAppDatabaseThroughput": {
+        "type": "int"
+      },
+      "CosmosDbResourceGroup": {
+        "type": "string"
+      },
+      "SubscriptionApiEndpointUrl": {
+        "type": "string"
+      },
+      "dysacAssessmentCollectionName": {
+        "type": "string"
+      },
+      "dysacContentCollectionName": {
+        "type": "string"
+      },
+      "sessionStateCollectionName": {
+        "type": "string"
+      },
+      "cosmosDbCollectionName": {
+        "type": "string"
+      },
+      "cmsTimeout": {
+        "type": "string"
+      },
+      "cmsApiKey": {
+        "type": "string"
+      },
+      "cmsBaseAddress": {
+        "type": "string"
+      },
+      "cmsStaticContentEndpoint": {
+        "type": "string"
+      },
+      "cmsContentIds": {
+        "type": "string"
       }
     },
-    "ApimDysacKey": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Ocp subscription key for DYSAC"
-      }
+    "variables": {
+      "appServiceAppInsightsName": "[concat(parameters('resourcePrefix'), '-ai')]",
+      "appServicePlanName": "[concat(parameters('resourcePrefix'), '-asp')]",
+      "appServicePlanResourceGroup": "[concat(parameters('resourcePrefix'),'-rg')]",
+      "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
+      "webAppName": "[concat(parameters('resourcePrefix'), '-as')]",
+      "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
+      "cosmosDbCollectionPartitionKey": "/PartitionKey",
+      "cosmosDbDatabaseName": "dfc-app-dysac",
+      "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
     },
-    "resourcePrefix": {
-      "type": "string"
-    },
-    "appSharedResourceGroup": {
-      "type": "string"
-    },
-    "appSharedStorageAccountName": {
-      "type": "string"
-    },
-    "aseHostingEnvironmentName": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "aseResourceGroup": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "aspInstances": {
-      "type": "int"
-    },
-    "aspSize": {
-      "type": "string"
-    },
-    "aspTier": {
-      "type": "string"
-    },
-    "JobProfileOverViewUrl": {
-      "type": "string"
-    },
-    "CdnUrl": {
-      "type": "string"
-    },
-    "NotifyApiKey": {
-      "type": "securestring"
-    },
-    "NotifyEmailTemplateId": {
-      "type": "string"
-    },
-    "NotifySmsTemplateId": {
-      "type": "string"
-    },
-    "NotifyReturnUrl": {
-      "type": "string"
-    },
-    "Environment": {
-      "type": "string"
-    },
-    "enableAlerts": {
-      "type": "bool",
-      "metadata": {
-        "description": "Enable or disable alerting"
-      }
-    },
-    "DysacUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "The base URL for Dysac"
-      }
-    },
-    "DysacUrl2": {
-      "type": "string"
-    },
-    "jobProfUrl": {
-      "type": "string"
-    },
-    "cosmosDbName": {
-      "type": "string",
-      "metadata": {
-        "description": "cosmos db account"
-      }
-    },
-    "cosmosDbKey": {
-      "type": "securestring"
-    },
-    "dysacAppDatabaseNeedsCreation": {
-      "type": "bool"
-    },
-    "dysacAppDatabaseThroughput": {
-      "type": "int"
-    },
-    "CosmosDbResourceGroup": {
-      "type": "string"
-    },
-    "SubscriptionApiEndpointUrl": {
-      "type": "string"
-    },
-    "dysacAssessmentCollectionName": {
-      "type": "string"
-    },
-    "dysacContentCollectionName": {
-      "type": "string"
-    },
-    "sessionStateCollectionName": {
-      "type": "string"
-    },
-    "cosmosDbCollectionName": {
-      "type": "string"
-    },
-    "cmsTimeout": {
-      "type": "string"
-    },
-    "cmsApiKey": {
-      "type": "string"
-    },
-    "cmsBaseAddress": {
-      "type": "string"
-    },
-    "cmsStaticContentEndpoint": {
-      "type": "string"
-    },
-    "cmsContentIds": {
-      "type": "string"
-    }
-  },
-  "variables": {
-    "appServiceAppInsightsName": "[concat(parameters('resourcePrefix'), '-ai')]",
-    "appServicePlanName": "[concat(parameters('resourcePrefix'), '-asp')]",
-    "appServicePlanResourceGroup": "[concat(parameters('resourcePrefix'),'-rg')]",
-    "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-    "webAppName": "[concat(parameters('resourcePrefix'), '-as')]",
-    "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
-    "cosmosDbCollectionPartitionKey": "/PartitionKey",
-    "cosmosDbDatabaseName": "dfc-app-dysac",
-    "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
-  },
-  "resources": [
+    "resources": [
     {
       "name": "[variables('CosmosDbDatabaseName')]",
       "type": "Microsoft.Resources/deployments",
