@@ -550,6 +550,10 @@
                 "value": "dfc-app-jobprofiles"
               },
               {
+                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__6",
+                "value": "/content/sharedcontent/"
+              },
+              {
                 "name": "Configuration__CosmosDbConnections__DysacContent__AccessKey",
                 "value": "[parameters('cosmosDbKey')]"
               },
