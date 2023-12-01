@@ -610,18 +610,6 @@
                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
               },
               {
-                "name": "CmsApiClientOptions__Timeout",
-                "value": "00:00:30"
-              },
-              {
-                "name": "CmsApiClientOptions__BaseAddress",
-                "value": "[parameters('dysacUrl2')]"
-              },
-              {
-                "name": "CmsApiClientOptions__SummaryEndpoint",
-                "value": "api/execute/"
-              },
-              {
                 "name": "JobProfileOverviewServiceOptions__BaseAddress",
                 "value": "[parameters('jobProfUrl')]"
               }
