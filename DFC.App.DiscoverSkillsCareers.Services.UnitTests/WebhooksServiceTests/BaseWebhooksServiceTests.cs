@@ -33,6 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             FakeContentCacheService = A.Fake<IContentCacheService>();
             FakeContentProcessors = A.CollectionOfFake<IContentProcessor>(3);
             FakeCmsApiClientOptions = A.Fake<CmsApiClientOptions>();
+            FakeCmsApiClientOptions.ContentIds = "2c9da1b3-3529-4834-afc9-9cd741e59788";
             FakeSharedContentItemDocumentService = A.Fake< IDocumentService<StaticContentItemModel>>();
         }
 

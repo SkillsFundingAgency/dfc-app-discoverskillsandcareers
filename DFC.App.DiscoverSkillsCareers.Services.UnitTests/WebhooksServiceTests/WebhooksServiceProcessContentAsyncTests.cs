@@ -11,7 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
     [Trait("Category", "Webhooks Service ProcessContentAsync Unit Tests")]
     public class WebhooksServiceProcessContentAsyncTests : BaseWebhooksServiceTests
     {
-        /*[Fact]
+        [Fact]
         public async Task WebhooksServiceProcessContentAsyncForCreateReturnsSuccess()
         {
             // Arrange
@@ -46,6 +46,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             A.CallTo(() => FakeContentProcessors[0].ProcessContent(A<Uri>.Ignored, A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
-        }*/
+        }
     }
 }

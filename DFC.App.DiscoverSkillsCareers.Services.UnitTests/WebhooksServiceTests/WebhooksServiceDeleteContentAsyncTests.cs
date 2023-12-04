@@ -10,8 +10,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
     [Trait("Category", "Webhooks Service DeleteContentAsync Unit Tests")]
     public class WebhooksServiceDeleteContentAsyncTests : BaseWebhooksServiceTests
     {
-        /*[Fact]*/
-        /*public async Task WebhooksServiceDeleteContentAsyncForCreateReturnsSuccess()
+        [Fact]
+        public async Task WebhooksServiceDeleteContentAsyncForCreateReturnsSuccess()
         {
             // Arrange
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
@@ -45,6 +45,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.WebhooksServiceTests
             A.CallTo(() => FakeContentProcessors[0].DeleteContentAsync(A<Guid>.Ignored, string.Empty)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
-        }*/
+        }
     }
 }
