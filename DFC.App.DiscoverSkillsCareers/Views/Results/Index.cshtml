@@ -1,5 +1,5 @@
 ﻿@model ResultIndexResponseViewModel
-<div id="top" class="govuk-main-wrapper govuk-width-container @(Model.AssessmentType == "short" ? string.Empty : "govuk-!-padding-top-7")">
+<div class="govuk-main-wrapper govuk-width-container @(Model.AssessmentType == "short" ? string.Empty : "govuk-!-padding-top-7")">
     <div class="govuk-body">
         @if (Model.Results.JobCategories.Any())
         {
