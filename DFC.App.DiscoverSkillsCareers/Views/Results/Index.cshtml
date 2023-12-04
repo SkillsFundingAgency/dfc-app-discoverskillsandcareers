@@ -1,5 +1,5 @@
 ﻿@model ResultIndexResponseViewModel
-<div class="govuk-main-wrapper govuk-width-container @(Model.AssessmentType == "short" ? string.Empty : "govuk-!-padding-top-7")">
+<div id="top" class="govuk-main-wrapper govuk-width-container @(Model.AssessmentType == "short" ? string.Empty : "govuk-!-padding-top-7")">
     <div class="govuk-body">
         @if (Model.Results.JobCategories.Any())
         {
@@ -12,7 +12,7 @@
             <partial name="_SendMyResults" model="@Model.AssessmentReference" />          
                                                                              
             <div>
-                <a href="#top" tabindex="1">
+                <a href="#top">
                     <svg class="app-back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
                         <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
                     </svg>Back to top
