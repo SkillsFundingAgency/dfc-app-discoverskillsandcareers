@@ -109,7 +109,7 @@
       "sessionStateCollectionName": {
         "type": "string"
       },
-      "cosmosDbCollectionName": {
+      "cosmosDbSharedCollectionName": {
         "type": "string"
       },
       "cmsTimeout": {
@@ -395,7 +395,7 @@
               },
               {
                 "name": "Configuration__CosmosDbConnections__SharedContent__CollectionId",
-                "value": "[parameters('cosmosDbCollectionName')]"
+                "value": "[parameters('cosmosDbSharedCollectionName')]"
               },
               {
                 "name": "Configuration__CosmosDbConnections__SharedContent__PartitionKey",
@@ -627,7 +627,7 @@
     },
     {
       "apiVersion": "2017-05-10",
-      "name": "[parameters('cosmosDbCollectionName')]",
+      "name": "[parameters('cosmosDbSharedCollectionName')]",
       "type": "Microsoft.Resources/deployments",
       "dependsOn": [
         "[variables('CosmosDbDatabaseName')]"
@@ -647,7 +647,7 @@
             "value": "[variables('cosmosDbDatabaseName')]"
           },
           "collectionName": {
-            "value": "[parameters('cosmosDbCollectionName')]"
+            "value": "[parameters('cosmosDbSharedCollectionName')]"
           },
           "provisionRequestUnits": {
             "value": false

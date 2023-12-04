@@ -53,8 +53,8 @@
 		    "cmsContentIds": {
 		      "value": "__cmsContentIds__"
 		    },
-		    "cosmosDbCollectionName": {
-		      "value": "__cosmosDbCollectionName__"
+		    "cosmosDbSharedCollectionName": {
+		      "value": "__cosmosDbSharedCollectionName__"
 		    },
         "NotifyApiKey": {
             "value": "__NotifyApiKey__"

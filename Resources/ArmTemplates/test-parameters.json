@@ -23,8 +23,8 @@
     "CdnUrl": {
       "value": "https://foo.cdn.nationalcareers.service.uk"
     },
-    "cosmosDbCollectionName": {
-      "value": "cosmosDbCollectionName"
+    "cosmosDbSharedCollectionName": {
+      "value": "cosmosDbSharedCollectionName"
     },
     "cmsTimeout": {
       "value": "00:00:30"
