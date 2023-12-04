@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             var assessmentResponse = new GetAssessmentResponse() { MaxQuestionsCount = 2, RecordedAnswersCount = 2 };
 
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>(A<string>.Ignored)).Returns(new List<DysacJobProfileOverviewContentModel>() { new DysacJobProfileOverviewContentModel { Html = "<h1>Chemist</h1>", Title = "Chemist" } });
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>(A<string>.Ignored, A<string>.Ignored)).Returns(new List<DysacJobProfileOverviewContentModel>() { new DysacJobProfileOverviewContentModel { Html = "<h1>Chemist</h1>", Title = "Chemist" } });
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             A.CallTo(() => assessmentService.GetAssessment()).Returns(assessmentResponse);
             A.CallTo(() => resultsService.GetResultsByCategory(A<string>.Ignored)).Returns(new GetResultsResponse { JobCategories = new List<JobCategoryResult> { new JobCategoryResult { JobFamilyName = "testcategory", JobFamilyUrl = "testcategory", JobProfiles = new List<JobProfileResult>() { new JobProfileResult { Title = "Chemist" } } } } });

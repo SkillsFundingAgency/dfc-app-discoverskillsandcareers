@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 new DysacQuestionSetContentModel()
             };
 
-            A.CallTo(() => fakeDocumentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet"))
+            A.CallTo(() => fakeDocumentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", A<string>.Ignored))
                 .Returns(expectedResult);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
@@ -41,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.GetAllCachedItemsAsync<DysacQuestionSetContentModel>().ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet")).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet", A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -53,9 +53,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var DysacQuestionSetContentModel = A.Fake<DysacQuestionSetContentModel>();
             var expectedResult = HttpStatusCode.OK;
 
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(existingQuestionSetContentModel);
-            A.CallTo(() => fakeDocumentStore.CreateContentAsync(A<DysacQuestionSetContentModel>.Ignored))
+            A.CallTo(() => fakeDocumentStore.CreateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored))
                 .Returns(expectedResult);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
@@ -64,8 +64,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.CreateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.CreateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.CreateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -82,8 +82,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.CreateAsync(DysacQuestionSetContentModel!).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
 
@@ -95,7 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var DysacQuestionSetContentModel = A.Fake<DysacQuestionSetContentModel>();
             var expectedResult = HttpStatusCode.AlreadyReported;
 
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(existingDysacQuestionSetContentModel);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
@@ -104,8 +104,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.CreateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
 
@@ -120,9 +120,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             DysacQuestionSetContentModel.PartitionKey = "a-partition-key";
             existingDysacQuestionSetContentModel.PartitionKey = DysacQuestionSetContentModel.PartitionKey;
 
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(existingDysacQuestionSetContentModel);
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
 
@@ -130,9 +130,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -147,10 +147,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             DysacQuestionSetContentModel.PartitionKey = "a-partition-key";
             existingDysacQuestionSetContentModel.PartitionKey = "a-different-partition-key";
 
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(existingDysacQuestionSetContentModel);
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(true);
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(true);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
 
@@ -158,9 +158,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -175,9 +175,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             DysacQuestionSetContentModel.PartitionKey = "a-partition-key";
             existingDysacQuestionSetContentModel.PartitionKey = "a-different-partition-key";
 
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingDysacQuestionSetContentModel);
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(false);
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(existingDysacQuestionSetContentModel);
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(false);
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
 
@@ -185,9 +185,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
 
@@ -204,8 +204,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel!).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
 
@@ -217,7 +217,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var DysacQuestionSetContentModel = A.Fake<DysacQuestionSetContentModel>();
             var expectedResult = HttpStatusCode.NotFound;
 
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(existingDysacQuestionSetContentModel);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
@@ -226,8 +226,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.UpdateAsync(DysacQuestionSetContentModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeDocumentStore.GetContentByIdAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.UpdateContentAsync(A<DysacQuestionSetContentModel>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
 
@@ -237,7 +237,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             // arrange
             var expectedResult = HttpStatusCode.OK;
 
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored))
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(true);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
@@ -246,7 +246,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.DeleteAsync<DysacQuestionSetContentModel>(Guid.NewGuid(), string.Empty).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -256,7 +256,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             // arrange
             var expectedResult = HttpStatusCode.NotFound;
 
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).Returns(false);
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(false);
 
             var eventMessageService = new EventMessageService(fakeLogger, fakeDocumentStore);
 
@@ -264,7 +264,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var result = await eventMessageService.DeleteAsync<DysacQuestionSetContentModel>(Guid.NewGuid(), string.Empty).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeDocumentStore.DeleteContentAsync<DysacQuestionSetContentModel>(A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
