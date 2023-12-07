@@ -7,6 +7,9 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Models;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +30,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly string testCategory;
         private readonly ILogService logService;
         private readonly IDocumentStore documentStore;
+        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
+        private readonly CmsApiClientOptions cmsApiClientOptions;
 
         public RolesTests()
         {
@@ -41,8 +46,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             logService = A.Fake<ILogService>();
             documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
+            staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
+            cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
         }
 
         [Fact]

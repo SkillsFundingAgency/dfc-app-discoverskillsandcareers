@@ -38,6 +38,24 @@
         "CdnUrl": {
             "value": "__CdnUrl__"
         },
+		    "cmsTimeout": {
+		      "value": "__cmsTimeout__"
+		    },
+		    "cmsApiKey": {
+		      "value": "__cmsApiKey__"
+		    },
+		    "cmsBaseAddress": {
+		      "value": "__cmsBaseAddress__"
+		    },
+		    "cmsStaticContentEndpoint": {
+		      "value": "__cmsStaticContentEndpoint__"
+		    },
+		    "cmsContentIds": {
+		      "value": "__cmsContentIds__"
+		    },
+		    "cosmosDbSharedCollectionName": {
+		      "value": "__cosmosDbSharedCollectionName__"
+		    },
         "NotifyApiKey": {
             "value": "__NotifyApiKey__"
         },
