@@ -14,7 +14,7 @@
         "description": "Ocp subscription key for DYSAC"
       }
     },
-    "apimCompositeApiKey": {
+    "apimCompositeKey": {
       "type": "securestring"
     },
     "SubscriptionSettingsEndpoint": {
@@ -505,7 +505,7 @@
               },
               {
                 "name": "SubscriptionSettings__Endpoint",
-                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeApiKey'))]"
+                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeKey'))]"
               },
               {
                 "name": "SubscriptionSettings__SubscriptionServiceEndpoint",

@@ -8,7 +8,7 @@
     "ApimDysacKey": {
       "value": "0123456789ABCDEF"
     },
-    "apimCompositeApiKey": {
+    "apimCompositeKey": {
       "value": "test"
     },
     "SubscriptionSettingsEndpoint": {

@@ -26,8 +26,8 @@
         "aspInstances": {
           "value": __aspInstances__
         },
-        "apimCompositeApiKey": {
-          "value": "__apimCompositeApiKey__"
+        "apimCompositeKey": {
+          "value": "__apimCompositeKey__"
         },
         "SubscriptionSettingsEndpoint": {
           "value": "__SubscriptionSettingsEndpoint__"
