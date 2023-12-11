@@ -8,6 +8,12 @@
     "ApimDysacKey": {
       "value": "0123456789ABCDEF"
     },
+    "apimCompositeApiKey": {
+      "value": "test"
+    },
+    "SubscriptionSettingsEndpoint": {
+      "value": "test"
+    },
     "resourcePrefix": {
       "value": "dfc-foo-app-dysac"
     },

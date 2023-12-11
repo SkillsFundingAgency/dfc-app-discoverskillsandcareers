@@ -24,7 +24,13 @@
             "value": "__aseResourceGroup__"
         },
         "aspInstances": {
-            "value": __aspInstances__
+          "value": __aspInstances__
+        },
+        "apimCompositeApiKey": {
+          "value": "__apimCompositeApiKey__"
+        },
+        "SubscriptionSettingsEndpoint": {
+          "value": "__SubscriptionSettingsEndpoint__"
         },
         "aspTier": {
             "value": "__aspTier__"
