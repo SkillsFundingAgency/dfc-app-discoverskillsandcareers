@@ -1,6 +1,8 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.SkillsHealthCheck.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -29,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             return await sessionService.HasValidSession().ConfigureAwait(false);
         }
+
         protected static BreadcrumbViewModel BuildBreadcrumb()
         {
             return new BreadcrumbViewModel
