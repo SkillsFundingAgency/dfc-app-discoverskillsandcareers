@@ -330,3 +330,8 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+DFC.App.DiscoverSkillsCareers.UI.FunctionalTests/DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.csproj
+DFC.App.DiscoverSkillsCareers.UI.FunctionalTests/DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.csproj
+DFC.App.DiscoverSkillsCareers.UI.FunctionalTests/DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.csproj
+*.csproj
+DFC.App.DiscoverSkillsCareers/Properties/launchSettings.json

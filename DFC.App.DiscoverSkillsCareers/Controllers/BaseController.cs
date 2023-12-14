@@ -29,5 +29,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             return await sessionService.HasValidSession().ConfigureAwait(false);
         }
+        protected static BreadcrumbViewModel BuildBreadcrumb()
+        {
+            return new BreadcrumbViewModel
+            {
+                Breadcrumbs = new List<BreadcrumbItemViewModel>
+                {
+                    new BreadcrumbItemViewModel
+                    {
+                        Route = "/",
+                        Title = "Home",
+                    },
+                    new BreadcrumbItemViewModel
+                    {
+                        Route = "/skills-assessment",
+                        Title = "Skills assessment",
+                    },
+                },
+            };
+        }
     }
 }
