@@ -1,9 +1,6 @@
-﻿using DFC.App.DiscoverSkillsCareers.Extensions;
-using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -35,6 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             if (!ModelState.IsValid)
             {
                 var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
+
                 return View(responseViewModel);
             }
 

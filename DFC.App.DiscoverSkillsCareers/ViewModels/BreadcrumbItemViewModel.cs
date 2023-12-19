@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 
-namespace DFC.App.DiscoverSkillsCareers.ViewModels
+namespace DFC.App.SkillsHealthCheck.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class BreadcrumbItemViewModel
     {
         public string? Route { get; set; }
