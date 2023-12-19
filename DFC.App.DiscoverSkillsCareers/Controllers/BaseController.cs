@@ -1,8 +1,11 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.SkillsHealthCheck.ViewModels;
+using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.App.DiscoverSkillsCareers.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -32,24 +35,95 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return await sessionService.HasValidSession().ConfigureAwait(false);
         }
 
-        protected static BreadcrumbViewModel BuildBreadcrumb()
+
+        // Double check the Routes and also the cases 
+        protected static BreadcrumbViewModel BuildBreadcrumb(String route)
         {
-            return new BreadcrumbViewModel
+            List<BreadcrumbItemViewModel> breadcrumbs;
+
+            switch (route)
             {
-                Breadcrumbs = new List<BreadcrumbItemViewModel>
-                {
-                    new BreadcrumbItemViewModel
+                case "/skills-health-check/save-my-progress/breadcrumb" or "/skills-health-check/save-my-progress/" or "/skills-health-check/save-my-progress/document":
+                    breadcrumbs = new List<BreadcrumbItemViewModel>
                     {
-                        Route = "/",
-                        Title = "Home",
-                    },
-                    new BreadcrumbItemViewModel
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/",
+                            Title = "Home",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/skills-assessment/home",
+                            Title = "Skills assessment",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/dysac/",
+                            Title = "DYSAC",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/skills-health-check/save-my-progress?type=",
+                            Title = "Save progress",
+                        },
+                    };
+                    break;
+
+                case "/skills-health-check/save-my-progress/getcode/breadcrumb" or "/skills-health-check/save-my-progress/getcode/document":
+                    breadcrumbs = new List<BreadcrumbItemViewModel>
                     {
-                        Route = "/skills-assessment",
-                        Title = "Skills assessment",
-                    },
-                },
-            };
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/",
+                            Title = "Home",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/skills-assessment/home",
+                            Title = "Skills assessment",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/dysac/",
+                            Title = "DYSAC",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/dysac/save-my-progress?type=",
+                            Title = "Save progress",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/dysac/save-my-progress/getcode",
+                            Title = "Reference code",
+                        },
+                    };
+                    break;
+
+                default:
+                    breadcrumbs = new List<BreadcrumbItemViewModel>
+                    {
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/",
+                            Title = "Home",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/skills-assessment/home",
+                            Title = "Skills assessment",
+                        },
+                        new BreadcrumbItemViewModel
+                        {
+                            Route = "/skills-health-check/",
+                            Title = "Skills health check",
+                        },
+                    };
+                    break;
+            }
+
+            return new BreadcrumbViewModel
+            { Breadcrumbs = breadcrumbs };
         }
     }
 }
