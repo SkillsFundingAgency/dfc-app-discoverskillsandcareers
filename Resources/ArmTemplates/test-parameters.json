@@ -85,6 +85,12 @@
         },
         "sessionStateCollectionName": {
             "value": "sessionStateCollectionName"
+        },
+        "workspaceName": {
+            "value": "aTestLogAnalyticsAccount"
+        },
+        "workspaceResourceGroup": {
+            "value": "aResourceGroup"
         }
     }
 }
