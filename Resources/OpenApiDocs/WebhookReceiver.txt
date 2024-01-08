@@ -4,7 +4,7 @@ info:
   description: 'Webhook receiver for Event Grid Events' 
   version: 1.0.0
 servers:
-  - url: __AppServiceUrl__
+  - url: __DysacUrl__
 paths:
   /api/webhook/ReceiveEvents:
     post:
