@@ -109,6 +109,21 @@
     },
     "sessionStateCollectionName": {
       "value": "sessionStateCollectionName"
+    },
+    "ApimResourceGroup": {
+      "value": "dfc-dev-shared-rg"
+    },
+    "ApimLoggerName": {
+      "value": "composite-ui-logger"
+    },
+    "ApimProductInstanceName": {
+      "value": "composite-ui"
+    },
+    "ApimServiceName": {
+      "value": "dfc-dev-shared-apim"
+    },
+    "ApiName": {
+      "value": "dysacwebhookapi"
     }
   }
 }
