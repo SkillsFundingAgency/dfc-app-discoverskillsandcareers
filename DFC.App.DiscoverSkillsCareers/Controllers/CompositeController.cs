@@ -39,14 +39,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("head/assessment/complete")]
         public IActionResult AssessmentComplete()
         {
-            logService.LogInformation($"AssessmentComplete ");
+            logService.LogInformation($"AssessmentComplete called");
             return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
         }
 
         [Route("head/assessment/save")]
         public IActionResult AssessmentSave()
         {
-            logService.LogInformation($"AssessmentComplete called");
+            logService.LogInformation($"AssessmentSave called");
             return CreateViewModelAndReturnView(PageTitle.AssessmentSave);
         }
 
@@ -102,9 +102,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop")]
-        public IActionResult BodyTopEmpty()
+        public IActionResult BreadcrumbsHome()
         {
-            logService.LogInformation($"BodyTopEmpty called");
+            logService.LogInformation($"BreadcrumbsHome called");
             return View();
         }
 
@@ -115,30 +115,27 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        [Route("bodytop/assessment/{assessmentType}/1")]
+      
+        [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
         [Route("bodytop/assessment/complete")]
-        public IActionResult BodyTopBackToStart()
+        public IActionResult BreadcrumbsQuestions()
         {
-            logService.LogInformation($"BodyTopBackToStart called");
+            logService.LogInformation($"BreadcrumbsQuestions called");
             return View();
         }
 
-        [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
-        public IActionResult BodyTopQuestions(string assessmentType, int questionNumber)
+        [Route("bodytop/assessment/reference")]
+        public IActionResult BreadcrumbsReferenceCode()
         {
-            logService.LogInformation($"BodyTopBackToStart assessmentType{assessmentType} questionNumber{questionNumber} called");
-            var previousQuestionNumber = questionNumber - 1;
-            if (previousQuestionNumber < 0)
-            {
-                previousQuestionNumber = 0;
-            }
+            logService.LogInformation($"BreadcrumbsReferenceCode called");
+            return View();
+        }
 
-            var vm = new BodyTopQuestionsViewModel()
-            {
-                AssessmentType = assessmentType,
-                PreviousQuestionNumber = previousQuestionNumber,
-            };
-            return View(vm);
+        [Route("bodytop/assessment/save")]
+        public IActionResult BreadcrumbsSaveProgress()
+        {
+            logService.LogInformation($"BreadcrumbsSaveProgress called");
+            return View();
         }
 
         [Route("herobanner")]
