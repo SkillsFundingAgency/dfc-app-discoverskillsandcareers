@@ -54,4 +54,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+    <ItemGroup>
+	    <Folder Include="OpenApiDocs\" />
+    </ItemGroup>
+
 </Project>

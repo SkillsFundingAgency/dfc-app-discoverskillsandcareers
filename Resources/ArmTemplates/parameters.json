@@ -24,7 +24,13 @@
             "value": "__aseResourceGroup__"
         },
         "aspInstances": {
-            "value": __aspInstances__
+          "value": __aspInstances__
+        },
+        "apimCompositeKey": {
+          "value": "__apimCompositeKey__"
+        },
+        "SubscriptionSettingsEndpoint": {
+          "value": "__SubscriptionSettingsEndpoint__"
         },
         "aspTier": {
             "value": "__aspTier__"
@@ -109,6 +115,21 @@
         },
         "sessionStateCollectionName": {
             "value": "__sessionStateCollectionName__"
+        },
+        "ApimResourceGroup": {
+        "value": "__SharedResourceGroupName__"
+        },
+        "ApimLoggerName": {
+        "value": "__ApimLoggerName__"
+        },
+        "ApimProductInstanceName": {
+        "value": "__ApimProductInstanceName__"
+        },
+        "ApimServiceName": {
+        "value": "__ApimServiceName__"
+        },
+        "ApiName": {
+        "value": "__ApiName__"
         }
     }
 }
