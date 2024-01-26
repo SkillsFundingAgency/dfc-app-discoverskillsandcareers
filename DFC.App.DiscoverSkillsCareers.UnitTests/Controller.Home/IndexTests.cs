@@ -7,6 +7,7 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,9 +27,23 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
+            cmsApiClientOptions = new CmsApiClientOptions
+            {
+                ContentIds = Guid.NewGuid().ToString(),
+            };
 
             controller = new HomeController(sessionService, assessmentService,staticContentDocumentService, cmsApiClientOptions);
+        }
+
+        [Fact]
+        public void NullContentIdThrowsException()
+        {
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions()));
+
+            // Assert
+            Assert.Equal("Value cannot be null. (Parameter 'ContentIds')", ex.Message);
         }
 
         [Fact]

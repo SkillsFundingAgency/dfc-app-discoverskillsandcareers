@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMemoryCache memoryCache;
         private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly Guid sharedContentItemGuid;
 
         public ResultsController(
             ILogService logService,
@@ -48,7 +48,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.staticContentDocumentService = staticContentDocumentService;
-            this.cmsApiClientOptions = cmsApiClientOptions;
+            if (cmsApiClientOptions?.ContentIds == null)
+            {
+                throw new ArgumentNullException(nameof(cmsApiClientOptions.ContentIds));
+            }
+
+            this.sharedContentItemGuid = new Guid(cmsApiClientOptions.ContentIds);
         }
 
         [HttpGet]
@@ -228,7 +233,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.SpeakToAnAdviser = await staticContentDocumentService.GetByIdAsync(new Guid(cmsApiClientOptions.ContentIds)).ConfigureAwait(false);
+            resultsHeroBannerViewModel.SpeakToAnAdviser = await staticContentDocumentService
+                .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false);
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
