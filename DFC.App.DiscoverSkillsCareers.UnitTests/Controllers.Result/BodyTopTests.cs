@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -35,7 +36,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
+            cmsApiClientOptions = new CmsApiClientOptions
+            {
+                ContentIds = Guid.NewGuid().ToString(),
+            };
 
             controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
         }

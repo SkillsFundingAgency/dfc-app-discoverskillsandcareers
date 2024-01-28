@@ -12,6 +12,7 @@ using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -40,7 +41,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
+            cmsApiClientOptions = new CmsApiClientOptions
+            {
+                ContentIds = Guid.NewGuid().ToString(),
+            };
 
             controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
         }
