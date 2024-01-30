@@ -48,12 +48,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.staticContentDocumentService = staticContentDocumentService;
-            if (cmsApiClientOptions?.ContentIds == null)
-            {
-                throw new ArgumentNullException(nameof(cmsApiClientOptions.ContentIds));
-            }
-
-            this.sharedContentItemGuid = new Guid(cmsApiClientOptions.ContentIds);
+            sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
 
         [HttpGet]

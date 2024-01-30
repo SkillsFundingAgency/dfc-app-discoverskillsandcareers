@@ -43,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
                 new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions()));
 
             // Assert
-            Assert.Equal("Value cannot be null. (Parameter 'ContentIds')", ex.Message);
+            Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
         }
 
         [Fact]
