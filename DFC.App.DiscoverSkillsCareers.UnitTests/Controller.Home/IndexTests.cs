@@ -7,6 +7,7 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,9 +27,34 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
+            cmsApiClientOptions = new CmsApiClientOptions
+            {
+                ContentIds = Guid.NewGuid().ToString(),
+            };
 
             controller = new HomeController(sessionService, assessmentService,staticContentDocumentService, cmsApiClientOptions);
+        }
+
+        [Fact]
+        public void NullContentIdThrowsException()
+        {
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions()));
+
+            // Assert
+            Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
+        }
+
+        [Fact]
+        public void NullCmsApiClientOptionsThrowsException()
+        {
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, null));
+
+            // Assert
+            Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
         }
 
         [Fact]
@@ -74,6 +100,22 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public async Task IndexAsyncReturnsSpeaksToAdvisor()
+        {
+            // Arrange
+            A.CallTo(() => staticContentDocumentService.GetByIdAsync(
+                new Guid(cmsApiClientOptions.ContentIds),
+                StaticContentItemModel.DefaultPartitionKey)).Returns(new StaticContentItemModel());
+
+            // Act
+            var result = await controller.IndexAsync() as ViewResult;
+            var model = result?.Model as HomeIndexResponseViewModel;
+
+            // Assert
+            Assert.NotNull(model?.SpeakToAnAdviser);
         }
     }
 }

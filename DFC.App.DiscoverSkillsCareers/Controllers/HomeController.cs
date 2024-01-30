@@ -15,20 +15,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly Guid _sharedContentItemGuid;
 
         public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
             this.staticContentDocumentService = staticContentDocumentService;
-            this.cmsApiClientOptions = cmsApiClientOptions;
+            _sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
 
         public async Task<IActionResult> IndexAsync()
         {
-            var responseVm = new HomeIndexResponseViewModel();
-            responseVm.SpeakToAnAdviser = await staticContentDocumentService.GetByIdAsync(new Guid(cmsApiClientOptions.ContentIds)).ConfigureAwait(false);
+            var responseVm = new HomeIndexResponseViewModel
+            {
+                SpeakToAnAdviser = await staticContentDocumentService
+                    .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false),
+            };
             return View(responseVm);
         }
 
@@ -42,8 +45,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
-                responseViewModel.SpeakToAnAdviser = await staticContentDocumentService.GetByIdAsync(new Guid(cmsApiClientOptions.ContentIds)).ConfigureAwait(false);
+                var responseViewModel = new HomeIndexResponseViewModel
+                {
+                    ReferenceCode = viewModel.ReferenceCode,
+                    SpeakToAnAdviser = await staticContentDocumentService
+                        .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey)
+                        .ConfigureAwait(false),
+                };
                 return View(responseViewModel);
             }
 
