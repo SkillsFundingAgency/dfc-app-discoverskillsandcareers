@@ -47,6 +47,17 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         }
 
         [Fact]
+        public void NullCmsApiClientOptionsThrowsException()
+        {
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, null));
+
+            // Assert
+            Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
+        }
+
+        [Fact]
         public async Task NullViewModelReturnsBadRequest()
         {
             HomeIndexRequestViewModel viewModel = null;
@@ -89,6 +100,22 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public async Task IndexAsyncReturnsSpeaksToAdvisor()
+        {
+            // Arrange
+            A.CallTo(() => staticContentDocumentService.GetByIdAsync(
+                new Guid(cmsApiClientOptions.ContentIds),
+                StaticContentItemModel.DefaultPartitionKey)).Returns(new StaticContentItemModel());
+
+            // Act
+            var result = await controller.IndexAsync() as ViewResult;
+            var model = result?.Model as HomeIndexResponseViewModel;
+
+            // Assert
+            Assert.NotNull(model?.SpeakToAnAdviser);
         }
     }
 }

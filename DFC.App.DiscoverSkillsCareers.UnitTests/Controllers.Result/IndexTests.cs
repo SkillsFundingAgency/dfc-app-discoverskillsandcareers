@@ -28,6 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly ILogService logService;
         private readonly IDocumentStore documentStore;
+        private readonly IMemoryCache memoryCache;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
 
@@ -39,14 +40,36 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
             documentStore = A.Fake<IDocumentStore>();
-            var fakeMemoryCache = A.Fake<IMemoryCache>();
+            memoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, cmsApiClientOptions);
+        }
+
+        [Fact]
+        public void NullContentIdThrowsException()
+        {
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, new CmsApiClientOptions()));
+
+            // Assert
+            Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
+        }
+
+        [Fact]
+        public void NullCmsApiClientOptionsThrowsException()
+        {
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, null));
+
+            // Assert
+            Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
         }
 
         [Fact]

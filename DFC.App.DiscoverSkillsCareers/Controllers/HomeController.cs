@@ -15,14 +15,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly Guid sharedContentItemGuid;
+        private readonly Guid _sharedContentItemGuid;
 
         public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
             this.staticContentDocumentService = staticContentDocumentService;
-            sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
+            _sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -30,7 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var responseVm = new HomeIndexResponseViewModel
             {
                 SpeakToAnAdviser = await staticContentDocumentService
-                    .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false),
+                    .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false),
             };
             return View(responseVm);
         }
@@ -49,7 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 {
                     ReferenceCode = viewModel.ReferenceCode,
                     SpeakToAnAdviser = await staticContentDocumentService
-                        .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey)
+                        .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey)
                         .ConfigureAwait(false),
                 };
                 return View(responseViewModel);
