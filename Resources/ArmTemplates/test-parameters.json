@@ -124,6 +124,13 @@
     },
     "ApiName": {
       "value": "dysacwebhookapi"
+    },
+      "workspaceName": {
+          "value": "aTestLogAnalyticsAccount"
+      },
+      "workspaceResourceGroup": {
+          "value": "aResourceGroup"
+      }
     }
   }
 }
