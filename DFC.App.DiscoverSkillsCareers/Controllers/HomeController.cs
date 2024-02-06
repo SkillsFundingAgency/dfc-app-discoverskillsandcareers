@@ -1,6 +1,12 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Sessionstate;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -8,31 +14,44 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class HomeController : BaseController
     {
         private readonly IAssessmentService assessmentService;
+        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
+        private readonly Guid _sharedContentItemGuid;
 
-        public HomeController(ISessionService sessionService, IAssessmentService assessmentService)
+        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
+            this.staticContentDocumentService = staticContentDocumentService;
+            _sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            var responseVm = new HomeIndexResponseViewModel();
+            var responseVm = new HomeIndexResponseViewModel
+            {
+                SpeakToAnAdviser = await staticContentDocumentService
+                    .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false),
+            };
             return View(responseVm);
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(HomeIndexRequestViewModel viewModel)
         {
-            if (viewModel == null)
+            if (viewModel == null || viewModel.ReferenceCode == null)
             {
                 return BadRequest();
             }
 
             if (!ModelState.IsValid)
             {
-                var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
-
+                var responseViewModel = new HomeIndexResponseViewModel
+                {
+                    ReferenceCode = viewModel.ReferenceCode,
+                    SpeakToAnAdviser = await staticContentDocumentService
+                        .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey)
+                        .ConfigureAwait(false),
+                };
                 return View(responseViewModel);
             }
 
