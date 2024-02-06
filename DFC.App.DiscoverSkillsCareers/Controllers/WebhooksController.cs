@@ -2,6 +2,7 @@
 using DFC.App.DiscoverSkillsCareers.Models.Enums;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
@@ -90,13 +91,25 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                         logger.LogInformation($"Got Event Id: {eventId}: {eventGridEvent.EventType}: Cache operation: {cacheOperation} {eventGridEventData.Api}");
 
-                        var result = await webhookService.ProcessMessageAsync(
+                        HttpStatusCode result;
+
+                        if (eventGridEventData.ContentType == "SharedContent")
+                        {
+                            result = await webhookService.ProcessMessageAsync(
+                            cacheOperation,
+                            eventId,
+                            contentId,
+                            eventGridEventData.Api).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            result = await webhookService.ProcessMessageAsync(
                             cacheOperation,
                             eventId,
                             contentId,
                             eventGridEventData.Api,
                             eventGridEventData.ContentType).ConfigureAwait(false);
-
+                        }
                         LogResult(eventId, contentId, result);
                     }
                     else
