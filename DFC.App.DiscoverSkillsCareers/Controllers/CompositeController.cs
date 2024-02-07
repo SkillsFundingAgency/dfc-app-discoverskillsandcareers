@@ -4,6 +4,9 @@ using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
@@ -39,14 +42,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("head/assessment/complete")]
         public IActionResult AssessmentComplete()
         {
-            logService.LogInformation($"AssessmentComplete ");
+            logService.LogInformation($"AssessmentComplete called");
             return CreateViewModelAndReturnView(PageTitle.AssessmentComplete);
         }
 
         [Route("head/assessment/save")]
         public IActionResult AssessmentSave()
         {
-            logService.LogInformation($"AssessmentComplete called");
+            logService.LogInformation($"AssessmentSave called");
             return CreateViewModelAndReturnView(PageTitle.AssessmentSave);
         }
 
@@ -102,10 +105,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop")]
-        public IActionResult BodyTopEmpty()
+        public IActionResult BreadcrumbsHome()
         {
-            logService.LogInformation($"BodyTopEmpty called");
-            return View();
+            logService.LogInformation($"BreadcrumbsHome called");
+            var viewModel = BuildBreadcrumb();
+            viewModel.Breadcrumbs.Last().AddHyperlink = false;
+
+            return View("Breadcrumb", viewModel);
         }
 
         [Route("bodytop/{**data}")]
@@ -115,30 +121,53 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        [Route("bodytop/assessment/{assessmentType}/1")]
+      
+        [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
         [Route("bodytop/assessment/complete")]
-        public IActionResult BodyTopBackToStart()
+        public IActionResult BreadcrumbsQuestions()
         {
-            logService.LogInformation($"BodyTopBackToStart called");
-            return View();
+            logService.LogInformation($"BreadcrumbsQuestions called");
+            var viewModel = BuildBreadcrumb();
+            return View("Breadcrumb", viewModel);
         }
 
-        [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
-        public IActionResult BodyTopQuestions(string assessmentType, int questionNumber)
+        [Route("bodytop/assessment/reference")]
+        public IActionResult BreadcrumbsReferenceCode()
         {
-            logService.LogInformation($"BodyTopBackToStart assessmentType{assessmentType} questionNumber{questionNumber} called");
-            var previousQuestionNumber = questionNumber - 1;
-            if (previousQuestionNumber < 0)
+            logService.LogInformation($"BreadcrumbsReferenceCode called");
+            var viewModel = BuildBreadcrumb();
+            var articlePathViewModel = new BreadcrumbItemViewModel
             {
-                previousQuestionNumber = 0;
-            }
-
-            var vm = new BodyTopQuestionsViewModel()
-            {
-                AssessmentType = assessmentType,
-                PreviousQuestionNumber = previousQuestionNumber,
+                Route = "/discover-your-skills-and-careers/Assessment/save",
+                Title = "Save progress",
             };
-            return View(vm);
+            viewModel.Breadcrumbs.Add(articlePathViewModel);
+            articlePathViewModel = new BreadcrumbItemViewModel
+            {
+                Route = "/discover-your-skills-and-careers/assessment/reference",
+                Title = "Reference code",
+            };
+            viewModel.Breadcrumbs.Add(articlePathViewModel);
+            viewModel.Breadcrumbs.Last().AddHyperlink = false;
+
+            return View("Breadcrumb", viewModel);
+        }
+
+        [Route("bodytop/assessment/save")]
+        public IActionResult BreadcrumbsSaveProgress()
+        {
+            logService.LogInformation($"BreadcrumbsSaveProgress called");
+            var viewModel = BuildBreadcrumb();
+            var articlePathViewModel = new BreadcrumbItemViewModel
+            {
+                Route = "/discover-your-skills-and-careers/Assessment/save",
+                Title = "Save progress",
+            };
+
+            viewModel.Breadcrumbs.Add(articlePathViewModel);
+            viewModel.Breadcrumbs.Last().AddHyperlink = false;
+
+            return View("Breadcrumb", viewModel);
         }
 
         [Route("herobanner")]
@@ -176,6 +205,33 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var vm = CreateViewModel(title);
             return View(ViewName, vm);
+        }
+
+        private BreadcrumbViewModel BuildBreadcrumb()
+        {
+            var viewModel = new BreadcrumbViewModel
+            {
+                Breadcrumbs = new List<BreadcrumbItemViewModel>()
+                {
+                    new BreadcrumbItemViewModel()
+                    {
+                        Route = "/",
+                        Title = "Home",
+                    },
+                    new BreadcrumbItemViewModel()
+                    {
+                        Route = $"/skills-assessment",
+                        Title = "Skills assessment",
+                    },
+                    new BreadcrumbItemViewModel()
+                    {
+                        Route = $"/discover-your-skills-and-careers",
+                        Title = "DYSAC",
+                    },
+                },
+            };
+
+            return viewModel;
         }
     }
 }

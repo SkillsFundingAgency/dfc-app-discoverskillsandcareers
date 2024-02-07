@@ -28,31 +28,31 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
-        public void BodyTopEmptyReturnsView()
+        public void BreadcrumbsHomeReturnsView()
         {
-            var actionResponse = controller.BodyTopEmpty();
+            var actionResponse = controller.BreadcrumbsHome();
             Assert.IsType<ViewResult>(actionResponse);
         }
 
         [Fact]
-        public void BodyTopFirstQuestionReturnsView()
+        public void BreadcrumbsSaveProgressReturnsView()
         {
-            var actionResponse = controller.BodyTopBackToStart();
+            var actionResponse = controller.BreadcrumbsSaveProgress();
             Assert.IsType<ViewResult>(actionResponse);
         }
 
         [Fact]
-        public void BodyTopQuestionsReturnsView()
+        public void BreadcrumbsReferenceCodeReturnsView()
         {
-            var assessmentType = "short";
-            var questionNumber = 2;
-            var actionResponse = controller.BodyTopQuestions(assessmentType, questionNumber);
+            var actionResponse = controller.BreadcrumbsReferenceCode();
             Assert.IsType<ViewResult>(actionResponse);
+        }
 
-            var viewResult = actionResponse as ViewResult;
-            var model = viewResult.Model as BodyTopQuestionsViewModel;
-            Assert.Equal(questionNumber - 1, model.PreviousQuestionNumber);
-            Assert.Equal(assessmentType, model.AssessmentType);
+        [Fact]
+        public void BreadcrumbsQuestionsReturnsView()
+        {
+            var actionResponse = controller.BreadcrumbsQuestions();
+            Assert.IsType<ViewResult>(actionResponse);
         }
     }
 }
