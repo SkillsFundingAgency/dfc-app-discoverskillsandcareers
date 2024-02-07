@@ -2,7 +2,10 @@
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -22,6 +25,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly ILogService logService;
         private readonly IMemoryCache memoryCache;
         private readonly IDocumentStore documentStore;
+        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
+        private readonly Guid sharedContentItemGuid;
 
         public ResultsController(
             ILogService logService,
@@ -30,7 +35,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             IResultsService resultsService,
             IAssessmentService assessmentService,
             IDocumentStore documentStore,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            IDocumentService<StaticContentItemModel> staticContentDocumentService,
+            CmsApiClientOptions cmsApiClientOptions)
                 : base(sessionService)
         {
             this.logService = logService;
@@ -40,6 +47,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.memoryCache = memoryCache;
 
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
+            this.staticContentDocumentService = staticContentDocumentService;
+            sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
 
         [HttpGet]
@@ -219,6 +228,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
+            resultsHeroBannerViewModel.SpeakToAnAdviser = await staticContentDocumentService
+                .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false);
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);

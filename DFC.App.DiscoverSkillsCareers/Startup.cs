@@ -11,6 +11,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
+using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
@@ -29,6 +30,7 @@ using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,12 +43,19 @@ using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using DFC.Compui.Cosmos;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
+using System.Configuration;
+using DFC.Content.Pkg.Netcore.Services;
+using NHibernate.Mapping.ByCode.Impl;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
+        public const string StaticCosmosDbConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
         private readonly IWebHostEnvironment env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -98,6 +107,14 @@ namespace DFC.App.DiscoverSkillsCareers
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
+
+            services.AddSingleton(Configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            var staticContentDbConnection = Configuration.GetSection(StaticCosmosDbConfigAppSettings).Get<CosmosDbConnection>();
+            var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
+            services.AddDocumentServices<StaticContentItemModel>(staticContentDbConnection, env.IsDevelopment(), cosmosRetryOptions);
+            services.AddTransient<ICmsApiService, CmsApiService>();
+            services.AddTransient<IStaticContentReloadService, StaticContentReloadService>();
+            services.AddTransient<IContentTypeMappingService, ContentTypeMappingService>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
@@ -160,6 +177,10 @@ namespace DFC.App.DiscoverSkillsCareers
 
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
             services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
+
+            services.AddTransient<IApiCacheService, ApiCacheService>();
+
+            services.AddHostedService<StaticContentReloadBackgroundService>();
 
             services.AddDFCLogging(Configuration["ApplicationInsights:InstrumentationKey"]);
             var policyRegistry = services.AddPolicyRegistry();
