@@ -49,10 +49,24 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
+        public void BreadcrumbsQuestionsCompleteReturnsView()
+        {
+            var actionResponse = controller.BreadcrumbsQuestionsComplete();
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
         public void BreadcrumbsQuestionsReturnsView()
         {
-            var actionResponse = controller.BreadcrumbsQuestions();
+            var assessmentType = "short";
+            var questionNumber = 2;
+            var actionResponse = controller.BreadcrumbsQuestions(assessmentType, questionNumber);
+            var viewResult = actionResponse as ViewResult;
+            var model = viewResult.Model as BodyTopQuestionsViewModel;
+
             Assert.IsType<ViewResult>(actionResponse);
+            Assert.Equal(questionNumber - 1, model.PreviousQuestionNumber);
+            Assert.Equal(assessmentType, model.AssessmentType);
         }
     }
 }
