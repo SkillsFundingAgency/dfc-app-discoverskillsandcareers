@@ -121,12 +121,30 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-      
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
-        [Route("bodytop/assessment/complete")]
-        public IActionResult BreadcrumbsQuestions()
+        public IActionResult BreadcrumbsQuestions(string assessmentType, int questionNumber)
         {
             logService.LogInformation($"BreadcrumbsQuestions called");
+            var previousQuestionNumber = questionNumber - 1;
+            if (previousQuestionNumber < 0)
+            {
+                previousQuestionNumber = 0;
+            }
+
+            var viewModel = new BodyTopQuestionsViewModel
+            {
+                AssessmentType = assessmentType,
+                PreviousQuestionNumber = previousQuestionNumber,
+            };
+
+            return View("BodyTopQuestions", viewModel);
+        }
+
+        [Route("bodytop/assessment/{assessmentType}/1")]
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BreadcrumbsQuestionsComplete()
+        {
+            logService.LogInformation($"BreadcrumbsQuestionsComplete called");
             var viewModel = BuildBreadcrumb();
             return View("Breadcrumb", viewModel);
         }
