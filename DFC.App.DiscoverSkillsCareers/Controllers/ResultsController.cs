@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -27,6 +28,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly Guid sharedContentItemGuid;
+        private readonly IGraphQlService graphQlService;
 
         public ResultsController(
             ILogService logService,
@@ -37,6 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             IDocumentStore documentStore,
             IMemoryCache memoryCache,
             IDocumentService<StaticContentItemModel> staticContentDocumentService,
+            IGraphQlService graphQlService,
             CmsApiClientOptions cmsApiClientOptions)
                 : base(sessionService)
         {
@@ -45,6 +48,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
             this.memoryCache = memoryCache;
+            this.graphQlService = graphQlService;
 
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.staticContentDocumentService = staticContentDocumentService;
@@ -175,6 +179,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     .GroupBy(jobProfile => jobProfile.Title)
                     .Select(jobProfileGroup => jobProfileGroup.First())
                     .Select(jobProfile => jobProfile?.Title?.ToLower());
+
+                var test = graphQlService.GetJobProfileAsync("Bookmaker");
+
+                //loop through and query graphql for each category from jobcategory
 
                 var jobProfileOverviews = (await GetJobProfileOverviews().ConfigureAwait(false))?
                     .Where(document => jobProfileTitles.Contains(document.Title!.ToLower()))
