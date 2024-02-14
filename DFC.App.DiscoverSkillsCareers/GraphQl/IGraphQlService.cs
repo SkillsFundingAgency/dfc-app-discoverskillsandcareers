@@ -1,5 +1,4 @@
 ﻿using DFC.App.DiscoverSkillsCareers.ViewModels;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.GraphQl
@@ -8,6 +7,8 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
     {
         Task<JobProfileViewModel> GetJobProfileAsync(string jobProfile);
 
-        string OverviewHTMLBuilder(JobProfileOverviewResponse response);
+        string OverviewHTMLBuilder(JobProfileViewModel response);
+
+        string ConvertCurrencyToGBP(string amountStr);
     }
 }
