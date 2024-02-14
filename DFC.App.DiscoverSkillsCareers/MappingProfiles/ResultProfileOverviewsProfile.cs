@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using Microsoft.Azure.Documents.SystemFunctions;
 using System.Linq;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
@@ -24,6 +26,19 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 
             CreateMap<JobProfileResult, ResultJobProfileModel>()
             .ForMember(d => d.JobProfilesOverview, s => s.Ignore());
+
+            CreateMap<JobProfileOverviewResponse, JobProfileViewModel>()
+            .ForMember(d => d.DisplayText, s => s.MapFrom(a => a.JobProfile[0].DisplayText))
+            .ForMember(d => d.Overview, s => s.MapFrom(a => a.JobProfile[0].Overview))
+            .ForMember(d => d.UrlName, s => s.MapFrom(a => a.JobProfile[0].PageLocation.UrlName))
+            .ForMember(d => d.WorkingPattern, s => s.MapFrom(a => a.JobProfile[0].WorkingPattern.ContentItems[0].DisplayText))
+            .ForMember(d => d.WorkingPatternDetails, s => s.MapFrom(a => a.JobProfile[0].WorkingPatternDetails.ContentItems[0].DisplayText))
+            .ForMember(d => d.WorkingHoursDetails, s => s.MapFrom(a => a.JobProfile[0].WorkingHoursDetails.ContentItems[0].DisplayText))
+            .ForMember(d => d.MinimumHours, s => s.MapFrom(a => a.JobProfile[0].Minimumhours))
+            .ForMember(d => d.MaximumHours, s => s.MapFrom(a => a.JobProfile[0].Maximumhours))
+            .ForMember(d => d.SalaryStarterPerYear, s => s.MapFrom(a => a.JobProfile[0].Salarystarterperyear))
+            .ForMember(d => d.SalaryExperiencedPerYear, s => s.MapFrom(a => a.JobProfile[0].Salaryexperiencedperyear))
+            .ForAllOtherMembers(opts => opts.Ignore());
 
             CreateMap<JobProfileViewModel, ResultJobProfileOverViewModel>()
             .ForMember(d => d.Cname, s => s.MapFrom(a => a.DisplayText))
