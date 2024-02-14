@@ -1,6 +1,4 @@
 using AutoMapper;
-using Dfc.Session;
-using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.App.DiscoverSkillsCareers.HostedServices;
@@ -16,19 +14,34 @@ using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
+using DFC.Common.SharedContent.Pkg.Netcore;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
+using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Sessionstate;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
+using DFC.Content.Pkg.Netcore.Services;
+using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
-using Microsoft.ApplicationInsights;
+using Dfc.Session;
+using Dfc.Session.Models;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
@@ -42,13 +55,9 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using System.Reflection;
-using DFC.Compui.Cosmos;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
-using System.Configuration;
-using DFC.Content.Pkg.Netcore.Services;
-using NHibernate.Mapping.ByCode.Impl;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -56,6 +65,8 @@ namespace DFC.App.DiscoverSkillsCareers
     public class Startup
     {
         public const string StaticCosmosDbConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
+        private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
+        private const string StaxGraphApiUrlAppSettings = "Cms:StaxGraphApiUrl";
         private readonly IWebHostEnvironment env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -102,6 +113,25 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+
+            services.AddHttpClient();
+            services.AddSingleton<IGraphQLClient>(s =>
+            {
+                var option = new GraphQLHttpClientOptions()
+                {
+                    EndPoint = new Uri(Configuration.GetSection(StaxGraphApiUrlAppSettings).Get<string>() ?? throw new ArgumentNullException()),
+
+                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>() ?? throw new ArgumentNullException()),
+                };
+                var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
+                return client;
+            });
+
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileOverviewResponse>, JobProfileOverviewQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+
             var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
             services.AddSessionServices(sessionServiceConfig);
 
@@ -164,6 +194,10 @@ namespace DFC.App.DiscoverSkillsCareers
                 contentRequestHandler
                 );
             });
+
+            services.AddTransient<IGraphQlService, GraphQlService>();
+            services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
+            services.AddTransient<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
 
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();
