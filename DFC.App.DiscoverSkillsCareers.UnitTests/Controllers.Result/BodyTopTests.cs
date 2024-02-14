@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
@@ -25,6 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly IGraphQlService graphQlService;
 
         public BodyTopTests()
         {
@@ -36,12 +38,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
+            graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, graphQlService, cmsApiClientOptions);
         }
 
         [Fact]
