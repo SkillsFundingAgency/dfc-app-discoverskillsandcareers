@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly IGraphQlService graphQlService;
 
         public HeroBannerTests()
         {
@@ -42,10 +44,11 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             documentStore = A.Fake<IDocumentStore>();
             var fakeMemoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
+            graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
             cmsApiClientOptions.ContentIds = "2c9da1b3-3529-4834-afc9-9cd741e59788";
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, graphQlService, cmsApiClientOptions);
         }
 
         [Fact]
