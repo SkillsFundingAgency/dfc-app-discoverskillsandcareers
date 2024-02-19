@@ -1,96 +1,114 @@
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "ApimRoot": {
-            "value": "https://api.example.org.uk/"
-        },
-        "ApimDysacKey": {
-            "value": "0123456789ABCDEF"
-        },
-        "resourcePrefix": {
-            "value": "dfc-foo-app-dysac"
-        },
-        "appSharedResourceGroup": {
-            "value": "dfc-dev-app-sharedresources-rg"
-        },
-        "appSharedStorageAccountName": {
-            "value": "dfcdevappsharedstr"
-        },
-        "JobProfileOverViewUrl": {
-            "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
-        },
-        "CdnUrl": {
-            "value": "https://foo.cdn.nationalcareers.service.uk"
-        },
-        "NotifyApiKey": {
-            "value": "not-a-real-key"
-        },
-        "NotifyEmailTemplateId": {
-            "value": "12345678-ABCD-0123456789ABCDEF-3D417"
-        },
-        "NotifySmsTemplateId": {
-            "value": "12345678-ABCD-0123456789ABCDEF-3D3"
-        },
-        "NotifyReturnUrl": {
-            "value": "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers"
-        },
-        "Environment": {
-            "value": "FOO"
-        },
-        "aspSize": {
-            "value": "2"
-        },
-        "aspTier": {
-            "value": "Standard"
-        },
-        "aspInstances": {
-            "value": 2
-        },
-        "enableAlerts": {
-            "value": false
-        },
-        "DysacUrl": {
-            "value": "https://dummydysac.com"
-        },
-        "DysacUrl2": {
-            "value": "https://dummydysac2.com"
-        },
-        "jobProfUrl": {
-            "value": "https://dummyjobprof.com"
-        },
-        "cosmosDbName": {
-            "value": "cosmosDBName"
-        },
-        "cosmosDbKey": {
-            "value": "not-a-real-key"
-        },
-        "CosmosDbResourceGroup": {
-            "value": "dfc-dev-app-sharedresources-rg"
-        },
-        "dysacAppDatabaseNeedsCreation": {
-            "value": true
-        },
-        "dysacAppDatabaseThroughput": {
-            "value": 2
-        },
-        "SubscriptionApiEndpointUrl": {
-            "value": "not-a-real-url"
-        },
-        "dysacContentCollectionName": {
-            "value": "dysacContentCollectionName"
-        },
-        "dysacAssessmentCollectionName": {
-            "value": "dysacAssessmentCollectionName"
-        },
-        "sessionStateCollectionName": {
-            "value": "sessionStateCollectionName"
-        },
-        "workspaceName": {
-            "value": "aTestLogAnalyticsAccount"
-        },
-        "workspaceResourceGroup": {
-            "value": "aResourceGroup"
-        }
+  "parameters": {
+    "ApimRoot": {
+      "value": "https://api.example.org.uk/"
+    },
+    "ApimDysacKey": {
+      "value": "0123456789ABCDEF"
+    },
+    "resourcePrefix": {
+      "value": "dfc-foo-app-dysac"
+    },
+    "appSharedResourceGroup": {
+      "value": "dfc-dev-app-sharedresources-rg"
+    },
+    "appSharedStorageAccountName": {
+      "value": "dfcdevappsharedstr"
+    },
+    "JobProfileOverViewUrl": {
+      "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
+    },
+    "CdnUrl": {
+      "value": "https://foo.cdn.nationalcareers.service.uk"
+    },
+    "NotifyApiKey": {
+      "value": "not-a-real-key"
+    },
+    "NotifyEmailTemplateId": {
+      "value": "12345678-ABCD-0123456789ABCDEF-3D417"
+    },
+    "NotifySmsTemplateId": {
+      "value": "12345678-ABCD-0123456789ABCDEF-3D3"
+    },
+    "NotifyReturnUrl": {
+      "value": "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers"
+    },
+    "TokenEndPointURL": {
+      "value": "test"
+    },
+    "GraphApiUrl": {
+      "value": "test"
+    },
+    "SqlApiUrl": {
+      "value": "test"
+    },
+    "ClientId": {
+      "value": "test"
+    },
+    "ClientSecret": {
+      "value": "test"
+    },
+    "RedisCacheConnectionString": {
+      "value": "string"
+    },
+    "Environment": {
+      "value": "FOO"
+    },
+    "aspSize": {
+      "value": "2"
+    },
+    "aspTier": {
+      "value": "Standard"
+    },
+    "aspInstances": {
+      "value": 2
+    },
+    "enableAlerts": {
+      "value": false
+    },
+    "DysacUrl": {
+      "value": "https://dummydysac.com"
+    },
+    "DysacUrl2": {
+      "value": "https://dummydysac2.com"
+    },
+    "jobProfUrl": {
+      "value": "https://dummyjobprof.com"
+    },
+    "cosmosDbName": {
+      "value": "cosmosDBName"
+    },
+    "cosmosDbKey": {
+      "value": "not-a-real-key"
+    },
+    "CosmosDbResourceGroup": {
+      "value": "dfc-dev-app-sharedresources-rg"
+    },
+    "dysacAppDatabaseNeedsCreation": {
+      "value": true
+    },
+    "dysacAppDatabaseThroughput": {
+      "value": 2
+    },
+    "SubscriptionApiEndpointUrl": {
+      "value": "not-a-real-url"
+    },
+    "dysacContentCollectionName": {
+      "value": "dysacContentCollectionName"
+    },
+    "dysacAssessmentCollectionName": {
+      "value": "dysacAssessmentCollectionName"
+    },
+    "sessionStateCollectionName": {
+      "value": "sessionStateCollectionName"
+    },
+    "workspaceName": {
+      "value": "aTestLogAnalyticsAccount"
+    },
+    "workspaceResourceGroup": {
+      "value": "aResourceGroup"
     }
+  }
 }

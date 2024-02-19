@@ -1,8 +1,14 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using System.Collections.Generic;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
@@ -35,6 +41,60 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .ForMember(d => d.JobCategoryName, s => s.MapFrom(a => a.JobCategory));
 
             CreateMap<TraitValue, TraitValueViewModel>();
+
+            CreateMap<PersonalityQuestionSet, DysacQuestionSetContentModel>().ForMember(
+                d => d.ShortQuestions,
+                s => s.MapFrom(z => Construct(z.Questions.ContentItems.ToList())));
+        }
+
+        private IEnumerable<DysacShortQuestionContentItemModel> Construct(List<QuestionContentItem> items)
+        {
+            var listOfQuestions = new List<DysacShortQuestionContentItemModel>();
+            string prefixShortQuestion = "<<contentapiprefix>>/personalityshortquestion/";
+            string prefixTrait = "<<contentapiprefix>>/personalitytrait/";
+
+            foreach (var item in items)
+            {
+                var question = new DysacShortQuestionContentItemModel
+                {
+                    Traits = new List<DysacTraitContentItemModel>(),
+                    Title = item.DisplayText,
+                    Ordinal = item.Ordinal,
+                    Impact = item.Impact,
+                    ItemId = new Guid(item.GraphSync.NodeId.Replace(prefixShortQuestion, "")),
+                    LastCached = DateTime.UtcNow
+                };
+
+                question.Traits.AddRange(
+                    item.Trait.ContentItems.Select(z =>
+                    new DysacTraitContentItemModel
+                    {
+                        Ordinal = item.Ordinal,
+                        Description = z.DisplayText,
+                        Title = z.DisplayText,
+                        JobCategories = ConstructJobCategories(z.JobProfileCategories),
+                        ItemId = new Guid(z.GraphSync.NodeId.Replace(prefixTrait, "")),
+                        LastCached = DateTime.UtcNow
+                    }));
+                listOfQuestions.Add(question);
+            }
+
+            return listOfQuestions;
+        }
+
+        private List<JobCategoryContentItemModel> ConstructJobCategories(JobProfileCategories jobProfileCategories)
+        {
+            var listToReturn = new List<JobCategoryContentItemModel>();
+
+            listToReturn.AddRange(
+                jobProfileCategories.ContentItems.Select(
+                    x => new JobCategoryContentItemModel
+                    {
+                        Description = x.DisplayText,
+                        LastCached = DateTime.UtcNow
+                    }));
+
+            return listToReturn;
         }
     }
 }
