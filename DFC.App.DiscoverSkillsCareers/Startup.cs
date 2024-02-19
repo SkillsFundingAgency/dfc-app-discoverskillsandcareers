@@ -16,6 +16,11 @@ using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Constant;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Sessionstate;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
@@ -25,24 +30,35 @@ using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 using Notify.Client;
 using Notify.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
+using RestSharp;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using System.Reflection;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Compui.Cosmos;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
@@ -102,6 +118,42 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IGraphQLClient>(s =>
+            {
+                var option = new GraphQLHttpClientOptions()
+                {
+                    //EndPoint = new Uri(configuration.GetSection(GraphApiUrlAppSettings).Get<string>()),
+                    EndPoint = new Uri(Configuration[ConfigKeys.GraphApiUrl]),
+                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                };
+                var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
+                return client;
+            });
+            services.AddSingleton<IRestClient>(s =>
+            {
+                var option = new RestClientOptions()
+                {
+                    BaseUrl = new Uri(Configuration[ConfigKeys.SqlApiUrl]),
+                    ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                };
+                JsonSerializerSettings defaultSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    DefaultValueHandling = DefaultValueHandling.Include,
+                    TypeNameHandling = TypeNameHandling.None,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.None,
+                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                };
+
+                var client = new RestClient(option);
+                return client;
+            });
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
+
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+
             var sessionServiceConfig = Configuration.GetSection("SessionConfig").Get<SessionConfig>();
             services.AddSessionServices(sessionServiceConfig);
 

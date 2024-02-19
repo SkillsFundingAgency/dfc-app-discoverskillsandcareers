@@ -6,8 +6,13 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using FluentNHibernate.Testing.Values;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using NHibernate.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly INotificationService notificationService;
         private readonly IHttpContextAccessor accessor;
         private readonly IMemoryCache memoryCache;
+        private ISharedContentRedisInterface sharedContentRedisInterface;
 
         public AssessmentService(
             ISessionIdToCodeConverter sessionIdToCodeConverter,
@@ -34,7 +40,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IMapper mapper,
             INotificationService notificationService,
             IHttpContextAccessor accessor,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            ISharedContentRedisInterface sharedContentRedisInterface)
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
@@ -43,6 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.notificationService = notificationService;
             this.accessor = accessor;
             this.memoryCache = memoryCache;
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -461,20 +469,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacQuestionSetContentModel>?> GetQuestionSets()
         {
-            if (memoryCache.TryGetValue(nameof(GetQuestionSets), out var filteringQuestionsFromCache))
-            {
-                return (List<DysacQuestionSetContentModel>?)filteringQuestionsFromCache;
-            }
+            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>("DYSAC/QuestionSet");
 
-            var questionSets = await documentStore.GetAllContentAsync<DysacQuestionSetContentModel>("QuestionSet").ConfigureAwait(false);
-
-            if (questionSets == null)
-            {
-                return questionSets;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetQuestionSets), questionSets, cacheEntryOptions);
+            var questionSets = new List<DysacQuestionSetContentModel>();
+            var qs = mapper.Map<DysacQuestionSetContentModel>(questionSetsResponse);
+            questionSets.Add(qs);
 
             return questionSets;
         }
