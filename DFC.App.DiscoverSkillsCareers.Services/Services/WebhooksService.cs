@@ -1,14 +1,19 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Enums;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.App.DiscoverSkillsCareers.Services.Models;
+using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Enums;
 using DFC.Content.Pkg.Netcore.Data.Models;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,17 +27,99 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
         private readonly IEnumerable<IContentProcessor> contentProcessors;
+        private readonly IDocumentService<StaticContentItemModel> staticContentItemDocumentService;
+        private readonly AutoMapper.IMapper mapper;
+        private readonly Guid sharedContentId;
 
         public WebhooksService(
             ILogger<WebhooksService> logger,
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService,
-            IEnumerable<IContentProcessor> contentProcessors)
+            IEnumerable<IContentProcessor> contentProcessors,
+            AutoMapper.IMapper mapper,
+            CmsApiClientOptions cmsApiClientOptions,
+            IDocumentService<StaticContentItemModel> sharedContentItemDocumentService)
         {
             this.logger = logger;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
             this.contentProcessors = contentProcessors;
+            this.mapper = mapper;
+            this.staticContentItemDocumentService = sharedContentItemDocumentService;
+            sharedContentId = Guid.Parse(cmsApiClientOptions?.ContentIds);
+        }
+
+        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint)
+        {
+            if (sharedContentId != contentId)
+            {
+                logger.LogInformation($"Event Id: {eventId}, is not a shared content item we are subscribed to, so no content has been processed");
+                return HttpStatusCode.OK;
+            }
+
+            switch (webhookCacheOperation)
+            {
+                case WebhookCacheOperation.Delete:
+                    return await DeleteContentAsync(contentId);
+
+                case WebhookCacheOperation.CreateOrUpdate:
+                    if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
+                    {
+                        throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
+                    }
+
+                    return await ProcessContentAsync(url);
+
+                default:
+                    logger.LogError($"Event Id: {eventId} got unknown cache operation - {webhookCacheOperation}");
+                    return HttpStatusCode.BadRequest;
+            }
+        }
+
+        public async Task<HttpStatusCode> ProcessContentAsync(Uri url)
+        {
+            var apiDataModel = await cmsApiService.GetItemAsync<StaticContentItemApiDataModel>(url);
+            var staticContentItemModel = mapper.Map<StaticContentItemModel>(apiDataModel);
+
+            if (staticContentItemModel == null)
+            {
+                return HttpStatusCode.NoContent;
+            }
+
+            if (!TryValidateModel(staticContentItemModel))
+            {
+                return HttpStatusCode.BadRequest;
+            }
+
+            var contentResult = await staticContentItemDocumentService.UpsertAsync(staticContentItemModel);
+
+            return contentResult;
+        }
+
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
+        {
+            var result = await staticContentItemDocumentService.DeleteAsync(contentId);
+
+            return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
+        }
+
+        public bool TryValidateModel(StaticContentItemModel? sharedContentItemModel)
+        {
+            _ = sharedContentItemModel ?? throw new ArgumentNullException(nameof(sharedContentItemModel));
+
+            var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(sharedContentItemModel, null, null);
+            var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(sharedContentItemModel, validationContext, validationResults, true);
+
+            if (!isValid && validationResults.Any())
+            {
+                foreach (var validationResult in validationResults)
+                {
+                    logger.LogError($"Error validating {sharedContentItemModel.Title} - {sharedContentItemModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                }
+            }
+
+            return isValid;
         }
 
         public async Task<HttpStatusCode> ProcessMessageAsync(

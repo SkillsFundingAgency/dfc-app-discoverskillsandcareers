@@ -1,12 +1,20 @@
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "ApimRoot": {
       "value": "https://api.example.org.uk/"
     },
     "ApimDysacKey": {
       "value": "0123456789ABCDEF"
+    },
+    "apimCompositeKey": {
+      "value": "test"
+    },
+    "SubscriptionSettingsEndpoint": {
+      "value": "test"
     },
     "resourcePrefix": {
       "value": "dfc-foo-app-dysac"
@@ -22,6 +30,24 @@
     },
     "CdnUrl": {
       "value": "https://foo.cdn.nationalcareers.service.uk"
+    },
+    "cosmosDbSharedCollectionName": {
+      "value": "cosmosDbSharedCollectionName"
+    },
+    "cmsTimeout": {
+      "value": "00:00:30"
+    },
+    "cmsApiKey": {
+      "value": "testkey"
+    },
+    "cmsBaseAddress": {
+      "value": "https://url"
+    },
+    "cmsStaticContentEndpoint": {
+      "value": "/shared-content/"
+    },
+    "cmsContentIds": {
+      "value": "12345"
     },
     "NotifyApiKey": {
       "value": "not-a-real-key"
@@ -103,6 +129,21 @@
     },
     "sessionStateCollectionName": {
       "value": "sessionStateCollectionName"
+    },
+    "ApimResourceGroup": {
+      "value": "dfc-dev-shared-rg"
+    },
+    "ApimLoggerName": {
+      "value": "composite-ui-logger"
+    },
+    "ApimProductInstanceName": {
+      "value": "composite-ui"
+    },
+    "ApimServiceName": {
+      "value": "dfc-dev-shared-apim"
+    },
+    "ApiName": {
+      "value": "dysacwebhookapi"
     },
     "workspaceName": {
       "value": "aTestLogAnalyticsAccount"
