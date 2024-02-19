@@ -7,8 +7,8 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
     {
         Task<JobProfileViewModel> GetJobProfileAsync(string jobProfile);
 
-        string OverviewHTMLBuilder(JobProfileViewModel response);
+        //string OverviewHTMLBuilder(JobProfileViewModel response);
 
-        string ConvertCurrencyToGBP(string amountStr);
+        //string ConvertCurrencyToGBP(string amountStr);
     }
 }

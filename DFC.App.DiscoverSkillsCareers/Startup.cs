@@ -211,6 +211,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IGraphQlService, GraphQlService>();
             services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
             services.AddTransient<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddRazorTemplating();
 
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();
