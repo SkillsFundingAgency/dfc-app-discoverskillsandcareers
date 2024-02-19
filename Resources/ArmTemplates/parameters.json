@@ -24,7 +24,7 @@
       "value": "__aseResourceGroup__"
     },
     "aspInstances": {
-      "value": "__aspInstances__"
+      "value": __aspInstances__
     },
     "TokenEndPointURL": {
       "value": "__StaxGraphqlTokenEndPointURL__"
@@ -72,7 +72,7 @@
       "value": "__ReleaseEnvironmentName__"
     },
     "enableAlerts": {
-      "value": "__EnableAzureMonitorAlerting__"
+      "value": __EnableAzureMonitorAlerting__
     },
     "DysacUrl": {
       "value": "__DysacUrl__"
@@ -93,10 +93,10 @@
       "value": "__appSharedResourceGroup__"
     },
     "dysacAppDatabaseNeedsCreation": {
-      "value": "__CosmosDbDatabaseDoesntExist__"
+      "value": __CosmosDbDatabaseDoesntExist__
     },
     "dysacAppDatabaseThroughput": {
-      "value": "__dysacAppDatabaseThroughput__"
+      "value": __dysacAppDatabaseThroughput__
     },
     "SubscriptionApiEndpointUrl": {
       "value": "__SubscriptionApiEndpointUrl__"
