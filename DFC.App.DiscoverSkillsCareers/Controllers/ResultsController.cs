@@ -180,32 +180,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     .Select(jobProfileGroup => jobProfileGroup.First())
                     .Select(jobProfile => jobProfile?.Title?.ToLower());
 
-                var test = graphQlService.GetJobProfileAsync("Bookmaker");
-
-                //loop through and query graphql for each category from jobcategory
-
-                var jobProfileOverviews = (await GetJobProfileOverviews().ConfigureAwait(false))?
-                    .Where(document => jobProfileTitles.Contains(document.Title!.ToLower()))
-                    .ToList();
-
-                if (jobProfileOverviews == null)
-                {
-                    logService.LogError(
-                        $"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
-
-                    continue;
-                }
+                var jobProfileList = await GetJobProfilesAsync(jobProfileTitles).ConfigureAwait(false);
 
                 var category = resultsByCategoryModel.JobsInCategory!
                     .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
 
-                category?.JobProfiles?.AddRange(jobProfileOverviews
-                    .GroupBy(jobProfileOverview => jobProfileOverview.Title)
+                category?.JobProfiles?.AddRange(jobProfileList
+                    .GroupBy(jobProfileOverview => jobProfileOverview.DisplayText)
                     .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
                     .Select(jobProfileOverview => new ResultJobProfileOverViewModel
                     {
-                        Cname = jobProfileOverview.Title?.Replace(" ", "-").Replace(",", string.Empty),
-                        OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
+                        Cname = jobProfileOverview.DisplayText,
+                        OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
                         ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                     }));
             }
@@ -250,6 +236,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             logService.LogInformation($"BodyTop BodyTopEmpty");
             return View("BodyTopEmpty");
+        }
+
+        private async Task<List<JobProfileViewModel>> GetJobProfilesAsync(IEnumerable<string> listOfJobProfileNames)
+        {
+            var jobProfileList = new List<JobProfileViewModel>();
+
+            foreach (var jobProfile in listOfJobProfileNames)
+            {
+                jobProfileList.Add(await graphQlService.GetJobProfileAsync(jobProfile));
+            }
+
+            return jobProfileList;
         }
 
         private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()

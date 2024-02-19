@@ -6,15 +6,17 @@
 
         public string Overview { get; set; }
 
+        public string Html { get; set; }
+
         public string SalaryStarterPerYear { get; set; }
 
         public string SalaryExperiencedPerYear { get; set; }
 
         public string UrlName { get; set; }
 
-        public string MaximumHours { get; set; }
+        public int MaximumHours { get; set; }
 
-        public string MinimumHours { get; set; }
+        public int MinimumHours { get; set; }
 
         public string WorkingPattern { get; set; }
 
