@@ -1,120 +1,159 @@
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-  "parameters": {
-    "ApimRoot": {
-      "value": "__ApimRoot__"
-    },
-    "ApimDysacKey": {
-      "value": "__ApimDiscoverMySkillsAndCareersKey__"
-    },
-    "resourcePrefix": {
-      "value": "__resourcePrefix__"
-    },
-    "appSharedResourceGroup": {
-      "value": "__appSharedResourceGroup__"
-    },
-    "appSharedStorageAccountName": {
-      "value": "__appSharedStorageAccountName__"
-    },
-    "aseHostingEnvironmentName": {
-      "value": "__AseServiceName__"
-    },
-    "aseResourceGroup": {
-      "value": "__aseResourceGroup__"
-    },
-    "aspInstances": {
-      "value": __aspInstances__
-    },
-    "TokenEndPointURL": {
-      "value": "__StaxGraphqlTokenEndPointURL__"
-    },
-    "GraphApiUrl": {
-      "value": "__StaxGraphqlApiUrl__"
-    },
-    "SqlApiUrl": {
-      "value": "__StaxGraphqlSqlApiUrl__"
-    },
-    "ClientId": {
-      "value": "__StaxGraphqlClientId__"
-    },
-    "ClientSecret": {
-      "value": "__StaxGraphqlClientSecret__"
-    },
-    "RedisCacheConnectionString": {
-      "value": "__RedisConnectionString__"
-    },
-    "aspTier": {
-      "value": "__aspTier__"
-    },
-    "aspSize": {
-      "value": "__aspSize__"
-    },
-    "JobProfileOverViewUrl": {
-      "value": "__JobProfileOverView__"
-    },
-    "CdnUrl": {
-      "value": "__CdnUrl__"
-    },
-    "NotifyApiKey": {
-      "value": "__NotifyApiKey__"
-    },
-    "NotifyEmailTemplateId": {
-      "value": "__NotifyEmailTemplateId__"
-    },
-    "NotifySmsTemplateId": {
-      "value": "__NotifySmsTemplateId__"
-    },
-    "NotifyReturnUrl": {
-      "value": "__NotifyReturnUrl__"
-    },
-    "Environment": {
-      "value": "__ReleaseEnvironmentName__"
-    },
-    "enableAlerts": {
-      "value": __EnableAzureMonitorAlerting__
-    },
-    "DysacUrl": {
-      "value": "__DysacUrl__"
-    },
-    "DysacUrl2": {
-      "value": "__DysacUrl2__"
-    },
-    "jobProfUrl": {
-      "value": "__jobProfUrl__"
-    },
-    "cosmosDbName": {
-      "value": "__appSharedCosmosDBName__"
-    },
-    "cosmosDbKey": {
-      "value": "__appSharedCosmosPrimaryKey__"
-    },
-    "CosmosDbResourceGroup": {
-      "value": "__appSharedResourceGroup__"
-    },
-    "dysacAppDatabaseNeedsCreation": {
-      "value": __CosmosDbDatabaseDoesntExist__
-    },
-    "dysacAppDatabaseThroughput": {
-      "value": __dysacAppDatabaseThroughput__
-    },
-    "SubscriptionApiEndpointUrl": {
-      "value": "__SubscriptionApiEndpointUrl__"
-    },
-    "dysacContentCollectionName": {
-      "value": "__dysacContentCollectionName__"
-    },
-    "dysacAssessmentCollectionName": {
-      "value": "__dysacAssessmentCollectionName__"
-    },
-    "sessionStateCollectionName": {
-      "value": "__sessionStateCollectionName__"
-    },
-    "workspaceName": {
-      "value": "__sharedLogAnalyticsWorkspace__"
-    },
-    "workspaceResourceGroup": {
-      "value": "__sharedLogAnalyticsResourceGroup__"
-    }
+    "parameters": {
+        "ApimRoot": {
+            "value": "__ApimRoot__"
+        },
+        "ApimDysacKey": {
+            "value": "__ApimDiscoverMySkillsAndCareersKey__"
+        },
+        "resourcePrefix": {
+            "value": "__resourcePrefix__"
+        },
+        "appSharedResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "appSharedStorageAccountName": {
+            "value": "__appSharedStorageAccountName__"
+        },
+        "aseHostingEnvironmentName": {
+            "value": "__AseServiceName__"
+        },
+        "aseResourceGroup": {
+            "value": "__aseResourceGroup__"
+        },
+        "aspInstances": {
+          "value": __aspInstances__
+        },
+        "apimCompositeKey": {
+          "value": "__apimCompositeKey__"
+        },
+        "SubscriptionSettingsEndpoint": {
+          "value": "__SubscriptionSettingsEndpoint__"
+        },
+        "aspTier": {
+            "value": "__aspTier__"
+        },
+        "aspSize": {
+            "value": "__aspSize__"
+        },
+        "JobProfileOverViewUrl": {
+            "value": "__JobProfileOverView__"
+        },
+        "CdnUrl": {
+            "value": "__CdnUrl__"
+        },
+        "cmsTimeout": {
+            "value": "__cmsTimeout__"
+        },
+        "cmsApiKey": {
+            "value": "__cmsApiKey__"
+        },
+        "cmsBaseAddress": {
+            "value": "__cmsBaseAddress__"
+        },
+        "cmsStaticContentEndpoint": {
+            "value": "__cmsStaticContentEndpoint__"
+        },
+        "cmsContentIds": {
+            "value": "__cmsContentIds__"
+        },
+        "cosmosDbSharedCollectionName": {
+            "value": "__cosmosDbSharedCollectionName__"
+        },
+        "NotifyApiKey": {
+            "value": "__NotifyApiKey__"
+        },
+        "NotifyEmailTemplateId": {
+            "value": "__NotifyEmailTemplateId__"
+        },
+        "NotifySmsTemplateId": {
+            "value": "__NotifySmsTemplateId__"
+        },
+        "NotifyReturnUrl": {
+            "value": "__NotifyReturnUrl__"
+        },
+        "Environment": {
+            "value": "__ReleaseEnvironmentName__"
+        },
+        "enableAlerts": {
+            "value": __EnableAzureMonitorAlerting__
+        },
+        "DysacUrl": {
+            "value": "__DysacUrl__"
+        },
+        "DysacUrl2": {
+            "value": "__DysacUrl2__"
+        },
+        "jobProfUrl": {
+            "value": "__jobProfUrl__"
+        },
+        "cosmosDbName": {
+            "value": "__appSharedCosmosDBName__"
+        },
+        "cosmosDbKey": {
+            "value": "__appSharedCosmosPrimaryKey__"
+        },
+        "CosmosDbResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "dysacAppDatabaseNeedsCreation": {
+            "value": __CosmosDbDatabaseDoesntExist__
+        },
+        "dysacAppDatabaseThroughput": {
+            "value": __dysacAppDatabaseThroughput__
+        },
+        "SubscriptionApiEndpointUrl": {
+            "value": "__SubscriptionApiEndpointUrl__"
+        },
+        "dysacContentCollectionName": {
+            "value": "__dysacContentCollectionName__"
+        },
+        "dysacAssessmentCollectionName": {
+            "value": "__dysacAssessmentCollectionName__"
+        },
+        "sessionStateCollectionName": {
+            "value": "__sessionStateCollectionName__"
+        },
+        "ApimResourceGroup": {
+        "value": "__SharedResourceGroupName__"
+        },
+        "ApimLoggerName": {
+        "value": "__ApimLoggerName__"
+        },
+        "ApimProductInstanceName": {
+        "value": "__ApimProductInstanceName__"
+        },
+        "ApimServiceName": {
+        "value": "__ApimServiceName__"
+        },
+        "ApiName": {
+        "value": "__ApiName__"
+        },
+        "workspaceName": {
+            "value": "__sharedLogAnalyticsWorkspace__"
+        },
+        "workspaceResourceGroup": {
+            "value": "__sharedLogAnalyticsResourceGroup__"
+        },
+        "TokenEndPointURL": {
+            "value": "__StaxGraphqlTokenEndPointURL__"
+        },
+        "GraphApiUrl": {
+            "value": "__StaxGraphqlApiUrl__"
+        },
+        "SqlApiUrl": {
+            "value": "__StaxGraphqlSqlApiUrl__"
+        },
+        "ClientId": {
+            "value": "__StaxGraphqlClientId__"
+        },
+        "ClientSecret": {
+            "value": "__StaxGraphqlClientSecret__"
+        },
+        "RedisCacheConnectionString": {
+            "value": "__RedisConnectionString__"
+        }
   }
 }
