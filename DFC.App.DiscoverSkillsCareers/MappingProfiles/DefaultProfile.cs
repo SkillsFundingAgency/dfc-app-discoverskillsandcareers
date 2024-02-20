@@ -5,9 +5,9 @@ using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
@@ -47,7 +47,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 s => s.MapFrom(z => Construct(z.Questions.ContentItems.ToList())));
         }
 
-        private IEnumerable<DysacShortQuestionContentItemModel> Construct(List<QuestionContentItem> items)
+        private static IEnumerable<DysacShortQuestionContentItemModel> Construct(List<QuestionContentItem> items)
         {
             var listOfQuestions = new List<DysacShortQuestionContentItemModel>();
             string prefixShortQuestion = "<<contentapiprefix>>/personalityshortquestion/";
