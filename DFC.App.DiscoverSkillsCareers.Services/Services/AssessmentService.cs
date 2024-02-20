@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly INotificationService notificationService;
         private readonly IHttpContextAccessor accessor;
         private readonly IMemoryCache memoryCache;
-        private ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
         public AssessmentService(
             ISessionIdToCodeConverter sessionIdToCodeConverter,
@@ -470,7 +470,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private async Task<List<DysacQuestionSetContentModel>?> GetQuestionSets()
         {
             var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>("DYSAC/QuestionSet");
-
             var questionSets = new List<DysacQuestionSetContentModel>();
             var qs = mapper.Map<DysacQuestionSetContentModel>(questionSetsResponse);
             questionSets.Add(qs);
