@@ -131,22 +131,22 @@
     "workspaceResourceGroup": {
       "value": "aResourceGroup"
     },
-    "TokenEndPointURL": {
+    "CmsTokenEndPointURL": {
       "value": "test"
     },
-    "GraphApiUrl": {
+    "CmsGraphApiUrl": {
       "value": "test"
     },
-    "SqlApiUrl": {
+    "CmsSqlApiUrl": {
       "value": "test"
     },
-    "ClientId": {
+    "CmsClientId": {
       "value": "test"
     },
-    "ClientSecret": {
+    "CmsClientSecret": {
       "value": "test"
     },
-    "RedisCacheConnectionString": {
+    "CmsRedisCacheConnectionString": {
       "value": "string"
     }
   }

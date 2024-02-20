@@ -132,26 +132,26 @@
     },
     "workspaceName": {
       "type": "string"
-    },
+	},
     "workspaceResourceGroup": {
       "type": "string"
     },
-    "TokenEndPointURL": {
+    "CmsTokenEndPointURL": {
       "type": "string"
     },
-    "GraphApiUrl": {
+    "CmsGraphApiUrl": {
       "type": "string"
     },
-    "SqlApiUrl": {
+    "CmsSqlApiUrl": {
       "type": "string"
     },
-    "ClientId": {
+    "CmsClientId": {
       "type": "string"
     },
-    "ClientSecret": {
+    "CmsClientSecret": {
       "type": "securestring"
     },
-    "RedisCacheConnectionString": {
+    "CmsRedisCacheConnectionString": {
       "type": "securestring"
     },
     "cosmosDbSharedCollectionName": {
@@ -704,27 +704,27 @@
               },
               {
                 "name": "Cms__TokenEndPointURL",
-                "value": "[parameters('TokenEndPointURL')]"
+                "value": "[parameters('CmsTokenEndPointURL')]"
               },
               {
                 "name": "Cms__GraphApiUrl",
-                "value": "[parameters('GraphApiUrl')]"
+                "value": "[parameters('CmsGraphApiUrl')]"
               },
               {
                 "name": "Cms__SqlApiUrl",
-                "value": "[parameters('SqlApiUrl')]"
+                "value": "[parameters('CmsSqlApiUrl')]"
               },
               {
                 "name": "Cms__ClientId",
-                "value": "[parameters('ClientId')]"
+                "value": "[parameters('CmsClientId')]"
               },
               {
                 "name": "Cms__ClientSecret",
-                "value": "[parameters('ClientSecret')]"
+                "value": "[parameters('CmsClientSecret')]"
               },
               {
                 "name": "Cms__RedisCacheConnectionString",
-                "value": "[parameters('RedisCacheConnectionString')]"
+                "value": "[parameters('CmsRedisCacheConnectionString')]"
               }
             ]
           }
