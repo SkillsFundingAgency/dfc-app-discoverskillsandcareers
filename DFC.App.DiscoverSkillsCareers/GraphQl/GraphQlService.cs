@@ -27,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
 
             var mappedResponse = mapper.Map<JobProfileViewModel>(response);
 
-            mappedResponse.Html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", mappedResponse);
+            mappedResponse.Html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", mappedResponse).ConfigureAwait(false);
 
             return mappedResponse;
         }
