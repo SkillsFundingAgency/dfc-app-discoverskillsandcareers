@@ -44,8 +44,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Notify.Client;
 using Notify.Interfaces;
 using Polly;
@@ -56,9 +56,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
-using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
 using DFC.Common.SharedContent.Pkg.Netcore;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using DFC.Compui.Cosmos;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
@@ -122,7 +122,6 @@ namespace DFC.App.DiscoverSkillsCareers
             {
                 var option = new GraphQLHttpClientOptions()
                 {
-                    //EndPoint = new Uri(configuration.GetSection(GraphApiUrlAppSettings).Get<string>()),
                     EndPoint = new Uri(Configuration[ConfigKeys.GraphApiUrl]),
                     HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
