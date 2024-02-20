@@ -386,7 +386,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
             var result = await assessmentService.GetQuestion(assessmentType, questionNumber).ConfigureAwait(false);
-            
+
             return result;
         }
 
