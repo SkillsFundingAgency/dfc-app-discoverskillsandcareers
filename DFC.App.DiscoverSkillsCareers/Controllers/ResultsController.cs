@@ -249,26 +249,5 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             return jobProfileList;
         }
-
-        private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
-        {
-            logService.LogInformation($"GetJobProfileOverviews");
-            if (memoryCache.TryGetValue(nameof(GetJobProfileOverviews), out var filteringQuestionsFromCache))
-            {
-                return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
-            }
-
-            var jobProfileOverviews = await documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>("JobProfileOverview", "GetJobProfileOverviews").ConfigureAwait(false);
-
-            if (!jobProfileOverviews.Any())
-            {
-                return jobProfileOverviews;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
-
-            return jobProfileOverviews;
-        }
     }
 }
