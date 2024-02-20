@@ -4,8 +4,8 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
@@ -61,8 +61,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     Title = item.DisplayText,
                     Ordinal = item.Ordinal,
                     Impact = item.Impact,
-                    ItemId = new Guid(item.GraphSync.NodeId.Replace(prefixShortQuestion, "")),
-                    LastCached = DateTime.UtcNow
+                    ItemId = new Guid(item.GraphSync.NodeId.Replace(prefixShortQuestion, string.Empty)),
+                    LastCached = DateTime.UtcNow,
                 };
 
                 question.Traits.AddRange(
@@ -73,8 +73,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                         Description = z.DisplayText,
                         Title = z.DisplayText,
                         JobCategories = ConstructJobCategories(z.JobProfileCategories),
-                        ItemId = new Guid(z.GraphSync.NodeId.Replace(prefixTrait, "")),
-                        LastCached = DateTime.UtcNow
+                        ItemId = new Guid(z.GraphSync.NodeId.Replace(prefixTrait, string.Empty)),
+                        LastCached = DateTime.UtcNow,
                     }));
                 listOfQuestions.Add(question);
             }
@@ -82,7 +82,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             return listOfQuestions;
         }
 
-        private List<JobCategoryContentItemModel> ConstructJobCategories(JobProfileCategories jobProfileCategories)
+        private static List<JobCategoryContentItemModel> ConstructJobCategories(JobProfileCategories jobProfileCategories)
         {
             var listToReturn = new List<JobCategoryContentItemModel>();
 
@@ -91,7 +91,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     x => new JobCategoryContentItemModel
                     {
                         Description = x.DisplayText,
-                        LastCached = DateTime.UtcNow
+                        LastCached = DateTime.UtcNow,
                     }));
 
             return listToReturn;
