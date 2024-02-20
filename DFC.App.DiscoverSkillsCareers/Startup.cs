@@ -135,16 +135,6 @@ namespace DFC.App.DiscoverSkillsCareers
                     BaseUrl = new Uri(Configuration[ConfigKeys.SqlApiUrl]),
                     ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
-                JsonSerializerSettings defaultSettings = new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    DefaultValueHandling = DefaultValueHandling.Include,
-                    TypeNameHandling = TypeNameHandling.None,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    Formatting = Formatting.None,
-                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                };
-
                 var client = new RestClient(option);
                 return client;
             });
