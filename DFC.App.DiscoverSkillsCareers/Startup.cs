@@ -21,6 +21,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
@@ -60,7 +61,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -69,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers
     {
         public const string StaticCosmosDbConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
-        private const string StaxGraphApiUrlAppSettings = "Cms:StaxGraphApiUrl";
+
         private readonly IWebHostEnvironment env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -141,7 +141,7 @@ namespace DFC.App.DiscoverSkillsCareers
                 return client;
             });
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileOverviewResponse>, JobProfileOverviewQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileDysacResponse>, JobProfileOverviewQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
 

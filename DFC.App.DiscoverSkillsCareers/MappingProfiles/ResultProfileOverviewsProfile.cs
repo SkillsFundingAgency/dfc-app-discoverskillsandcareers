@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<JobProfileResult, ResultJobProfileModel>()
             .ForMember(d => d.JobProfilesOverview, s => s.Ignore());
 
-            CreateMap<JobProfileOverviewResponse, JobProfileViewModel>()
+            CreateMap<JobProfileDysacResponse, JobProfileViewModel>()
             .ForMember(d => d.DisplayText, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().DisplayText))
             .ForMember(d => d.Overview, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Overview))
             .ForMember(d => d.Html, s => s.Ignore())

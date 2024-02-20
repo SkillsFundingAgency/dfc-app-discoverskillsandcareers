@@ -22,8 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
 
         public async Task<JobProfileViewModel> GetJobProfileAsync(string jobProfile)
         {
-            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileOverviewResponse>($"JobProfileOverview/{jobProfile}")
-                ?? new JobProfileOverviewResponse();
+            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>($"JobProfileOverview/{jobProfile}")
+                ?? new JobProfileDysacResponse();
 
             var mappedResponse = mapper.Map<JobProfileViewModel>(response);
 

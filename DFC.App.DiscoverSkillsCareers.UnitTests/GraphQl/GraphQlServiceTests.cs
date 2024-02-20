@@ -22,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.GraphQl
             var fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
             var fakeRazorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 
-            A.CallTo(() => fakeSharedContentRedisInterface.GetDataAsync<JobProfileOverviewResponse>(A<string>.Ignored)).Returns(A.Dummy<JobProfileOverviewResponse>());
+            A.CallTo(() => fakeSharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>(A<string>.Ignored)).Returns(A.Dummy<JobProfileDysacResponse>());
 
             var service = new GraphQlService(fakeSharedContentRedisInterface, fakeRazorTemplateEngine, mapper);
 
