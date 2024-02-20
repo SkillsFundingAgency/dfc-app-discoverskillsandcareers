@@ -10,11 +10,13 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
     public class GraphQlService : IGraphQlService
     {
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine razorTemplateEngine;
         private readonly IMapper mapper;
 
-        public GraphQlService(ISharedContentRedisInterface sharedContentRedisInterface, IMapper mapper)
+        public GraphQlService(ISharedContentRedisInterface sharedContentRedisInterface, IRazorTemplateEngine razorTemplateEngine, IMapper mapper)
         {
             this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.razorTemplateEngine = razorTemplateEngine;
             this.mapper = mapper;
         }
 
@@ -25,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
 
             var mappedResponse = mapper.Map<JobProfileViewModel>(response);
 
-            mappedResponse.Html = await RazorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", mappedResponse);
+            mappedResponse.Html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", mappedResponse);
 
             return mappedResponse;
         }
