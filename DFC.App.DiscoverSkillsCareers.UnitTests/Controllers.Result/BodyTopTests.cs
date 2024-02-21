@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.GraphQl;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.Compui.Cosmos.Contracts;
@@ -9,7 +8,6 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using Xunit;
 
@@ -23,7 +21,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
         private readonly ILogService logService;
-        private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly IGraphQlService graphQlService;
@@ -35,8 +32,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
-            documentStore = A.Fake<IDocumentStore>();
-            var fakeMemoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
             graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = new CmsApiClientOptions
@@ -44,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
                 ContentIds = Guid.NewGuid().ToString(),
             };
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, graphQlService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, graphQlService, cmsApiClientOptions);
         }
 
         [Fact]
