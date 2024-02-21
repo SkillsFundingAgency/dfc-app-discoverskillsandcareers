@@ -169,31 +169,38 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                if (!jobCategory.JobProfiles.Any())
+                try
                 {
-                    logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
-                    continue;
-                }
-
-                var jobProfileTitles = jobCategory.JobProfiles
-                    .GroupBy(jobProfile => jobProfile.Title)
-                    .Select(jobProfileGroup => jobProfileGroup.First())
-                    .Select(jobProfile => jobProfile?.Title?.ToLower());
-
-                var jobProfileList = await GetJobProfilesAsync(jobProfileTitles).ConfigureAwait(false);
-
-                var category = resultsByCategoryModel.JobsInCategory!
-                    .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
-
-                category?.JobProfiles?.AddRange(jobProfileList
-                    .GroupBy(jobProfileOverview => jobProfileOverview.DisplayText)
-                    .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
-                    .Select(jobProfileOverview => new ResultJobProfileOverViewModel
+                    logService.LogInformation($"Attempting to build JobProfileOverview for each job profile in {jobCategory.JobFamilyName}");
+                    if (!jobCategory.JobProfiles.Any())
                     {
-                        Cname = jobProfileOverview.DisplayText,
-                        OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
-                        ReturnedStatusCode = System.Net.HttpStatusCode.OK,
-                    }));
+                        logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
+                        continue;
+                    }
+
+                    var jobProfileTitles = jobCategory.JobProfiles
+                        .GroupBy(jobProfile => jobProfile.Title)
+                        .Select(jobProfileGroup => jobProfileGroup.First())
+                        .Select(jobProfile => jobProfile?.Title?.ToLower());
+
+                    var jobProfileList = await GetJobProfilesAsync(jobProfileTitles).ConfigureAwait(false);
+
+                    var category = resultsByCategoryModel.JobsInCategory!
+                        .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
+
+                    category?.JobProfiles?.AddRange(jobProfileList
+                        .GroupBy(jobProfileOverview => jobProfileOverview.DisplayText)
+                        .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
+                        .Select(jobProfileOverview => new ResultJobProfileOverViewModel
+                        {
+                            Cname = jobProfileOverview.DisplayText,
+                            OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
+                            ReturnedStatusCode = System.Net.HttpStatusCode.OK,
+                        }));
+                } catch (Exception ex)
+                {
+                    logService.LogError(ex.Message);
+                }
             }
 
             logService.LogInformation("Finished loop");
@@ -240,6 +247,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private async Task<List<JobProfileViewModel>> GetJobProfilesAsync(IEnumerable<string> listOfJobProfileNames)
         {
+            logService.LogInformation($"Calling {nameof(GetJobProfilesAsync)}");
+
             var jobProfileList = new List<JobProfileViewModel>();
 
             foreach (var jobProfile in listOfJobProfileNames)
