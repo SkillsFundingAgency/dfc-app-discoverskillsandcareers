@@ -8,9 +8,9 @@
 
         public string Html { get; set; }
 
-        public string SalaryStarterPerYear { get; set; }
+        public int SalaryStarterPerYear { get; set; }
 
-        public string SalaryExperiencedPerYear { get; set; }
+        public int SalaryExperiencedPerYear { get; set; }
 
         public string UrlName { get; set; }
 

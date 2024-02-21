@@ -36,10 +36,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             .ForMember(d => d.WorkingHoursDetails, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().WorkingHoursDetails.ContentItems.FirstOrDefault().DisplayText))
             .ForMember(d => d.MinimumHours, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Minimumhours))
             .ForMember(d => d.MaximumHours, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Maximumhours))
-            .ForMember(d => d.SalaryStarterPerYear, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Salarystarterperyear
-                .ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))))
-            .ForMember(d => d.SalaryExperiencedPerYear, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Salaryexperiencedperyear
-                .ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))))
+            .ForMember(d => d.SalaryStarterPerYear, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Salarystarterperyear))
+            .ForMember(d => d.SalaryExperiencedPerYear, s => s.MapFrom(a => a.JobProfile.FirstOrDefault().Salaryexperiencedperyear))
             .ForAllOtherMembers(opts => opts.Ignore());
 
             CreateMap<JobProfileViewModel, ResultJobProfileOverViewModel>()

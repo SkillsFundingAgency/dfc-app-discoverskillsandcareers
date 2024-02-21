@@ -18,9 +18,9 @@
             <div>
 			@if (Model.SalaryStarterPerYear > 0 && Model.SalaryExperiencedPerYear > 0)
                     {
-						<p class="salary-min">@Model.SalaryStarterPerYear.ToString("C0")<span class="govuk-visually-hidden">&nbsp;(starter)</span></p>
+                    <p class="salary-min">@Model.SalaryStarterPerYear.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))<span class="govuk-visually-hidden">&nbsp;(starter)</span></p>
                         <i class="sr-hidden dfc-code-jpshidden">to</i>
-                    <p class="salary-max">@Model.SalaryExperiencedPerYear.ToString("C0")<span class="govuk-visually-hidden">&nbsp;(experienced)</span></p>
+                    <p class="salary-max">@Model.SalaryExperiencedPerYear.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))<span class="govuk-visually-hidden">&nbsp;(experienced)</span></p>
                     }
                     else
                     {
