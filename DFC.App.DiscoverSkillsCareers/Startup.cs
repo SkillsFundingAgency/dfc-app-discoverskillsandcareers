@@ -123,8 +123,8 @@ namespace DFC.App.DiscoverSkillsCareers
             {
                 var option = new GraphQLHttpClientOptions()
                 {
-                    EndPoint = new Uri(Configuration[ConfigKeys.GraphApiUrl]) ?? throw new ArgumentNullException(),
-                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>() ?? throw new ArgumentNullException()),
+                    EndPoint = new Uri(Configuration[ConfigKeys.GraphApiUrl]) ?? throw new ArgumentNullException(nameof(ConfigKeys.GraphApiUrl)),
+                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
                 var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
                 return client;
@@ -134,7 +134,7 @@ namespace DFC.App.DiscoverSkillsCareers
             {
                 var option = new RestClientOptions()
                 {
-                    BaseUrl = new Uri(Configuration[ConfigKeys.SqlApiUrl]),
+                    BaseUrl = new Uri(Configuration[ConfigKeys.SqlApiUrl]) ?? throw new ArgumentNullException(nameof(ConfigKeys.SqlApiUrl)),
                     ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
                 var client = new RestClient(option);
