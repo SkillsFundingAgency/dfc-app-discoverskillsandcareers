@@ -6,6 +6,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
         public HeroBannerTests()
         {
@@ -44,8 +46,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
             cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
             cmsApiClientOptions.ContentIds = "2c9da1b3-3529-4834-afc9-9cd741e59788";
+            sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
         }
 
         [Fact]
