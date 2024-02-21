@@ -4,7 +4,6 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Logger.AppInsights.Contracts;
 using Razor.Templating.Core;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -38,8 +37,8 @@ namespace DFC.App.DiscoverSkillsCareers.GraphQl
 
                 var html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", mappedResponse).ConfigureAwait(false);
                 mappedResponse.Html = html;
-
-            } catch (IOException ex)
+            }
+            catch (IOException ex)
             {
                 logService.LogError("Error: " + ex.GetType().Name + " - " + ex.Message);
             }

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.GraphQl;
-using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
@@ -9,7 +7,6 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,8 +21,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
-        private readonly IMemoryCache memoryCache;
-        private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly Guid sharedContentItemGuid;
         private readonly IGraphQlService graphQlService;
@@ -36,8 +31,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             ISessionService sessionService,
             IResultsService resultsService,
             IAssessmentService assessmentService,
-            IDocumentStore documentStore,
-            IMemoryCache memoryCache,
             IDocumentService<StaticContentItemModel> staticContentDocumentService,
             IGraphQlService graphQlService,
             CmsApiClientOptions cmsApiClientOptions)
@@ -47,10 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
-            this.memoryCache = memoryCache;
             this.graphQlService = graphQlService;
-
-            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.staticContentDocumentService = staticContentDocumentService;
             sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
