@@ -4,6 +4,8 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
@@ -26,7 +28,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IMemoryCache memoryCache;
         private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly Guid sharedContentItemGuid;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        public readonly string ContactUsStaxId = "2c9da1b3-3529-4834-afc9-9cd741e59788";
 
         public ResultsController(
             ILogService logService,
@@ -37,7 +40,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             IDocumentStore documentStore,
             IMemoryCache memoryCache,
             IDocumentService<StaticContentItemModel> staticContentDocumentService,
-            CmsApiClientOptions cmsApiClientOptions)
+            CmsApiClientOptions cmsApiClientOptions,
+            ISharedContentRedisInterface sharedContentRedisInterface)
                 : base(sessionService)
         {
             this.logService = logService;
@@ -48,7 +52,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.staticContentDocumentService = staticContentDocumentService;
-            sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
+            ContactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         [HttpGet]
@@ -228,8 +233,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.SpeakToAnAdviser = await staticContentDocumentService
-                .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false);
+            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + ContactUsStaxId).Result.Html;
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);

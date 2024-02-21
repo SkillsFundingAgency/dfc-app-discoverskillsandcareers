@@ -13,6 +13,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int NumberOfCategories { get; set; }
 
-        public StaticContentItemModel SpeakToAnAdviser { get; set; }
+        public string SpeakToAnAdviser { get; set; }
     }
 }

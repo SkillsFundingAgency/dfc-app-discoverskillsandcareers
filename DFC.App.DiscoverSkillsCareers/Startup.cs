@@ -65,6 +65,7 @@ using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
 using System.Configuration;
 using DFC.Content.Pkg.Netcore.Services;
 using NHibernate.Mapping.ByCode.Impl;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -72,6 +73,7 @@ namespace DFC.App.DiscoverSkillsCareers
     public class Startup
     {
         public const string StaticCosmosDbConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
+        private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
         private readonly IWebHostEnvironment env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -118,6 +120,9 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+
+            services.AddHttpClient();
             services.AddSingleton<IGraphQLClient>(s =>
             {
                 var option = new GraphQLHttpClientOptions()
@@ -128,17 +133,9 @@ namespace DFC.App.DiscoverSkillsCareers
                 var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
                 return client;
             });
-            services.AddSingleton<IRestClient>(s =>
-            {
-                var option = new RestClientOptions()
-                {
-                    BaseUrl = new Uri(Configuration[ConfigKeys.SqlApiUrl]),
-                    ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
-                };
-                var client = new RestClient(option);
-                return client;
-            });
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<SharedHtml>, SharedHtmlQueryStrategy>();
+
 
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
