@@ -1,6 +1,4 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
@@ -60,24 +58,6 @@
     },
     "NotifyReturnUrl": {
       "value": "https://dev-beta.nationalcareersservice.org.uk/discover-your-skills-and-careers"
-    },
-    "TokenEndPointURL": {
-      "value": "test"
-    },
-    "GraphApiUrl": {
-      "value": "test"
-    },
-    "SqlApiUrl": {
-      "value": "test"
-    },
-    "ClientId": {
-      "value": "test"
-    },
-    "ClientSecret": {
-      "value": "test"
-    },
-    "RedisCacheConnectionString": {
-      "value": "string"
     },
     "Environment": {
       "value": "FOO"
@@ -150,6 +130,24 @@
     },
     "workspaceResourceGroup": {
       "value": "aResourceGroup"
+    },
+    "TokenEndPointURL": {
+      "value": "test"
+    },
+    "GraphApiUrl": {
+      "value": "test"
+    },
+    "SqlApiUrl": {
+      "value": "test"
+    },
+    "ClientId": {
+      "value": "test"
+    },
+    "ClientSecret": {
+      "value": "test"
+    },
+    "RedisCacheConnectionString": {
+      "value": "string"
     }
   }
 }
