@@ -187,7 +187,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                             OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
                             ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                         }));
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     logService.LogError(ex.Message);
                 }
