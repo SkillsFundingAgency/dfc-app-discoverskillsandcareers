@@ -36,7 +36,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             notificationService = A.Fake<INotificationService>();
             documentStore = A.Fake<IDocumentStore>();
             var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
-            var fakeMemoryCache = A.Fake<IMemoryCache>();
             var fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
             assessmentService = new AssessmentService(
@@ -46,7 +45,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             mapper,
             notificationService,
             fakeContextAccessor,
-            fakeMemoryCache,
             fakeSharedContentRedisInterface);
         }
 
