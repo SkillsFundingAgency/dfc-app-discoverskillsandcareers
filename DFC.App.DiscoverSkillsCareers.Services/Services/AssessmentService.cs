@@ -28,7 +28,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IMapper mapper;
         private readonly INotificationService notificationService;
         private readonly IHttpContextAccessor accessor;
-        private readonly IMemoryCache memoryCache;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
         public AssessmentService(
@@ -38,7 +37,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IMapper mapper,
             INotificationService notificationService,
             IHttpContextAccessor accessor,
-            IMemoryCache memoryCache,
             ISharedContentRedisInterface sharedContentRedisInterface)
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
@@ -47,7 +45,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.mapper = mapper;
             this.notificationService = notificationService;
             this.accessor = accessor;
-            this.memoryCache = memoryCache;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
