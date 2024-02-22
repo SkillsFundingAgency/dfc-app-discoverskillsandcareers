@@ -9,10 +9,8 @@ using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using FluentNHibernate.Testing.Values;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-using NHibernate.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -449,27 +447,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions()
         {
-            if (memoryCache.TryGetValue(nameof(GetFilteringQuestions), out var filteringQuestionsFromCache))
+            var fiteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>("DYSAC/FilteringQuestions");
+            var filteringQuestions = new List<DysacFilteringQuestionContentModel>();
+            if (fiteringQuestionResponse != null)
             {
-                return (List<DysacFilteringQuestionContentModel>?)filteringQuestionsFromCache;
+                filteringQuestions = mapper.Map<List<DysacFilteringQuestionContentModel>>(source: fiteringQuestionResponse.PersonalityFilteringQuestion);
             }
-
-            var filteringQuestions = await documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion").ConfigureAwait(false);
-
-            if (filteringQuestions == null)
-            {
-                return filteringQuestions;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetFilteringQuestions), filteringQuestions, cacheEntryOptions);
 
             return filteringQuestions;
         }
 
         private async Task<List<DysacQuestionSetContentModel>?> GetQuestionSets()
         {
-            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>("DYSAC/QuestionSet");
+            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>("DYSAC/QuestionSets");
+
             var questionSets = new List<DysacQuestionSetContentModel>();
             var qs = mapper.Map<DysacQuestionSetContentModel>(questionSetsResponse);
             questionSets.Add(qs);

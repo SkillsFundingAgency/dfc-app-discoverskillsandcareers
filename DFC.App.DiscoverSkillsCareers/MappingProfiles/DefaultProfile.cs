@@ -1,20 +1,26 @@
 ﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
     [ExcludeFromCodeCoverage]
     public class DefaultProfile : Profile
     {
+        private static string prefixShortQuestion = "<<contentapiprefix>>/personalityshortquestion/";
+        private static string prefixTrait = "<<contentapiprefix>>/personalitytrait/";
+        private static string skillIdPrefix = "<<contentapiprefix>>/socskillsmatrix/";
+        private static string filteringIdPrefix = "<<contentapiprefix>>/personalityfilteringquestion/";
+
         public DefaultProfile()
         {
             CreateMap<AnswerDetail, AnswerDetailsViewModel>()
@@ -45,13 +51,33 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<PersonalityQuestionSet, DysacQuestionSetContentModel>().ForMember(
                 d => d.ShortQuestions,
                 s => s.MapFrom(z => Construct(z.Questions.ContentItems.ToList())));
+
+            CreateMap<PersonalityFilteringQuestion, DysacFilteringQuestionContentModel>()
+              .ForMember(d => d.Id, s => s.MapFrom(a => a.GraphSync.NodeId.Replace(filteringIdPrefix, string.Empty)))
+              .ForMember(d => d.Text, s => s.MapFrom(a => a.Text))
+              .ForMember(d => d.Ordinal, s => s.MapFrom(a => a.Ordinal))
+              .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.SOCSkillsMatrix.ContentItems)));
+        }
+
+        private static List<DysacSkillContentItemModel> ConstructSkills(SOCSkillsMatrixContentItem[] contentItems)
+        {
+            var listToReturn = contentItems.Select(x => new DysacSkillContentItemModel
+            {
+                ONetRank = !string.IsNullOrEmpty(x.ONetRank) ?
+                    decimal.Parse(x.ONetRank) : (decimal?)null,
+                Ordinal = x.Ordinal,
+                ItemId = new Guid(x.GraphSync.NodeId.Replace(skillIdPrefix, string.Empty)),
+                Title = GeneralHelper.GetGenericSkillName(x.DisplayText),
+                AttributeType = x.ONetAttributeType,
+                LastCached = DateTime.UtcNow,
+            }).ToList();
+
+            return listToReturn;
         }
 
         private static IEnumerable<DysacShortQuestionContentItemModel> Construct(List<QuestionContentItem> items)
         {
             var listOfQuestions = new List<DysacShortQuestionContentItemModel>();
-            string prefixShortQuestion = "<<contentapiprefix>>/personalityshortquestion/";
-            string prefixTrait = "<<contentapiprefix>>/personalitytrait/";
 
             foreach (var item in items)
             {
