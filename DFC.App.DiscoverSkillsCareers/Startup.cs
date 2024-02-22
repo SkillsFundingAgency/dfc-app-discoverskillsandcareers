@@ -69,7 +69,6 @@ namespace DFC.App.DiscoverSkillsCareers
     {
         public const string StaticCosmosDbConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
-
         private readonly IWebHostEnvironment env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -117,7 +116,6 @@ namespace DFC.App.DiscoverSkillsCareers
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
-
             services.AddHttpClient();
             services.AddSingleton<IGraphQLClient>(s =>
             {
@@ -137,11 +135,13 @@ namespace DFC.App.DiscoverSkillsCareers
                     BaseUrl = new Uri(Configuration[ConfigKeys.SqlApiUrl]),
                     ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
+
                 var client = new RestClient(option);
                 return client;
             });
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileDysacResponse>, JobProfileOverviewQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityFilteringQuestionResponse>, DysacFilteringQuestionQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
 
@@ -204,8 +204,7 @@ namespace DFC.App.DiscoverSkillsCareers
                 cosmosDbConnectionContent1.CollectionId!,
                 logger,
                 assessmentRequestHandler,
-                contentRequestHandler
-                );
+                contentRequestHandler);
             });
 
             services.AddTransient<IGraphQlService, GraphQlService>();
