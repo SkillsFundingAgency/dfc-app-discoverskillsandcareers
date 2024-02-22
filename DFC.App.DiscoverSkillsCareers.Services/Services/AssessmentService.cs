@@ -10,7 +10,6 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -444,11 +443,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions()
         {
-            var fiteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>("DYSAC/FilteringQuestions");
+            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>("DYSAC/FilteringQuestions");
             var filteringQuestions = new List<DysacFilteringQuestionContentModel>();
-            if (fiteringQuestionResponse != null)
+            if (filteringQuestionResponse != null)
             {
-                filteringQuestions = mapper.Map<List<DysacFilteringQuestionContentModel>>(source: fiteringQuestionResponse.PersonalityFilteringQuestion);
+                filteringQuestions = mapper.Map<List<DysacFilteringQuestionContentModel>>(source: filteringQuestionResponse.PersonalityFilteringQuestion); ;
             }
 
             return filteringQuestions;
