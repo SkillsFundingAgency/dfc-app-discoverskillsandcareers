@@ -1,6 +1,7 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Framework;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.HostedServices;
 using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models;
@@ -115,6 +116,7 @@ namespace DFC.App.DiscoverSkillsCareers
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+            services.AddHttpClient();
             services.AddSingleton<IGraphQLClient>(s =>
             {
                 var option = new GraphQLHttpClientOptions()
@@ -125,6 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers
                 var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
                 return client;
             });
+
             services.AddSingleton<IRestClient>(s =>
             {
                 var option = new RestClientOptions()
@@ -137,6 +140,7 @@ namespace DFC.App.DiscoverSkillsCareers
                 return client;
             });
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileDysacResponse>, JobProfileOverviewQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityFilteringQuestionResponse>, DysacFilteringQuestionQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
@@ -202,6 +206,11 @@ namespace DFC.App.DiscoverSkillsCareers
                 assessmentRequestHandler,
                 contentRequestHandler);
             });
+
+            services.AddTransient<IGraphQlService, GraphQlService>();
+            services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
+            services.AddTransient<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddRazorTemplating();
 
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IMappingService, MappingService>();

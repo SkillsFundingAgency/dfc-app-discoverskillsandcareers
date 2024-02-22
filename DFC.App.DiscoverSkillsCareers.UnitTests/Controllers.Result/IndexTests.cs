@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
@@ -11,7 +11,6 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,10 +26,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
         private readonly ILogService logService;
-        private readonly IDocumentStore documentStore;
-        private readonly IMemoryCache memoryCache;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly IGraphQlService graphQlService;
 
         public IndexTests()
         {
@@ -39,15 +37,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
-            documentStore = A.Fake<IDocumentStore>();
-            memoryCache = A.Fake<IMemoryCache>();
+            graphQlService = A.Fake<IGraphQlService>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, graphQlService, cmsApiClientOptions);
         }
 
         [Fact]
@@ -55,7 +52,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, new CmsApiClientOptions()));
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, graphQlService, new CmsApiClientOptions()));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
@@ -66,7 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, null));
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, graphQlService, null));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
@@ -8,7 +7,6 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,10 +21,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
-        private readonly IMemoryCache memoryCache;
-        private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly Guid sharedContentItemGuid;
+        private readonly IGraphQlService graphQlService;
 
         public ResultsController(
             ILogService logService,
@@ -34,9 +31,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             ISessionService sessionService,
             IResultsService resultsService,
             IAssessmentService assessmentService,
-            IDocumentStore documentStore,
-            IMemoryCache memoryCache,
             IDocumentService<StaticContentItemModel> staticContentDocumentService,
+            IGraphQlService graphQlService,
             CmsApiClientOptions cmsApiClientOptions)
                 : base(sessionService)
         {
@@ -44,9 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
-            this.memoryCache = memoryCache;
-
-            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
+            this.graphQlService = graphQlService;
             this.staticContentDocumentService = staticContentDocumentService;
             sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
         }
@@ -165,41 +159,39 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                if (!jobCategory.JobProfiles.Any())
+                try
                 {
-                    logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
-                    continue;
-                }
-
-                var jobProfileTitles = jobCategory.JobProfiles
-                    .GroupBy(jobProfile => jobProfile.Title)
-                    .Select(jobProfileGroup => jobProfileGroup.First())
-                    .Select(jobProfile => jobProfile?.Title?.ToLower());
-
-                var jobProfileOverviews = (await GetJobProfileOverviews().ConfigureAwait(false))?
-                    .Where(document => jobProfileTitles.Contains(document.Title!.ToLower()))
-                    .ToList();
-
-                if (jobProfileOverviews == null)
-                {
-                    logService.LogError(
-                        $"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
-
-                    continue;
-                }
-
-                var category = resultsByCategoryModel.JobsInCategory!
-                    .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
-
-                category?.JobProfiles?.AddRange(jobProfileOverviews
-                    .GroupBy(jobProfileOverview => jobProfileOverview.Title)
-                    .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
-                    .Select(jobProfileOverview => new ResultJobProfileOverViewModel
+                    logService.LogInformation($"Attempting to build JobProfileOverview for each job profile in {jobCategory.JobFamilyName}");
+                    if (!jobCategory.JobProfiles.Any())
                     {
-                        Cname = jobProfileOverview.Title?.Replace(" ", "-").Replace(",", string.Empty),
-                        OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
-                        ReturnedStatusCode = System.Net.HttpStatusCode.OK,
-                    }));
+                        logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
+                        continue;
+                    }
+
+                    var jobProfileTitles = jobCategory.JobProfiles
+                        .GroupBy(jobProfile => jobProfile.Title)
+                        .Select(jobProfileGroup => jobProfileGroup.First())
+                        .Select(jobProfile => jobProfile?.Title?.ToLower());
+
+                    var jobProfileList = await GetJobProfilesAsync(jobProfileTitles).ConfigureAwait(false);
+
+                    var category = resultsByCategoryModel.JobsInCategory!
+                        .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
+
+                    category?.JobProfiles?.AddRange(jobProfileList
+                        .GroupBy(jobProfileOverview => jobProfileOverview.DisplayText)
+                        .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
+                        .Select(jobProfileOverview => new ResultJobProfileOverViewModel
+                        {
+                            Cname = jobProfileOverview.DisplayText,
+                            OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
+                            ReturnedStatusCode = System.Net.HttpStatusCode.OK,
+                        }));
+                }
+                catch (Exception ex)
+                {
+                    logService.LogError(ex.Message);
+                }
             }
 
             logService.LogInformation("Finished loop");
@@ -244,25 +236,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View("BodyTopEmpty");
         }
 
-        private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
+        private async Task<List<JobProfileViewModel>> GetJobProfilesAsync(IEnumerable<string> listOfJobProfileNames)
         {
-            logService.LogInformation($"GetJobProfileOverviews");
-            if (memoryCache.TryGetValue(nameof(GetJobProfileOverviews), out var filteringQuestionsFromCache))
+            logService.LogInformation($"Calling {nameof(GetJobProfilesAsync)}");
+
+            var jobProfileList = new List<JobProfileViewModel>();
+
+            foreach (var jobProfile in listOfJobProfileNames)
             {
-                return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
+                jobProfileList.Add(await graphQlService.GetJobProfileAsync(jobProfile));
             }
 
-            var jobProfileOverviews = await documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>("JobProfileOverview", "GetJobProfileOverviews").ConfigureAwait(false);
-
-            if (!jobProfileOverviews.Any())
-            {
-                return jobProfileOverviews;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
-
-            return jobProfileOverviews;
+            return jobProfileList;
         }
     }
 }
