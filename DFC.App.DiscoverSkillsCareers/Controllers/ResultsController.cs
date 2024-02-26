@@ -4,14 +4,18 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         public readonly string ContactUsStaxId = "2c9da1b3-3529-4834-afc9-9cd741e59788";
+        private readonly IRazorTemplateEngine razorTemplateEngine;
 
         public ResultsController(
             ILogService logService,
@@ -35,14 +40,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             IAssessmentService assessmentService,
             IDocumentService<StaticContentItemModel> staticContentDocumentService,
             CmsApiClientOptions cmsApiClientOptions,
-            ISharedContentRedisInterface sharedContentRedisInterface)
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IRazorTemplateEngine razorTemplateEngine)
                 : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
-            this.graphQlService = graphQlService;
+            this.razorTemplateEngine = razorTemplateEngine;
             this.staticContentDocumentService = staticContentDocumentService;
             ContactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
             this.sharedContentRedisInterface = sharedContentRedisInterface;
@@ -244,9 +250,25 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var jobProfileList = new List<JobProfileViewModel>();
 
-            foreach (var jobProfile in listOfJobProfileNames)
+            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>($"DYSAC/JobProfileOverview")
+                ?? new JobProfileDysacResponse();
+
+            foreach (JobProfile jobProfileOverview in response.JobProfile)
             {
-                jobProfileList.Add(await graphQlService.GetJobProfileAsync(jobProfile));
+                var mappedResponse = mapper.Map<JobProfileViewModel>(jobProfileOverview);
+                try
+                {
+                    logService.LogInformation($"Attempting to build HTML for {jobProfileOverview.DisplayText}");
+
+                    var html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", mappedResponse).ConfigureAwait(false);
+                    mappedResponse.Html = html;
+                }
+                catch (IOException ex)
+                {
+                    logService.LogError("Error: " + ex.GetType().Name + " - " + ex.Message);
+                }
+
+                jobProfileList.Add(mappedResponse);
             }
 
             return jobProfileList;
