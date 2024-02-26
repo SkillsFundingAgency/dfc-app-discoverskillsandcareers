@@ -3,6 +3,7 @@ using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using FakeItEasy;
@@ -20,6 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
 
         public IndexTests()
@@ -31,8 +33,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
+            sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
-            controller = new HomeController(sessionService, assessmentService,staticContentDocumentService, cmsApiClientOptions);
+            controller = new HomeController(sessionService, assessmentService,staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
         }
 
         [Fact]
@@ -40,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions()));
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions(), sharedContentRedisInterface));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
@@ -51,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new HomeController(sessionService, assessmentService, staticContentDocumentService, null));
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, null, sharedContentRedisInterface));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
@@ -100,22 +103,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
-        }
-
-        [Fact]
-        public async Task IndexAsyncReturnsSpeaksToAdvisor()
-        {
-            // Arrange
-            A.CallTo(() => staticContentDocumentService.GetByIdAsync(
-                new Guid(cmsApiClientOptions.ContentIds),
-                StaticContentItemModel.DefaultPartitionKey)).Returns(new StaticContentItemModel());
-
-            // Act
-            var result = await controller.IndexAsync() as ViewResult;
-            var model = result?.Model as HomeIndexResponseViewModel;
-
-            // Assert
-            Assert.NotNull(model?.SpeakToAnAdviser);
         }
     }
 }

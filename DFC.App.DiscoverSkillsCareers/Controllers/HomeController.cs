@@ -1,6 +1,8 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Sessionstate;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
@@ -15,22 +17,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly Guid _sharedContentItemGuid;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly string ContactUsStaxId;
 
-        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions)
+        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions, ISharedContentRedisInterface sharedContentRedisInterface)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
             this.staticContentDocumentService = staticContentDocumentService;
-            _sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
+            ContactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         public async Task<IActionResult> IndexAsync()
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = await staticContentDocumentService
-                    .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false),
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + ContactUsStaxId).Result.Html,
             };
             return View(responseVm);
         }
@@ -48,9 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = await staticContentDocumentService
-                        .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey)
-                        .ConfigureAwait(false),
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + ContactUsStaxId).Result.Html,
                 };
                 return View(responseViewModel);
             }
