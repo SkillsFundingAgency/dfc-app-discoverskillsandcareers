@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System;
 using Xunit;
 
@@ -23,7 +24,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly ILogService logService;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
-        private readonly IGraphQlService graphQlService;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine razorTemplateEngine;
 
         public BodyTopTests()
         {
@@ -33,13 +35,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
+            sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+            razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, graphQlService, cmsApiClientOptions);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, cmsApiClientOptions, sharedContentRedisInterface, razorTemplateEngine);
         }
 
         [Fact]

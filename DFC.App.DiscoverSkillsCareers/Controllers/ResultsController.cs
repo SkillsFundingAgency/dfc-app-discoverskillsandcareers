@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,9 +25,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
-        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly Guid sharedContentItemGuid;
-        private readonly IGraphQlService graphQlService;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly string contactUsStaxId;
+        private readonly IRazorTemplateEngine razorTemplateEngine;
 
         public ResultsController(
             ILogService logService,
@@ -31,18 +35,18 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             ISessionService sessionService,
             IResultsService resultsService,
             IAssessmentService assessmentService,
-            IDocumentService<StaticContentItemModel> staticContentDocumentService,
-            IGraphQlService graphQlService,
-            CmsApiClientOptions cmsApiClientOptions)
+            CmsApiClientOptions cmsApiClientOptions,
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IRazorTemplateEngine razorTemplateEngine)
                 : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
-            this.graphQlService = graphQlService;
-            this.staticContentDocumentService = staticContentDocumentService;
-            sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
+            this.razorTemplateEngine = razorTemplateEngine;
+            contactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         [HttpGet]
@@ -157,6 +161,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 throw new NoNullAllowedException(nameof(resultsByCategoryModel));
             }
 
+            var jobProfileListFull = await GetJobProfilesAsync().ConfigureAwait(false);
+
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
                 try
@@ -173,7 +179,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                         .Select(jobProfileGroup => jobProfileGroup.First())
                         .Select(jobProfile => jobProfile?.Title?.ToLower());
 
-                    var jobProfileList = await GetJobProfilesAsync(jobProfileTitles).ConfigureAwait(false);
+                    var jobProfileList = jobProfileListFull?
+                        .Where(document => jobProfileTitles.Contains(document.DisplayText!.ToLower()))
+                        .ToList();
+
+                    foreach (JobProfileViewModel jobProfileOverview in jobProfileList)
+                    {
+                        try
+                        {
+                            logService.LogInformation($"Attempting to build HTML for {jobProfileOverview.DisplayText}");
+
+                            var html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", jobProfileOverview).ConfigureAwait(false);
+                            jobProfileOverview.Html = html;
+                        }
+                        catch (IOException ex)
+                        {
+                            logService.LogError("Error: " + ex.GetType().Name + " - " + ex.Message);
+                        }
+                    }
 
                     var category = resultsByCategoryModel.JobsInCategory!
                         .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
@@ -220,8 +243,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.SpeakToAnAdviser = await staticContentDocumentService
-                .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false);
+            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html;
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
@@ -236,16 +258,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View("BodyTopEmpty");
         }
 
-        private async Task<List<JobProfileViewModel>> GetJobProfilesAsync(IEnumerable<string> listOfJobProfileNames)
+        private async Task<List<JobProfileViewModel>> GetJobProfilesAsync()
         {
             logService.LogInformation($"Calling {nameof(GetJobProfilesAsync)}");
 
-            var jobProfileList = new List<JobProfileViewModel>();
+            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>($"DYSAC/JobProfileOverviews")
+            ?? new JobProfileDysacResponse();
 
-            foreach (var jobProfile in listOfJobProfileNames)
-            {
-                jobProfileList.Add(await graphQlService.GetJobProfileAsync(jobProfile));
-            }
+            var jobProfileList = mapper.Map<List<JobProfileViewModel>>(response.JobProfile);
 
             return jobProfileList;
         }
