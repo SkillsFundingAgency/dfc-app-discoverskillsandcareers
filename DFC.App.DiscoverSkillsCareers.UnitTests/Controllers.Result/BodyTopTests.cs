@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
+using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
@@ -9,7 +9,6 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using Xunit;
 
@@ -23,7 +22,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IAssessmentService assessmentService;
         private readonly IResultsService resultsService;
         private readonly ILogService logService;
-        private readonly IDocumentStore documentStore;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
@@ -35,9 +33,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
-            documentStore = A.Fake<IDocumentStore>();
-            var fakeMemoryCache = A.Fake<IMemoryCache>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
+            graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
