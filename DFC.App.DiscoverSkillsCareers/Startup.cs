@@ -1,7 +1,6 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Framework;
-using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.HostedServices;
 using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models;
@@ -207,8 +206,6 @@ namespace DFC.App.DiscoverSkillsCareers
                 assessmentRequestHandler,
                 contentRequestHandler);
             });
-
-            services.AddTransient<IGraphQlService, GraphQlService>();
             services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
             services.AddTransient<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddRazorTemplating();

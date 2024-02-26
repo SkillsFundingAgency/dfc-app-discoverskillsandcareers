@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.GraphQl;
 using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
@@ -13,6 +12,7 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,8 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly string testCategory;
         private readonly ILogService logService;
-        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly IGraphQlService graphQlService;
+        private readonly IRazorTemplateEngine razorTemplateEngine;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
@@ -45,15 +44,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             testCategory = "testcategory";
             logService = A.Fake<ILogService>();
-            staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+            razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, cmsApiClientOptions, sharedContentRedisInterface, razorTemplateEngine);
         }
 
         [Fact]
