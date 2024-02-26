@@ -447,7 +447,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var filteringQuestions = new List<DysacFilteringQuestionContentModel>();
             if (filteringQuestionResponse != null)
             {
-                filteringQuestions = mapper.Map<List<DysacFilteringQuestionContentModel>>(source: filteringQuestionResponse.PersonalityFilteringQuestion); ;
+                filteringQuestions = mapper.Map<List<DysacFilteringQuestionContentModel>>(source: filteringQuestionResponse.PersonalityFilteringQuestion);
             }
 
             return filteringQuestions;

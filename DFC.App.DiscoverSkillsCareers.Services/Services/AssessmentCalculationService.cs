@@ -6,6 +6,9 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -32,13 +35,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ILogger<AssessmentCalculationService> logger;
         private readonly IAssessmentService assessmentService;
         private readonly IMemoryCache memoryCache;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
             IAssessmentService assessmentService,
             IMemoryCache memoryCache,
             IMapper mapper,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ISharedContentRedisInterface sharedContentRedisInterface)
         {
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
 
@@ -46,6 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.memoryCache = memoryCache;
             this.mapper = mapper;
             this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
@@ -82,86 +88,91 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var prominentSkills =
                 JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
-
-            foreach (var trait in topTraits)
+            try
             {
-                var applicableTrait = allTraits.FirstOrDefault(traitA => traitA.Title == trait.TraitCode);
-
-                if (applicableTrait == null)
+                foreach (var trait in topTraits)
                 {
-                    throw new InvalidOperationException($"Trait {applicableTrait} not found in trait repository");
-                }
+                    var applicableTrait = allTraits.FirstOrDefault(traitA => traitA.Title == trait.TraitCode);
 
-                foreach (var limitedJobCategory in applicableTrait.JobCategories)
-                {
-                    var fullJobCategory = allJobProfileCategories
-                        .First(jobProfileCategory => jobProfileCategory.Url == limitedJobCategory.Url);
-
-                    var jobCategoryTraits = allTraits
-                        .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
-                        .Select(traitA => traitA.Title)
-                        .ToList();
-
-                    if (!jobCategoryTraits.All(jobCategoryTrait => traitLookup.ContainsKey(jobCategoryTrait)))
+                    if (applicableTrait == null)
                     {
-                        continue;
+                        throw new InvalidOperationException($"Trait {applicableTrait} not found in trait repository");
                     }
 
-                    var jobProfiles = fullJobCategory.JobProfiles
-                        .GroupBy(jobProfile => jobProfile.Title)
-                        .Select(jobProfileGroup => jobProfileGroup.First())
-                        .ToList();
-
-                    var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles
-                        .Where(jobProfile => jobProfile.Skills.Any())
-                        .GroupBy(jobProfile => jobProfile.Title)
-                        .Select(jobProfileGroup => jobProfileGroup.First())
-                        .ToList();
-
-                    var categorySkills = jobProfilesWithAtLeastOneSkill.GetSkillAttributes(
-                        prominentSkills,
-                        75);
-
-                    logger.LogInformation("Job Category: {Data}", JsonConvert.SerializeObject(fullJobCategory));
-                    logger.LogInformation("Category Skills: {Data}", JsonConvert.SerializeObject(categorySkills));
-
-                    if (results.Any(jobCategory => jobCategory.JobFamilyName == fullJobCategory.Title))
+                    foreach (var limitedJobCategory in applicableTrait.JobCategories)
                     {
-                        var result = results.First(jobCategory => jobCategory.JobFamilyName == fullJobCategory.Title);
-                        result.Total += trait.TotalScore;
+                        var fullJobCategory = allJobProfileCategories
+                            .First(jobProfileCategory => jobProfileCategory.ItemId == limitedJobCategory.ItemId);
 
-                        continue;
+                        var jobCategoryTraits = allTraits
+                            .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
+                            .Select(traitA => traitA.Title)
+                            .ToList();
+
+                        if (!jobCategoryTraits.All(jobCategoryTrait => traitLookup.ContainsKey(jobCategoryTrait)))
+                        {
+                            continue;
+                        }
+
+                        var jobProfiles = fullJobCategory.JobProfiles
+                            .GroupBy(jobProfile => jobProfile.Title)
+                            .Select(jobProfileGroup => jobProfileGroup.First())
+                            .ToList();
+
+                        var jobProfilesWithAtLeastOneSkill = fullJobCategory.JobProfiles
+                            .Where(jobProfile => jobProfile.Skills.Any())
+                            .GroupBy(jobProfile => jobProfile.Title)
+                            .Select(jobProfileGroup => jobProfileGroup.First())
+                            .ToList();
+
+                        var categorySkills = jobProfilesWithAtLeastOneSkill.GetSkillAttributes(
+                            prominentSkills,
+                            75);
+
+                        logger.LogInformation("Job Category: {Data}", JsonConvert.SerializeObject(fullJobCategory));
+                        logger.LogInformation("Category Skills: {Data}", JsonConvert.SerializeObject(categorySkills));
+
+                        if (results.Any(jobCategory => jobCategory.JobFamilyName == fullJobCategory.Title))
+                        {
+                            var result = results.First(jobCategory => jobCategory.JobFamilyName == fullJobCategory.Title);
+                            result.Total += trait.TotalScore;
+
+                            continue;
+                        }
+
+                        var skillQuestions = categorySkills
+                            .Where(categorySkill =>
+                                allFilteringQuestions.Any(applicableQuestion =>
+                                     applicableQuestion.Skills.Select(skill => skill.Title).Contains(categorySkill.ONetAttribute)))
+                            .Select(skillAttribute => skillAttribute.ONetAttribute!)
+                            .ToList();
+
+                        results.Add(new JobCategoryResult
+                        {
+                            JobFamilyName = fullJobCategory.Title!,
+                            JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(
+                                limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) + 1,
+                                limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) - 1),
+                            SkillQuestions = skillQuestions,
+                            TraitValues = allTraits
+                                .Where(traitA => traitA.JobCategories.Any(jobCategory => jobCategory.ItemId == fullJobCategory.ItemId))
+                                .Select(traitA => new TraitValue
+                                {
+                                    TraitCode = traitA.Title!.ToUpperInvariant(),
+                                    NormalizedTotal = trait.TotalScore,
+                                    Total = trait.TotalScore,
+                                }).ToList(),
+                            Total = trait.TotalScore,
+                            TotalQuestions = skillQuestions.Count,
+                            JobProfiles = jobProfiles.Select(jobProfile => mapper.Map<JobProfileResult>(jobProfile)),
+                        });
                     }
-
-                    var skillQuestions = categorySkills
-                        .Where(categorySkill =>
-                            allFilteringQuestions.Any(applicableQuestion =>
-                                 applicableQuestion.Skills.Select(skill => skill.Title).Contains(categorySkill.ONetAttribute)))
-                        .Select(skillAttribute => skillAttribute.ONetAttribute!)
-                        .ToList();
-
-                    results.Add(new JobCategoryResult
-                    {
-                        JobFamilyName = fullJobCategory.Title!,
-                        JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(
-                            limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) + 1,
-                            limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) - 1),
-                        SkillQuestions = skillQuestions,
-                        TraitValues = allTraits
-                            .Where(traitA => traitA.JobCategories.Any(jobCategory => jobCategory.ItemId == fullJobCategory.ItemId))
-                            .Select(traitA => new TraitValue
-                            {
-                                TraitCode = traitA.Title!.ToUpperInvariant(),
-                                NormalizedTotal = trait.TotalScore,
-                                Total = trait.TotalScore,
-                            }).ToList(),
-                        Total = trait.TotalScore,
-                        TotalQuestions = skillQuestions.Count,
-                        JobProfiles = jobProfiles.Select(jobProfile => mapper.Map<JobProfileResult>(jobProfile)),
-                    });
                 }
             }
-
+            catch (Exception ex) 
+            { 
+                throw; 
+            }
             return results.OrderByDescending(jobCategory => jobCategory.Total);
         }
 
@@ -239,21 +250,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            if (memoryCache.TryGetValue(nameof(GetTraits), out var filteringQuestionsFromCache))
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>("DYSAC/Traits");
+            var traits = new List<DysacTraitContentModel>();
+            if (traintsResponse != null)
             {
-                return (List<DysacTraitContentModel>?)filteringQuestionsFromCache;
+                traits = mapper.Map<List<DysacTraitContentModel>>(source: traintsResponse.PersonalityTraits);
             }
-
-            var traits = await documentStore.GetAllContentAsync<DysacTraitContentModel>(
-                "Trait").ConfigureAwait(false);
-
-            if (traits == null)
-            {
-                return traits;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetTraits), traits, cacheEntryOptions);
 
             return traits;
         }
