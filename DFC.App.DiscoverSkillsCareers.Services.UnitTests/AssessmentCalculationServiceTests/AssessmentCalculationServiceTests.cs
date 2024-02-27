@@ -113,7 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
             // Act
-            var result = await serviceToTest.ProcessAssessment(assessment);
+            var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());
 
             // Assert
             Assert.Single(result.ShortQuestionResult!.JobCategories);
@@ -138,7 +138,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
             // Act
-            var result = await serviceToTest.ProcessAssessment(assessment);
+            var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());
 
             // Assert
             Assert.Equal(2, result.ShortQuestionResult!.JobCategories.Count());
@@ -161,7 +161,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             var assessment = AssessmentHelpers.GetAssessment();
 
             // Act
-            var result = await serviceToTest.ProcessAssessment(assessment);
+            var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());
 
             // Assert
             Assert.Empty(result.ShortQuestionResult!.JobCategories);
