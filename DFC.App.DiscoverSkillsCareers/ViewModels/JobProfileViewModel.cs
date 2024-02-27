@@ -1,4 +1,6 @@
-﻿namespace DFC.App.DiscoverSkillsCareers.ViewModels
+﻿using System;
+
+namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
     public class JobProfileViewModel
     {
@@ -14,9 +16,9 @@
 
         public string UrlName { get; set; }
 
-        public int MaximumHours { get; set; }
+        public Double MaximumHours { get; set; }
 
-        public int MinimumHours { get; set; }
+        public Double MinimumHours { get; set; }
 
         public string WorkingPattern { get; set; }
 
