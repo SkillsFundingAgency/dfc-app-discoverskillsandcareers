@@ -56,7 +56,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
         {
-
             if (assessment == null)
             {
                 throw new ArgumentNullException(nameof(assessment));
@@ -184,12 +183,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return results.OrderByDescending(jobCategory => jobCategory.Total);
         }
 
-        private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
-        {
-            var traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
-            return traitResult.Take(traitsTake);
-        }
-
         public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment, List<DysacTraitContentModel> allTraits)
         {
             var allFilteringQuestions = await assessmentService.GetFilteringQuestions().ConfigureAwait(false);
@@ -242,6 +235,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             };
 
             return assessment;
+        }
+
+        private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
+        {
+            var traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
+            return traitResult.Take(traitsTake);
         }
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
