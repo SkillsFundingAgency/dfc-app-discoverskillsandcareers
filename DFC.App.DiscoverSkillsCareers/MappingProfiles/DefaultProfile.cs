@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.App.DiscoverSkillsCareers.Models.API;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 using System;
@@ -20,6 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
         private static string prefixTrait = "<<contentapiprefix>>/personalitytrait/";
         private static string skillIdPrefix = "<<contentapiprefix>>/socskillsmatrix/";
         private static string filteringIdPrefix = "<<contentapiprefix>>/personalityfilteringquestion/";
+        private static string jobProfilePrefix = "<<contentapiprefix>>/jobprofile/";
+        private static string jobCategoryPrefix = "<<contentapiprefix>>/jobprofilecategory/";
 
         public DefaultProfile()
         {
@@ -57,6 +61,11 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
               .ForMember(d => d.Text, s => s.MapFrom(a => a.Text))
               .ForMember(d => d.Ordinal, s => s.MapFrom(a => a.Ordinal))
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.SOCSkillsMatrix.ContentItems)));
+
+            CreateMap<PersonalityTrait, DysacTraitContentModel>()
+                .ForMember(d => d.Id, s => s.MapFrom(a => new Guid(a.GraphSync.NodeId.Replace(prefixTrait, string.Empty))))
+                .ForMember(d => d.JobCategories, s => s.MapFrom(z => ConstructJobCategories(z.JobProfileCategories)))
+                .ForMember(d => d.Title, s => s.MapFrom(z => z.DisplayText.ToUpperInvariant()));
         }
 
         private static List<DysacSkillContentItemModel> ConstructSkills(SOCSkillsMatrixContentItem[] contentItems)
@@ -116,9 +125,29 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 jobProfileCategories.ContentItems.Select(
                     x => new JobCategoryContentItemModel
                     {
+                        ItemId = new Guid(x.GraphSync.NodeId.Replace(jobCategoryPrefix, string.Empty)),
                         Description = x.DisplayText,
+                        JobProfiles = ConstructJobProfiles(x.JobProfiles),
                         LastCached = DateTime.UtcNow,
                     }));
+
+            return listToReturn;
+        }
+
+        private static List<JobProfileContentItemModel> ConstructJobProfiles(List<JobProfile> jobProfiles)
+        {
+            var listToReturn = new List<JobProfileContentItemModel>();
+            if (jobProfiles != null)
+            {
+                listToReturn.AddRange(jobProfiles.Select(x =>
+                    new JobProfileContentItemModel
+                    {
+                        ItemId = new Guid(x.GraphSync.NodeId.Replace(jobProfilePrefix, string.Empty)),
+                        Title = x.DisplayText,
+                        JobProfileWebsiteUrl = x.PageLocation.FullUrl,
+                        LastCached = DateTime.UtcNow,
+                    }));
+            }
 
             return listToReturn;
         }

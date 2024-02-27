@@ -6,6 +6,9 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -32,13 +35,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ILogger<AssessmentCalculationService> logger;
         private readonly IAssessmentService assessmentService;
         private readonly IMemoryCache memoryCache;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
             IAssessmentService assessmentService,
             IMemoryCache memoryCache,
             IMapper mapper,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ISharedContentRedisInterface sharedContentRedisInterface)
         {
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
 
@@ -46,11 +51,25 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.memoryCache = memoryCache;
             this.mapper = mapper;
             this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
         {
-            return await RunShortAssessmentCalculation(assessment).ConfigureAwait(false);
+
+            if (assessment == null)
+            {
+                throw new ArgumentNullException(nameof(assessment));
+            }
+
+            var allTraits = await GetTraits().ConfigureAwait(false);
+
+            if (allTraits == null)
+            {
+                throw new InvalidOperationException("No traits retrieved from document service");
+            }
+
+            return await RunShortAssessmentCalculation(assessment, allTraits).ConfigureAwait(false);
         }
 
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
@@ -95,7 +114,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
                     var fullJobCategory = allJobProfileCategories
-                        .First(jobProfileCategory => jobProfileCategory.Url == limitedJobCategory.Url);
+                        .First(jobProfileCategory => jobProfileCategory.ItemId == limitedJobCategory.ItemId);
 
                     var jobCategoryTraits = allTraits
                         .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
@@ -171,20 +190,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return traitResult.Take(traitsTake);
         }
 
-        private async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment)
+        public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment, List<DysacTraitContentModel> allTraits)
         {
-            if (assessment == null)
-            {
-                throw new ArgumentNullException(nameof(assessment));
-            }
-
-            var allTraits = await GetTraits().ConfigureAwait(false);
-
-            if (allTraits == null)
-            {
-                throw new InvalidOperationException("No traits retrieved from document service");
-            }
-
             var allFilteringQuestions = await assessmentService.GetFilteringQuestions().ConfigureAwait(false);
 
             var userTraits = assessment.Questions
@@ -239,21 +246,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            if (memoryCache.TryGetValue(nameof(GetTraits), out var filteringQuestionsFromCache))
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>("DYSAC/Traits");
+            var traits = new List<DysacTraitContentModel>();
+            if (traintsResponse != null)
             {
-                return (List<DysacTraitContentModel>?)filteringQuestionsFromCache;
+                traits = mapper.Map<List<DysacTraitContentModel>>(source: traintsResponse.PersonalityTraits);
             }
-
-            var traits = await documentStore.GetAllContentAsync<DysacTraitContentModel>(
-                "Trait").ConfigureAwait(false);
-
-            if (traits == null)
-            {
-                return traits;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetTraits), traits, cacheEntryOptions);
 
             return traits;
         }

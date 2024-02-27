@@ -14,6 +14,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculationServiceTests
 {
@@ -23,6 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         private readonly AssessmentService assessmentService = A.Fake<AssessmentService>();
         private readonly IMapper mapper = A.Fake<IMapper>();
         private readonly IMemoryCache memoryCache = A.Fake<IMemoryCache>();
+        private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
         public AssessmentCalculationServiceTests()
         {
@@ -42,7 +44,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 assessmentService,
                 memoryCache,
                 mapper,
-                A.Fake<ILoggerFactory>());
+                A.Fake<ILoggerFactory>(),
+                fakeSharedContentRedisInterface);
 
             var skills = new List<DysacSkillContentItemModel>
             {
@@ -103,13 +106,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 assessmentService,
                 memoryCache,
                 mapper,
-                A.Fake<ILoggerFactory>());
+                A.Fake<ILoggerFactory>(),
+                fakeSharedContentRedisInterface);
             
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
             // Act
-            var result = await serviceToTest.ProcessAssessment(assessment);
+            var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());
 
             // Assert
             Assert.Single(result.ShortQuestionResult!.JobCategories);
@@ -125,14 +129,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 assessmentService,
                 memoryCache,                
                 mapper,
-                A.Fake<ILoggerFactory>());
+                A.Fake<ILoggerFactory>(), 
+                fakeSharedContentRedisInterface
+                );
             
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
             assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
 
             // Act
-            var result = await serviceToTest.ProcessAssessment(assessment);
+            var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());
 
             // Assert
             Assert.Equal(2, result.ShortQuestionResult!.JobCategories.Count());
@@ -149,12 +155,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 assessmentService,
                 memoryCache,
                 mapper,
-                A.Fake<ILoggerFactory>());
+                A.Fake<ILoggerFactory>(), 
+                fakeSharedContentRedisInterface);
             
             var assessment = AssessmentHelpers.GetAssessment();
 
             // Act
-            var result = await serviceToTest.ProcessAssessment(assessment);
+            var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());
 
             // Assert
             Assert.Empty(result.ShortQuestionResult!.JobCategories);
