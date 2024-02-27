@@ -18,14 +18,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IAssessmentService assessmentService;
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly string ContactUsStaxId;
+        private readonly string contactUsStaxId;
 
         public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions, ISharedContentRedisInterface sharedContentRedisInterface)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
             this.staticContentDocumentService = staticContentDocumentService;
-            ContactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
+            contactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
             this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
@@ -33,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + ContactUsStaxId).Result.Html,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
             };
             return View(responseVm);
         }
@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + ContactUsStaxId).Result.Html,
+                    SpeakToAnAdviser = await this.sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
                 };
                 return View(responseViewModel);
             }
