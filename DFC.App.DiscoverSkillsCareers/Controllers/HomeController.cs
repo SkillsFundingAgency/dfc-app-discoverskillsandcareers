@@ -16,7 +16,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     public class HomeController : BaseController
     {
         private readonly IAssessmentService assessmentService;
-        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly string contactUsStaxId;
 
@@ -24,7 +23,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
-            this.staticContentDocumentService = staticContentDocumentService;
             contactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
             this.sharedContentRedisInterface = sharedContentRedisInterface;
         }

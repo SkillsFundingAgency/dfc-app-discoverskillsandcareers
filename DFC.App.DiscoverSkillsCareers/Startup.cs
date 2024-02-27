@@ -20,6 +20,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Cosmos;
@@ -55,23 +56,10 @@ using Notify.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
-using RestSharp;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
-using DFC.Common.SharedContent.Pkg.Netcore;
-using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
-using DFC.Compui.Cosmos;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
-using System.Configuration;
-using DFC.Content.Pkg.Netcore.Services;
-using NHibernate.Mapping.ByCode.Impl;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
-
 
 namespace DFC.App.DiscoverSkillsCareers
 {

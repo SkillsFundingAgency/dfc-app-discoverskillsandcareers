@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
-            controller = new HomeController(sessionService, assessmentService,staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
+            controller = new HomeController(sessionService, assessmentService, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
         }
 
         [Fact]
