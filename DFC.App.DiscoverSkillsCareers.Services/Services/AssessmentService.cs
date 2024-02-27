@@ -252,18 +252,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<DysacAssessment?> GetAssessment(string sessionId, bool throwErrorWhenNotFound)
         {
-            if (accessor.HttpContext != null)
-            {
-                if (accessor.HttpContext.Items.ContainsKey(HttpContextAssessmentKey))
-                {
-                    return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
-                }
-            }
 
+            if (accessor.HttpContext != null && accessor.HttpContext.Items.ContainsKey(HttpContextAssessmentKey))
+            {
+              return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
+            }
+            
             var assessment = await documentStore.GetAssessmentAsync(sessionId)
                 .ConfigureAwait(false);
 
-            if (assessment != null)
+            if (assessment != null && accessor.HttpContext != null)
             {
                 accessor.HttpContext.Items.Add(HttpContextAssessmentKey, assessment);
                 return assessment;
@@ -441,7 +439,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         public async Task UpdateAssessment(DysacAssessment assessment)
         {
             await documentStore.UpdateAssessmentAsync(assessment).ConfigureAwait(false);
-            if (accessor.HttpContext !=null)
+
+            if (accessor.HttpContext != null)
             {
                 accessor.HttpContext.Items[HttpContextAssessmentKey] = assessment;
             }

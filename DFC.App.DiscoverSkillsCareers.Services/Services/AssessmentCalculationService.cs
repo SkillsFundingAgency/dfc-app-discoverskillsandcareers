@@ -46,7 +46,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             ISharedContentRedisInterface sharedContentRedisInterface)
         {
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
-
             this.assessmentService = assessmentService;
             this.memoryCache = memoryCache;
             this.mapper = mapper;
@@ -83,9 +82,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(userTrait => userTrait.TotalScore)
                 .Take(10);
 
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
             var traitLookup = userTraits
                 .Where(traitResult => traitResult.TotalScore > 0)
-                .ToDictionary(traitResult => traitResult.TraitCode, StringComparer.InvariantCultureIgnoreCase);
+                .ToDictionary(keySelector: traitResult => traitResult.TraitCode, StringComparer.InvariantCultureIgnoreCase);
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
 
             logger.LogInformation("User Traits: {Data}", JsonConvert.SerializeObject(userTraits));
             logger.LogInformation("All Traits: {Data}", JsonConvert.SerializeObject(allTraits));

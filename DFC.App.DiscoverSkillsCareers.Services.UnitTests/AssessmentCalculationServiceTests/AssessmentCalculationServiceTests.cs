@@ -134,8 +134,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 );
             
             var assessment = AssessmentHelpers.GetAssessment();
-            assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
-            assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
+            if (assessment != null)
+            {
+                assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
+                assessment.Questions.FirstOrDefault(x => x.Trait == "DOER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
+            }
 
             // Act
             var result = await serviceToTest.RunShortAssessmentCalculation(assessment, await AssessmentHelpers.GetTraits());

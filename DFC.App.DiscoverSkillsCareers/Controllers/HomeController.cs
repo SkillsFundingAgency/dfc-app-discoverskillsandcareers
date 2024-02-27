@@ -29,13 +29,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public Task<IActionResult> IndexAsync()
         {
             var responseVm = new HomeIndexResponseViewModel
             {
                 SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
             };
-            return View(responseVm);
+            return Task.FromResult<IActionResult>(View(responseVm));
         }
 
         [HttpPost]
@@ -51,7 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = await this.sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
                 };
                 return View(responseViewModel);
             }
