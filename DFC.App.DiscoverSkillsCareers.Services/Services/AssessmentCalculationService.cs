@@ -6,6 +6,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -32,13 +33,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ILogger<AssessmentCalculationService> logger;
         private readonly IAssessmentService assessmentService;
         private readonly IMemoryCache memoryCache;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
             IAssessmentService assessmentService,
             IMemoryCache memoryCache,
             IMapper mapper,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ISharedContentRedisInterface sharedContentRedisInterface)
         {
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
 
@@ -46,6 +49,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.memoryCache = memoryCache;
             this.mapper = mapper;
             this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
@@ -80,8 +84,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var prominentSkills =
-                JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
+            var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var trait in topTraits)
             {
@@ -95,7 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
                     var fullJobCategory = allJobProfileCategories
-                        .First(jobProfileCategory => jobProfileCategory.Url == limitedJobCategory.Url);
+                        .First(jobProfileCategory => jobProfileCategory.Title == limitedJobCategory.Title);
 
                     var jobCategoryTraits = allTraits
                         .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
@@ -208,7 +211,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,

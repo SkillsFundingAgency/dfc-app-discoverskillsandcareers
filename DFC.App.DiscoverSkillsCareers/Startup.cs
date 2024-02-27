@@ -61,16 +61,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using DFC.Common.SharedContent.Pkg.Netcore;
-using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
-using DFC.Compui.Cosmos;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
-using System.Configuration;
-using DFC.Content.Pkg.Netcore.Services;
-using NHibernate.Mapping.ByCode.Impl;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
+using JobProfileCategoriesResponse = DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.JobProfileCategoriesResponse;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -142,6 +134,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileDysacResponse>, JobProfileOverviewQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityFilteringQuestionResponse>, DysacFilteringQuestionQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileCategoriesResponse>, DysacJobProfileCategoriesQueryStrategy>();
 
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();

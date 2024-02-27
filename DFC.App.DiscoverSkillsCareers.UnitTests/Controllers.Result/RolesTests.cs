@@ -13,6 +13,7 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IGraphQlService graphQlService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine fakeRazorTemplateEngine;
 
         public RolesTests()
         {
@@ -52,8 +54,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
                 ContentIds = Guid.NewGuid().ToString(),
             };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+            fakeRazorTemplateEngine = A.Fake<IRazorTemplateEngine>();   
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface, fakeRazorTemplateEngine);
         }
 
         [Fact]

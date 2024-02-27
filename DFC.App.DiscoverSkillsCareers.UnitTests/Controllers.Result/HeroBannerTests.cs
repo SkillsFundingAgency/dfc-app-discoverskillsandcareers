@@ -13,6 +13,7 @@ using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine fakeRazorTemplateEngine;
 
         public HeroBannerTests()
         {
@@ -40,11 +42,11 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             testCategory = "testCategory";
             logService = A.Fake<ILogService>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
-            graphQlService = A.Fake<IGraphQlService>();
             cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
             cmsApiClientOptions.ContentIds = "2c9da1b3-3529-4834-afc9-9cd741e59788";
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, fakeMemoryCache, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
+            fakeRazorTemplateEngine = A.Fake<IRazorTemplateEngine>();
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface, fakeRazorTemplateEngine);
         }
 
         [Fact]

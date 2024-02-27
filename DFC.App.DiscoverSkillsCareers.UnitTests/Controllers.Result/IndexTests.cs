@@ -12,6 +12,7 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine fakeRazorTemplateEngine;
 
         public IndexTests()
         {
@@ -38,15 +40,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             assessmentService = A.Fake<IAssessmentService>();
             resultsService = A.Fake<IResultsService>();
             logService = A.Fake<ILogService>();
-            graphQlService = A.Fake<IGraphQlService>();
             staticContentDocumentService = A.Fake<IDocumentService<StaticContentItemModel>>();
             cmsApiClientOptions = new CmsApiClientOptions
             {
                 ContentIds = Guid.NewGuid().ToString(),
             };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+            fakeRazorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface, fakeRazorTemplateEngine);
         }
 
         [Fact]
@@ -54,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, new CmsApiClientOptions(), sharedContentRedisInterface));
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, new CmsApiClientOptions(), sharedContentRedisInterface, fakeRazorTemplateEngine));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
@@ -65,7 +67,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, documentStore, memoryCache, staticContentDocumentService, null, sharedContentRedisInterface));
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, staticContentDocumentService, null, sharedContentRedisInterface, fakeRazorTemplateEngine));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);

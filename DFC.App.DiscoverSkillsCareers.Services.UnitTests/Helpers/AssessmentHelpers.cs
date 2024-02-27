@@ -3,6 +3,8 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
 {
@@ -41,9 +43,16 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
                 new DysacJobProfileCategoryContentModel { Title = "border force leader", Url = new Uri("https://localhost/jobprofile/1") },
                 new DysacJobProfileCategoryContentModel { Title = "border force doer", Url = new Uri("https://localhost/jobprofile/2") },
             };
-            
+
             return listOfCategories;
         }
+
+        //public static async Task<JobProfileCategoriesResponse> GetDataFromRedis()
+        //{
+        //    var response = new JobProfileCategoriesResponse();
+        //    response.JobProfileCategories = new JobProfileCategory() { DisplayText = "Test", ContentItemId = "Test" }; 
+
+        //}       
 
         public static async Task<List<DysacTraitContentModel>> GetTraits()
         {
