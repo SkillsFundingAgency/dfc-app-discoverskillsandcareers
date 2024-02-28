@@ -7,7 +7,6 @@ using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -99,8 +98,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var prominentSkills =
-                JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
+            var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var trait in topTraits)
             {
@@ -209,7 +207,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,

@@ -1,10 +1,11 @@
-﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
-using DFC.App.DiscoverSkillsCareers.Models;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Core.Enums;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -20,13 +21,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IAssessmentCalculationService assessmentCalculationService;
         private readonly IDocumentStore documentStore;
         private readonly IMemoryCache memoryCache;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IMapper mapper;
+
 
         public ResultsService(
             ISessionService sessionService,
             IAssessmentService assessmentService,
             IAssessmentCalculationService assessmentCalculationService,
             IDocumentStore documentStore,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IMapper mapper)
         {
             this.sessionService = sessionService;
             this.assessmentService = assessmentService;
@@ -34,6 +40,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.memoryCache = memoryCache;
+
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.mapper = mapper;
         }
 
         public async Task<GetResultsResponse> GetResults(bool updateCollection)
@@ -72,7 +81,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Select(skillGroup => skillGroup.First())
                 .ToList();
 
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
 
             var allJobProfiles = allJobCategories!
                 .SelectMany(jobCategory => jobCategory.JobProfiles)

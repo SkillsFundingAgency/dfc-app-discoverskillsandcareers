@@ -3,6 +3,8 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
 {
@@ -54,6 +56,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
 
             return listOfCategories;
         }
+
+        //public static async Task<JobProfileCategoriesResponse> GetDataFromRedis()
+        //{
+        //    var response = new JobProfileCategoriesResponse();
+        //    response.JobProfileCategories = new JobProfileCategory() { DisplayText = "Test", ContentItemId = "Test" }; 
+
+        //}       
 
         public static async Task<List<DysacTraitContentModel>> GetTraits()
         {
