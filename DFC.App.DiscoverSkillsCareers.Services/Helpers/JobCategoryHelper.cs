@@ -4,6 +4,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
@@ -19,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                    ?? new JobProfileCategoriesResponse();
 
             var jobCategories = mapper.Map<List<DysacJobProfileCategoryContentModel>>(result.JobProfileCategories);
-            return jobCategories;
+            return jobCategories.Where(x => x.Title != null).ToList();
         }
     }
 }
