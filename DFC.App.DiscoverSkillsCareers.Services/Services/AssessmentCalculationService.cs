@@ -206,8 +206,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Where(traitResult => traitResult.TotalScore > 0)
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
-
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
+            //var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,
