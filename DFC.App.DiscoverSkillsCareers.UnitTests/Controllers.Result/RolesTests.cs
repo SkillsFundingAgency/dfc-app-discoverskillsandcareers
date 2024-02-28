@@ -32,6 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IRazorTemplateEngine razorTemplateEngine;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine fakeRazorTemplateEngine;
 
         public RolesTests()
         {
