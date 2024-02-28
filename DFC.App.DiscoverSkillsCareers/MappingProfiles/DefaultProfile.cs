@@ -127,6 +127,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     {
                         ItemId = new Guid(x.GraphSync.NodeId.Replace(jobCategoryPrefix, string.Empty)),
                         Description = x.DisplayText,
+                        Title = x.DisplayText,
                         JobProfiles = ConstructJobProfiles(x.JobProfiles),
                         LastCached = DateTime.UtcNow,
                     }));
