@@ -27,6 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IDocumentStore documentStore;
         private readonly INotificationService notificationService;
         private readonly IMapper mapper;
+        private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface;
 
         public AssessmentServiceTests()
         {
@@ -36,7 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             notificationService = A.Fake<INotificationService>();
             documentStore = A.Fake<IDocumentStore>();
             var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
-            var fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+            fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
             assessmentService = new AssessmentService(
             sessionIdToCodeConverter,

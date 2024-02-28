@@ -99,8 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var prominentSkills =
-                JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
+            var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var trait in topTraits)
             {
@@ -114,7 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
                     var fullJobCategory = allJobProfileCategories
-                        .First(jobProfileCategory => jobProfileCategory.ItemId == limitedJobCategory.ItemId);
+                        .First(jobProfileCategory => jobProfileCategory.Title == limitedJobCategory.Title);
 
                     var jobCategoryTraits = allTraits
                         .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
@@ -209,7 +208,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,

@@ -33,6 +33,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
 
             A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
                 .Returns(AssessmentHelpers.GetAllJobCategories());
+
+            //A.CallTo(() => sharedContentRedisInterface.GetDataAsync<DysacJobProfileCategoryContentModel>("DYSAC/JobProfileCategories"))
+            //    .Returns(AssessmentHelpers.GetAllJobCategories());
         }
 
         [Fact]
@@ -127,7 +130,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             var serviceToTest = new AssessmentCalculationService(
                 documentStore,
                 assessmentService,
-                memoryCache,
+                memoryCache,                
                 mapper,
                 A.Fake<ILoggerFactory>(),
                 fakeSharedContentRedisInterface
