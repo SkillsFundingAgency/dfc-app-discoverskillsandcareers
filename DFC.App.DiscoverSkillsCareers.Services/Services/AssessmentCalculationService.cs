@@ -114,7 +114,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
                     var fullJobCategory = allJobProfileCategories
-                        .First(jobProfileCategory => jobProfileCategory.ItemId == limitedJobCategory.ItemId);
+                        .First(jobProfileCategory => jobProfileCategory.Title == limitedJobCategory.Title);
 
                     var jobCategoryTraits = allTraits
                         .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
