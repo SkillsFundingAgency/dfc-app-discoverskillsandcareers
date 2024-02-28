@@ -43,7 +43,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
                 ContentIds = Guid.NewGuid().ToString(),
             };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-            fakeRazorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 

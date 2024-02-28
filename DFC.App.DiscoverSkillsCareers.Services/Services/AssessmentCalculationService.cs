@@ -7,7 +7,6 @@ using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
