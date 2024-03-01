@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                     decimal.Parse(x.ONetRank) : (decimal?)null,
                 Ordinal = x.Ordinal,
                 ItemId = new Guid(x.GraphSync.NodeId.Replace(skillIdPrefix, string.Empty)),
-                Title = GeneralHelper.GetGenericSkillName(x.DisplayText),
+                Title = GeneralHelper.GetGenericSkillName(x.RelatedSkill),
                 AttributeType = x.ONetAttributeType,
                 LastCached = DateTime.UtcNow,
             }).ToList();
