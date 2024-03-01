@@ -61,7 +61,6 @@ namespace DFC.App.DiscoverSkillsCareers
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public const string StaticCosmosDbConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
         private readonly IWebHostEnvironment env;
 
@@ -138,7 +137,6 @@ namespace DFC.App.DiscoverSkillsCareers
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
 
-            services.AddTransient<ICmsApiService, CmsApiService>();
             services.AddTransient<IContentTypeMappingService, ContentTypeMappingService>();
 
             services.AddApplicationInsightsTelemetry();
@@ -155,7 +153,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(DysacOptions)).Get<DysacOptions>() ?? new DysacOptions());
-            services.AddSingleton(Configuration.GetSection(nameof(JobProfileOverviewServiceOptions)).Get<JobProfileOverviewServiceOptions>() ?? new JobProfileOverviewServiceOptions());
             services.AddTransient<IEventMessageService, EventMessageService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
@@ -196,7 +193,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
             services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
-            services.AddTransient<IJobProfileOverviewApiService, JobProfileOverviewApiService>();
             services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
 
             var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
@@ -216,10 +212,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddApiServices(Configuration, policyRegistry);
             services.AddLinkDetailsConverter(new CustomLinkDetailConverter());
-
-            services
-             .AddPolicies(policyRegistry, nameof(JobProfileOverviewServiceOptions), policyOptions)
-             .AddHttpClient<IJobProfileOverviewApiService, JobProfileOverviewApiService, JobProfileOverviewServiceOptions>(nameof(JobProfileOverviewServiceOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
