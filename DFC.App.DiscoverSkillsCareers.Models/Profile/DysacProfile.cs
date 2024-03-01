@@ -64,13 +64,6 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
               .ForMember(d => d.Ordinal, s => s.MapFrom(a => a.Ordinal))
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.ContentItems)));
 
-            CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
-            .ForMember(d => d.Url, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty).Replace(",", string.Empty)))
-            .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
-            .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
-            .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
-            .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
-
             CreateMap<JobProfileCategory, DysacJobProfileCategoryContentModel>()
                 .ForMember(d => d.JobProfiles, s => s.MapFrom(a => a.JobProfiles))
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
