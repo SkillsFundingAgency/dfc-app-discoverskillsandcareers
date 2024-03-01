@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels

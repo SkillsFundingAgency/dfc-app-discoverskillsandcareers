@@ -1,14 +1,8 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Compui.Sessionstate;
-using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -17,13 +11,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
     {
         private readonly IAssessmentService assessmentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly string contactUsStaxId;
 
-        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions, ISharedContentRedisInterface sharedContentRedisInterface)
+        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, ISharedContentRedisInterface sharedContentRedisInterface)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
-            contactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
             this.sharedContentRedisInterface = sharedContentRedisInterface;
         }
 
@@ -31,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + SharedContentStaxId).Result.Html,
             };
             return Task.FromResult<IActionResult>(View(responseVm));
         }
@@ -49,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html,
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + SharedContentStaxId).Result.Html,
                 };
                 return View(responseViewModel);
             }
