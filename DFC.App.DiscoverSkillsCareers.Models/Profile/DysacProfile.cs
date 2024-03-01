@@ -74,10 +74,20 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<JobProfileCategory, DysacJobProfileCategoryContentModel>()
                 .ForMember(d => d.JobProfiles, s => s.MapFrom(a => a.JobProfiles))
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
-                .ForMember(d => d.Url, s => s.MapFrom(a => a.DisplayText));
+                .AfterMap((source, destination) =>
+                {
+                    foreach (var item in destination.JobProfiles)
+                    {
+                        int firstOrdinal = 0;
+                        foreach (var skill in item.Skills)
+                        {
+                            skill.Ordinal = firstOrdinal++;
+                        }
+                    }
+                });
 
             CreateMap<RelatedSkill, DysacSkillContentItemModel>()
-                .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.RelatedSkillDesc))
                 .ForMember(d => d.AttributeType, s => s.MapFrom(a => a.ONetAttributeType))
                 .ForMember(d => d.ONetRank, s => s.MapFrom(a => Convert.ToDecimal(a.ONetRank)));
 
@@ -85,6 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
                 .ForMember(d => d.JobProfileWebsiteUrl, s => s.MapFrom(a => a.PageLocation.FullUrl))
                 .ForMember(d => d.Skills, s => s.MapFrom(a => a.Relatedskills.ContentItems));
+
         }
 
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)
