@@ -28,7 +28,6 @@ using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
 using DFC.Content.Pkg.Netcore.Services;
-using DFC.Content.Pkg.Netcore.Services.CmsApiProcessorService;
 using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
@@ -61,6 +60,9 @@ namespace DFC.App.DiscoverSkillsCareers
     [ExcludeFromCodeCoverage]
     public class Startup
     {
+        private const string CosmosDbConnectionAssessmentAppSettings = "Configuration:CosmosDbConnections:DysacAssessment";
+        private const string CosmosDbConnectionSessionStateAppSettings = "Configuration:CosmosDbConnections:SessionState";
+        private const string CosmosDbConnectionContentAppSettings = "Configuration:CosmosDbConnections:DysacContent";
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
         private readonly IWebHostEnvironment env;
 
@@ -161,11 +163,11 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddSingleton<IDocumentStore, CosmosDbService>(serviceProvider =>
             {
-                var cosmosDbConnectionAssessment = Configuration.GetSection("Configuration:CosmosDbConnections:DysacAssessment").Get<CosmosDbConnection>();
+                var cosmosDbConnectionAssessment = Configuration.GetSection(CosmosDbConnectionAssessmentAppSettings).Get<CosmosDbConnection>();
                 var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
 
-                var cosmosDbConnectionContent1 = Configuration.GetSection("Configuration:CosmosDbConnections:DysacContent").Get<CosmosDbConnection>();
-                var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent1.EndpointUrl};AccountKey={cosmosDbConnectionContent1.AccessKey};";
+                var cosmosDbConnectionContent = Configuration.GetSection(CosmosDbConnectionContentAppSettings).Get<CosmosDbConnection>();
+                var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent.EndpointUrl};AccountKey={cosmosDbConnectionContent.AccessKey};";
 
                 services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
                 var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbService>>();
@@ -177,8 +179,8 @@ namespace DFC.App.DiscoverSkillsCareers
                 cosmosDbConnectionAssessment.DatabaseId!,
                 cosmosDbConnectionAssessment.CollectionId!,
                 connectionStringContent,
-                cosmosDbConnectionContent1.DatabaseId!,
-                cosmosDbConnectionContent1.CollectionId!,
+                cosmosDbConnectionContent.DatabaseId!,
+                cosmosDbConnectionContent.CollectionId!,
                 logger,
                 assessmentRequestHandler,
                 contentRequestHandler);
@@ -195,7 +197,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
 
-            var cosmosDbConnectionSessionState = Configuration.GetSection("Configuration:CosmosDbConnections:SessionState").Get<CosmosDbConnection>();
+            var cosmosDbConnectionSessionState = Configuration.GetSection(CosmosDbConnectionSessionStateAppSettings).Get<CosmosDbConnection>();
             services.AddSessionStateServices<DfcUserSession>(cosmosDbConnectionSessionState, env.IsDevelopment());
 
             services.AddTransient<IApiCacheService, ApiCacheService>();
