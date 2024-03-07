@@ -11,9 +11,6 @@
     "apimCompositeKey": {
       "value": "test"
     },
-    "SubscriptionSettingsEndpoint": {
-      "value": "test"
-    },
     "resourcePrefix": {
       "value": "dfc-foo-app-dysac"
     },

@@ -29,9 +29,6 @@
         "apimCompositeKey": {
           "value": "__apimCompositeKey__"
         },
-        "SubscriptionSettingsEndpoint": {
-          "value": "__SubscriptionSettingsEndpoint__"
-        },
         "aspTier": {
             "value": "__aspTier__"
         },
