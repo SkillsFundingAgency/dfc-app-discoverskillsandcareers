@@ -9,6 +9,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -35,6 +36,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IAssessmentService assessmentService;
         private readonly IMemoryCache memoryCache;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IConfiguration configuration;
+        private string status;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
@@ -42,7 +45,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IMemoryCache memoryCache,
             IMapper mapper,
             ILoggerFactory loggerFactory,
-            ISharedContentRedisInterface sharedContentRedisInterface)
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IConfiguration configuration)
         {
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
             this.assessmentService = assessmentService;
@@ -50,6 +54,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.mapper = mapper;
             this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
             this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.configuration = configuration;
+
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
@@ -207,7 +219,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper, configuration).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,
@@ -244,7 +256,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>("DYSAC/Traits");
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>("DYSAC/Traits", status);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {

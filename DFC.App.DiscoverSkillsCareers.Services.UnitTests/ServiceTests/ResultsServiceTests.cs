@@ -16,6 +16,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -28,7 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IAssessmentService assessmentService;
         private readonly string sessionId;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IMapper mapper; 
+        private readonly IMapper mapper;
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public ResultsServiceTests()
         {
@@ -47,7 +49,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 documentStore,
                 fakeMemoryCache,
                 sharedContentRedisInterface, 
-                mapper);
+                mapper,
+                configuration);
 
             sessionId = "session1";
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);

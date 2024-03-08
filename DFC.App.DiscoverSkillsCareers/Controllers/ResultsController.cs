@@ -9,6 +9,7 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly string contactUsStaxId;
         private readonly IRazorTemplateEngine razorTemplateEngine;
+        private readonly IConfiguration configuration;
+        private string status;
 
         public ResultsController(
             ILogService logService,
@@ -37,7 +40,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             IAssessmentService assessmentService,
             CmsApiClientOptions cmsApiClientOptions,
             ISharedContentRedisInterface sharedContentRedisInterface,
-            IRazorTemplateEngine razorTemplateEngine)
+            IRazorTemplateEngine razorTemplateEngine,
+            IConfiguration configuration)
                 : base(sessionService)
         {
             this.logService = logService;
@@ -47,6 +51,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             this.razorTemplateEngine = razorTemplateEngine;
             contactUsStaxId = cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null");
             this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.configuration = configuration;
+
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
         }
 
         [HttpGet]
@@ -243,7 +255,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId).Result.Html;
+            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + contactUsStaxId, status).Result.Html;
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
@@ -262,7 +274,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             logService.LogInformation($"Calling {nameof(GetJobProfilesAsync)}");
 
-            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>($"DYSAC/JobProfileOverviews")
+            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>($"DYSAC/JobProfileOverviews", status)
             ?? new JobProfileDysacResponse();
 
             var jobProfileList = mapper.Map<List<JobProfileViewModel>>(response.JobProfile);

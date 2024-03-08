@@ -11,6 +11,7 @@ using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IRazorTemplateEngine razorTemplateEngine;
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public IndexTests()
         {
@@ -46,7 +48,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
 
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
 
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, cmsApiClientOptions, sharedContentRedisInterface, razorTemplateEngine);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, cmsApiClientOptions, sharedContentRedisInterface, razorTemplateEngine, configuration);
         }
 
         [Fact]
@@ -54,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, new CmsApiClientOptions(), sharedContentRedisInterface, razorTemplateEngine));
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, new CmsApiClientOptions(), sharedContentRedisInterface, razorTemplateEngine, configuration));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
@@ -65,7 +67,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, null, sharedContentRedisInterface, razorTemplateEngine));
+                new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, null, sharedContentRedisInterface, razorTemplateEngine, configuration));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);

@@ -8,6 +8,7 @@ using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -22,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public IndexTests()
         {
@@ -35,7 +36,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
             };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
-            controller = new HomeController(sessionService, assessmentService, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface);
+            controller = new HomeController(sessionService, assessmentService, staticContentDocumentService, cmsApiClientOptions, sharedContentRedisInterface, configuration);
         }
 
         [Fact]
@@ -43,7 +44,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions(), sharedContentRedisInterface));
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, new CmsApiClientOptions(), sharedContentRedisInterface, configuration));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);
@@ -54,7 +55,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         {
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() =>
-                new HomeController(sessionService, assessmentService, staticContentDocumentService, null, sharedContentRedisInterface));
+                new HomeController(sessionService, assessmentService, staticContentDocumentService, null, sharedContentRedisInterface, configuration));
 
             // Assert
             Assert.Equal("ContentIds cannot be null (Parameter 'cmsApiClientOptions')", ex.Message);

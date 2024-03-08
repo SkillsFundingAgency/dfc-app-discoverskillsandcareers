@@ -16,6 +16,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 using FluentAssertions.Equivalency;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -28,6 +29,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly INotificationService notificationService;
         private readonly IMapper mapper;
         private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface;
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public AssessmentServiceTests()
         {
@@ -46,7 +48,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             mapper,
             notificationService,
             fakeContextAccessor,
-            fakeSharedContentRedisInterface);
+            fakeSharedContentRedisInterface,
+            configuration);
         }
 
         [Fact]
