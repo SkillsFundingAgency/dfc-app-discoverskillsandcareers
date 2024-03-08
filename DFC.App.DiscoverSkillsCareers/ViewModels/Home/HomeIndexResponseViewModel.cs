@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Models;
-using DFC.App.DiscoverSkillsCareers.Validation;
+﻿using DFC.App.DiscoverSkillsCareers.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels

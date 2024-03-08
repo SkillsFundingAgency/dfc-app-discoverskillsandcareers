@@ -5,16 +5,12 @@ using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Razor.Templating.Core;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -31,10 +27,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly string testCategory;
         private readonly ILogService logService;
         private readonly IRazorTemplateEngine razorTemplateEngine;
-        private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IRazorTemplateEngine fakeRazorTemplateEngine;
-        private readonly IConfiguration config = A.Fake<IConfiguration>();
+        private readonly IConfiguration config;
 
         public RolesTests()
         {
@@ -47,14 +41,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             testCategory = "testcategory";
             logService = A.Fake<ILogService>();
-            cmsApiClientOptions = new CmsApiClientOptions
-            {
-                ContentIds = Guid.NewGuid().ToString(),
-            };
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
-
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, cmsApiClientOptions, sharedContentRedisInterface, razorTemplateEngine, config);
+            config = A.Fake<IConfiguration>();
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine, config);
         }
 
         [Fact]

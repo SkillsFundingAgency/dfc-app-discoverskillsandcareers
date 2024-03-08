@@ -29,35 +29,14 @@
         "apimCompositeKey": {
           "value": "__apimCompositeKey__"
         },
-        "SubscriptionSettingsEndpoint": {
-          "value": "__SubscriptionSettingsEndpoint__"
-        },
         "aspTier": {
             "value": "__aspTier__"
         },
         "aspSize": {
             "value": "__aspSize__"
         },
-        "JobProfileOverViewUrl": {
-            "value": "__JobProfileOverView__"
-        },
         "CdnUrl": {
             "value": "__CdnUrl__"
-        },
-        "cmsTimeout": {
-            "value": "__cmsTimeout__"
-        },
-        "cmsApiKey": {
-            "value": "__cmsApiKey__"
-        },
-        "cmsBaseAddress": {
-            "value": "__cmsBaseAddress__"
-        },
-        "cmsStaticContentEndpoint": {
-            "value": "__cmsStaticContentEndpoint__"
-        },
-        "cmsContentIds": {
-            "value": "__cmsContentIds__"
         },
         "cosmosDbSharedCollectionName": {
             "value": "__cosmosDbSharedCollectionName__"

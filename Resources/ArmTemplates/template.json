@@ -32,9 +32,6 @@
     "apimCompositeKey": {
       "type": "securestring"
     },
-    "SubscriptionSettingsEndpoint": {
-      "type": "string"
-    },
     "resourcePrefix": {
       "type": "string"
     },
@@ -59,9 +56,6 @@
       "type": "string"
     },
     "aspTier": {
-      "type": "string"
-    },
-    "JobProfileOverViewUrl": {
       "type": "string"
     },
     "CdnUrl": {
@@ -155,21 +149,6 @@
       "type": "securestring"
     },
     "cosmosDbSharedCollectionName": {
-      "type": "string"
-    },
-    "cmsTimeout": {
-      "type": "string"
-    },
-    "cmsApiKey": {
-      "type": "string"
-    },
-    "cmsBaseAddress": {
-      "type": "string"
-    },
-    "cmsStaticContentEndpoint": {
-      "type": "string"
-    },
-    "cmsContentIds": {
       "type": "string"
     },
     "contentMode": {
@@ -446,26 +425,6 @@
                 "value": 1
               },
               {
-                "name": "CmsApiClientOptions__Timeout",
-                "value": "[parameters('cmsTimeout')]"
-              },
-              {
-                "name": "CmsApiClientOptions__ApiKey",
-                "value": "[parameters('cmsApiKey')]"
-              },
-              {
-                "name": "CmsApiClientOptions__BaseAddress",
-                "value": "[parameters('cmsBaseAddress')]"
-              },
-              {
-                "name": "CmsApiClientOptions__StaticContentEndpoint",
-                "value": "[parameters('cmsStaticContentEndpoint')]"
-              },
-              {
-                "name": "CmsApiClientOptions__ContentIds",
-                "value": "[parameters('cmsContentIds')]"
-              },
-              {
                 "name": "Configuration__CosmosDbConnections__SharedContent__AccessKey",
                 "value": "[parameters('cosmosDbKey')]"
               },
@@ -538,10 +497,6 @@
                 "value": "/matchskills/dysacResults"
               },
               {
-                "name": "JobProfileOverViewClientOptions__BaseAddress",
-                "value": "[parameters('JobProfileOverViewUrl')]"
-              },
-              {
                 "name": "Policies__HttpCircuitBreaker__DurationOfBreak",
                 "value": "00:01:00"
               },
@@ -580,66 +535,6 @@
               {
                 "name": "SessionConfig__Salt",
                 "value": "ncs"
-              },
-              {
-                "name": "SubscriptionSettings__Endpoint",
-                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeKey'))]"
-              },
-              {
-                "name": "SubscriptionSettings__SubscriptionRegistrationDelay",
-                "value": "00:02:00"
-              },
-              {
-                "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
-                "value": "[parameters('SubscriptionApiEndpointUrl')]"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
-                "value": "published"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__IncludeEventTypes__1",
-                "value": "unpublished"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__IncludeEventTypes__2",
-                "value": "deleted"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Property",
-                "value": "subject"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Type",
-                "value": "StringContains"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__0",
-                "value": "/content/personalityskill/"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__1",
-                "value": "/content/personalitytrait/"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__2",
-                "value": "/content/personalityshortquestion/"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__3",
-                "value": "/content/jobcategory/"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__4",
-                "value": "/content/personalityquestionset/"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__5",
-                "value": "dfc-app-jobprofiles"
-              },
-              {
-                "name": "SubscriptionSettings__Filter__AdvancedFilters__0__Values__6",
-                "value": "/content/sharedcontent/"
               },
               {
                 "name": "Configuration__CosmosDbConnections__DysacContent__AccessKey",
@@ -700,10 +595,6 @@
               {
                 "name": "Configuration__CosmosDbConnections__DysacAssessment__PartitionKey",
                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
-              },
-              {
-                "name": "JobProfileOverviewServiceOptions__BaseAddress",
-                "value": "[parameters('jobProfUrl')]"
               },
               {
                 "name": "Cms__TokenEndPointURL",

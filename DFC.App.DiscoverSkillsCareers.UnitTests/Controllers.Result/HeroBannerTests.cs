@@ -3,11 +3,8 @@ using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
@@ -28,10 +25,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly IResultsService resultsService;
         private readonly string testCategory;
         private readonly ILogService logService;
-        private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IRazorTemplateEngine razorTemplateEngine;
-        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
+        private readonly IConfiguration configuration;
 
         public HeroBannerTests()
         {
@@ -41,13 +37,10 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             resultsService = A.Fake<IResultsService>();
             testCategory = "testCategory";
             logService = A.Fake<ILogService>();
-            cmsApiClientOptions = A.Fake<CmsApiClientOptions>();
-            cmsApiClientOptions.ContentIds = "2c9da1b3-3529-4834-afc9-9cd741e59788";
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-
+            configuration = A.Fake<IConfiguration>();
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
-
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, cmsApiClientOptions, sharedContentRedisInterface, razorTemplateEngine, configuration);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine, configuration);
         }
 
         [Fact]

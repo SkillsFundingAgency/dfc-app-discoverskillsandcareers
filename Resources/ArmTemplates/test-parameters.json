@@ -11,9 +11,6 @@
     "apimCompositeKey": {
       "value": "test"
     },
-    "SubscriptionSettingsEndpoint": {
-      "value": "test"
-    },
     "resourcePrefix": {
       "value": "dfc-foo-app-dysac"
     },
@@ -23,29 +20,11 @@
     "appSharedStorageAccountName": {
       "value": "dfcdevappsharedstr"
     },
-    "JobProfileOverViewUrl": {
-      "value": "https://dfc-foo-app-jobprofover-as.azurewebsites.net"
-    },
     "CdnUrl": {
       "value": "https://foo.cdn.nationalcareers.service.uk"
     },
     "cosmosDbSharedCollectionName": {
       "value": "cosmosDbSharedCollectionName"
-    },
-    "cmsTimeout": {
-      "value": "00:00:30"
-    },
-    "cmsApiKey": {
-      "value": "testkey"
-    },
-    "cmsBaseAddress": {
-      "value": "https://url"
-    },
-    "cmsStaticContentEndpoint": {
-      "value": "/shared-content/"
-    },
-    "cmsContentIds": {
-      "value": "12345"
     },
     "NotifyApiKey": {
       "value": "not-a-real-key"
