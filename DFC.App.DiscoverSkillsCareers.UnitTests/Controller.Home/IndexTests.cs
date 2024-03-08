@@ -18,14 +18,15 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
+        private readonly IConfiguration configuration;
 
         public IndexTests()
         {
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-            controller = new HomeController(sessionService, assessmentService, sharedContentRedisInterface);
+            configuration = A.Fake<IConfiguration>();
+            controller = new HomeController(sessionService, assessmentService, sharedContentRedisInterface, configuration);
         }
 
         [Fact]
