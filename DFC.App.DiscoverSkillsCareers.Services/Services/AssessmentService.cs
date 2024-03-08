@@ -10,6 +10,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly INotificationService notificationService;
         private readonly IHttpContextAccessor accessor;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IConfiguration configuration;
+        private string status;
 
         public AssessmentService(
             ISessionIdToCodeConverter sessionIdToCodeConverter,
@@ -36,7 +39,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IMapper mapper,
             INotificationService notificationService,
             IHttpContextAccessor accessor,
-            ISharedContentRedisInterface sharedContentRedisInterface)
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IConfiguration configuration)
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
@@ -45,6 +49,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.notificationService = notificationService;
             this.accessor = accessor;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.configuration = configuration;
+
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
         }
 
         public async Task<bool> NewSession(string assessmentType)
@@ -447,7 +459,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions()
         {
-            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>("DYSAC/FilteringQuestions");
+            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>("DYSAC/FilteringQuestions", status);
             var filteringQuestions = new List<DysacFilteringQuestionContentModel>();
             if (filteringQuestionResponse != null)
             {
@@ -459,7 +471,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacQuestionSetContentModel>?> GetQuestionSets()
         {
-            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>("DYSAC/QuestionSets");
+            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>("DYSAC/QuestionSets", status);
 
             var questionSets = new List<DysacQuestionSetContentModel>();
             var qs = mapper.Map<DysacQuestionSetContentModel>(questionSetsResponse);
