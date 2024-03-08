@@ -15,6 +15,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculationServiceTests
 {
@@ -25,6 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         private readonly IMapper mapper = A.Fake<IMapper>();
         private readonly IMemoryCache memoryCache = A.Fake<IMemoryCache>();
         private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public AssessmentCalculationServiceTests()
         {
@@ -48,7 +50,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 memoryCache,
                 mapper,
                 A.Fake<ILoggerFactory>(),
-                fakeSharedContentRedisInterface);
+                fakeSharedContentRedisInterface,
+                configuration);
 
             var skills = new List<DysacSkillContentItemModel>
             {
@@ -110,7 +113,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 memoryCache,
                 mapper,
                 A.Fake<ILoggerFactory>(),
-                fakeSharedContentRedisInterface);
+                fakeSharedContentRedisInterface,
+                configuration);
 
             var assessment = AssessmentHelpers.GetAssessment();
             assessment.Questions.FirstOrDefault(x => x.Trait == "LEADER").Answer!.Value = Core.Enums.Answer.StronglyAgree;
@@ -133,7 +137,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 memoryCache,                
                 mapper,
                 A.Fake<ILoggerFactory>(),
-                fakeSharedContentRedisInterface
+                fakeSharedContentRedisInterface,
+                configuration
                 );
 
             var assessment = AssessmentHelpers.GetAssessment();
@@ -160,7 +165,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 memoryCache,
                 mapper,
                 A.Fake<ILoggerFactory>(),
-                fakeSharedContentRedisInterface);
+                fakeSharedContentRedisInterface, configuration);
 
             var assessment = AssessmentHelpers.GetAssessment();
 

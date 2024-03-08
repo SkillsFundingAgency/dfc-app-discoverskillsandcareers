@@ -5,6 +5,8 @@ using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,14 +18,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public IndexTests()
         {
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-
             controller = new HomeController(sessionService, assessmentService, sharedContentRedisInterface);
         }
 

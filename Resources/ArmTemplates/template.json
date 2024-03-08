@@ -126,7 +126,7 @@
     },
     "workspaceName": {
       "type": "string"
-	},
+    },
     "workspaceResourceGroup": {
       "type": "string"
     },
@@ -149,6 +149,9 @@
       "type": "securestring"
     },
     "cosmosDbSharedCollectionName": {
+      "type": "string"
+    },
+    "contentMode": {
       "type": "string"
     }
   },
@@ -616,6 +619,10 @@
               {
                 "name": "Cms__RedisCacheConnectionString",
                 "value": "[parameters('CmsRedisCacheConnectionString')]"
+              },
+              {
+                "name": "contentMode__contentMode",
+                "value": "[parameters('contentMode')]"
               }
             ]
           }

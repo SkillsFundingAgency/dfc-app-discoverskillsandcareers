@@ -9,6 +9,7 @@ using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Razor.Templating.Core;
 using System.Threading.Tasks;
 using Xunit;
@@ -26,6 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly ILogService logService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IRazorTemplateEngine razorTemplateEngine;
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public HeroBannerTests()
         {
@@ -38,7 +40,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
-
             controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine);
         }
 
