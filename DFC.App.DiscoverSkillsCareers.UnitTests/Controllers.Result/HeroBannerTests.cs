@@ -27,7 +27,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly ILogService logService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IRazorTemplateEngine razorTemplateEngine;
-        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
+        private readonly IConfiguration configuration;
 
         public HeroBannerTests()
         {
@@ -38,9 +38,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             testCategory = "testCategory";
             logService = A.Fake<ILogService>();
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-
+            configuration = A.Fake<IConfiguration>();
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine);
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine, configuration);
         }
 
         [Fact]

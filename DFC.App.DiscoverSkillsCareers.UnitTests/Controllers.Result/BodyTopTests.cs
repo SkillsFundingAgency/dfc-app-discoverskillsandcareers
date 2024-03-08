@@ -21,7 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
         private readonly ILogService logService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IRazorTemplateEngine razorTemplateEngine;
-        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
+        private readonly IConfiguration configuration;
 
         public BodyTopTests()
         {
@@ -32,7 +32,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Result
             logService = A.Fake<ILogService>();
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
             razorTemplateEngine = A.Fake<IRazorTemplateEngine>();
-            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine);
+            configuration = A.Fake<IConfiguration>();
+            controller = new ResultsController(logService, mapper, sessionService, resultsService, assessmentService, sharedContentRedisInterface, razorTemplateEngine, configuration);
         }
 
         [Fact]
