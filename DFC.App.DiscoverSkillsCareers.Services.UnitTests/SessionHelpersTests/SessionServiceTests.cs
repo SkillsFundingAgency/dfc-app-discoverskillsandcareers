@@ -1,6 +1,7 @@
 ﻿using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using DFC.Compui.Sessionstate;
+using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -16,13 +17,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
     {
         private readonly ISessionStateService<DfcUserSession> fakeStateService;
         private readonly IHttpContextAccessor fakeContextAccessor;
+        private readonly ILogService fakeLogService;
         private readonly SessionService sessionService;
 
         public SessionServiceTests()
         {
             fakeStateService = A.Fake<ISessionStateService<DfcUserSession>>();
             fakeContextAccessor = A.Fake<IHttpContextAccessor>();
-            sessionService = new SessionService(fakeStateService, fakeContextAccessor);
+            fakeLogService = A.Fake<ILogService>();
+            sessionService = new SessionService(fakeStateService, fakeContextAccessor, fakeLogService);
         }
 
         [Fact]
