@@ -7,6 +7,7 @@ using NHibernate.Engine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 {
@@ -24,7 +25,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 status = "PUBLISHED";
             }
 
-            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponse>("DYSAC/JobProfileCategories", status)
+            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponse>(Constants.DysacJobProfileCategories, status)
                    ?? new JobProfileCategoriesResponse();
 
             var jobCategories = mapper.Map<List<DysacJobProfileCategoryContentModel>>(result.JobProfileCategories);
