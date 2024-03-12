@@ -41,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (requestViewModel == null)
             {
-                logService.LogInformation($"BadRequest {requestViewModel}");
+                logService.LogError($"BadRequest {requestViewModel}");
                 return BadRequest();
             }
 
@@ -55,13 +55,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var questionResponse = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (questionResponse == null)
             {
-                logService.LogInformation($"questionResponse {questionResponse} BadRequest ");
+                logService.LogError($"questionResponse {questionResponse} BadRequest.");
                 return BadRequest();
             }
 
             if (requestViewModel.QuestionNumber > questionResponse.MaxQuestionsCount)
             {
-                logService.LogInformation($"questionResponse {questionResponse} requestViewModel.QuestionNumber {requestViewModel.QuestionNumber} BadRequest ");
+                logService.LogError($"questionResponse {questionResponse} requestViewModel.QuestionNumber {requestViewModel.QuestionNumber} BadRequest ");
                 return BadRequest();
             }
 
@@ -108,7 +108,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (requestViewModel == null)
             {
-                logService.LogInformation($"Index requestviewmodel is null BadRequest");
+                logService.LogError($"Index requestviewmodel is null BadRequest");
                 return BadRequest();
             }
 
@@ -122,7 +122,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             var question = await GetQuestion(requestViewModel.AssessmentType, requestViewModel.QuestionNumber).ConfigureAwait(false);
             if (question == null)
             {
-                logService.LogInformation($"question {hasSessionId} RedirectToRoot");
+                logService.LogError($"question {hasSessionId} BadRequest");
                 return BadRequest();
             }
 
