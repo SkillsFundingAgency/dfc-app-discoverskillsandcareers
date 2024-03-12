@@ -5,6 +5,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
@@ -34,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + SharedContentStaxId, status).Result.Html,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status).Result.Html,
             };
             return Task.FromResult<IActionResult>(View(responseVm));
         }
@@ -52,7 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>("SharedContent/" + SharedContentStaxId, status).Result.Html,
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status).Result.Html,
                 };
                 return View(responseViewModel);
             }

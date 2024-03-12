@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -256,7 +257,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>("DYSAC/Traits", status);
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DysacPersonalityTrait, status);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {
