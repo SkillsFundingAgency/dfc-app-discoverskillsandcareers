@@ -9,6 +9,7 @@ using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IHttpContextAccessor accessor;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
+        private readonly ILogService logService;
         private string status;
 
         public AssessmentService(
@@ -40,7 +42,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             INotificationService notificationService,
             IHttpContextAccessor accessor,
             ISharedContentRedisInterface sharedContentRedisInterface,
-            IConfiguration configuration)
+            IConfiguration configuration, 
+            ILogService logService)
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
@@ -50,6 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.accessor = accessor;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.configuration = configuration;
+            this.logService = logService;
 
             status = configuration?.GetSection("contentMode:contentMode").Get<string>();
 
@@ -61,6 +65,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<bool> NewSession(string assessmentType)
         {
+            logService.LogInformation($"AssessmentService NewSession started");
             var questionSets = await GetQuestionSets().ConfigureAwait(false);
 
             var assessmentCode = SessionIdHelper.GenerateSessionId("ncs");
@@ -79,12 +84,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             await UpdateAssessment(assessment).ConfigureAwait(false);
             await sessionService.CreateDysacSession(assessmentCode).ConfigureAwait(false);
-
+            logService.LogInformation($"AssessmentService NewSession end");
             return true;
         }
 
         public async Task<GetQuestionResponse> GetQuestion(string assessmentType, int questionNumber)
         {
+            logService.LogInformation($"AssessmentService GetQuestion started");
             var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
 
             if (session == null)
@@ -107,6 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             var currentQuestionNumber = question.Ordinal! + 1;
 
+            logService.LogInformation($"AssessmentService GetQuestion end");
             return new GetQuestionResponse
             {
                 SessionId = sessionId,
@@ -128,6 +135,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<PostAnswerResponse> AnswerQuestion(string assessmentType, int realQuestionNumber, int questionNumberCounter, int answer)
         {
+            logService.LogInformation($"AssessmentService AnswerQuestion: {realQuestionNumber} started");
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
 
             assessment.Questions.First(questionA => questionA.Ordinal + 1 == realQuestionNumber).Answer = new QuestionAnswer
@@ -137,7 +145,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             };
 
             await UpdateAssessment(assessment).ConfigureAwait(false);
-
+            logService.LogInformation($"AssessmentService AnswerQuestion: {realQuestionNumber} end");
             return new PostAnswerResponse
             {
                 IsSuccess = true,
@@ -148,6 +156,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<PostAnswerResponse> AnswerFilterQuestion(string jobCategory, int realQuestionNumber, int questionNumberCounter, int answer)
         {
+            logService.LogInformation($"AssessmentService AnswerFilterQuestion: {realQuestionNumber} started");
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
 
             if (assessment.FilteredAssessment == null)
@@ -200,6 +209,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderBy(question => question.Ordinal)
                 .First();
 
+            logService.LogInformation($"AssessmentService AnswerFilterQuestion: {realQuestionNumber} end");
             return new PostAnswerResponse
             {
                 IsSuccess = true,
@@ -211,6 +221,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<GetAssessmentResponse> GetAssessment()
         {
+            logService.LogInformation($"AssessmentService GetAssessment started");
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
             var assessment = await GetCurrentAssessment().ConfigureAwait(false);
 
@@ -235,6 +246,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 !string.IsNullOrEmpty(assessment.FilteredAssessment?.CurrentFilterAssessmentCode) &&
                 categoryQuestions?.All(categoryQuestion => categoryQuestion.Answer != null) == true;
 
+            logService.LogInformation($"AssessmentService GetAssessment end");
             return new GetAssessmentResponse
             {
                 SessionId = sessionId,
@@ -283,6 +295,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 return null;
             }
 
+            logService.LogError($"AssessmentService GetAssessment: Assessment {sessionId} not found ");
             throw new InvalidOperationException($"Assessment {sessionId} not found");
         }
 

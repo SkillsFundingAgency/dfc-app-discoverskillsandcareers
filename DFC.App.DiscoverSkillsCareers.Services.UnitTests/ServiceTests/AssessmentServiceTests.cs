@@ -17,6 +17,7 @@ using Xunit;
 using FluentAssertions.Equivalency;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.Extensions.Configuration;
+using DFC.Logger.AppInsights.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -30,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IMapper mapper;
         private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface;
         private readonly IConfiguration configuration = A.Fake<IConfiguration>();
+        private readonly ILogService fakeLogService;
 
         public AssessmentServiceTests()
         {
@@ -40,6 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             documentStore = A.Fake<IDocumentStore>();
             var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
             fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
+            fakeLogService = A.Fake<ILogService>();
 
             assessmentService = new AssessmentService(
             sessionIdToCodeConverter,
@@ -49,7 +52,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             notificationService,
             fakeContextAccessor,
             fakeSharedContentRedisInterface,
-            configuration);
+            configuration,
+            fakeLogService);
         }
 
         [Fact]
