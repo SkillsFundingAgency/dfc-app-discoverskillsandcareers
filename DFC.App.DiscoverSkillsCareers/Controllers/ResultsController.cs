@@ -269,10 +269,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             logService.LogInformation($"Calling {nameof(GetJobProfilesAsync)}");
 
-            var response = await sharedContentRedisInterface.GetDataAsync<JobProfileDysacResponse>(Constants.DysacJobProfileOverviews, status)
-            ?? new JobProfileDysacResponse();
+            var response = await sharedContentRedisInterface.GetDataAsync<JobProfilesResponse>(Constants.DysacJobProfileOverviews, status)
+            ?? new JobProfilesResponse();
 
-            var jobProfileList = mapper.Map<List<JobProfileViewModel>>(response.JobProfile);
+            var jobProfileList = mapper.Map<List<JobProfileViewModel>>(response.JobProfiles);
 
             return jobProfileList;
         }

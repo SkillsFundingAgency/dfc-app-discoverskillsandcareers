@@ -53,7 +53,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using JobProfileCategoriesResponse = DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.JobProfileCategoriesResponse;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -125,9 +124,9 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<SharedHtml>, SharedHtmlQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileDysacResponse>, JobProfileOverviewQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfilesResponse>, JobProfileOverviewQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityFilteringQuestionResponse>, DysacFilteringQuestionQueryStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileCategoriesResponse>, DysacJobProfileCategoriesQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileCategoriesResponse>, JobCategoryQueryStrategy>();
 
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityTraitResponse>, TraitsQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
