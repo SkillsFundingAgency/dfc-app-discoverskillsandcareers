@@ -126,7 +126,7 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityQuestionSet>, DysacQuestionSetQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfilesResponse>, JobProfileOverviewQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityFilteringQuestionResponse>, DysacFilteringQuestionQueryStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileCategoriesResponse>, JobCategoryQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileCategoriesResponseDysac>, JobCategoryQueryStrategyDysac>();
 
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityTraitResponse>, TraitsQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();

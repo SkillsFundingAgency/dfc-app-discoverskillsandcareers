@@ -26,8 +26,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 status = "PUBLISHED";
             }
 
-            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponse>(Constants.JobProfileCategories, status)
-                   ?? new JobProfileCategoriesResponse();
+            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponseDysac>(Constants.DysacJobProfileCategories, status)
+                   ?? new JobProfileCategoriesResponseDysac();
 
             var jobCategories = mapper.Map<List<DysacJobProfileCategoryContentModel>>(result.JobProfileCategories);
             return jobCategories.Where(x => x.Title != null).ToList();
