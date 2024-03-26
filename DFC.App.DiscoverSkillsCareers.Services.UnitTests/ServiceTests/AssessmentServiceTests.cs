@@ -14,6 +14,9 @@ using Dfc.Session.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
+using FluentAssertions.Equivalency;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -25,6 +28,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly IDocumentStore documentStore;
         private readonly INotificationService notificationService;
         private readonly IMapper mapper;
+        private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface;
+        private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
         public AssessmentServiceTests()
         {
@@ -34,7 +39,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             notificationService = A.Fake<INotificationService>();
             documentStore = A.Fake<IDocumentStore>();
             var fakeContextAccessor = A.Fake<IHttpContextAccessor>();
-            var fakeMemoryCache = A.Fake<IMemoryCache>();
+            fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
 
             assessmentService = new AssessmentService(
             sessionIdToCodeConverter,
@@ -43,7 +48,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             mapper,
             notificationService,
             fakeContextAccessor,
-            fakeMemoryCache);
+            fakeSharedContentRedisInterface,
+            configuration);
         }
 
         [Fact]

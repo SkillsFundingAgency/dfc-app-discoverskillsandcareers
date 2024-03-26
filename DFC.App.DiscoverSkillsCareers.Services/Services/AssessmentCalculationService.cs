@@ -6,13 +6,17 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -32,25 +36,50 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ILogger<AssessmentCalculationService> logger;
         private readonly IAssessmentService assessmentService;
         private readonly IMemoryCache memoryCache;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IConfiguration configuration;
+        private string status;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
             IAssessmentService assessmentService,
             IMemoryCache memoryCache,
             IMapper mapper,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IConfiguration configuration)
         {
             this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
-
             this.assessmentService = assessmentService;
             this.memoryCache = memoryCache;
             this.mapper = mapper;
             this.logger = loggerFactory.CreateLogger<AssessmentCalculationService>();
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.configuration = configuration;
+
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
         {
-            return await RunShortAssessmentCalculation(assessment).ConfigureAwait(false);
+            if (assessment == null)
+            {
+                throw new ArgumentNullException(nameof(assessment));
+            }
+
+            var allTraits = await GetTraits().ConfigureAwait(false);
+
+            if (allTraits == null)
+            {
+                throw new InvalidOperationException("No traits retrieved from document service");
+            }
+
+            return await RunShortAssessmentCalculation(assessment, allTraits).ConfigureAwait(false);
         }
 
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
@@ -65,9 +94,11 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(userTrait => userTrait.TotalScore)
                 .Take(10);
 
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
             var traitLookup = userTraits
                 .Where(traitResult => traitResult.TotalScore > 0)
-                .ToDictionary(traitResult => traitResult.TraitCode, StringComparer.InvariantCultureIgnoreCase);
+                .ToDictionary(keySelector: traitResult => traitResult.TraitCode, StringComparer.InvariantCultureIgnoreCase);
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
 
             logger.LogInformation("User Traits: {Data}", JsonConvert.SerializeObject(userTraits));
             logger.LogInformation("All Traits: {Data}", JsonConvert.SerializeObject(allTraits));
@@ -80,8 +111,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .Select(jobProfileGroup => jobProfileGroup.First())
                 .ToList();
 
-            var prominentSkills =
-                JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
+            var prominentSkills = JobCategorySkillMappingHelper.CalculateCommonSkillsByPercentage(allJobProfiles);
 
             foreach (var trait in topTraits)
             {
@@ -95,7 +125,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 foreach (var limitedJobCategory in applicableTrait.JobCategories)
                 {
                     var fullJobCategory = allJobProfileCategories
-                        .First(jobProfileCategory => jobProfileCategory.Url == limitedJobCategory.Url);
+                        .First(jobProfileCategory => jobProfileCategory.Title.ToUpper() == limitedJobCategory.Title.ToUpper());
 
                     var jobCategoryTraits = allTraits
                         .Where(traitA => traitA.JobCategories.Any(jc => jc.Title == limitedJobCategory.Title))
@@ -165,26 +195,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return results.OrderByDescending(jobCategory => jobCategory.Total);
         }
 
-        private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
+        public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment, List<DysacTraitContentModel> allTraits)
         {
-            var traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
-            return traitResult.Take(traitsTake);
-        }
-
-        private async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment)
-        {
-            if (assessment == null)
-            {
-                throw new ArgumentNullException(nameof(assessment));
-            }
-
-            var allTraits = await GetTraits().ConfigureAwait(false);
-
-            if (allTraits == null)
-            {
-                throw new InvalidOperationException("No traits retrieved from document service");
-            }
-
             var allFilteringQuestions = await assessmentService.GetFilteringQuestions().ConfigureAwait(false);
 
             var userTraits = assessment.Questions
@@ -208,7 +220,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .OrderByDescending(traitResult => traitResult.TotalScore)
                 .ToList();
 
-            var allJobCategories = await JobCategoryHelper.GetJobCategories(memoryCache, documentStore).ConfigureAwait(false);
+            var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper, configuration).ConfigureAwait(false);
 
             var jobCategoryRelevance = CalculateJobFamilyRelevance(
                 userTraits,
@@ -237,23 +249,20 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return assessment;
         }
 
+        private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
+        {
+            var traitsTake = traitResult.Length > 3 && traitResult[2].TotalScore == traitResult[3].TotalScore ? 4 : 3;
+            return traitResult.Take(traitsTake);
+        }
+
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            if (memoryCache.TryGetValue(nameof(GetTraits), out var filteringQuestionsFromCache))
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DysacPersonalityTrait, status);
+            var traits = new List<DysacTraitContentModel>();
+            if (traintsResponse != null)
             {
-                return (List<DysacTraitContentModel>?)filteringQuestionsFromCache;
+                traits = mapper.Map<List<DysacTraitContentModel>>(source: traintsResponse.PersonalityTraits);
             }
-
-            var traits = await documentStore.GetAllContentAsync<DysacTraitContentModel>(
-                "Trait").ConfigureAwait(false);
-
-            if (traits == null)
-            {
-                return traits;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetTraits), traits, cacheEntryOptions);
 
             return traits;
         }

@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
-using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Razor.Templating.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
@@ -23,10 +24,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
-        private readonly IMemoryCache memoryCache;
-        private readonly IDocumentStore documentStore;
-        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly Guid sharedContentItemGuid;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IRazorTemplateEngine razorTemplateEngine;
+        private readonly IConfiguration configuration;
+        private string status;
 
         public ResultsController(
             ILogService logService,
@@ -34,21 +35,25 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             ISessionService sessionService,
             IResultsService resultsService,
             IAssessmentService assessmentService,
-            IDocumentStore documentStore,
-            IMemoryCache memoryCache,
-            IDocumentService<StaticContentItemModel> staticContentDocumentService,
-            CmsApiClientOptions cmsApiClientOptions)
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IRazorTemplateEngine razorTemplateEngine,
+            IConfiguration configuration)
                 : base(sessionService)
         {
             this.logService = logService;
             this.mapper = mapper;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
-            this.memoryCache = memoryCache;
+            this.razorTemplateEngine = razorTemplateEngine;
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.configuration = configuration;
 
-            this.documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
-            this.staticContentDocumentService = staticContentDocumentService;
-            sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
         }
 
         [HttpGet]
@@ -163,43 +168,60 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 throw new NoNullAllowedException(nameof(resultsByCategoryModel));
             }
 
+            var jobProfileListFull = await GetJobProfilesAsync().ConfigureAwait(false);
+
             foreach (var jobCategory in resultsResponse.JobCategories)
             {
-                if (!jobCategory.JobProfiles.Any())
+                try
                 {
-                    logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
-                    continue;
-                }
-
-                var jobProfileTitles = jobCategory.JobProfiles
-                    .GroupBy(jobProfile => jobProfile.Title)
-                    .Select(jobProfileGroup => jobProfileGroup.First())
-                    .Select(jobProfile => jobProfile?.Title?.ToLower());
-
-                var jobProfileOverviews = (await GetJobProfileOverviews().ConfigureAwait(false))?
-                    .Where(document => jobProfileTitles.Contains(document.Title!.ToLower()))
-                    .ToList();
-
-                if (jobProfileOverviews == null)
-                {
-                    logService.LogError(
-                        $"Job Profile Overviews returned null for: {string.Join(",", jobProfileTitles)}");
-
-                    continue;
-                }
-
-                var category = resultsByCategoryModel.JobsInCategory!
-                    .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
-
-                category?.JobProfiles?.AddRange(jobProfileOverviews
-                    .GroupBy(jobProfileOverview => jobProfileOverview.Title)
-                    .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
-                    .Select(jobProfileOverview => new ResultJobProfileOverViewModel
+                    logService.LogInformation($"Attempting to build JobProfileOverview for each job profile in {jobCategory.JobFamilyName}");
+                    if (!jobCategory.JobProfiles.Any())
                     {
-                        Cname = jobProfileOverview.Title?.Replace(" ", "-").Replace(",", string.Empty),
-                        OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.Url}'>{jobProfileOverview.Title}</a>",
-                        ReturnedStatusCode = System.Net.HttpStatusCode.OK,
-                    }));
+                        logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
+                        continue;
+                    }
+
+                    var jobProfileTitles = jobCategory.JobProfiles
+                        .GroupBy(jobProfile => jobProfile.Title)
+                        .Select(jobProfileGroup => jobProfileGroup.First())
+                        .Select(jobProfile => jobProfile?.Title?.ToLower());
+
+                    var jobProfileList = jobProfileListFull?
+                        .Where(document => jobProfileTitles.Contains(document.DisplayText!.ToLower()))
+                        .ToList();
+
+                    foreach (JobProfileViewModel jobProfileOverview in jobProfileList)
+                    {
+                        try
+                        {
+                            logService.LogInformation($"Attempting to build HTML for {jobProfileOverview.DisplayText}");
+
+                            var html = await razorTemplateEngine.RenderAsync("~/Views/Results/JobProfileOverview.cshtml", jobProfileOverview).ConfigureAwait(false);
+                            jobProfileOverview.Html = html;
+                        }
+                        catch (IOException ex)
+                        {
+                            logService.LogError("Error: " + ex.GetType().Name + " - " + ex.Message);
+                        }
+                    }
+
+                    var category = resultsByCategoryModel.JobsInCategory!
+                        .FirstOrDefault(job => job.CategoryUrl.Contains(jobCategory.JobFamilyNameUrl!));
+
+                    category?.JobProfiles?.AddRange(jobProfileList
+                        .GroupBy(jobProfileOverview => jobProfileOverview.DisplayText)
+                        .Select(jobProfileOverviewGroup => jobProfileOverviewGroup.First())
+                        .Select(jobProfileOverview => new ResultJobProfileOverViewModel
+                        {
+                            Cname = jobProfileOverview.DisplayText,
+                            OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
+                            ReturnedStatusCode = System.Net.HttpStatusCode.OK,
+                        }));
+                }
+                catch (Exception ex)
+                {
+                    logService.LogError(ex.Message);
+                }
             }
 
             logService.LogInformation("Finished loop");
@@ -228,8 +250,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.SpeakToAnAdviser = await staticContentDocumentService
-                .GetByIdAsync(sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false);
+            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status).Result.Html;
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);
@@ -244,25 +265,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View("BodyTopEmpty");
         }
 
-        private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
+        private async Task<List<JobProfileViewModel>> GetJobProfilesAsync()
         {
-            logService.LogInformation($"GetJobProfileOverviews");
-            if (memoryCache.TryGetValue(nameof(GetJobProfileOverviews), out var filteringQuestionsFromCache))
-            {
-                return (List<DysacJobProfileOverviewContentModel>)filteringQuestionsFromCache;
-            }
+            logService.LogInformation($"Calling {nameof(GetJobProfilesAsync)}");
 
-            var jobProfileOverviews = await documentStore.GetAllContentAsync<DysacJobProfileOverviewContentModel>("JobProfileOverview", "GetJobProfileOverviews").ConfigureAwait(false);
+            var response = await sharedContentRedisInterface.GetDataAsync<JobProfilesResponse>(Constants.DysacJobProfileOverviews, status)
+            ?? new JobProfilesResponse();
 
-            if (!jobProfileOverviews.Any())
-            {
-                return jobProfileOverviews;
-            }
+            var jobProfileList = mapper.Map<List<JobProfileViewModel>>(response.JobProfiles);
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
-
-            return jobProfileOverviews;
+            return jobProfileList;
         }
     }
 }

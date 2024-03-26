@@ -1,38 +1,43 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.App.DiscoverSkillsCareers.Services.Models;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Compui.Sessionstate;
-using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class HomeController : BaseController
     {
         private readonly IAssessmentService assessmentService;
-        private readonly IDocumentService<StaticContentItemModel> staticContentDocumentService;
-        private readonly Guid _sharedContentItemGuid;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IConfiguration configuration;
+        private string status;
 
-        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, IDocumentService<StaticContentItemModel> staticContentDocumentService, CmsApiClientOptions cmsApiClientOptions)
+        public HomeController(ISessionService sessionService, IAssessmentService assessmentService, ISharedContentRedisInterface sharedContentRedisInterface, IConfiguration configuration)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
-            this.staticContentDocumentService = staticContentDocumentService;
-            _sharedContentItemGuid = new Guid(cmsApiClientOptions?.ContentIds ?? throw new ArgumentNullException(nameof(cmsApiClientOptions), "ContentIds cannot be null"));
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.configuration = configuration;
+
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public Task<IActionResult> IndexAsync()
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = await staticContentDocumentService
-                    .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey).ConfigureAwait(false),
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status).Result.Html,
             };
-            return View(responseVm);
+            return Task.FromResult<IActionResult>(View(responseVm));
         }
 
         [HttpPost]
@@ -48,9 +53,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = await staticContentDocumentService
-                        .GetByIdAsync(_sharedContentItemGuid, StaticContentItemModel.DefaultPartitionKey)
-                        .ConfigureAwait(false),
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status).Result.Html,
                 };
                 return View(responseViewModel);
             }
