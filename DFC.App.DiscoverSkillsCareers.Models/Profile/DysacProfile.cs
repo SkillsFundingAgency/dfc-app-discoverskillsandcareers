@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
