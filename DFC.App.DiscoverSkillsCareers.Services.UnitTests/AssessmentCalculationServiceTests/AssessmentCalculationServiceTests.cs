@@ -28,18 +28,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         private readonly ISharedContentRedisInterface fakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
         private readonly IConfiguration configuration = A.Fake<IConfiguration>();
 
-        public AssessmentCalculationServiceTests()
-        {
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacTraitContentModel>("Trait", A<string>.Ignored))
-                .Returns(AssessmentHelpers.GetTraits());
-
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
-                .Returns(AssessmentHelpers.GetAllJobCategories());
-
-            //A.CallTo(() => sharedContentRedisInterface.GetDataAsync<DysacJobProfileCategoryContentModel>("DYSAC/JobProfileCategories"))
-            //    .Returns(AssessmentHelpers.GetAllJobCategories());
-        }
-
         [Fact]
         public async Task CalculateJobFamilyRelevanceTests()
         {

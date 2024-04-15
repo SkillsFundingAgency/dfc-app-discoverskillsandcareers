@@ -471,8 +471,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 }
             };
             
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
-                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
 
             var category = "ACategory";
@@ -509,25 +507,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } } } } };
 
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion", A<string>.Ignored))
-                .Returns(new List<DysacFilteringQuestionContentModel>
-                {
-                    new DysacFilteringQuestionContentModel
-                    {
-                        Skills  = new List<DysacSkillContentItemModel>
-                        {
-                            new DysacSkillContentItemModel
-                            {
-                                Title = "Self Control"
-                            },
-                            new DysacSkillContentItemModel
-                            {
-                                Title = "Another one - that wasnt answered"
-                            }
-                        }
-                    }
-                }
-            );
             
             var jobCategory = new DysacJobProfileCategoryContentModel
             {
@@ -549,9 +528,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                     }
                 }
             };
-            
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
-                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
             
             var category = "ACategory";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
@@ -962,8 +938,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 }
             };
 
-            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
-                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
 
             var category = "ACategory";
