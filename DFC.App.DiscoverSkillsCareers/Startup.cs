@@ -10,7 +10,6 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.DataProcessors;
 using DFC.App.DiscoverSkillsCareers.Services.Serialisation;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
-using DFC.App.DiscoverSkillsCareers.Services.Services.Processors;
 using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Constant;
@@ -53,6 +52,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -61,14 +61,17 @@ namespace DFC.App.DiscoverSkillsCareers
     {
         private const string CosmosDbConnectionAssessmentAppSettings = "Configuration:CosmosDbConnections:DysacAssessment";
         private const string CosmosDbConnectionSessionStateAppSettings = "Configuration:CosmosDbConnections:SessionState";
-        private const string CosmosDbConnectionContentAppSettings = "Configuration:CosmosDbConnections:DysacContent";
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
+        private const string WorkerThreadsConfigAppSettings = "ThreadSettings:WorkerThreads";
+        private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
+        private readonly ILogger<Startup> logger;
         private readonly IWebHostEnvironment env;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             Configuration = configuration;
             this.env = env;
+            this.logger = logger;
         }
 
         private IConfiguration Configuration { get; }
@@ -109,6 +112,8 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureMinimumThreads();
+
             services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
             services.AddHttpClient();
             services.AddSingleton<IGraphQLClient>(s =>
@@ -127,7 +132,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfilesResponse>, JobProfileOverviewQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityFilteringQuestionResponse>, DysacFilteringQuestionQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<JobProfileCategoriesResponseDysac>, JobCategoryQueryStrategyDysac>();
-
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PersonalityTraitResponse>, TraitsQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
@@ -137,8 +141,6 @@ namespace DFC.App.DiscoverSkillsCareers
 
             var notifyOptions = Configuration.GetSection("Notify").Get<NotifyOptions>();
             services.AddSingleton(notifyOptions);
-
-            services.AddTransient<IContentTypeMappingService, ContentTypeMappingService>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
@@ -154,9 +156,14 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISessionIdToCodeConverter, SessionIdToCodeConverter>();
             services.AddSingleton(Configuration.GetSection(nameof(DysacOptions)).Get<DysacOptions>() ?? new DysacOptions());
-            services.AddTransient<IEventMessageService, EventMessageService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddSingleton<INotificationClient>(new NotificationClient(Configuration["Notify:ApiKey"]));
+
+            services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
+            services.AddTransient<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddRazorTemplating();
+
+            services.AddTransient<IMappingService, MappingService>();
 
             services.AddTransient<CosmosDbAppInsightsRequestHandler>();
 
@@ -165,34 +172,17 @@ namespace DFC.App.DiscoverSkillsCareers
                 var cosmosDbConnectionAssessment = Configuration.GetSection(CosmosDbConnectionAssessmentAppSettings).Get<CosmosDbConnection>();
                 var connectionStringAssessment = $"AccountEndpoint={cosmosDbConnectionAssessment.EndpointUrl};AccountKey={cosmosDbConnectionAssessment.AccessKey};";
 
-                var cosmosDbConnectionContent = Configuration.GetSection(CosmosDbConnectionContentAppSettings).Get<CosmosDbConnection>();
-                var connectionStringContent = $"AccountEndpoint={cosmosDbConnectionContent.EndpointUrl};AccountKey={cosmosDbConnectionContent.AccessKey};";
-
                 services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
                 var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbService>>();
                 var assessmentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
-                var contentRequestHandler = serviceProvider.GetRequiredService<CosmosDbAppInsightsRequestHandler>();
 
                 return new CosmosDbService(
                 connectionStringAssessment,
                 cosmosDbConnectionAssessment.DatabaseId!,
                 cosmosDbConnectionAssessment.CollectionId!,
-                connectionStringContent,
-                cosmosDbConnectionContent.DatabaseId!,
-                cosmosDbConnectionContent.CollectionId!,
                 logger,
-                assessmentRequestHandler,
-                contentRequestHandler);
+                assessmentRequestHandler);
             });
-            services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
-            services.AddTransient<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
-            services.AddRazorTemplating();
-
-            services.AddTransient<IMappingService, MappingService>();
-
-            services.AddTransient<IContentProcessor, DysacQuestionSetContentProcessor>();
-            services.AddTransient<IContentProcessor, DysacTraitContentProcessor>();
-            services.AddTransient<IContentProcessor, DysacSkillContentProcessor>();
 
             services.AddTransient<IAssessmentCalculationService, AssessmentCalculationService>();
 
@@ -213,6 +203,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddApiServices(Configuration, policyRegistry);
             services.AddLinkDetailsConverter(new CustomLinkDetailConverter());
+
         }
 
         private static void AddPolicies(IPolicyRegistry<string> policyRegistry)
@@ -225,6 +216,25 @@ namespace DFC.App.DiscoverSkillsCareers
         private static void MapRoute(IEndpointRouteBuilder routeBuilder, string name, string pattern, string controller, string action)
         {
             routeBuilder.MapControllerRoute(name, pattern, new { controller, action });
+        }
+
+        private void ConfigureMinimumThreads()
+        {
+            var workerThreads = Convert.ToInt32(Configuration[WorkerThreadsConfigAppSettings]);
+
+            var iocpThreads = Convert.ToInt32(Configuration[IocpThreadsConfigAppSettings]);
+
+            if (ThreadPool.SetMinThreads(workerThreads, iocpThreads))
+            {
+                logger.LogInformation(
+                    "ConfigureMinimumThreads: Minimum configuration value set. IOCP = {0} and WORKER threads = {1}",
+                    iocpThreads,
+                    workerThreads);
+            }
+            else
+            {
+                logger.LogWarning("ConfigureMinimumThreads: The minimum number of threads was not changed");
+            }
         }
     }
 }

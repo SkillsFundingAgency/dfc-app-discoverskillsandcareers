@@ -153,6 +153,12 @@
     },
     "contentMode": {
       "type": "string"
+    },
+	"WorkerThreads": {
+	  "type": "string"
+    },
+    "IocpThreads": {
+      "type": "string"
     }
   },
     "variables": {
@@ -623,6 +629,14 @@
               {
                 "name": "contentMode__contentMode",
                 "value": "[parameters('contentMode')]"
+              },
+              {
+                "name": "ThreadSettings__WorkerThreads",
+                "value": "[parameters('WorkerThreads')]"
+              },
+              {
+                "name": "ThreadSettings__IocpThreads",
+                "value": "[parameters('IocpThreads')]"
               }
             ]
           }
