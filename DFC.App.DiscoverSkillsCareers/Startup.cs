@@ -52,6 +52,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 
 namespace DFC.App.DiscoverSkillsCareers
 {
@@ -61,12 +62,16 @@ namespace DFC.App.DiscoverSkillsCareers
         private const string CosmosDbConnectionAssessmentAppSettings = "Configuration:CosmosDbConnections:DysacAssessment";
         private const string CosmosDbConnectionSessionStateAppSettings = "Configuration:CosmosDbConnections:SessionState";
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
+        private const string WorkerThreadsConfigAppSettings = "ThreadSettings:WorkerThreads";
+        private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
+        private readonly ILogger<Startup> logger;
         private readonly IWebHostEnvironment env;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             Configuration = configuration;
             this.env = env;
+            this.logger = logger;
         }
 
         private IConfiguration Configuration { get; }
@@ -107,6 +112,8 @@ namespace DFC.App.DiscoverSkillsCareers
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureMinimumThreads();
+
             services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
             services.AddHttpClient();
             services.AddSingleton<IGraphQLClient>(s =>
@@ -209,6 +216,25 @@ namespace DFC.App.DiscoverSkillsCareers
         private static void MapRoute(IEndpointRouteBuilder routeBuilder, string name, string pattern, string controller, string action)
         {
             routeBuilder.MapControllerRoute(name, pattern, new { controller, action });
+        }
+
+        private void ConfigureMinimumThreads()
+        {
+            var workerThreads = Convert.ToInt32(Configuration[WorkerThreadsConfigAppSettings]);
+
+            var iocpThreads = Convert.ToInt32(Configuration[IocpThreadsConfigAppSettings]);
+
+            if (ThreadPool.SetMinThreads(workerThreads, iocpThreads))
+            {
+                logger.LogInformation(
+                    "ConfigureMinimumThreads: Minimum configuration value set. IOCP = {0} and WORKER threads = {1}",
+                    iocpThreads,
+                    workerThreads);
+            }
+            else
+            {
+                logger.LogWarning("ConfigureMinimumThreads: The minimum number of threads was not changed");
+            }
         }
     }
 }
