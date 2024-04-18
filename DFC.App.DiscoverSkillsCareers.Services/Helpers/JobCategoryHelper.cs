@@ -1,37 +1,36 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models;
-using DFC.App.DiscoverSkillsCareers.Models.Contracts;
-using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using AutoMapper;
+using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using Microsoft.Extensions.Configuration;
+using NHibernate.Engine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
 {
     public static class JobCategoryHelper
     {
         public static async Task<List<DysacJobProfileCategoryContentModel>?> GetJobCategories(
-            IMemoryCache memoryCache,
-            IDocumentStore documentStore
-            )
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IMapper mapper,
+            IConfiguration configuration)
         {
-            if (memoryCache.TryGetValue(nameof(GetJobCategories), out var filteringQuestionsFromCache))
+            string status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
             {
-                return (List<DysacJobProfileCategoryContentModel>?)filteringQuestionsFromCache;
+                status = "PUBLISHED";
             }
 
-            var jobCategories = await documentStore
-                .GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory").ConfigureAwait(false);
+            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponseDysac>(Constants.DysacJobProfileCategories, status)
+                   ?? new JobProfileCategoriesResponseDysac();
 
-            if (jobCategories == null)
-            {
-                return jobCategories;
-            }
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(600));
-            memoryCache.Set(nameof(GetJobCategories), jobCategories, cacheEntryOptions);
-
-            return jobCategories;
+            var jobCategories = mapper.Map<List<DysacJobProfileCategoryContentModel>>(result.JobProfileCategories);
+            return jobCategories.Where(x => x.Title != null).ToList();
         }
     }
 }
