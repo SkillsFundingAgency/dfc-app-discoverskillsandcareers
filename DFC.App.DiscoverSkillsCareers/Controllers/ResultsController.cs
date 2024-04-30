@@ -3,6 +3,7 @@ using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Models;
+using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
@@ -14,12 +15,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class ResultsController : BaseController
     {
         private readonly IMapper mapper;
+        private readonly ISessionService sessionService;
         private readonly IResultsService resultsService;
         private readonly IAssessmentService assessmentService;
         private readonly ILogService logService;
@@ -263,6 +266,19 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
 
             return jobProfileOverviews;
+        }
+
+
+        [HttpGet]
+        [Route("api/get/results/ajax")]
+        public async Task AjaxChanged()
+        {
+            logService.LogInformation($"{nameof(AjaxChanged)} has been called");
+
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+            var assessment = await assessmentService.GetAssessment(sessionId).ConfigureAwait(false);
+            await resultsService.UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
+
         }
     }
 }
