@@ -45,6 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             this.logService = logService;
             this.mapper = mapper;
+            this.sessionService = sessionService;
             this.resultsService = resultsService;
             this.assessmentService = assessmentService;
             this.memoryCache = memoryCache;
@@ -247,6 +248,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View("BodyTopEmpty");
         }
 
+        [HttpGet]
+        [Route("api/get/results/ajax")]
+        public async Task AjaxChanged()
+        {
+            logService.LogInformation($"{nameof(AjaxChanged)} has been called");
+
+            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+            var assessment = await assessmentService.GetAssessment(sessionId).ConfigureAwait(false);
+            await resultsService.UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
+        }
+
         private async Task<List<DysacJobProfileOverviewContentModel>> GetJobProfileOverviews()
         {
             logService.LogInformation($"GetJobProfileOverviews");
@@ -266,19 +278,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             memoryCache.Set(nameof(GetJobProfileOverviews), jobProfileOverviews, cacheEntryOptions);
 
             return jobProfileOverviews;
-        }
-
-
-        [HttpGet]
-        [Route("api/get/results/ajax")]
-        public async Task AjaxChanged()
-        {
-            logService.LogInformation($"{nameof(AjaxChanged)} has been called");
-
-            var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
-            var assessment = await assessmentService.GetAssessment(sessionId).ConfigureAwait(false);
-            await resultsService.UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
-
         }
     }
 }
