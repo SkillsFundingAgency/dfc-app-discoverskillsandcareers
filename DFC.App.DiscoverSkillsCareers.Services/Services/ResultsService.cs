@@ -56,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     $"Filtered State: {assessment.FilteredAssessment}, Assessment: {assessment.Id}");
             }
 
-            await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
+            //await UpdateJobCategoryCounts(assessment).ConfigureAwait(false);
 
             var answeredQuestions = assessment.FilteredAssessment.Questions!
                 .Where(question => question.Answer != null)
