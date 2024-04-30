@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DFC.App.DiscoverSkillsCareers.Core.Helpers;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 
 namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
 {
@@ -63,12 +65,31 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
               .ForMember(d => d.Ordinal, s => s.MapFrom(a => a.Ordinal))
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.ContentItems)));
 
-            CreateMap<ApiJobProfileOverview, DysacJobProfileOverviewContentModel>()
-            .ForMember(d => d.Url, s => s.MapFrom(a => a.CanonicalName.Replace("/job-profiles/", string.Empty).Replace(",", string.Empty)))
-            .ForMember(d => d.Title, s => s.MapFrom(a => a.Title))
-            .ForMember(d => d.Id, s => s.MapFrom(a => Guid.NewGuid()))
-            .ForMember(d => d.LastCached, s => s.MapFrom(a => DateTime.UtcNow))
-            .ForMember(d => d.Html, s => s.MapFrom(a => a.Html));
+            CreateMap<JobProfileCategory, DysacJobProfileCategoryContentModel>()
+                .ForMember(d => d.JobProfiles, s => s.MapFrom(a => a.JobProfiles))
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
+                .AfterMap((source, destination) =>
+                {
+                    foreach (var item in destination.JobProfiles)
+                    {
+                        int firstOrdinal = 0;
+                        foreach (var skill in item.Skills)
+                        {
+                            skill.Ordinal = firstOrdinal++;
+                        }
+                    }
+                });
+
+            CreateMap<RelatedSkill, DysacSkillContentItemModel>()
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.RelatedSkillDesc))
+                .ForMember(d => d.AttributeType, s => s.MapFrom(a => a.ONetAttributeType))
+                .ForMember(d => d.ONetRank, s => s.MapFrom(a => Convert.ToDecimal(a.ONetRank)));
+
+            CreateMap<JobProfile, JobProfileContentItemModel>()
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
+                .ForMember(d => d.JobProfileWebsiteUrl, s => s.MapFrom(a => a.PageLocation.FullUrl))
+                .ForMember(d => d.Skills, s => s.MapFrom(a => a.Relatedskills.ContentItems));
+
         }
 
         private static List<DysacSkillContentItemModel> ConstructSkills(IList<IBaseContentItemModel> contentItems)

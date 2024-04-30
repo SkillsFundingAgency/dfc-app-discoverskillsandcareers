@@ -29,35 +29,14 @@
         "apimCompositeKey": {
           "value": "__apimCompositeKey__"
         },
-        "SubscriptionSettingsEndpoint": {
-          "value": "__SubscriptionSettingsEndpoint__"
-        },
         "aspTier": {
             "value": "__aspTier__"
         },
         "aspSize": {
             "value": "__aspSize__"
         },
-        "JobProfileOverViewUrl": {
-            "value": "__JobProfileOverView__"
-        },
         "CdnUrl": {
             "value": "__CdnUrl__"
-        },
-        "cmsTimeout": {
-            "value": "__cmsTimeout__"
-        },
-        "cmsApiKey": {
-            "value": "__cmsApiKey__"
-        },
-        "cmsBaseAddress": {
-            "value": "__cmsBaseAddress__"
-        },
-        "cmsStaticContentEndpoint": {
-            "value": "__cmsStaticContentEndpoint__"
-        },
-        "cmsContentIds": {
-            "value": "__cmsContentIds__"
         },
         "cosmosDbSharedCollectionName": {
             "value": "__cosmosDbSharedCollectionName__"
@@ -136,6 +115,33 @@
         },
         "workspaceResourceGroup": {
             "value": "__sharedLogAnalyticsResourceGroup__"
+        },
+        "CmsTokenEndPointURL": {
+            "value": "__StaxGraphqlTokenEndPointURL__"
+        },
+        "CmsGraphApiUrl": {
+            "value": "__StaxGraphqlApiUrl__"
+        },
+        "CmsSqlApiUrl": {
+            "value": "__StaxGraphqlSqlApiUrl__"
+        },
+        "CmsClientId": {
+            "value": "__StaxGraphqlClientId__"
+        },
+        "CmsClientSecret": {
+            "value": "__StaxGraphqlClientSecret__"
+        },
+        "CmsRedisCacheConnectionString": {
+            "value": "__RedisConnectionString__"
+        },
+        "contentMode": {
+            "value": "__contentMode__"
+        },
+        "WorkerThreads":{
+            "value": "__WorkerThreads__"
+        },
+        "IocpThreads":{
+            "value": "__IocpThreads__"
         }
     }
 }
