@@ -10,7 +10,7 @@
     },
     "DFC.App.DiscoverSkillsCareers": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchUrl": "https://localhost:7001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

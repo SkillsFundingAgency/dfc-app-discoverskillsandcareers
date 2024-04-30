@@ -158,7 +158,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return new GetResultsResponse { JobCategories = jobCategories };
         }
 
-        private async Task UpdateJobCategoryCounts(DysacAssessment assessment)
+        public async Task UpdateJobCategoryCounts(DysacAssessment assessment)
         {
             var answeredQuestions = assessment.FilteredAssessment!.Questions!
                 .Where(filteredAssessmentQuestion => filteredAssessmentQuestion.Answer != null)
