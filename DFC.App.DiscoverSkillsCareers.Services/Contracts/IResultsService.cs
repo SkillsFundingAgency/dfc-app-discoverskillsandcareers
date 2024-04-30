@@ -10,6 +10,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
 
         Task<GetResultsResponse> GetResultsByCategory(string jobCategoryName);
 
-        Task<GetResultsResponse> UpdateJobCategoryCounts(DysacAssessment assessment);
+        Task UpdateJobCategoryCounts(DysacAssessment assessment);
     }
 }
