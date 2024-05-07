@@ -47,7 +47,7 @@
         "Name": "Ajax",
         "IsHealthy": true,
         "AjaxEndpoint": "https://__AppServiceName__.__appServiceDomain__/api/get/results/ajax",
-        "HealthCheckRequired": true,
+        "HealthCheckRequired": false,
         "OfflineHtml": "<div class=\"govuk-width-container\"><H3>Service Unavailable</H3></div>",
         "DateOfRegistration": "2020-12-14T14:53:01.5171872Z",
         "LastModifiedDate": "2024-03-26T11:06:44.2874351Z"

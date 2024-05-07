@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
@@ -243,6 +244,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public async Task<IActionResult> HeroBanner(string id)
         {
             logService.LogInformation($"HeroBanner id {id}");
+
             if (!await HasSessionId().ConfigureAwait(false))
             {
 
