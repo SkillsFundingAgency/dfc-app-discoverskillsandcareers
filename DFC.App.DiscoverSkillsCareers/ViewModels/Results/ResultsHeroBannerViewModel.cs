@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.Services.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -13,6 +12,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int NumberOfCategories { get; set; }
 
-        public StaticContentItemModel SpeakToAnAdviser { get; set; }
+        public string SpeakToAnAdviser { get; set; }
     }
 }
