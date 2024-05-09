@@ -168,7 +168,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public IEnumerable<JobCategoryResult> OrderJobFamilyRelevanceResults(List<JobCategoryResult> resultsToOrder)
         {
-            //First order by trait score total
             return resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
                                  .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
                                  .ThenBy(jobCategory => jobCategory.JobFamilyName); //Lastly, order those with the same trait score and number of remaining questions alphabetically.
