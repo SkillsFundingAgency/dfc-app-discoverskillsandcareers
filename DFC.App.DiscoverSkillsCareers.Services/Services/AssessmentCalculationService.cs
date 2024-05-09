@@ -6,6 +6,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -162,7 +163,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 }
             }
 
-            return results.OrderByDescending(jobCategory => jobCategory.Total);
+            return OrderJobFamilyRelevanceResults(results);
+        }
+
+        public IEnumerable<JobCategoryResult> OrderJobFamilyRelevanceResults(List<JobCategoryResult> resultsToOrder)
+        {
+            //First order by trait score total
+            return resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
+                                 .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
+                                 .ThenBy(jobCategory => jobCategory.JobFamilyName); //Lastly, order those with the same trait score and number of remaining questions alphabetically.
         }
 
         private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)

@@ -14,6 +14,10 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
+using System.Security.Policy;
+using FluentNHibernate.Testing.Values;
+using DFC.App.DiscoverSkillsCareers.Models.Result;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculationServiceTests
 {
@@ -61,21 +65,21 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                     Skills = skills,
                 }
             };
-            
+
             var jobCategories = new List<JobCategoryContentItemModel>
             {
                 new JobCategoryContentItemModel
-                {  
+                {
                     Title = "CATEGORY1",
                     Url = new Uri("http://localhost/category1"),
                     JobProfiles = jobProfiles,
                 },
                 new JobCategoryContentItemModel
-                {  
+                {
                     Title = "CATEGORY1",
                     Url = new Uri("http://localhost/category1"),
                     JobProfiles = jobProfiles,
-                },
+                }
             };
             
             // Act
@@ -93,7 +97,64 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             result.Should().NotBeNull();
             result.Should().HaveCount(1);
         }
-        
+
+        [Fact]
+        public async Task OrderJobFamilyResultsTests()
+        {
+            //Arrange
+            var serviceToTest = new AssessmentCalculationService(
+                documentStore,
+                assessmentService,
+                memoryCache,
+                mapper,
+                A.Fake<ILoggerFactory>());
+
+            var fakeReusltsToTest = new List<JobCategoryResult>
+            {
+                new JobCategoryResult
+                {
+                    JobFamilyName = "CATEGORY2",
+                    Total = 2,
+                    TotalQuestions = 2,
+                },
+                new JobCategoryResult
+                {
+                    JobFamilyName = "CATEGORY1",
+                    Total = 3,
+                    TotalQuestions = 1,
+                },
+                new JobCategoryResult
+                {
+                    JobFamilyName = "CATEGORY3",
+                    Total = 1,
+                    TotalQuestions = 1,
+                },
+                new JobCategoryResult
+                {
+                    JobFamilyName = "B-CATEGORY",
+                    Total = 1,
+                    TotalQuestions = 2,
+                },
+                new JobCategoryResult
+                {
+                    JobFamilyName = "A-CATEGORY",
+                    Total = 1,
+                    TotalQuestions = 2,
+                },
+            };
+
+            //Act
+            var result = serviceToTest.OrderJobFamilyRelevanceResults(fakeReusltsToTest);
+
+            //Assert
+            result.Should().HaveCount(5);
+            Assert.Equal("CATEGORY1", result.FirstOrDefault().JobFamilyName);
+            Assert.Equal("CATEGORY2", result.ElementAt(1).JobFamilyName);
+            Assert.Equal("A-CATEGORY", result.ElementAt(2).JobFamilyName);
+            Assert.Equal("B-CATEGORY", result.ElementAt(3).JobFamilyName);
+            Assert.Equal("CATEGORY3", result.ElementAt(4).JobFamilyName);
+        }
+
         [Fact]
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
         {
@@ -136,8 +197,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
 
             // Assert
             Assert.Equal(2, result.ShortQuestionResult!.JobCategories.Count());
-            Assert.Equal("border-force-leader", result.ShortQuestionResult!.JobCategories.FirstOrDefault().JobFamilyNameUrl);
-            Assert.Equal("border-force-doer", result.ShortQuestionResult!.JobCategories.LastOrDefault().JobFamilyNameUrl);
+            Assert.Equal("border-force-doer", result.ShortQuestionResult!.JobCategories.FirstOrDefault().JobFamilyNameUrl);
+            Assert.Equal("border-force-leader", result.ShortQuestionResult!.JobCategories.LastOrDefault().JobFamilyNameUrl);
         }
 
         [Fact]
