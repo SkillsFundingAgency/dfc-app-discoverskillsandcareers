@@ -141,7 +141,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .JobProfiles = listOfJobProfiles;
             }
 
-            var jobCategories = OrderResults(assessment.ShortQuestionResult.JobCategories!.ToList(), jobCategoryName);
+            var jobCategories = assessmentCalculationService.OrderJobCategoryResults(assessment.ShortQuestionResult.JobCategories!.ToList());
             return new GetResultsResponse { JobCategories = jobCategories };
         }
 

@@ -99,7 +99,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
         }
 
         [Fact]
-        public async Task OrderJobFamilyResultsTests()
+        public async Task OrderJobCategoryResultsTests()
         {
             //Arrange
             var serviceToTest = new AssessmentCalculationService(
@@ -144,7 +144,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             };
 
             //Act
-            var result = serviceToTest.OrderJobFamilyRelevanceResults(fakeReusltsToTest);
+            var result = serviceToTest.OrderJobCategoryResults(fakeReusltsToTest);
 
             //Assert
             result.Should().HaveCount(5);

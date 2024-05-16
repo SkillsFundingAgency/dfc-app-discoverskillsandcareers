@@ -54,6 +54,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return await RunShortAssessmentCalculation(assessment).ConfigureAwait(false);
         }
 
+        public IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder)
+        {
+            return resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
+                                 .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
+                                 .ThenBy(jobCategory => jobCategory.JobFamilyName); //Lastly, order those with the same trait score and number of remaining questions alphabetically.
+        }
+
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
             List<TraitResult> userTraits,
             List<DysacTraitContentModel> allTraits,
@@ -163,14 +170,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 }
             }
 
-            return OrderJobFamilyRelevanceResults(results);
-        }
-
-        public IEnumerable<JobCategoryResult> OrderJobFamilyRelevanceResults(List<JobCategoryResult> resultsToOrder)
-        {
-            return resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
-                                 .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
-                                 .ThenBy(jobCategory => jobCategory.JobFamilyName); //Lastly, order those with the same trait score and number of remaining questions alphabetically.
+            return OrderJobCategoryResults(results);
         }
 
         private static IEnumerable<TraitResult> LimitTraits(TraitResult[] traitResult)
