@@ -141,7 +141,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .JobProfiles = listOfJobProfiles;
             }
 
-            var jobCategories = assessmentCalculationService.OrderJobCategoryResults(assessment.ShortQuestionResult.JobCategories!.ToList());
+            var jobCategories = assessment.ShortQuestionResult.JobCategories!.ToList();
             return new GetResultsResponse { JobCategories = jobCategories };
         }
 
@@ -205,14 +205,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 c.DisplayOrder = order;
 
-                if (!string.IsNullOrEmpty(selectedCategory)
-                    && c.JobFamilyNameUrl == selectedCategory
-                        .ToLower()
-                        .Replace(" ", "-")
-                        .Replace(",", string.Empty))
-                {
-                    c.DisplayOrder = 9999;
-                }
+                //if (!string.IsNullOrEmpty(selectedCategory)
+                //    && c.JobFamilyNameUrl == selectedCategory
+                //        .ToLower()
+                //        .Replace(" ", "-")
+                //        .Replace(",", string.Empty))
+                //{
+                //    c.DisplayOrder = 9999;
+                //}
 
                 order--;
             }
