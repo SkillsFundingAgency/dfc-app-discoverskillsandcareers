@@ -142,6 +142,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             var jobCategories = assessment.ShortQuestionResult.JobCategories!.ToList();
+
+            var jobCategory = jobCategories?.Find(j => Equals(j.JobFamilyNameUrl, jobCategoryName));
+            if (jobCategory != null && jobCategory.TotalQuestions == 0 )
+            {
+                jobCategories = OrderResultsByJobCategory(jobCategories, jobCategoryName);
+            }
+
             return new GetResultsResponse { JobCategories = jobCategories };
         }
 
@@ -197,7 +204,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             };
         }
 
-        private List<JobCategoryResult> OrderResults(List<JobCategoryResult> categories, string selectedCategory)
+        private List<JobCategoryResult> OrderResultsByJobCategory(List<JobCategoryResult> categories, string selectedCategory)
         {
             var order = categories.Count;
 
@@ -205,14 +212,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 c.DisplayOrder = order;
 
-                //if (!string.IsNullOrEmpty(selectedCategory)
-                //    && c.JobFamilyNameUrl == selectedCategory
-                //        .ToLower()
-                //        .Replace(" ", "-")
-                //        .Replace(",", string.Empty))
-                //{
-                //    c.DisplayOrder = 9999;
-                //}
+                if (!string.IsNullOrEmpty(selectedCategory)
+                    && c.JobFamilyNameUrl == selectedCategory
+                        .ToLower()
+                        .Replace(" ", "-")
+                        .Replace(",", string.Empty))
+                {
+                    c.DisplayOrder = 9999;
+                }
 
                 order--;
             }
