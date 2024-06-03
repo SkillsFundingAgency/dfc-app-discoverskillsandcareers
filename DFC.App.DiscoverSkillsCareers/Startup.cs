@@ -1,6 +1,5 @@
 using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
-using DFC.App.DiscoverSkillsCareers.Framework;
 using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
@@ -27,7 +26,6 @@ using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
 using DFC.Content.Pkg.Netcore.Services;
-using DFC.Logger.AppInsights.Contracts;
 using DFC.Logger.AppInsights.Extensions;
 using Dfc.Session;
 using Dfc.Session.Models;
@@ -147,7 +145,6 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetAssembly(typeof(DysacProfile)), Assembly.GetAssembly(typeof(DefaultProfile)));
 
-            services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
             services.AddScoped<IAssessmentService, AssessmentService>();
             services.AddScoped<IResultsService, ResultsService>();
