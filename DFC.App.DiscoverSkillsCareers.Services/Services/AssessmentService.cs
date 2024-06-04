@@ -460,7 +460,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions()
         {
-            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>(Constants.DysacFilteringQuestion, status);
+            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>(Constants.DYSACFilteringQuestion, status);
             var filteringQuestions = new List<DysacFilteringQuestionContentModel>();
             if (filteringQuestionResponse != null)
             {
@@ -472,7 +472,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacQuestionSetContentModel>?> GetQuestionSets()
         {
-            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>(Constants.DysacQuestionSet, status);
+            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>(Constants.DYSACQuestionSet, status);
 
             var questionSets = new List<DysacQuestionSetContentModel>();
             var qs = mapper.Map<DysacQuestionSetContentModel>(questionSetsResponse);
