@@ -57,13 +57,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
             return listOfCategories;
         }
 
-        //public static async Task<JobProfileCategoriesResponse> GetDataFromRedis()
-        //{
-        //    var response = new JobProfileCategoriesResponse();
-        //    response.JobProfileCategories = new JobProfileCategory() { DisplayText = "Test", ContentItemId = "Test" }; 
-
-        //}       
-
         public static async Task<List<DysacTraitContentModel>> GetTraits()
         {
             var listOfTraits = new List<DysacTraitContentModel>

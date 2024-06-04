@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Configuration;
-using NHibernate.Engine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
