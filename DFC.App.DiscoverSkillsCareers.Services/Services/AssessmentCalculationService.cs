@@ -257,7 +257,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DysacPersonalityTrait, status);
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {

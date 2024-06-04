@@ -1,4 +1,6 @@
 using AutoMapper;
+using Dfc.Session;
+using Dfc.Session.Models;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.MappingProfiles;
 using DFC.App.DiscoverSkillsCareers.Models;
@@ -27,8 +29,6 @@ using DFC.Content.Pkg.Netcore.Data.Models.PollyOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
 using DFC.Content.Pkg.Netcore.Services;
 using DFC.Logger.AppInsights.Extensions;
-using Dfc.Session;
-using Dfc.Session.Models;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -37,6 +37,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -119,7 +120,11 @@ namespace DFC.App.DiscoverSkillsCareers
                 var option = new GraphQLHttpClientOptions()
                 {
                     EndPoint = new Uri(Configuration[ConfigKeys.GraphApiUrl]),
-                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                    HttpMessageHandler = new CmsRequestHandler(
+                        s.GetService<IHttpClientFactory>(),
+                        s.GetService<IConfiguration>(),
+                        s.GetService<IHttpContextAccessor>(),
+                        s.GetService<IMemoryCache>()),
                 };
                 var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
                 return client;
