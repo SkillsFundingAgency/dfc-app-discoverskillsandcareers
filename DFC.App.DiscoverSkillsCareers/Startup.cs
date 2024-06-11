@@ -91,7 +91,7 @@ namespace DFC.App.DiscoverSkillsCareers
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -115,6 +115,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
             services.AddHttpClient();
+            services.AddMemoryCache();
             services.AddSingleton<IGraphQLClient>(s =>
             {
                 var option = new GraphQLHttpClientOptions()
