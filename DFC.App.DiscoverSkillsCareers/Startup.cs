@@ -15,6 +15,7 @@ using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
 using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Constant;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.CacheRepository;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
@@ -91,7 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -116,6 +117,8 @@ namespace DFC.App.DiscoverSkillsCareers
             services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
             services.AddHttpClient();
             services.AddMemoryCache();
+            services.AddSingleton<ICacheRepository, CacheRepository>();
+
             services.AddSingleton<IGraphQLClient>(s =>
             {
                 var option = new GraphQLHttpClientOptions()
