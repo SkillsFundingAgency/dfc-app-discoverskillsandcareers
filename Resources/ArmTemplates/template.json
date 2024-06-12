@@ -41,21 +41,11 @@
     "appSharedStorageAccountName": {
       "type": "string"
     },
-    "aseHostingEnvironmentName": {
+    "appServicePlanSuffix": {
       "type": "string",
       "defaultValue": ""
     },
-    "aseResourceGroup": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "aspInstances": {
-      "type": "int"
-    },
-    "aspSize": {
-      "type": "string"
-    },
-    "aspTier": {
+    "appServiceName": {
       "type": "string"
     },
     "CdnUrl": {
@@ -164,10 +154,9 @@
     "variables": {
       "ApiName": "[concat(parameters('ApimProductInstanceName'), '-', parameters('ApiName'))]",
       "appServiceAppInsightsName": "[concat(parameters('resourcePrefix'), '-ai')]",
-      "appServicePlanName": "[concat(parameters('resourcePrefix'), '-asp')]",
+      "appServicePlanName": "[concat(parameters('resourcePrefix'), parameters('appServicePlanSuffix'), '-asp')]",
       "appServicePlanResourceGroup": "[concat(parameters('resourcePrefix'),'-rg')]",
       "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-      "webAppName": "[concat(parameters('resourcePrefix'), '-as')]",
       "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
       "cosmosDbCollectionPartitionKey": "/PartitionKey",
       "cosmosDbDatabaseName": "dfc-app-dysac",
@@ -360,7 +349,7 @@
     },
     {
       "apiVersion": "2017-05-10",
-      "name": "[variables('WebAppName')]",
+      "name": "[parameters('appServiceName')]",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -370,7 +359,7 @@
         },
         "parameters": {
           "appServiceName": {
-            "value": "[variables('webAppName')]"
+            "value": "[parameters('appServiceName')]"
           },
           "appServicePlanName": {
             "value": "[variables('appServicePlanName')]"
