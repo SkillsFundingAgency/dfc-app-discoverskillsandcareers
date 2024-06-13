@@ -125,6 +125,9 @@
         "CmsRedisCacheConnectionString": {
             "value": "__RedisConnectionString__"
         },
+        "CmsCacheKeyExpiry": {
+            "value": "__CmsCacheKeyExpiry__"
+        },
         "contentMode": {
             "value": "__contentMode__"
         },
