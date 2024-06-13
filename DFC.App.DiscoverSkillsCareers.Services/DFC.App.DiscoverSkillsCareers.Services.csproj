@@ -13,7 +13,7 @@
   <ItemGroup>
 	<PackageReference Include="DFC.Compui.Subscriptions" Version="1.0.96" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="DFC.Common.SharedContent.Pkg.Netcore" Version="0.1.84" />
+    <PackageReference Include="DFC.Common.SharedContent.Pkg.Netcore" Version="0.1.109" />
 	<PackageReference Include="Razor.Templating.Core" Version="1.9.0" />
     <PackageReference Include="DFC.Compui.Sessionstate" Version="1.0.15" />
     <PackageReference Include="DFC.Content.Pkg.Netcore" Version="2.0.0" />
@@ -23,7 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
