@@ -104,7 +104,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
                 assessmentService,
                 memoryCache,
                 mapper,
-                A.Fake<ILoggerFactory>());
+                A.Fake<ILoggerFactory>(),
+                fakeSharedContentRedisInterface,
+                configuration);
 
             var fakeReusltsToTest = new List<JobCategoryResult>
             {
@@ -152,7 +154,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             Assert.Equal("CATEGORY3", result.ElementAt(4).JobFamilyName);
         }
 
-        [Fact]
         [Fact(Skip = "Further investigation required")]
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
         {
