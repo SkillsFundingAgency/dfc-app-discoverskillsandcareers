@@ -7,6 +7,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 {
     public class BaseController : Controller
     {
+        public const string SharedContentStaxId = "2c9da1b3-3529-4834-afc9-9cd741e59788";
         private readonly ISessionService sessionService;
 
         public BaseController(ISessionService sessionService)
