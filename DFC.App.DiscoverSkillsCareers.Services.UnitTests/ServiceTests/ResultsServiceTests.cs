@@ -14,6 +14,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
@@ -963,6 +964,81 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 .MustHaveHappenedOnceExactly();
 
             Assert.False(results.AllJobProfilesMatchWithAssessmentProfiles);
+        }
+
+        [Fact]
+        public async Task GetResultsByCategory_OrdersByCategoryWhenSelectedJobCategoryHasNoFilteringQuestionsLeft()
+        {
+            //Arrange
+            var assessment = AssessmentHelpers.GetAssessment();
+            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "1 filtering question left", TotalQuestions = 1, JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } }, new JobCategoryResult { JobFamilyName = "0 filtering questions left", TotalQuestions = 0, JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, TraitText = new List<string>() { "you'd be good working in place a", "you might do well in place b", "you're really a at b" } };
+            assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } } } } };
+
+            A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion", A<string>.Ignored))
+                .Returns(new List<DysacFilteringQuestionContentModel>
+                {
+                    new DysacFilteringQuestionContentModel
+                    {
+                        Skills  = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Another one - that wasnt answered"
+                            }
+                        }
+                    }
+                }
+            );
+
+            var jobCategory = new DysacJobProfileCategoryContentModel
+            {
+                JobProfiles = new List<JobProfileContentItemModel>
+                {
+                    new JobProfileContentItemModel
+                    {
+                        Skills = new List<DysacSkillContentItemModel>
+                        {
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Self Control"
+                            },
+                            new DysacSkillContentItemModel
+                            {
+                                Title = "Another one - that wasnt answered"
+                            }
+                        }
+                    }
+                }
+            };
+
+            A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
+                .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
+
+            var category = "0-filtering-questions-left";
+            var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
+            var profiles = new List<JobProfileResult>
+            {
+                new JobProfileResult()
+            };
+            resultsResponse.JobProfiles = profiles;
+
+            var categories = new List<JobCategoryResult>
+             {
+                new JobCategoryResult { JobFamilyName = category, JobFamilyUrl = category, }
+            };
+            resultsResponse.JobCategories = categories;
+
+            //Act
+            var results = await resultsService.GetResultsByCategory(category);
+
+            // Assert
+            Assert.NotEqual(9999, assessment.ShortQuestionResult.JobCategories.FirstOrDefault().DisplayOrder);
+            Assert.Equal(9999, assessment.ShortQuestionResult.JobCategories.ElementAt(1).DisplayOrder);
         }
     }
 }
