@@ -24,7 +24,14 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 status = "PUBLISHED";
             }
 
-            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponseDysac>(Constants.DYSACJobProfileCategories, status)
+            double expiry = 4;
+            if (configuration != null)
+            {
+                string expiryAppString = configuration.GetSection("Cms:Expiry").Get<string>();
+                expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+            }
+
+            var result = await sharedContentRedisInterface.GetDataAsyncWithExpiry<JobProfileCategoriesResponseDysac>(Constants.DYSACJobProfileCategories, status, expiry)
                    ?? new JobProfileCategoriesResponseDysac();
 
             var jobCategories = mapper.Map<List<DysacJobProfileCategoryContentModel>>(result.JobProfileCategories);

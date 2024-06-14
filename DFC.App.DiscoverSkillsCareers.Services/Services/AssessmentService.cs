@@ -21,6 +21,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
     public class AssessmentService : IAssessmentService
     {
+        private const string ExpiryAppSettings = "Cms:Expiry";
         private const string HttpContextAssessmentKey = "DysacAssessment";
 
         private readonly ISessionIdToCodeConverter sessionIdToCodeConverter;
@@ -32,6 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
         private string status;
+        private double expiry = 4;
 
         public AssessmentService(
             ISessionIdToCodeConverter sessionIdToCodeConverter,
@@ -57,6 +59,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             if (string.IsNullOrEmpty(status))
             {
                 status = "PUBLISHED";
+            }
+
+            if (this.configuration != null)
+            {
+                string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
+                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
             }
         }
 
@@ -460,7 +468,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<List<DysacFilteringQuestionContentModel>?> GetFilteringQuestions()
         {
-            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityFilteringQuestionResponse>(Constants.DYSACFilteringQuestion, status);
+            var filteringQuestionResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityFilteringQuestionResponse>(Constants.DYSACFilteringQuestion, status, expiry);
             var filteringQuestions = new List<DysacFilteringQuestionContentModel>();
             if (filteringQuestionResponse != null)
             {
@@ -472,7 +480,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacQuestionSetContentModel>?> GetQuestionSets()
         {
-            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityQuestionSet>(Constants.DYSACQuestionSet, status);
+            var questionSetsResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityQuestionSet>(Constants.DYSACQuestionSet, status, expiry);
 
             var questionSets = new List<DysacQuestionSetContentModel>();
             var qs = mapper.Map<DysacQuestionSetContentModel>(questionSetsResponse);
