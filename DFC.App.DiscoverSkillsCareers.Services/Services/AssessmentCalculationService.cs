@@ -40,7 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
         private string status;
-        private double expiry = 4;
+        private double expiryInHours = 4;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
@@ -69,7 +69,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             if (this.configuration != null)
             {
                 string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
-                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
             }
         }
 
@@ -265,7 +268,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status, expiry);
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status, expiryInHours);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {
