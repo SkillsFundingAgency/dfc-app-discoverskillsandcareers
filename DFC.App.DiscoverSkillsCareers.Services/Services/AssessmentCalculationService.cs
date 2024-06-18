@@ -31,6 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             { Answer.StronglyAgree, 2 },
         };
 
+        private const string ExpiryAppSettings = "Cms:Expiry";
         private readonly IDocumentStore documentStore;
         private readonly IMapper mapper;
         private readonly ILogger<AssessmentCalculationService> logger;
@@ -39,6 +40,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
         private string status;
+        private double expiryInHours = 4;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
@@ -62,6 +64,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             if (string.IsNullOrEmpty(status))
             {
                 status = "PUBLISHED";
+            }
+
+            if (this.configuration != null)
+            {
+                string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
             }
         }
 
@@ -257,7 +268,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status);
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status, expiryInHours);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {

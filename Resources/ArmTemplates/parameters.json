@@ -142,6 +142,9 @@
         },
         "IocpThreads":{
             "value": "__IocpThreads__"
+        },
+        "Expiry": {
+            "value": "__Expiry__"
         }
     }
 }
