@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFC.Logger.AppInsights.Contracts;
 using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
@@ -31,6 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IHttpContextAccessor accessor;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
+        private readonly ILogService logService;
         private string status;
 
         public AssessmentService(
@@ -41,7 +43,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             INotificationService notificationService,
             IHttpContextAccessor accessor,
             ISharedContentRedisInterface sharedContentRedisInterface,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ILogService logService)
         {
             this.sessionIdToCodeConverter = sessionIdToCodeConverter;
             this.sessionService = sessionService;
@@ -51,6 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.accessor = accessor;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.configuration = configuration;
+            this.logService = logService;
 
             status = configuration?.GetSection("contentMode:contentMode").Get<string>();
 
@@ -260,30 +264,38 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<DysacAssessment> GetAssessment(string sessionId)
         {
+            logService.LogInformation($"Calling {nameof(GetAssessment)} using sessionID {sessionId}");
             return (await GetAssessment(sessionId, true).ConfigureAwait(false))!;
         }
 
         public async Task<DysacAssessment?> GetAssessment(string sessionId, bool throwErrorWhenNotFound)
         {
+            logService.LogInformation($"{nameof(GetAssessment)} process has started");
             if (accessor.HttpContext != null && accessor.HttpContext.Items.ContainsKey(HttpContextAssessmentKey))
             {
               return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
             }
 
+            logService.LogInformation($"Retrieving assessment {sessionId} from CosmosDB");
             var assessment = await documentStore.GetAssessmentAsync(sessionId)
                 .ConfigureAwait(false);
 
             if (assessment != null && accessor.HttpContext != null)
             {
+                logService.LogInformation($"Assessment {sessionId} has been found. Returning assessment {assessment.Id}");
                 accessor.HttpContext.Items.Add(HttpContextAssessmentKey, assessment);
+                logService.LogInformation($"{nameof(GetAssessment)} process has ended");
                 return assessment;
             }
 
             if (!throwErrorWhenNotFound)
             {
+                logService.LogWarning($"Assessment {sessionId} has not been found. Returning null");
+                logService.LogInformation($"{nameof(GetAssessment)} process has ended");
                 return null;
             }
 
+            logService.LogInformation($"{nameof(GetAssessment)} process has ended");
             throw new InvalidOperationException($"Assessment {sessionId} not found");
         }
 
@@ -450,6 +462,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task UpdateAssessment(DysacAssessment assessment)
         {
+            logService.LogInformation($"Updating assessment {assessment.Id} in CosmosDB");
             await documentStore.UpdateAssessmentAsync(assessment).ConfigureAwait(false);
 
             if (accessor.HttpContext != null)

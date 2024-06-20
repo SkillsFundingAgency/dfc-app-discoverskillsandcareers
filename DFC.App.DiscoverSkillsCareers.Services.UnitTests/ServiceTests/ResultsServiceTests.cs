@@ -20,6 +20,7 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac;
+using DFC.Logger.AppInsights.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -34,6 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration = A.Fake<IConfiguration>();
+        private readonly ILogService logService;
 
         public ResultsServiceTests()
         {
@@ -44,6 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             var fakeMemoryCache = A.Fake<IMemoryCache>();
             sharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();   
             mapper = A.Fake<Mapper>();  
+            logService = A.Fake<ILogService>();
             
             resultsService = new ResultsService(
                 sessionService,
@@ -53,7 +56,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                 fakeMemoryCache,
                 sharedContentRedisInterface, 
                 mapper,
-                configuration);
+                configuration,
+                logService);
 
             sessionId = "session1";
             A.CallTo(() => sessionService.GetSessionId()).Returns(sessionId);

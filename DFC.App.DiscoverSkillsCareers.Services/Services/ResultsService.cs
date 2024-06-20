@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFC.Logger.AppInsights.Contracts;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
@@ -25,6 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
+        private readonly ILogService logService;
         private string status;
 
         public ResultsService(
@@ -35,7 +37,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             IMemoryCache memoryCache,
             ISharedContentRedisInterface sharedContentRedisInterface,
             IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ILogService logService)
         {
             this.sessionService = sessionService;
             this.assessmentService = assessmentService;
@@ -47,13 +50,18 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.mapper = mapper;
             this.configuration = configuration;
+            this.logService = logService;
         }
 
         public async Task<GetResultsResponse> GetResults(bool updateCollection)
         {
+            logService.LogInformation($"Retrieving sessionID from {nameof(sessionService.GetSessionId)}");
             var sessionId = await sessionService.GetSessionId().ConfigureAwait(false);
+            logService.LogInformation($"{nameof(sessionService.GetSessionId)} has returned {sessionId}");
+            logService.LogInformation($"Retrieving assessment from {nameof(assessmentService.GetAssessment)} using sessionID {sessionId}");
             var assessment = await assessmentService.GetAssessment(sessionId).ConfigureAwait(false);
 
+            logService.LogInformation($"Calling {nameof(ProcessAssessment)}");
             return await ProcessAssessment(assessment, updateCollection).ConfigureAwait(false);
         }
 
@@ -191,18 +199,23 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<GetResultsResponse> ProcessAssessment(DysacAssessment assessment, bool updateCollection)
         {
+            logService.LogInformation($"{nameof(ProcessAssessment)} process has started for {assessment.Id}");
+            logService.LogInformation($"Calling {nameof(assessmentCalculationService.ProcessAssessment)}");
             var assessmentCalculationResponse = await assessmentCalculationService.ProcessAssessment(assessment).ConfigureAwait(false);
 
             if (assessmentCalculationResponse == null)
             {
+                logService.LogInformation($"{nameof(ProcessAssessment)} process has ended for {assessment.Id}");
                 throw new InvalidOperationException($"Assessment Calculation Response is null for {assessment.Id}");
             }
 
             if (updateCollection)
             {
+                logService.LogInformation($"Calling {nameof(assessmentService.UpdateAssessment)}");
                 await assessmentService.UpdateAssessment(assessmentCalculationResponse).ConfigureAwait(false);
             }
 
+            logService.LogInformation($"Returning {nameof(GetResultsResponse)}");
             return new GetResultsResponse
             {
                 LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments

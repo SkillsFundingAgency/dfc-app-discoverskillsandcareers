@@ -248,8 +248,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return RedirectToRoot();
             }
 
+            logService.LogInformation($"Calling {nameof(resultsService.GetResults)}");
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
+            logService.LogInformation($"Calling {nameof(sharedContentRedisInterface.GetDataAsync)} to retrieve {nameof(resultsHeroBannerViewModel.SpeakToAnAdviser)} from STAX");
             resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsync<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status).Result.Html;
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
