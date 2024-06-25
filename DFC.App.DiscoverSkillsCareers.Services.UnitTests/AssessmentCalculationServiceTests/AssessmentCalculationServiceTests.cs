@@ -94,8 +94,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             result.Should().NotBeNull();
             result.Should().HaveCount(1);
         }
-
-        [Fact]
+        //149589 commented out
+        /*[Fact]
         public async Task OrderJobCategoryResultsTests()
         {
             //Arrange
@@ -152,7 +152,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             Assert.Equal("A-CATEGORY", result.ElementAt(2).JobFamilyName);
             Assert.Equal("B-CATEGORY", result.ElementAt(3).JobFamilyName);
             Assert.Equal("CATEGORY3", result.ElementAt(4).JobFamilyName);
-        }
+        }*/
 
         [Fact(Skip = "Further investigation required")]
         public async Task AssessmentCalculationServiceWhenLeaderQuestionPositiveReturnsLeaderJobCategory()
@@ -204,6 +204,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.AssessmentCalculation
             Assert.Equal(2, result.ShortQuestionResult!.JobCategories.Count());
             Assert.Equal("border-force-doer", result.ShortQuestionResult!.JobCategories.FirstOrDefault().JobFamilyNameUrl);
             Assert.Equal("border-force-leader", result.ShortQuestionResult!.JobCategories.LastOrDefault().JobFamilyNameUrl);
+
         }
 
         [Fact]

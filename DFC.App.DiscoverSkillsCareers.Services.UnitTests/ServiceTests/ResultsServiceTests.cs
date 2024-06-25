@@ -971,8 +971,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             Assert.False(results.AllJobProfilesMatchWithAssessmentProfiles);
         }
-
-        [Fact(Skip = "Further Investigation Needed")]
+        //149589 commented out
+        /*[Fact(Skip = "Further Investigation Needed")]
         public async Task GetResultsByCategory_OrdersByCategoryWhenSelectedJobCategoryHasNoFilteringQuestionsLeft()
         {
             //Arrange
@@ -990,7 +990,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
             A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityFilteringQuestionResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored))
                 .Returns(questionResponse);
-          /*  A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion", A<string>.Ignored))
+          *//*  A.CallTo(() => documentStore.GetAllContentAsync<DysacFilteringQuestionContentModel>("FilteringQuestion", A<string>.Ignored))
                 .Returns(new List<DysacFilteringQuestionContentModel>
                 {
                     new DysacFilteringQuestionContentModel
@@ -1008,7 +1008,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                         }
                     }
                 }
-            );*/
+            );*//*
 
             var jobCategory = new DysacJobProfileCategoryContentModel
             {
@@ -1033,9 +1033,9 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
 
 
-           /* A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
+           *//* A.CallTo(() => documentStore.GetAllContentAsync<DysacJobProfileCategoryContentModel>("JobProfileCategory", A<string>.Ignored))
                 .Returns(new List<DysacJobProfileCategoryContentModel> { jobCategory });
-*/
+*//*
             var category = "0-filtering-questions-left";
             var resultsResponse = new GetResultsResponse() { SessionId = sessionId };
             var profiles = new List<JobProfileResult>
@@ -1056,6 +1056,6 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
             // Assert
             Assert.NotEqual(9999, assessment.ShortQuestionResult.JobCategories.FirstOrDefault().DisplayOrder);
             Assert.Equal(9999, assessment.ShortQuestionResult.JobCategories.ElementAt(1).DisplayOrder);
-        }
+        }*/
     }
 }

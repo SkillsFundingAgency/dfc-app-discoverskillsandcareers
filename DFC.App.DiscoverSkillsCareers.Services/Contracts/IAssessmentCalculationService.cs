@@ -8,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
     public interface IAssessmentCalculationService
     {
         Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment);
-
-        IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder);
+        //149589 commented out
+        //IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder);
     }
 }

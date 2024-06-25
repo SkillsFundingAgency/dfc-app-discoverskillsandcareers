@@ -83,7 +83,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             return await RunShortAssessmentCalculation(assessment, allTraits).ConfigureAwait(false);
         }
 
-        public IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder)
+        //149589 commented out
+        /*public IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder)
         {
             var orderedResults = resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
                                  .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
@@ -99,7 +100,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return orderedResults;
-        }
+        }*/
 
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
             List<TraitResult> userTraits,
@@ -211,7 +212,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 }
             }
 
-            return OrderJobCategoryResults(results);
+            return results.OrderByDescending(jobCategory => jobCategory.Total);
+            //return OrderJobCategoryResults(results);
         }
 
         public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment, List<DysacTraitContentModel> allTraits)
