@@ -6,6 +6,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
@@ -80,6 +81,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return await RunShortAssessmentCalculation(assessment, allTraits).ConfigureAwait(false);
+        }
+
+        public IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder)
+        {
+            var orderedResults = resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
+                                 .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
+                                 .ThenBy(jobCategory => jobCategory.JobFamilyName); //Lastly, order those with the same trait score and number of remaining questions alphabetically.
+
+            var numberOfOrderedResults = orderedResults.Count();
+            var order = 0;
+
+            foreach (var c in orderedResults)
+            {
+                c.DisplayOrder = numberOfOrderedResults - order;
+                order++;
+            }
+
+            return orderedResults;
         }
 
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
@@ -192,7 +211,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 }
             }
 
-            return results.OrderByDescending(jobCategory => jobCategory.Total);
+            return OrderJobCategoryResults(results);
         }
 
         public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment, List<DysacTraitContentModel> allTraits)
@@ -257,7 +276,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DysacPersonalityTrait, status);
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {
