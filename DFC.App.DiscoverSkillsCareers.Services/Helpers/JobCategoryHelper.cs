@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Configuration;
-using NHibernate.Engine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +24,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Helpers
                 status = "PUBLISHED";
             }
 
-            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponseDysac>(Constants.DysacJobProfileCategories, status)
+            var result = await sharedContentRedisInterface.GetDataAsync<JobProfileCategoriesResponseDysac>(Constants.DYSACJobProfileCategories, status)
                    ?? new JobProfileCategoriesResponseDysac();
 
             var jobCategories = mapper.Map<List<DysacJobProfileCategoryContentModel>>(result.JobProfileCategories);
