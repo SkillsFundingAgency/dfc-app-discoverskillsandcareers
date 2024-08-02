@@ -20,6 +20,12 @@
     "appSharedStorageAccountName": {
       "value": "dfcdevappsharedstr"
     },
+    "appServicePlanSuffix": {
+      "value": "-migrated"
+    },
+    "appServiceName": {
+      "value": "dfc-foo-dysac-as-ver"
+    },
     "CdnUrl": {
       "value": "https://foo.cdn.nationalcareers.service.uk"
     },
@@ -40,15 +46,6 @@
     },
     "Environment": {
       "value": "FOO"
-    },
-    "aspSize": {
-      "value": "2"
-    },
-    "aspTier": {
-      "value": "Standard"
-    },
-    "aspInstances": {
-      "value": 2
     },
     "enableAlerts": {
       "value": false
