@@ -144,10 +144,13 @@
     "contentMode": {
       "type": "string"
     },
-	"WorkerThreads": {
-	  "type": "string"
+    "WorkerThreads": {
+      "type": "string"
     },
     "IocpThreads": {
+      "type": "string"
+    },
+    "Expiry": {
       "type": "string"
     }
   },
@@ -594,6 +597,10 @@
               {
                 "name": "ThreadSettings__IocpThreads",
                 "value": "[parameters('IocpThreads')]"
+              },
+              {
+                "name": "Cms__Expiry",
+                "value": "[parameters('Expiry')]"
               }
             ]
           }
