@@ -138,6 +138,9 @@
     "CmsRedisCacheConnectionString": {
       "type": "securestring"
     },
+    "CmsCacheKeyExpiry": {
+      "type": "string"
+    },
     "cosmosDbSharedCollectionName": {
       "type": "string"
     },
@@ -585,6 +588,10 @@
               {
                 "name": "Cms__RedisCacheConnectionString",
                 "value": "[parameters('CmsRedisCacheConnectionString')]"
+              },
+              {
+                "name": "Cms__CacheKeyExpiry",
+                "value": "[parameters('CmsCacheKeyExpiry')]"
               },
               {
                 "name": "contentMode__contentMode",
