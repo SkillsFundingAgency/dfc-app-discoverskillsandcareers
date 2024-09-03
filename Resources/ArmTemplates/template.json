@@ -144,6 +144,10 @@
     "contentMode": {
       "type": "string"
     },
+    "assessmentsCollectionTimeToLive": {
+      "type": "int",
+      "defaultValue": 31536000
+    },
     "WorkerThreads": {
       "type": "string"
     },
@@ -154,18 +158,19 @@
       "type": "string"
     }
   },
-    "variables": {
-      "ApiName": "[concat(parameters('ApimProductInstanceName'), '-', parameters('ApiName'))]",
-      "appServiceAppInsightsName": "[concat(parameters('resourcePrefix'), '-ai')]",
+  "variables": {
+    "ApiName": "[concat(parameters('ApimProductInstanceName'), '-', parameters('ApiName'))]",
+    "appServiceAppInsightsName": "[concat(parameters('resourcePrefix'), '-ai')]",
       "appServicePlanName": "[concat(parameters('resourcePrefix'), parameters('appServicePlanSuffix'), '-asp')]",
-      "appServicePlanResourceGroup": "[concat(parameters('resourcePrefix'),'-rg')]",
-      "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-      "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
-      "cosmosDbCollectionPartitionKey": "/PartitionKey",
-      "cosmosDbDatabaseName": "dfc-app-dysac",
-      "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
-    },
-    "resources": [
+    "appServicePlanResourceGroup": "[concat(parameters('resourcePrefix'),'-rg')]",
+    "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
+    "webAppName": "[concat(parameters('resourcePrefix'), '-as')]",
+    "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]",
+    "cosmosDbCollectionPartitionKey": "/PartitionKey",
+    "cosmosDbDatabaseName": "dfc-app-dysac",
+    "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]"
+  },
+  "resources": [
     {
       "name": "[variables('ApiName')]",
       "type": "Microsoft.Resources/deployments",
@@ -317,6 +322,9 @@
           },
           "partitionKey": {
             "value": "[variables('cosmosDbCollectionPartitionKey')]"
+          },
+          "timeToLive": {
+            "value": "[parameters('assessmentsCollectionTimeToLive')]"
           }
         }
       },
@@ -340,12 +348,12 @@
           },
           "attachedService": {
             "value": ""
-                    },
-                    "workspaceName": {
-                        "value": "[parameters('workspaceName')]"
-                    },
-                    "workspaceResourceGroup": {
-                        "value": "[parameters('workspaceResourceGroup')]"
+          },
+          "workspaceName": {
+            "value": "[parameters('workspaceName')]"
+          },
+          "workspaceResourceGroup": {
+            "value": "[parameters('workspaceResourceGroup')]"
           }
         }
       }
