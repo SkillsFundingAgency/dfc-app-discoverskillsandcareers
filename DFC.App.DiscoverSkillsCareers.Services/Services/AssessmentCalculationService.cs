@@ -6,6 +6,7 @@ using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
@@ -31,6 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             { Answer.StronglyAgree, 2 },
         };
 
+        private const string ExpiryAppSettings = "Cms:Expiry";
         private readonly IDocumentStore documentStore;
         private readonly IMapper mapper;
         private readonly ILogger<AssessmentCalculationService> logger;
@@ -39,6 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
         private string status;
+        private double expiryInHours = 4;
 
         public AssessmentCalculationService(
             IDocumentStore documentStore,
@@ -63,6 +66,15 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 status = "PUBLISHED";
             }
+
+            if (this.configuration != null)
+            {
+                string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
+            }
         }
 
         public async Task<DysacAssessment> ProcessAssessment(DysacAssessment assessment)
@@ -80,6 +92,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             }
 
             return await RunShortAssessmentCalculation(assessment, allTraits).ConfigureAwait(false);
+        }
+
+        public IEnumerable<JobCategoryResult> OrderJobCategoryResults(List<JobCategoryResult> resultsToOrder)
+        {
+            var orderedResults = resultsToOrder.OrderByDescending(jobCategory => jobCategory.Total) //First order by trait score total
+                                 .ThenByDescending(jobCategory => jobCategory.TotalQuestions) //Now order those with the same trait score total by their number of remaining questions left to answer.
+                                 .ThenBy(jobCategory => jobCategory.JobFamilyName); //Lastly, order those with the same trait score and number of remaining questions alphabetically.
+
+            var numberOfOrderedResults = orderedResults.Count();
+            var order = 0;
+
+            foreach (var c in orderedResults)
+            {
+                c.DisplayOrder = numberOfOrderedResults - order;
+                order++;
+            }
+
+            return orderedResults;
         }
 
         public IEnumerable<JobCategoryResult> CalculateJobFamilyRelevance(
@@ -192,7 +222,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 }
             }
 
-            return results.OrderByDescending(jobCategory => jobCategory.Total);
+            return OrderJobCategoryResults(results);
         }
 
         public async Task<DysacAssessment> RunShortAssessmentCalculation(DysacAssessment assessment, List<DysacTraitContentModel> allTraits)
@@ -257,7 +287,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         private async Task<List<DysacTraitContentModel>?> GetTraits()
         {
-            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsync<PersonalityTraitResponse>(Constants.DysacPersonalityTrait, status);
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status, expiryInHours);
             var traits = new List<DysacTraitContentModel>();
             if (traintsResponse != null)
             {
