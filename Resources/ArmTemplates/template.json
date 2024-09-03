@@ -153,6 +153,9 @@
     },
     "IocpThreads": {
       "type": "string"
+    },
+    "Expiry": {
+      "type": "string"
     }
   },
   "variables": {
@@ -602,6 +605,10 @@
               {
                 "name": "ThreadSettings__IocpThreads",
                 "value": "[parameters('IocpThreads')]"
+              },
+              {
+                "name": "Cms__Expiry",
+                "value": "[parameters('Expiry')]"
               }
             ]
           }
