@@ -78,6 +78,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
         }
 
+        [Route("head/assessment/emailstart")]
+        public IActionResult AssessmentEmailStart()
+        {
+            logService.LogInformation($"AssessmentEmailStart {PageTitle.AssessmentEmailStart} called");
+            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailStart);
+        }
+
         [Route("head/loadsession")]
         public IActionResult LoadSession()
         {
