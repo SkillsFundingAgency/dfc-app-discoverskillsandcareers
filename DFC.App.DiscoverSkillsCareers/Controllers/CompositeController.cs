@@ -158,6 +158,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("herobanner/{**data}")]
         public IActionResult HeroBannerEmpty()
         {
+            if (RouteData.Values["data"]?.ToString() == "start")
+            {
+                return View("HeroBanner");
+            }
+
             logService.LogInformation($"HeroBannerEmpty called");
             return Content(string.Empty);
         }
@@ -176,6 +181,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var vm = CreateViewModel(title);
             return View(ViewName, vm);
+        }
+
+        [Route("head/start")]
+        public IActionResult Start()
+        {
+            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
+            return CreateViewModelAndReturnView(PageTitle.Start);
         }
     }
 }

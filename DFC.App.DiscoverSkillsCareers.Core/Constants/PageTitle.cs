@@ -15,5 +15,8 @@
         public const string LoadSession = "Load Session";
         public const string Results = "Results";
         public const string AssessmentComplete = "Assessment complete";
+        public const string Start = "Start";
+
+
     }
 }
