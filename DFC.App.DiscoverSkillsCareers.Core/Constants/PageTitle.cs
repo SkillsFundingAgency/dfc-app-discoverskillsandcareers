@@ -16,6 +16,7 @@
         public const string Results = "Results";
         public const string AssessmentComplete = "Assessment complete";
         public const string Start = "Start";
+        public const string StartEmailSent = "Email sent";
 
 
     }

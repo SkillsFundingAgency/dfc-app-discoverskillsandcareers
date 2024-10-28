@@ -72,10 +72,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("head/assessment/emailsent")]
+        [Route("head/start/emailsent")]
         public IActionResult AssessmentEmailSent()
         {
-            logService.LogInformation($"AssessmentEmailSent {PageTitle.AssessmentEmailSent} called");
-            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
+           var pageTitle = RouteData.Values["action"].ToString().Contains("Assessment") ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
+           logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
+           return CreateViewModelAndReturnView(pageTitle);
         }
 
         [Route("head/loadsession")]

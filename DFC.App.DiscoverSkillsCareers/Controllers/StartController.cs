@@ -4,7 +4,6 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -82,6 +81,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             };
 
             return result;
+        }
+
+        public IActionResult EmailSent()
+        {
+            logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
+
+            return View();
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
