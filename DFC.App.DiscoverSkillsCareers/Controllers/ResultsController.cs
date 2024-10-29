@@ -93,7 +93,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             };
 
             resultIndexResponseViewModel.Results.JobCategoriesNumberToShow = requestViewModel?.CountToShow ?? 3;
-
+            resultIndexResponseViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
             logService.LogInformation("About to display results view");
             return View(resultIndexResponseViewModel);
         }
@@ -239,6 +239,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
+            resultsByCategoryModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
+
 
             logService.LogInformation($"{nameof(Roles)} generated the model and ready to pass to the view");
 
