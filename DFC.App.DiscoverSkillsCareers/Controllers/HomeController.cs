@@ -46,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status, expiryInHours).Result.Html,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
             };
             return Task.FromResult<IActionResult>(View(responseVm));
         }
@@ -64,7 +64,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 var responseViewModel = new HomeIndexResponseViewModel
                 {
                     ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status, expiryInHours).Result.Html,
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
                 };
                 return View(responseViewModel);
             }

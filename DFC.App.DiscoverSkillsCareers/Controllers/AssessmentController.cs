@@ -289,6 +289,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        public IActionResult EmailStart()
+        {
+            logService.LogInformation($"{nameof(this.EmailStart)} generated the model and ready to pass to the view");
+
+            return View();
+        }
+
         public async Task<IActionResult> Reference()
         {
             var hasSessionId = await HasSessionId().ConfigureAwait(false);

@@ -80,6 +80,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
            return CreateViewModelAndReturnView(pageTitle);
         }
 
+        [Route("head/assessment/emailstart")]
+        public IActionResult AssessmentEmailStart()
+        {
+            logService.LogInformation($"AssessmentEmailStart {PageTitle.AssessmentEmailStart} called");
+            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailStart);
+        }
+
         [Route("head/loadsession")]
         public IActionResult LoadSession()
         {
@@ -123,6 +130,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             logService.LogInformation($"BodyTopBackToStart called");
             return View();
+        }
+
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BodyTopBackToStartComplete()
+        {
+            logService.LogInformation($"BodyTopBackToStartComplete called");
+            return NoContent();
         }
 
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
