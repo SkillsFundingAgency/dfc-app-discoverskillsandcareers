@@ -130,6 +130,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BodyTopBackToStartComplete()
+        {
+            logService.LogInformation($"BodyTopBackToStartComplete called");
+            return NoContent();
+        }
+
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
         public IActionResult BodyTopQuestions(string assessmentType, int questionNumber)
         {
