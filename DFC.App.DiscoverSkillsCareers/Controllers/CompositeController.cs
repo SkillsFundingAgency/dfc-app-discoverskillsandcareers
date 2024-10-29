@@ -116,7 +116,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop/assessment/{assessmentType}/1")]
-        [Route("bodytop/assessment/complete")]
         public IActionResult BodyTopBackToStart()
         {
             logService.LogInformation($"BodyTopBackToStart called");
