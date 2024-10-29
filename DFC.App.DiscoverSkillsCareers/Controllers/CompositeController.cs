@@ -123,11 +123,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop/assessment/{assessmentType}/1")]
-        [Route("bodytop/assessment/complete")]
         public IActionResult BodyTopBackToStart()
         {
             logService.LogInformation($"BodyTopBackToStart called");
             return View();
+        }
+
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BodyTopBackToStartComplete()
+        {
+            logService.LogInformation($"BodyTopBackToStartComplete called");
+            return NoContent();
         }
 
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
