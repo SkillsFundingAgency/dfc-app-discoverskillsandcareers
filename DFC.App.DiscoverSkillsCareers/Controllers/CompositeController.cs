@@ -72,10 +72,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("head/assessment/emailsent")]
+        [Route("head/start/emailsent")]
         public IActionResult AssessmentEmailSent()
         {
-            logService.LogInformation($"AssessmentEmailSent {PageTitle.AssessmentEmailSent} called");
-            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
+           var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
+           logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
+           return CreateViewModelAndReturnView(pageTitle);
         }
 
         [Route("head/assessment/emailstart")]
@@ -171,6 +173,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("herobanner/{**data}")]
         public IActionResult HeroBannerEmpty()
         {
+            if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start")
+            {
+                return View("HeroBanner");
+            }
+
             logService.LogInformation($"HeroBannerEmpty called");
             return Content(string.Empty);
         }
@@ -189,6 +196,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var vm = CreateViewModel(title);
             return View(ViewName, vm);
+        }
+
+        [Route("head/start")]
+        public IActionResult Start()
+        {
+            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
+            return CreateViewModelAndReturnView(PageTitle.Start);
         }
     }
 }
