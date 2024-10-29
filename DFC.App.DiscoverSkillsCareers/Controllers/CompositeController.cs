@@ -75,7 +75,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("head/start/emailsent")]
         public IActionResult AssessmentEmailSent()
         {
-           var pageTitle = RouteData.Values["action"].ToString().Contains("Assessment") ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
+           var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
            logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
            return CreateViewModelAndReturnView(pageTitle);
         }
@@ -174,7 +174,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("herobanner/{**data}")]
         public IActionResult HeroBannerEmpty()
         {
-            if (RouteData.Values["data"]?.ToString() == "start")
+            if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start")
             {
                 return View("HeroBanner");
             }
