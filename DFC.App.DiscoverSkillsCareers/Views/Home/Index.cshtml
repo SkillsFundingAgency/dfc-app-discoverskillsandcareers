@@ -48,7 +48,7 @@
             <p class="govuk-body">After 12 months of no updates being made, your assessment will be automatically deleted.</p>
         </div>
 
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-full govuk-!-margin-bottom-5">
             <div class="app-sidebar app-resume-panel">
                 <h2 class="govuk-heading-m">Return to an assessment</h2>
                 <form method="post" asp-controller="home" id="dysac-form">
@@ -64,15 +64,16 @@
                 </form>
             </div>
 
-            <div class="app-sidebar app-advisor-panel">
-                @if (Model.SpeakToAnAdviser != null)
-                {
-                    <div class="app-related-items">
-                        @Html.Raw(Model.SpeakToAnAdviser)
-                    </div>
-                }
-            </div>
+            
 
+        </div>
+        <div class="govuk-grid-column-full">
+            @if (Model.SpeakToAnAdviser != null)
+            {
+                <div class="app-related-items">
+                    @Html.Raw(Model.SpeakToAnAdviser)
+                </div>
+            }
         </div>
     </div>
 </div>

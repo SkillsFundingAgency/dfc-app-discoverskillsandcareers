@@ -15,5 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public ResultsIndexResponseViewModel Results { get; set; }
 
         public string AssessmentType { get; set; }
+
+        public string SpeakToAnAdviser { get; set; }
     }
 }

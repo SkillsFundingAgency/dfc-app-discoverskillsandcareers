@@ -13,5 +13,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public IEnumerable<string> Traits { get; set; }
 
         public IEnumerable<ResultsJobsInCategoryModel> JobsInCategory { get; set; }
+
+        public string SpeakToAnAdviser { get; set; }
     }
 }
