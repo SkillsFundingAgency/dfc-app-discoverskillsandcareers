@@ -8,10 +8,10 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class StartViewModel
     {
-        public string SharedContent { get; set; }
-
+        [Required]
         public string ReferenceCode { get; set; }
 
+        [Required]
         public string AssessmentStarted { get; set; }
 
         [Required(ErrorMessage = "Choose how to get your reference code sent to you")]
