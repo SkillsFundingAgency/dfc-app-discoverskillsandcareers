@@ -76,24 +76,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View(startViewModel);
         }
 
-        private async Task<StartViewModel> GetAssessmentViewModel()
-        {
-            var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
-
-            var result = new StartViewModel
-            {
-                ReferenceCode = SessionHelper.FormatSessionId(getAssessmentResponse.ReferenceCode!),
-                AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard),
-            };
-
-            return result;
-        }
-
-        private async Task<GetAssessmentResponse> GetAssessment()
-        {
-            return await assessmentService.GetAssessment().ConfigureAwait(false);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Index(StartViewModel request)
         {
@@ -165,5 +147,23 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             TryValidateModel(request);
         }
+        private async Task<StartViewModel> GetAssessmentViewModel()
+        {
+            var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
+
+            var result = new StartViewModel
+            {
+                ReferenceCode = SessionHelper.FormatSessionId(getAssessmentResponse.ReferenceCode!),
+                AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard),
+            };
+
+            return result;
+        }
+
+        private async Task<GetAssessmentResponse> GetAssessment()
+        {
+            return await assessmentService.GetAssessment().ConfigureAwait(false);
+        }
+
     }
 }
