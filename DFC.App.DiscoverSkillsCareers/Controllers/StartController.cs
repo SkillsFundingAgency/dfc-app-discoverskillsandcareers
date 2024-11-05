@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
+using System.Web;
 using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -70,10 +71,79 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
 
-            var sharedhtml = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
-            startViewModel.SharedContent = sharedhtml;
+            TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             return View(startViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(StartViewModel request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
+            TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
+            {
+                SanitiseEmail(request);
+            }
+
+            return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
+                await SendEmail(request).ConfigureAwait(false);
+        }
+
+        private async Task<IActionResult> SendEmail(StartViewModel request)
+        {
+            try
+            {
+                var emailResponse = await commonService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
+
+                if (emailResponse.IsSuccess)
+                {
+                    if (TempData != null)
+                    {
+                        TempData["SentEmail"] = request.Email;
+                    }
+
+                    return RedirectTo("start/emailsent");
+                }
+            }
+            catch (Exception exception)
+            {
+                logService.LogError(exception.Message);
+            }
+
+            return View(request);
+        }
+
+        private async Task<IActionResult> SendSms(StartViewModel request)
+        {
+            if (TempData != null)
+            {
+                const string key = "PhoneNumber";
+                TempData.Remove(key);
+                TempData.Add(key, request.PhoneNumber);
+            }
+
+            await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
+
+            return RedirectTo("assessment/referencesent"); // This needs changed once the page is implemented.
+        }
+
+        private void SanitiseEmail(StartViewModel request)
+        {
+            request.Email = request.Email?.ToLower();
+            ModelState.Clear();
+
+            TryValidateModel(request);
         }
 
         private async Task<StartViewModel> GetAssessmentViewModel()
@@ -92,78 +162,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private async Task<GetAssessmentResponse> GetAssessment()
         {
             return await assessmentService.GetAssessment().ConfigureAwait(false);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Index(StartViewModel request)
-        {
-            if (request == null)
-            {
-                return BadRequest();
-            }
-
-            if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
-            {
-                SanitiseEmail(request);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
-                request.SharedContent = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
-                request.AssessmentStarted = startViewModel.AssessmentStarted;
-                request.ReferenceCode = startViewModel.ReferenceCode;
-                return View(request);
-            }
-
-            if (ModelState.IsValid)
-            {
-                if (request.Contact == Core.Enums.AssessmentReturnType.Reference)
-                {
-                    if (TempData != null)
-                    {
-                        const string key = "Telephone";
-                        TempData.Remove(key);
-                        TempData.Add(key, request.PhoneNumber);
-                    }
-
-                    await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
-
-                    return RedirectTo("assessment/referencesent"); // This needs changed once the page is implemented.
-                }
-
-                if (request.Contact == Core.Enums.AssessmentReturnType.Email)
-                {
-                    try
-                    {
-                        var emailResponse = await commonService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
-
-                        if (emailResponse.IsSuccess)
-                        {
-                            if (TempData != null)
-                            {
-                                TempData["SentEmail"] = request.Email;
-                            }
-
-                            return RedirectTo("start/emailsent");
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        logService.LogError(exception.Message);
-                    }
-                }
-            }
-
-            return View(request);
-        }
-
-        private void SanitiseEmail(StartViewModel request)
-        {
-            request.Email = request.Email?.ToLower();
-            ModelState.Clear();
-
-            TryValidateModel(request);
         }
     }
 }
