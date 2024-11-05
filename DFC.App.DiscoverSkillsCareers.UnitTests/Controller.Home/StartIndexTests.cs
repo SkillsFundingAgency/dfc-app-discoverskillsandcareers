@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
+namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
 {
     public class StartIndexTests : StartTestBase
     {

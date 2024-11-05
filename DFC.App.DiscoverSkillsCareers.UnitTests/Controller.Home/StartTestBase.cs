@@ -7,7 +7,7 @@ using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.Extensions.Configuration;
 
-namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
+namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
 {
     public class StartTestBase
     {
