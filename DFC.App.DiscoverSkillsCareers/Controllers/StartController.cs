@@ -77,11 +77,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(StartViewModel request)
+        public async Task<IActionResult> Index([FromBody] StartViewModel request)
         {
             if (request == null)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
             }
 
             if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
@@ -89,10 +94,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 SanitiseEmail(request);
             }
 
-            if (!ModelState.IsValid)
-            {
-                return View(request);
-            }
+            request.SharedContent = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
                 await SendEmail(request).ConfigureAwait(false);
