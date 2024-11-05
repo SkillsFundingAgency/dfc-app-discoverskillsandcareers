@@ -1,23 +1,18 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
-using DFC.App.DiscoverSkillsCareers.ViewModels;
-using FakeItEasy;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using DFC.App.DiscoverSkillsCareers.Services.Contracts;
-using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using Microsoft.Extensions.Configuration;
-using DFC.Logger.AppInsights.Contracts;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
-using DFC.Content.Pkg.Netcore.Services.ApiProcessorService;
-using Microsoft.AspNetCore.Http;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using DFC.App.DiscoverSkillsCareers.Services.Contracts;
+using DFC.App.DiscoverSkillsCareers.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Logger.AppInsights.Contracts;
+using FakeItEasy;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
 {
@@ -63,7 +58,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
             A.CallTo(() => sessionService.HasValidSession()).Returns(true);
             controller.ModelState.AddModelError("Key1", "Some Error");
 
-            //var controller = StartController;
             controller.ObjectValidator = A.Fake<IObjectModelValidator>();
             A.CallTo(() => controller.ObjectValidator.Validate(
                 A<ActionContext>.Ignored,

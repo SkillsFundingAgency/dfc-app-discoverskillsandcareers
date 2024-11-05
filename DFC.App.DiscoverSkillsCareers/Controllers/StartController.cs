@@ -3,7 +3,6 @@ using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
-using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
@@ -35,8 +34,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             IConfiguration configuration,
             ILogService logService,
             ICommonService commonService,
-            NotifyOptions notifyOptions
-            )
+            NotifyOptions notifyOptions)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
@@ -89,13 +87,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             };
 
             return result;
-        }
-
-        public IActionResult EmailSent()
-        {
-            logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
-
-            return View();
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
