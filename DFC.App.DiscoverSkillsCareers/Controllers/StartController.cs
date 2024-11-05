@@ -71,19 +71,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
 
-            var sharedhtml = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
-            //startViewModel.SharedContent = sharedhtml;
+            TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             return View(startViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index([FromBody] StartViewModel request)
+        public async Task<IActionResult> Index(StartViewModel request)
         {
             if (request == null)
             {
                 return BadRequest();
             }
+
+            TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             if (!ModelState.IsValid)
             {
@@ -94,8 +95,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 SanitiseEmail(request);
             }
-
-            //request.SharedContent = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
                 await SendEmail(request).ConfigureAwait(false);
@@ -164,6 +163,5 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             return await assessmentService.GetAssessment().ConfigureAwait(false);
         }
-
     }
 }

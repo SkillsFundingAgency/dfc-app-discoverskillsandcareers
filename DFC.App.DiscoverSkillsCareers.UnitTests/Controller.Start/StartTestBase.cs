@@ -46,6 +46,5 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         {
             get { return commonService; }
         }
-
     }
 }

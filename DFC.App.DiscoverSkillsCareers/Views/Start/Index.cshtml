@@ -63,3 +63,9 @@
         </form>
     </fieldset>
 </div>
+@if (TempData != null)
+{
+    <div class="app-related-items">
+       @Html.Raw(TempData["sharedcontent"].ToString())
+    </div>
+}

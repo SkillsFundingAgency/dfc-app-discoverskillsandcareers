@@ -50,7 +50,7 @@
           </li>
             <li class="m-r-10">
                 <a href="#">
-                    <span class="badge badge-primary">4/13/2022 10:03:39 AM</span>
+                    <span class="badge badge-primary">11/5/2024 4:12:17 PM</span>
                 </a>
             </li>
         </ul>
@@ -102,58 +102,18 @@
 	                                        </div>
 	                                    </div>
 	                                    <div class="card-footer">
-	                                    	<div><small data-tooltip='0%'>
-	                                    		<b>0</b> features passed
+	                                    	<div><small data-tooltip='100%'>
+	                                    		<b>1</b> features passed
                                     		</small></div>
 	                                    	<div>
-	                                    		<small data-tooltip='100%'><b>1</b> features failed, 
+	                                    		<small data-tooltip='0%'><b>0</b> features failed, 
 	                                    		<b data-tooltip='0%'>0</b> others
 	                                    		</small>
                                     		</div>
 	                                    </div>
 									</div>
 								</div>
-								<div class="col-sm-12 col-md-4">
-									<div class="card">
-										<div class="card-header">
-											<h6 class="card-title">Scenarios</h6>
-										</div>
-										<div class="card-body">
-	                                        <div class="">
-	                                            <canvas id='child-analysis' width='115' height='90'></canvas>
-	                                        </div>
-	                                    </div>
-	                                    <div class="card-footer">
-	                                    	<div><small data-tooltip='85.18518518518519%'><b>23</b> scenarios passed</small></div>
-	                                    	<div>
-	                                    		<small data-tooltip='14.814814814814813%'><b>4</b> scenarios failed, 
-	                                    		<b data-tooltip='0%'>0</b> others
-	                                    		</small>
-                                    		</div>
-	                                    </div>
-									</div>
-								</div>
-																<div class="col-sm-12 col-md-4">
-									<div class="card">
-										<div class="card-header">
-											<h6 class="card-title">Steps</h6>
-										</div>
-										<div class="card-body">
-	                                        <div class="">
-	                                            <canvas id='grandchild-analysis' width='115' height='90'></canvas>
-	                                        </div>
-	                                    </div>
-	                                    <div class="card-footer">
-	                                    	<div><small data-tooltip='98.86685552407933%'><b>349</b> steps passed</small></div>
-	                                    	<div>
-	                                    		<small data-tooltip='1.13314447592068%'><b>4</b> steps failed, 
-	                                    		<b data-tooltip='0%'>0</b> others
-	                                    		</small>
-                                    		</div>
-	                                    </div>
-									</div>
-								</div>
-							</div>
+															</div>
 							<div class="row">
 								<div class="col-md-3">
 									<div class="card">
@@ -164,26 +124,7 @@
 													<h2 class="font-size-28 font-weight-light">1</h2>
 													<span class="text-semibold text-success font-size-15">
 													<i class="ti-arrow-up font-size-11"></i> 
-														<span>0%</span>
-													</span>
-												</div>
-												<div class="align-self-end">
-													<i class="fa fa-align-left font-size-70 opacity-01"></i>
-												</div>
-											</div>
-	                                    </div>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body box-height-150">
-	                                        <div class="media justify-content-between">
-												<div>
-													<p class="">Scenarios</p>
-													<h2 class="font-size-28 font-weight-light">27</h2>
-													<span class="text-semibold text-success font-size-15">
-													<i class="ti-arrow-up font-size-11"></i> 
-														<span>85.19%</span>
+														<span>100%</span>
 													</span>
 												</div>
 												<div class="align-self-end">
@@ -199,7 +140,7 @@
 	                                        <div class="media justify-content-between">
 												<div>
 													<p class="">Start</p>
-													<h6 class="font-weight-light">4/13/2022 10:03:39 AM</h6>
+													<h6 class="font-weight-light">11/5/2024 4:12:17 PM</h6>
 													<span class="text-semibold text-success font-size-15">
 												</div>
 												<div class="align-self-end">
@@ -215,8 +156,24 @@
 	                                        <div class="media justify-content-between">
 												<div>
 													<p class="">End</p>
-													<h6 class="font-weight-light">4/13/2022 10:18:21 AM</h6>
+													<h6 class="font-weight-light">11/5/2024 4:13:00 PM</h6>
 													<span class="text-semibold text-danger font-size-15">
+												</div>
+												<div class="align-self-end">
+													<i class="fa fa-clock-o font-size-70 text-danger opacity-01"></i>
+												</div>
+											</div>
+	                                    </div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="card">
+										<div class="card-body box-height-150">
+	                                        <div class="media justify-content-between">
+												<div>
+													<p class="">Duration</p>
+													<h6 class="font-weight-light">00:00:47.4402591</h6>
+													<span class="text-semibold font-size-15">
 												</div>
 												<div class="align-self-end">
 													<i class="fa fa-clock-o font-size-70 text-danger opacity-01"></i>
@@ -250,37 +207,37 @@
 		<script>
 			var statusGroup = {
                 parentCount: 1,
-				passParent: 0,
-				failParent: 1,
+				passParent: 1,
+				failParent: 0,
 				fatalParent: 0,
 				errorParent: 0,
 				warningParent: 0,
 				skipParent: 0,
-				exceptionsParent: 1,
-				childCount: 27,
-				passChild: 23,
-				failChild: 4,
+				exceptionsParent: 0,
+				childCount: 0,
+				passChild: 0,
+				failChild: 0,
 				fatalChild: 0,
 				errorChild: 0,
 				warningChild: 0,
 				skipChild: 0,
 				infoChild: 0,
 				debugChild: 0,
-				exceptionsChild: 4,
-				grandChildCount: 353,
-				passGrandChild: 349,
-				failGrandChild: 4,
+				exceptionsChild: 0,
+				grandChildCount: 0,
+				passGrandChild: 0,
+				failGrandChild: 0,
 				fatalGrandChild: 0,
 				errorGrandChild: 0,
 				warningGrandChild: 0,
 				skipGrandChild: 0,
 				infoGrandChild: 0,
 				debugGrandChild: 0,
-				exceptionsGrandChild: 4,
+				exceptionsGrandChild: 0,
 			};
 		</script>
 			<script>
-				var timeline = { "DYSACUserActions":881.2368393 };
+				var timeline = { "DYSACUserActions":5.2E-06 };
 			</script>
 		<script type='text/javascript'>
 	

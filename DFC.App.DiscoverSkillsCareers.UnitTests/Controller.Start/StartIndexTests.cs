@@ -6,12 +6,13 @@ using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
 {
-    public class IndexTests : StartTestBase
+    public class StartIndexTests : StartTestBase
     {
         [Fact]
         public async Task IfNoSessionExistsRedirectedToRoot()
@@ -31,6 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
             var startViewModel = new StartViewModel();
             A.CallTo(() => Session.HasValidSession()).Returns(true);
             StartController.ModelState.AddModelError("Key1", "Some Error");
+            StartController.TempData = A.Fake<ITempDataDictionary>();
 
             StartController.ObjectValidator = A.Fake<IObjectModelValidator>();
             A.CallTo(() => StartController.ObjectValidator.Validate(
@@ -52,7 +54,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
             Assert.IsType<BadRequestResult>(actionResponse);
         }
 
-
         [Fact]
         public async Task WhenReferenceCodeSentToEmailIsSuccessfulRedirectsToEmailSent()
         {
@@ -60,6 +61,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
             {
                 HttpContext = new DefaultHttpContext(),
             };
+            StartController.TempData = A.Fake<ITempDataDictionary>();
 
             var sendEmailResponse = new SendEmailResponse() { IsSuccess = true };
             var viewModel = new StartViewModel() { Email = "someemail@gmail.com", Contact = Core.Enums.AssessmentReturnType.Email };
@@ -86,8 +88,9 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
             {
                 HttpContext = new DefaultHttpContext(),
             };
+            StartController.TempData = A.Fake<ITempDataDictionary>();
             var sendEmailResponse = new SendEmailResponse() { IsSuccess = false };
-            var viewModel = new StartViewModel() { Email = "someemail@gmail.com" , Contact = Core.Enums.AssessmentReturnType.Email };
+            var viewModel = new StartViewModel() { Email = "someemail@gmail.com", Contact = Core.Enums.AssessmentReturnType.Email };
             A.CallTo(() => CommonService.SendEmail(A<string>.Ignored, viewModel.Email)).Returns(sendEmailResponse);
 
             StartController.ObjectValidator = A.Fake<IObjectModelValidator>();
@@ -110,6 +113,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
                 HttpContext = new DefaultHttpContext(),
             };
             StartController.ModelState.AddModelError("key1", "Error1");
+            StartController.TempData = A.Fake<ITempDataDictionary>();
 
             var viewModel = new StartViewModel();
             var actionResponse = await StartController.Index(viewModel).ConfigureAwait(false);
@@ -124,6 +128,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
             {
                 HttpContext = new DefaultHttpContext(),
             };
+            StartController.TempData = A.Fake<ITempDataDictionary>();
             var viewModel = new StartViewModel() { PhoneNumber = "07000123456", Contact = Core.Enums.AssessmentReturnType.Reference };
 
             await StartController.Index(viewModel).ConfigureAwait(false);

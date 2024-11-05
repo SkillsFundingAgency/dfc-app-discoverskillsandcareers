@@ -1,5 +1,4 @@
-﻿using DFC.App.DiscoverSkillsCareers.ViewModels;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using static NuGet.Client.ManagedCodeConventions;
@@ -15,10 +14,13 @@ namespace DFC.App.DiscoverSkillsCareers.Validation
         public string[] Values { get; set; }
 
         /// <summary>
-        /// Independent property name
+        /// PropertyName
         /// </summary>
         public string PropertyName { get; set; }
 
+        /// <summary>
+        /// Error Message
+        /// </summary>
         public string ErrorMessage { get; set; }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -32,7 +34,6 @@ namespace DFC.App.DiscoverSkillsCareers.Validation
             var currentValue = model.GetType().GetProperty(PropertyName)?.GetValue(model, null)?.ToString();
             if (Values.Contains(currentValue) && value == null)
             {
-                var propertyInfo = validationContext.ObjectType.GetProperty(validationContext.MemberName);
                 return new ValidationResult(ErrorMessage);
             }
 
