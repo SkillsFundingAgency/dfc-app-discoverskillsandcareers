@@ -91,53 +91,49 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             if (!ModelState.IsValid)
             {
-                var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
-                request.SharedContent = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
-                request.AssessmentStarted = startViewModel.AssessmentStarted;
-                request.ReferenceCode = startViewModel.ReferenceCode;
                 return View(request);
             }
 
-            if (ModelState.IsValid)
+            return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
+                await SendEmail(request).ConfigureAwait(false);
+        }
+
+        private async Task<IActionResult> SendEmail(StartViewModel request)
+        {
+            try
             {
-                if (request.Contact == Core.Enums.AssessmentReturnType.Reference)
+                var emailResponse = await commonService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
+
+                if (emailResponse.IsSuccess)
                 {
                     if (TempData != null)
                     {
-                        const string key = "Telephone";
-                        TempData.Remove(key);
-                        TempData.Add(key, request.PhoneNumber);
+                        TempData["SentEmail"] = request.Email;
                     }
 
-                    await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
-
-                    return RedirectTo("assessment/referencesent"); // This needs changed once the page is implemented.
+                    return RedirectTo("start/emailsent");
                 }
-
-                if (request.Contact == Core.Enums.AssessmentReturnType.Email)
-                {
-                    try
-                    {
-                        var emailResponse = await commonService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
-
-                        if (emailResponse.IsSuccess)
-                        {
-                            if (TempData != null)
-                            {
-                                TempData["SentEmail"] = request.Email;
-                            }
-
-                            return RedirectTo("start/emailsent");
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        logService.LogError(exception.Message);
-                    }
-                }
+            }
+            catch (Exception exception)
+            {
+                logService.LogError(exception.Message);
             }
 
             return View(request);
+        }
+
+        private async Task<IActionResult> SendSms(StartViewModel request)
+        {
+            if (TempData != null)
+            {
+                const string key = "PhoneNumber";
+                TempData.Remove(key);
+                TempData.Add(key, request.PhoneNumber);
+            }
+
+            await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
+
+            return RedirectTo("assessment/referencesent"); // This needs changed once the page is implemented.
         }
 
         private void SanitiseEmail(StartViewModel request)
@@ -147,6 +143,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             TryValidateModel(request);
         }
+
         private async Task<StartViewModel> GetAssessmentViewModel()
         {
             var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
