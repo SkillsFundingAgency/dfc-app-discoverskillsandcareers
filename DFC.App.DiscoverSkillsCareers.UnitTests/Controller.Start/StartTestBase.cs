@@ -20,7 +20,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
-
         public StartTestBase()
         {
             sessionService = A.Fake<ISessionService>();

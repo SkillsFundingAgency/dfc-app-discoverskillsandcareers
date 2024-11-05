@@ -26,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         }
 
         [Fact]
-        public async Task WhenSessionExistsAndModelStateIsNotValidReturnsView()
+        public async Task WhenModelStateIsNotValidAndSessionExistsReturnsToIndex()
         {
             var startViewModel = new StartViewModel();
             A.CallTo(() => Session.HasValidSession()).Returns(true);
@@ -45,7 +45,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         }
 
         [Fact]
-        public async Task NullViewModelReturnsBadRequest()
+        public async Task WhenViewModelIsNullReturnsBadRequest()
         {
             StartViewModel viewModel = null;
             var actionResponse = await StartController.Index(viewModel).ConfigureAwait(false);
@@ -54,7 +54,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
 
 
         [Fact]
-        public async Task WhenModelStateIsValidRedirectsToView()
+        public async Task WhenReferenceCodeSentToEmailIsSuccessfulRedirectsToEmailSent()
         {
             StartController.ControllerContext = new ControllerContext()
             {
@@ -80,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         }
 
         [Fact]
-        public async Task WhenModelStateIsInvalidRedirectsToView()
+        public async Task WhenReferenceCodeSentToEmailModelStateIsInvalidRedirectsToView()
         {
             StartController.ControllerContext = new ControllerContext()
             {
@@ -103,7 +103,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         }
 
         [Fact]
-        public async Task WhenModelStateIsInvalidRedirectsView()
+        public async Task WhenReferenceCodeSentToPhoneNumberModelStateIsInvalidRedirectsToIndex()
         {
             StartController.ControllerContext = new ControllerContext()
             {
@@ -118,7 +118,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
         }
 
         [Fact]
-        public async Task WhenModelStateCallsSendSms()
+        public async Task WhenReferenceCodeSenttoPhoneNumber()
         {
             StartController.ControllerContext = new ControllerContext()
             {
