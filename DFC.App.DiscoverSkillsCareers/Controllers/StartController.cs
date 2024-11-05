@@ -1,5 +1,6 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Models.Common;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
@@ -8,7 +9,9 @@ using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using DFC.Logger.AppInsights.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Threading.Tasks;
+using System.Web;
 using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Controllers
@@ -22,21 +25,26 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private string status;
         private double expiryInHours = 4;
         private readonly ILogService logService;
+        private readonly NotifyOptions notifyOptions;
+        private readonly ICommonService commonService;
 
         public StartController(
             ISessionService sessionService,
             IAssessmentService assessmentService,
             ISharedContentRedisInterface sharedContentRedisInterface,
             IConfiguration configuration,
-            ILogService logService)
+            ILogService logService,
+            ICommonService commonService,
+            NotifyOptions notifyOptions)
             : base(sessionService)
         {
             this.assessmentService = assessmentService;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.configuration = configuration;
             this.logService = logService;
-
+            this.commonService = commonService;
             status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+            this.notifyOptions = notifyOptions;
 
             if (string.IsNullOrEmpty(status))
             {
@@ -63,12 +71,80 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
 
-            var sharedhtml = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status, expiryInHours).Result.Html;
-            startViewModel.SharedContent = sharedhtml;
+            TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             return View(startViewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(StartViewModel request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
+            TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
+            {
+                SanitiseEmail(request);
+            }
+
+            return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
+                await SendEmail(request).ConfigureAwait(false);
+        }
+
+        private async Task<IActionResult> SendEmail(StartViewModel request)
+        {
+            try
+            {
+                var emailResponse = await commonService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
+
+                if (emailResponse.IsSuccess)
+                {
+                    if (TempData != null)
+                    {
+                        TempData["SentEmail"] = request.Email;
+                    }
+
+                    return RedirectTo("start/emailsent");
+                }
+            }
+            catch (Exception exception)
+            {
+                logService.LogError(exception.Message);
+            }
+
+            return View(request);
+        }
+
+        private async Task<IActionResult> SendSms(StartViewModel request)
+        {
+            if (TempData != null)
+            {
+                const string key = "PhoneNumber";
+                TempData.Remove(key);
+                TempData.Add(key, request.PhoneNumber);
+            }
+
+            await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
+
+            return RedirectTo("assessment/referencesent"); // This needs changed once the page is implemented.
+        }
+
+        private void SanitiseEmail(StartViewModel request)
+        {
+            request.Email = request.Email?.ToLower();
+            ModelState.Clear();
+
+            TryValidateModel(request);
+        }
 
         private async Task<StartViewModel> GetAssessmentViewModel()
         {
@@ -81,13 +157,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             };
 
             return result;
-        }
-
-        public IActionResult EmailSent()
-        {
-            logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
-
-            return View();
         }
 
         private async Task<GetAssessmentResponse> GetAssessment()
