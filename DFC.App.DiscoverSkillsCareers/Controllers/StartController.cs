@@ -100,6 +100,20 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 await SendEmail(request).ConfigureAwait(false);
         }
 
+        public IActionResult EmailSent()
+        {
+            logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
+
+            return View();
+        }
+
+        public IActionResult ReferenceSent()
+        {
+            logService.LogInformation($"{nameof(this.ReferenceSent)} generated the model and ready to pass to the view");
+
+            return View();
+        }
+
         private async Task<IActionResult> SendEmail(StartViewModel request)
         {
             try
@@ -121,21 +135,32 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 logService.LogError(exception.Message);
             }
 
+            ModelState.AddModelError("Email", "There was a problem sending email");
             return View(request);
         }
 
         private async Task<IActionResult> SendSms(StartViewModel request)
         {
-            if (TempData != null)
+            try
             {
-                const string key = "PhoneNumber";
+                if (TempData != null)
+            {
+                const string key = "Telephone";
                 TempData.Remove(key);
                 TempData.Add(key, request.PhoneNumber);
             }
 
-            await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
+                await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
 
-            return RedirectTo("assessment/referencesent"); // This needs changed once the page is implemented.
+                return RedirectTo("start/referencesent"); // This needs changed once the page is implemented.
+            }
+            catch (Exception exception)
+            {
+                logService.LogError(exception.Message);
+            }
+
+            ModelState.AddModelError("PhoneNumber", "There was a problem sending a text message");
+            return View(request);
         }
 
         private void SanitiseEmail(StartViewModel request)
