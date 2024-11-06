@@ -58,9 +58,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("head/assessment/referencesent")]
+        [Route("head/start/referencesent")]
         public IActionResult AssessmentReferenceSent()
         {
-            logService.LogInformation($"AssessmentReferenceSent {PageTitle.AssessmentReferenceSent} called");
+            var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentReferenceSent : PageTitle.StartReferenceSent;
+            logService.LogInformation($"ReferceSent {pageTitle} called");
+
             return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
         }
 
