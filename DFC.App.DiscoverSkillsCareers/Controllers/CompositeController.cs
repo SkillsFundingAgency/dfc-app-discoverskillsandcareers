@@ -163,7 +163,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult HeroBanner()
         {
             logService.LogInformation($"HeroBanner called");
-            return View();
+            return View(new HeroBannerViewModel { IsLandingPage = true});
         }
 
         [Route("bodyfooter/{**data}")]
@@ -178,7 +178,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start")
             {
-                return View("HeroBanner");
+                return View("HeroBanner", new HeroBannerViewModel { IsLandingPage = false });
             }
 
             logService.LogInformation($"HeroBannerEmpty called");

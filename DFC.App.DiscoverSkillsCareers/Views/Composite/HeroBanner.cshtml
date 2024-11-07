@@ -1,17 +1,27 @@
 ﻿@inject IConfiguration configuration
+@model HeroBannerViewModel
 <div class="dfc-dysac-assement-panel-banner ncs-hero page-hero ">
 
     <div class="content govuk-width-container">
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-two-thirds">
-
-                <h1 class="govuk-heading-xl">
-                    <div class="block ncs dysac">
-                        <span>Discover your skills and</span>                        
-                        <span>careers assessment</span>
-                    </div>
-                </h1>
+                @if (Model.IsLandingPage)
+                {
+                    <h1 class="govuk-heading-xl">
+                        Skills assessment
+                    </h1>
+                    <p>Find out about careers that might be right for you by taking a skills assessment</p>
+                } else
+                {
+                    <h1 class="govuk-heading-xl">
+                       <div class="block ncs dysac">
+                    <span>Discover your skills and</span>
+                    <span>careers assessment</span>
+                    </div> 
+                    </h1>
+                }
+                
             </div>
         </div>
     </div>
