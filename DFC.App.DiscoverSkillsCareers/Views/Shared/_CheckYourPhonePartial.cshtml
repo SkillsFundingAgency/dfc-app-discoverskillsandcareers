@@ -1,4 +1,6 @@
-﻿<div class="govuk-width-container">
+﻿@model string;
+
+<div class="govuk-width-container">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-xl">Check your phone</h1>
@@ -9,8 +11,8 @@
                 {
                 <form method="post" asp-action="new" asp-controller="assessment">
                     <input type="hidden" id="assessmentType" name="assessmentType" value="short" />
-                    <button role="button" draggable="false" class="govuk-button ncs-button__primary" data-module="govuk-button">
-                        Start assessment                       
+                    <button role="button" draggable="false" type="submit" class="govuk-button ncs-button__primary" data-module="govuk-button">
+                        Start assessment
                     </button>
                 </form>
                 }

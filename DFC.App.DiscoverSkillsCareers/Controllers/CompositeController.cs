@@ -59,12 +59,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [Route("head/assessment/referencesent")]
         [Route("head/start/referencesent")]
-        public IActionResult AssessmentReferenceSent()
+        public IActionResult ReferenceSent()
         {
             var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentReferenceSent : PageTitle.StartReferenceSent;
             logService.LogInformation($"ReferceSent {pageTitle} called");
 
-            return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
+            return CreateViewModelAndReturnView(pageTitle);
         }
 
         [Route("head/assessment/email")]
@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [Route("head/assessment/emailsent")]
         [Route("head/start/emailsent")]
-        public IActionResult AssessmentEmailSent()
+        public IActionResult EmailSent()
         {
            var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
            logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
