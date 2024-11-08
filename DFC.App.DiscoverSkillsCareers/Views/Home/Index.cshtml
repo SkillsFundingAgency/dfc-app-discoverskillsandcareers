@@ -58,7 +58,7 @@
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
                         <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code"  value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
-                    <button type="submit" class="govuk-button ncs-button__white app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
+                    <button type="submit" class="govuk-button ncs-button__secondary ncs-button__secondary__white app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
                         Continue
                     </button>
                 </form>
