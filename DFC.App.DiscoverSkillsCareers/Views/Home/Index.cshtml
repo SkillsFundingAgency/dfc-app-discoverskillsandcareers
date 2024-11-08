@@ -50,8 +50,8 @@
         <div class="govuk-grid-column-one-third">
             <div class="app-sidebar app-resume-panel">
                 <h2 class="govuk-heading-m">Return to an assessment</h2>
-                <p class="dysac-ref-summary">Enter your reference code if you've already started an assessment</p>
-                <p class="dysac-ref-summary">Example: 732E E325 GE3R E6</p>
+                <p class="dysac-ref-label">Enter your reference code if you've already started an assessment</p>
+                <p class="dysac-ref-label">Example: 732E E325 GE3R E6</p>
                 <form method="post" asp-controller="home" id="dysac-form">
                     <partial name="ValidationSummary" model="ViewData.ModelState" />
                     <div class="app-resume-panel__input govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
