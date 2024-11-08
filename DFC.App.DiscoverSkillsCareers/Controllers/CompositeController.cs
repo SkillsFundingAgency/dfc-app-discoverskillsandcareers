@@ -185,6 +185,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return Content(string.Empty);
         }
 
+        [Route("head/start")]
+        public IActionResult Start()
+        {
+            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
+            return CreateViewModelAndReturnView(PageTitle.Start);
+        }
+
         private static HeadResponseViewModel CreateViewModel(string title)
         {
             var result = new HeadResponseViewModel
@@ -199,13 +206,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var vm = CreateViewModel(title);
             return View(ViewName, vm);
-        }
-
-        [Route("head/start")]
-        public IActionResult Start()
-        {
-            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
-            return CreateViewModelAndReturnView(PageTitle.Start);
         }
     }
 }

@@ -7,9 +7,9 @@ using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
 using Microsoft.Extensions.Configuration;
 
-namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
+namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
 {
-    public class StartTestBase
+    public class StartControllerTestBase
     {
         private readonly StartController controller;
         private readonly ISessionService sessionService;
@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
         private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
 
-        public StartTestBase()
+        public StartControllerTestBase()
         {
             sessionService = A.Fake<ISessionService>();
             assessmentService = A.Fake<IAssessmentService>();

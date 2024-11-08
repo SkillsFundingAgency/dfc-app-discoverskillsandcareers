@@ -241,7 +241,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             resultsByCategoryModel.AssessmentType = "filter";
             resultsByCategoryModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
-
             logService.LogInformation($"{nameof(Roles)} generated the model and ready to pass to the view");
 
             return View("ResultsByCategory", resultsByCategoryModel);
