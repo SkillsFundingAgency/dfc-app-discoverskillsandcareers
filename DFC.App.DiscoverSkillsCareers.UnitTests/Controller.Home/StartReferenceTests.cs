@@ -12,14 +12,14 @@ using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
 {
-    public class StartIndexTests : StartTestBase
+    public class StartReferenceTests : StartTestBase
     {
         [Fact]
         public async Task IfNoSessionExistsRedirectedToRoot()
         {
             A.CallTo(() => Session.HasValidSession()).Returns(false);
 
-            var actionResponse = await StartController.IndexAsync().ConfigureAwait(false);
+            var actionResponse = await StartController.Reference().ConfigureAwait(false);
             Assert.IsType<RedirectResult>(actionResponse);
 
             var redirectResult = actionResponse as RedirectResult;
@@ -41,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
                 A<string>.Ignored,
                 A<object>.Ignored)).DoesNothing();
 
-            var actionResponse = await StartController.Index(startViewModel).ConfigureAwait(false);
+            var actionResponse = await StartController.Reference(startViewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }
@@ -50,7 +50,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
         public async Task WhenViewModelIsNullReturnsBadRequest()
         {
             StartViewModel viewModel = null;
-            var actionResponse = await StartController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await StartController.Reference(viewModel).ConfigureAwait(false);
             Assert.IsType<BadRequestResult>(actionResponse);
         }
 
@@ -74,7 +74,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
                 A<string>.Ignored,
                 A<object>.Ignored)).DoesNothing();
 
-            var actionResponse = await StartController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await StartController.Reference(viewModel).ConfigureAwait(false);
 
             Assert.IsType<RedirectResult>(actionResponse);
             var redirectResult = actionResponse as RedirectResult;
@@ -100,7 +100,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
                 A<string>.Ignored,
                 A<object>.Ignored)).DoesNothing();
 
-            var actionResponse = await StartController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await StartController.Reference(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }
@@ -116,7 +116,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
             StartController.TempData = A.Fake<ITempDataDictionary>();
 
             var viewModel = new StartViewModel();
-            var actionResponse = await StartController.Index(viewModel).ConfigureAwait(false);
+            var actionResponse = await StartController.Reference(viewModel).ConfigureAwait(false);
 
             Assert.IsType<ViewResult>(actionResponse);
         }
@@ -131,7 +131,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
             StartController.TempData = A.Fake<ITempDataDictionary>();
             var viewModel = new StartViewModel() { PhoneNumber = "07000123456", Contact = Core.Enums.AssessmentReturnType.Reference };
 
-            await StartController.Index(viewModel).ConfigureAwait(false);
+            await StartController.Reference(viewModel).ConfigureAwait(false);
 
             A.CallTo(() => CommonService.SendSms(A<string>.Ignored, viewModel.PhoneNumber)).MustHaveHappenedOnceExactly();
         }

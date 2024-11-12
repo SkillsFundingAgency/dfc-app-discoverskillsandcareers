@@ -92,6 +92,28 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Reference(StartViewModel request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
+            {
+                SanitiseEmail(request);
+            }
+
+            return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
+                await SendEmail(request).ConfigureAwait(false);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Index(StartViewModel request)
         {
             if (request == null)
