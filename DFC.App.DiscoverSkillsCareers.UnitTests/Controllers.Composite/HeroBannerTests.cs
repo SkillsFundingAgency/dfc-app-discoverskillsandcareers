@@ -46,5 +46,17 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
             var actionResponse = controller.HeroBannerEmpty();
             Assert.IsType<ViewResult>(actionResponse);
         }
+
+        [Fact]
+        public void HeroBannerReturnsViewForReference()
+        {
+            var httpContext = new DefaultHttpContext();
+            var routeData = new RouteData();
+            routeData.Values["data"] = "start/reference";
+            var actionContext = new ActionContext(httpContext, routeData, new ControllerActionDescriptor());
+            controller.ControllerContext = new ControllerContext(actionContext);
+            var actionResponse = controller.HeroBannerEmpty();
+            Assert.IsType<ViewResult>(actionResponse);
+        }
     }
 }

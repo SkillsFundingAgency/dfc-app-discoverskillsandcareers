@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -7,6 +8,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     [ExcludeFromCodeCoverage]
     public class HeroBannerViewModel
     {
-        public bool IsLandingPage { get; set; }
+        public PageType PageType { get; set; }
     }
 }

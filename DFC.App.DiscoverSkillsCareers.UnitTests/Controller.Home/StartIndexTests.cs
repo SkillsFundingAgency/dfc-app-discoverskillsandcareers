@@ -27,6 +27,18 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
         }
 
         [Fact]
+        public async Task ReferenceCodeIfNoSessionExistsRedirectedToRoot()
+        {
+            A.CallTo(() => Session.HasValidSession()).Returns(false);
+
+            var actionResponse = await StartController.Reference().ConfigureAwait(false);
+            Assert.IsType<RedirectResult>(actionResponse);
+
+            var redirectResult = actionResponse as RedirectResult;
+            Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
+        }
+
+        [Fact]
         public async Task WhenModelStateIsNotValidAndSessionExistsReturnsToIndex()
         {
             var startViewModel = new StartViewModel();
