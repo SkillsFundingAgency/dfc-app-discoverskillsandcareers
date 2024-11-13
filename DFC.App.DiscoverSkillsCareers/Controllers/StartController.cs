@@ -71,10 +71,47 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
 
             var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
+            startViewModel.DysacAction = Core.Enums.DysacAction.Start;
 
             TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             return View(startViewModel);
+        }
+
+        public async Task<IActionResult> Reference()
+        {
+            var hasSessionId = await HasSessionId().ConfigureAwait(false);
+            if (!hasSessionId)
+            {
+                return RedirectToRoot();
+            }
+
+            var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
+            startViewModel.DysacAction = Core.Enums.DysacAction.Return;
+
+            return View(startViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Reference(StartViewModel request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
+            {
+                SanitiseEmail(request);
+            }
+
+            return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
+                await SendEmail(request).ConfigureAwait(false);
         }
 
         [HttpPost]
@@ -126,6 +163,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     if (TempData != null)
                     {
                         TempData["SentEmail"] = request.Email;
+                        if (request.DysacAction == Core.Enums.DysacAction.Start)
+                        {
+                            TempData["DysacAction"] = "Start";
+                        }
+                        else
+                        {
+                            TempData["DysacAction"] = "Return";
+                        }
                     }
 
                     return RedirectTo("start/emailsent");
@@ -149,7 +194,15 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 const string key = "Telephone";
                 TempData.Remove(key);
                 TempData.Add(key, request.PhoneNumber);
-            }
+                if (request.DysacAction == Core.Enums.DysacAction.Start)
+                {
+                   TempData["DysacAction"] = "Start";
+                }
+                else
+                {
+                   TempData["DysacAction"] = "Return";
+                }
+             }
 
                 await commonService.SendSms(notifyOptions.ReturnUrl!, request.PhoneNumber).ConfigureAwait(false);
 

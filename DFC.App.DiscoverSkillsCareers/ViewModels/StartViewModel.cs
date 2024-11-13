@@ -30,6 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
             ErrorMessage = "Enter a mobile phone number, like 07700 900 982.")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Enter a phone number")]
         public string PhoneNumber { get; set; }
+        public DysacAction DysacAction { get; set; }
 
         public bool IsChecked(AssessmentReturnType answer)
         {
