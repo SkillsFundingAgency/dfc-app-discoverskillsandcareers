@@ -6,15 +6,9 @@
                         <partial name="ValidationSummary" model="ViewData.ModelState" />
                     </div>
                 </div>
-<partial name="_ReferencePartial" model="Model" />
+<partial name="_ReferenceCodePartial" model="Model" />
 
 
 <div class="govuk-form-group">
     <partial name="_SendReferencePartial" model="Model" />
 </div>
-@if (TempData != null)
-{
-    <div class="app-related-items">
-       @Html.Raw(TempData["sharedcontent"].ToString())
-    </div>
-}

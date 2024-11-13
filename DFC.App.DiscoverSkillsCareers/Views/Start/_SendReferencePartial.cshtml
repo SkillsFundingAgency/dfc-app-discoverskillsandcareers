@@ -1,0 +1,59 @@
+﻿@model StartViewModel
+<fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+    <form method="post" id="reference-form">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                Get your reference code sent to you
+            </h1>
+        </legend>
+        <input type="hidden" asp-for="AssessmentStarted" />
+        <input type="hidden" asp-for="ReferenceCode" />
+        <div id="contact-hint" class="govuk-hint">
+            Select one option (optional)
+        </div>
+        <div class="govuk-radios" data-module="govuk-radios">
+            <span asp-validation-for="Contact" class="text-danger govuk-error-message"></span>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="contact" type="radio" data-aria-controls="conditional-contact" checked="@Model.IsChecked(AssessmentReturnType.Email)" value="1" asp-for="Contact">
+                <label class="govuk-label govuk-radios__label" for="contact">
+                    Send reference code in an email
+                </label>
+            </div>
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="contact-by-email">
+                        Email address
+                    </label>
+
+                    <div id="contact-hint-email" class="govuk-hint">We’ll only use your email address to send you a reference code and a link to return to your assessment.</div>
+                    <span asp-validation-for="Email" class="govuk-error-message"></span>
+                    <input class="govuk-input  @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" value="@(Model.Email)" id="code" asp-for="Email" type="text">
+                </div>
+            </div>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="contact-2" asp-for="Contact" data-aria-controls="conditional-contact-2" checked="@Model.IsChecked(AssessmentReturnType.Reference)" type="radio" value="2">
+                <label class="govuk-label govuk-radios__label" for="contact-2">
+                    Send reference code in a text message
+                </label>
+            </div>
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact-2">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="contact-by-phone">
+                        UK mobile phone number
+                    </label>
+
+                    <div id="contact-hint-phonenumber" class="govuk-hint">We’ll only use your mobile number to send you a reference code and a link to return to your assessment.</div>
+                    <span asp-validation-for="PhoneNumber" class="govuk-error-message"></span>
+                    <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" value="@(Model.PhoneNumber)" type="text" asp-for="PhoneNumber" id="phoneNumber" />
+                </div>
+            </div>
+            @if (Model.DysacAction == DysacAction.Start) {
+                <button class="govuk-button ncs-button__secondary ncs-button__secondary__white govuk-!-margin-top-5" name="DysacAction" value="Start" type="submit" id="dysac-start-submit-button">Send and continue to assessment</button>
+            } else
+            {
+                <button class="govuk-button ncs-button__secondary ncs-button__secondary__white govuk-!-margin-top-5" name="DysacAction" value="Return" type="submit" id="dysac-start-submit-button">Send reference code</button>
+            }
+
+        </div>
+    </form>
+</fieldset>

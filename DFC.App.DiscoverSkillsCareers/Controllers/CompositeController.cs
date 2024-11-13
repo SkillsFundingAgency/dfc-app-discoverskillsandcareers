@@ -51,6 +51,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("head/assessment/reference")]
+        [Route("head/start/reference")]
         public IActionResult AssessmentReference()
         {
             logService.LogInformation($"AssessmentReference {PageTitle.AssessmentReference} called");
@@ -163,7 +164,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult HeroBanner()
         {
             logService.LogInformation($"HeroBanner called");
-            return View(new HeroBannerViewModel { IsLandingPage = true});
+            return View(new HeroBannerViewModel { PageType = Core.Enums.PageType.Landing});
         }
 
         [Route("bodyfooter/{**data}")]
@@ -178,7 +179,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start")
             {
-                return View("HeroBanner", new HeroBannerViewModel { IsLandingPage = false });
+                return View("HeroBanner", new HeroBannerViewModel { PageType = Core.Enums.PageType.Start });
+            }
+
+            if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start/reference")
+            {
+                return View("HeroBanner", new HeroBannerViewModel { PageType = Core.Enums.PageType.ReferenceCode });
             }
 
             logService.LogInformation($"HeroBannerEmpty called");

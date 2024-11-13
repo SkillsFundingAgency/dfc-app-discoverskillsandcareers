@@ -6,7 +6,7 @@
         <div class="govuk-grid-row">
 
            
-                @if (Model.IsLandingPage)
+                @if (Model.PageType == PageType.Landing)
                 {
                     <div class="dysac-panel-header-container">
                         <div class="dysac-panel-header-container-text">
@@ -19,7 +19,8 @@
                         <img src="@configuration["AssetsCdn"]nationalcareers_toolkit/images/checkbox.svg" alt="" />
                          </div>
                      </div>
-                } else
+                }
+                @if(Model.PageType == PageType.Start)
                 {
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">
@@ -28,6 +29,16 @@
                     <span>careers assessment</span>
                     </div> 
                     </h1>
+                    </div>
+                }
+                @if (Model.PageType == PageType.ReferenceCode)
+                {
+                    <div class="govuk-grid-column-two-thirds">
+                        <h1 class="govuk-heading-xl">
+                            <div class="block ncs dysac">
+                            <span>Your reference code</span>
+                            </div>
+                        </h1>
                     </div>
                 }
         </div>
