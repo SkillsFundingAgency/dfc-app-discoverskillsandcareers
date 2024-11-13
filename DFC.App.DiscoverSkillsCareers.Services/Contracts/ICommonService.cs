@@ -8,5 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Contracts
         Task<SendEmailResponse> SendEmail(string domain, string emailAddress);
 
         Task<SendSmsResponse> SendSms(string domain, string mobile);
+
+        Task<bool> HasSessionStateId();
     }
 }

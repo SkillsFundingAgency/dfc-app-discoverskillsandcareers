@@ -1,6 +1,8 @@
-﻿using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Helpers;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
+using System;
 using System.Threading.Tasks;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
@@ -32,6 +34,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             return notificationService
                 .SendSms(domain, mobile, sessionId, SessionHelper.FormatSessionId(sessionId));
+        }
+
+        public async Task<bool> HasSessionStateId()
+        {
+            var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
+            return !(session?.State?.SessionId is null);
         }
     }
 }
