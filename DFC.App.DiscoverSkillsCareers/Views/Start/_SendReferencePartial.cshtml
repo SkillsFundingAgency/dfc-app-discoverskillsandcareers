@@ -1,11 +1,9 @@
 ﻿@model StartViewModel
 <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
     <form method="post" id="reference-form">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 class="govuk-fieldset__heading">
-                Get your reference code sent to you
-            </h1>
-        </legend>
+        <h2 class="govuk-heading-m">
+            Get your reference code sent to you
+        </h2>
         <input type="hidden" asp-for="AssessmentStarted" />
         <input type="hidden" asp-for="ReferenceCode" />
         <div id="contact-hint" class="govuk-hint">
