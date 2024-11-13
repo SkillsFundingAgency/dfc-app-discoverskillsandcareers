@@ -60,12 +60,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [Route("head/assessment/referencesent")]
         [Route("head/start/referencesent")]
-        public IActionResult AssessmentReferenceSent()
+        public IActionResult ReferenceSent()
         {
             var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentReferenceSent : PageTitle.StartReferenceSent;
             logService.LogInformation($"ReferceSent {pageTitle} called");
 
-            return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
+            return CreateViewModelAndReturnView(pageTitle);
         }
 
         [Route("head/assessment/email")]
@@ -77,7 +77,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         [Route("head/assessment/emailsent")]
         [Route("head/start/emailsent")]
-        public IActionResult AssessmentEmailSent()
+        public IActionResult EmailSent()
         {
            var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
            logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
@@ -191,6 +191,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return Content(string.Empty);
         }
 
+        [Route("head/start")]
+        public IActionResult Start()
+        {
+            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
+            return CreateViewModelAndReturnView(PageTitle.Start);
+        }
+
         private static HeadResponseViewModel CreateViewModel(string title)
         {
             var result = new HeadResponseViewModel
@@ -205,13 +212,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var vm = CreateViewModel(title);
             return View(ViewName, vm);
-        }
-
-        [Route("head/start")]
-        public IActionResult Start()
-        {
-            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
-            return CreateViewModelAndReturnView(PageTitle.Start);
         }
     }
 }

@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
+namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Start
 {
-    public class StartIndexTests : StartTestBase
+    public class StartControllerTests : StartControllerTestBase
     {
         [Fact]
         public async Task IfNoSessionExistsRedirectedToRoot()

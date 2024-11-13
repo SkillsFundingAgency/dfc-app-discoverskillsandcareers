@@ -56,7 +56,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         [Fact]
         public void AssessmentReferenceSentReturnsPageTitle()
         {
-            var actionResponse = controller.AssessmentReferenceSent();
+            var actionResponse = controller.ReferenceSent();
             AssertPageTitle(actionResponse, PageTitle.AssessmentReferenceSent);
         }
 
@@ -76,7 +76,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
             var actionContext = new ActionContext(httpContext, routeData, new ControllerActionDescriptor());
 
             controller.ControllerContext = new ControllerContext(actionContext);
-            var actionResponse = controller.AssessmentEmailSent();
+            var actionResponse = controller.EmailSent();
             AssertPageTitle(actionResponse, PageTitle.AssessmentEmailSent);
         }
 

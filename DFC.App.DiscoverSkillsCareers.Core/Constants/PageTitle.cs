@@ -19,7 +19,5 @@
         public const string Start = "Start";
         public const string StartEmailSent = "Email sent";
         public const string StartReferenceSent = "Check your phone";
-
-
     }
 }

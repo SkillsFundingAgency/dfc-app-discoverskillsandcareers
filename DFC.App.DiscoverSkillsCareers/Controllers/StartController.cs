@@ -22,8 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         private readonly IAssessmentService assessmentService;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IConfiguration configuration;
-        private string status;
-        private double expiryInHours = 4;
+        private readonly string status;
+        private readonly double expiryInHours = 4;
         private readonly ILogService logService;
         private readonly NotifyOptions notifyOptions;
         private readonly ICommonService commonService;

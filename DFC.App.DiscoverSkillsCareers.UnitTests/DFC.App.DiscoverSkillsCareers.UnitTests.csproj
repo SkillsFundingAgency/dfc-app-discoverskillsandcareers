@@ -50,9 +50,5 @@
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers.Core\DFC.App.DiscoverSkillsCareers.Core.csproj" />
     <ProjectReference Include="..\DFC.App.DiscoverSkillsCareers\DFC.App.DiscoverSkillsCareers.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Controller.Start\" />
-  </ItemGroup>
 
 </Project>
