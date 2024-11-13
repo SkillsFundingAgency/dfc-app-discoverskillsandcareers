@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.Controllers;
 using DFC.App.DiscoverSkillsCareers.Core.Constants;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.App.DiscoverSkillsCareers.Services.Services;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
@@ -15,15 +16,13 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controller.Home
     public class StartIndexTests : StartTestBase
     {
         [Fact]
-        public async Task IfNoSessionExistsRedirectedToRoot()
+        public async Task IfNoSessionExistsCreateSession()
         {
-            A.CallTo(() => Session.HasValidSession()).Returns(false);
+            A.CallTo(() => CommonService.HasSessionStateId()).Returns(false);
 
+            StartController.TempData = A.Fake<ITempDataDictionary>();
             var actionResponse = await StartController.IndexAsync().ConfigureAwait(false);
-            Assert.IsType<RedirectResult>(actionResponse);
-
-            var redirectResult = actionResponse as RedirectResult;
-            Assert.Equal($"~/{RouteName.Prefix}/", redirectResult.Url);
+            Assert.IsType<ViewResult>(actionResponse);
         }
 
         [Fact]
