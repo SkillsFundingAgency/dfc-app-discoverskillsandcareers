@@ -60,14 +60,15 @@
 
         <div class="govuk-grid-column-one-third">
             <div class="app-sidebar app-resume-panel">
-                <h2 class="govuk-heading-m">Return to an assessment</h2>
-                <p class="dysac-ref-label">Enter your reference code if you've already started an assessment</p>
-                <p class="dysac-ref-label">Example: 732E E325 GE3R E6</p>
+                <h2 class="govuk-heading-m">Return to your assessment</h2>
+               
                 <form method="post" asp-controller="home" id="dysac-form">
                     <partial name="ValidationSummary" model="ViewData.ModelState" />
                     <div class="app-resume-panel__input govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+                        <label for="code" class="dysac-ref-label govuk-label">Enter your reference code if you've already started an assessment</label>
+                        <p class="dysac-ref-label govuk-label">Example: 732E E325 GE3R E6</p>
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
-                        <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code"  value="@(!ViewData.ModelState.IsValid ? "": "")" />
+                        <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code" aria-label="Reference-Code"  value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
                     <button type="submit" class="govuk-button ncs-button__secondary ncs-button__secondary__white app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
                         Continue

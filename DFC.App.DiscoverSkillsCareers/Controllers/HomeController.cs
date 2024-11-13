@@ -77,7 +77,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             else
             {
                 ModelState.AddModelError("ReferenceCode", "The reference could not be found");
-                var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
+                var responseViewModel = new HomeIndexResponseViewModel { 
+                    ReferenceCode = viewModel.ReferenceCode,
+                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
+                };
                 ViewData["Title"] = "Error";
                 return View(responseViewModel);
             }
