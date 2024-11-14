@@ -6,8 +6,8 @@
     @inject IConfiguration configuration
     <div class="govuk-grid-row govuk-!-margin-bottom-9">
         <div class="govuk-grid-column-two-thirds">
-            <img class="dysac-landing-page-img-d" src="@configuration["AssetsCdn"]nationalcareers_toolkit/images/skills-assessment-desktop.png" alt="" />
-            <img class="dysac-landing-page-img-m" src="@configuration["AssetsCdn"]nationalcareers_toolkit/images/skills-assessment-mobile.png" alt="" />
+            <img class="dysac-landing-page-img-d" src="@configuration["AssetsCdn"]assets/dist/images/skills-assessment-desktop.png" alt="" />
+            <img class="dysac-landing-page-img-m" src="@configuration["AssetsCdn"]assets/dist/images/skills-assessment-mobile.png" alt="" />
             <p class="govuk-body govuk-!-margin-top-6">
                 There are no right or wrong answers when doing a skills assessment. It’s a way to understand yourself better and help you think about your next step. 
             </p>
@@ -60,14 +60,14 @@
 
         <div class="govuk-grid-column-one-third">
             <div class="app-sidebar app-resume-panel">
-                <h2 class="govuk-heading-m">Return to your assessment</h2>
-               
                 <form method="post" asp-controller="home" id="dysac-form">
-                    <partial name="ValidationSummary" model="ViewData.ModelState" />
+                <partial name="ValidationSummary" model="ViewData.ModelState" />
                     <div class="app-resume-panel__input govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
+                        <h2 class="govuk-heading-m">Return to your assessment</h2>
+                        <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
+
                         <label for="code" class="dysac-ref-label govuk-label">Enter your reference code if you've already started an assessment</label>
                         <p class="dysac-ref-label govuk-label">Example: 732E E325 GE3R E6</p>
-                        <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
                         <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code" aria-label="Reference-Code"  value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
                     <button type="submit" class="govuk-button ncs-button__secondary ncs-button__secondary__white app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
