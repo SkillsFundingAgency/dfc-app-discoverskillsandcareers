@@ -18,14 +18,6 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         [Required(ErrorMessage = "Choose how to get your reference code sent to you")]
         public AssessmentReturnType? Contact { get; set; }
 
-        public bool IsEmail
-        {
-            get
-            {
-                return Contact == AssessmentReturnType.Email;
-            }
-        }
-
         [RequiredWhenSelectedAttribute(Values = new[] { nameof(AssessmentReturnType.Email) }, PropertyName = "Contact", ErrorMessage = "Enter a email")]
         [ValidateEmailAddressAttribute(Values = new[] { nameof(AssessmentReturnType.Email) }, PropertyName = "Contact", ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter a email")]
