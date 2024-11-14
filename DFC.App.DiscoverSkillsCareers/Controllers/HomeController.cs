@@ -56,7 +56,9 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             if (viewModel == null || viewModel.ReferenceCode == null)
             {
-                return BadRequest();
+                var responseViewModel = GetResponseViewModel(viewModel);
+                ViewData["Title"] = "Error";
+                return View(responseViewModel);
             }
 
             if (!ModelState.IsValid)
@@ -76,14 +78,21 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
             else
             {
-                ModelState.AddModelError("ReferenceCode", "The reference could not be found");
-                var responseViewModel = new HomeIndexResponseViewModel { 
-                    ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
-                };
+                var responseViewModel = GetResponseViewModel(viewModel);
+                ModelState.AddModelError("ReferenceCode", "Enter a valid reference code");
                 ViewData["Title"] = "Error";
                 return View(responseViewModel);
             }
+        }
+
+        private HomeIndexResponseViewModel GetResponseViewModel(HomeIndexRequestViewModel viewModel)
+        {
+            var responseViewModel = new HomeIndexResponseViewModel
+            {
+                ReferenceCode = viewModel?.ReferenceCode,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
+            };
+            return responseViewModel;
         }
     }
 }
