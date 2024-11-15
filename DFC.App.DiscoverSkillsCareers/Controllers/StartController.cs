@@ -124,14 +124,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             TempData["sharedcontent"] = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
-            if (!ModelState.IsValid)
-            {
-                return View(request);
-            }
-
             if (request.Contact is not null && request.Contact == Core.Enums.AssessmentReturnType.Email)
             {
                 SanitiseEmail(request);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
             }
 
             return request.Contact == Core.Enums.AssessmentReturnType.Reference ? await SendSms(request).ConfigureAwait(false) :
@@ -219,9 +219,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         private void SanitiseEmail(StartViewModel request)
         {
-            request.Email = request.Email?.ToLower();
             ModelState.Clear();
-
             TryValidateModel(request);
         }
 
