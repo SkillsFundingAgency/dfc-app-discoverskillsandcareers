@@ -32,6 +32,8 @@ namespace DFC.App.DiscoverSkillsCareers.Models
         [JsonIgnore]
         public List<Guid>? AllContentItemIds => GetAllContentItemIds();
 
+        public string? ImagePath { get; set; }
+
         public List<IDysacContentModel>? GetContentItems()
         {
             return JobCategories.Select(x => (IDysacContentModel)x).ToList();
