@@ -11,7 +11,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
             JobCategories = new List<JobCategoryResult>();
             JobProfiles = new List<JobProfileResult>();
             WhatYouToldUs = new List<string>();
-            Traits = new List<string>();
+            Traits = new List<TraitResult>();
         }
 
         public bool AllJobProfilesMatchWithAssessmentProfiles { get; set; } = true;
@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public IEnumerable<JobCategoryResult>? JobCategories { get; set; }
 
-        public IEnumerable<string> Traits { get; set; }
+        public IEnumerable<TraitResult> Traits { get; set; }
 
         public int? JobFamilyCount { get; set; }
 

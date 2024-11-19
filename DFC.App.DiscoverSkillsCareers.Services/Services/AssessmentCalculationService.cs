@@ -244,6 +244,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         TraitCode = trait.Key!,
                         TotalScore = trait.Sum(traitAndScore => traitAndScore.Score),
                         Text = allTraits.First(traitA => traitA.Title == trait.Key!).Description!,
+                        ImagePath = allTraits.First(traitA => traitA.Title == trait.Key!).ImagePath!,
                     };
                 })
                 .Where(traitResult => traitResult.TotalScore > 0)
@@ -273,7 +274,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 Traits = userTraits,
                 JobCategories = jobCategories.ToList(),
-                TraitText = limitedTraits.Select(traitResult => traitResult.Text!),
+                LimitedTraits = limitedTraits.Select(traitResult => traitResult),
             };
 
             return assessment;
