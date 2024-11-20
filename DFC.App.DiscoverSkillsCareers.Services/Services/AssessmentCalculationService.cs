@@ -244,6 +244,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         TraitCode = trait.Key!,
                         TotalScore = trait.Sum(traitAndScore => traitAndScore.Score),
                         Text = allTraits.First(traitA => traitA.Title == trait.Key!).Description!,
+                        Title = allTraits.First(traitA => traitA.Title == trait.Key!).Title!,
                         ImagePath = allTraits.First(traitA => traitA.Title == trait.Key!).ImagePath!,
                     };
                 })
