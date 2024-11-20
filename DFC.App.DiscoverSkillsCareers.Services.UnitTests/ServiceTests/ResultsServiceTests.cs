@@ -209,9 +209,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                         Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER"
                     }
                 },
-                TraitText = new List<string>
+                LimitedTraits = new List<TraitResult> {
+                new TraitResult
                 {
-                    "you'd be good working in place a", "you might do well in place b", "you're really a at b"
+                    Text = "you enjoy something",
+                    TotalScore = 5,
+                    TraitCode = "LEADER"
+                }
                 }
             };
             
@@ -506,7 +510,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             //Arrange
             var assessment = AssessmentHelpers.GetAssessment();
-            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "delivery and storage", JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, TraitText = new List<string>() { "you'd be good working in place a", "you might do well in place b", "you're really a at b" } };
+            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "delivery and storage", JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, LimitedTraits = null };
             assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } } } } };
 
             A.CallTo(() => assessmentService.GetAssessment(A<string>.Ignored)).Returns(assessment);
@@ -676,9 +680,12 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
                         Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER"
                     }
                 },
-                TraitText = new List<string>
+                LimitedTraits = new List<TraitResult>
                 {
-                    "you'd be good working in place a", "you might do well in place b", "you're really a at b"
+                    new TraitResult
+                    {
+                        Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER"
+                    }
                 }
             };
 
@@ -973,7 +980,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
         {
             //Arrange
             var assessment = AssessmentHelpers.GetAssessment();
-            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "1 filtering question left", TotalQuestions = 1, JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } }, new JobCategoryResult { JobFamilyName = "0 filtering questions left", TotalQuestions = 0, JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, TraitText = new List<string>() { "you'd be good working in place a", "you might do well in place b", "you're really a at b" } };
+            assessment.ShortQuestionResult = new ResultData { JobCategories = new List<JobCategoryResult>() { new JobCategoryResult { JobFamilyName = "1 filtering question left", TotalQuestions = 1, JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } }, new JobCategoryResult { JobFamilyName = "0 filtering questions left", TotalQuestions = 0, JobProfiles = new List<JobProfileResult> { new JobProfileResult { SkillCodes = new List<string> { "Self Control", "Another one - that wasnt answered" } } } } }, Traits = new List<TraitResult>() { new TraitResult { Text = "you enjoy something", TotalScore = 5, TraitCode = "LEADER" } }, LimitedTraits = null };
             assessment.FilteredAssessment = new FilteredAssessment { Questions = new List<FilteredAssessmentQuestion> { new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question?", TraitCode = "Self Control", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } }, new FilteredAssessmentQuestion { Ordinal = 0, QuestionText = "A filtered question 2?", TraitCode = "Self Motivation", Id = Guid.NewGuid(), Answer = new QuestionAnswer { AnsweredAt = DateTime.Now, Value = Answer.Yes } } }, JobCategoryAssessments = new List<JobCategoryAssessment> { new JobCategoryAssessment { JobCategory = "delivery-and-storage", LastAnswer = DateTime.MinValue, QuestionSkills = new Dictionary<string, int> { { "Self Control", 0 } } } } };
 
             var PersonalityQuestion = new PersonalityFilteringQuestion

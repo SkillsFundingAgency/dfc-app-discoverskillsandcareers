@@ -211,7 +211,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     .JobCategory!,
                 JobCategories = assessmentCalculationResponse.ShortQuestionResult?.JobCategories,
                 JobFamilyCount = assessmentCalculationResponse.ShortQuestionResult?.JobCategories?.Count(),
-                Traits = assessmentCalculationResponse.ShortQuestionResult?.TraitText!,
+                Traits = assessmentCalculationResponse.ShortQuestionResult?.LimitedTraits!,
                 SessionId = assessment.Id!,
                 AssessmentType = "short",
             };
