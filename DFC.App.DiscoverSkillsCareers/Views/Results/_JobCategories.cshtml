@@ -1,5 +1,12 @@
 ﻿@model ResultIndexResponseViewModel
-    <ol class="govuk-list govuk-!-margin-bottom-2" id="app-results-list">
+<div class="">
+    <h2 class="govuk-heading-m">Job categories that might interest you</h2>
+    <p class="govuk-body">We’ve suggested 3 job categories for you to explore based on your responses. Start with these or look at the remaining categories suggested.</p>
+    <p class="govuk-body">Answer a few specific questions for each category to get suggested careers.</p>
+
+</div>
+
+    @* <ol class="govuk-list govuk-!-margin-top-5" id="app-results-list">
         @{ var loopCount = 0; }
         @foreach (var item in Model.Results.JobCategories)
         {
@@ -39,4 +46,4 @@
                 <a href="/discover-your-skills-and-careers/results/100">See matches</a>
             </div>
         }
-    </ol>
+    </ol> *@
