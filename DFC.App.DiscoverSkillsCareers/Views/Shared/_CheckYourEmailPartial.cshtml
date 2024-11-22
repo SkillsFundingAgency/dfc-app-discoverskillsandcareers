@@ -6,7 +6,7 @@
             <div class="govuk-body">
                 <h1 class="govuk-heading-xl">Check your email</h1>
                 <p>An email has been sent to  @TempData.Peek("SentEmail")</p>
-                <p>This includes your reference code and a link to return to your assessment at any time.</p>
+                <p>This includes your reference code and a link to return to your assessment.</p>
                 @if (@Model == PageTitle.Start)
                 {
                 <form method="post" asp-action="new" asp-controller="assessment">
@@ -17,7 +17,7 @@
                 </form>
                 }
                 else {
-                <a asp-controller="assessment" class="govuk-button ncs-button__primary" asp-action="return">Return to assessment</a>
+                <a asp-controller="assessment" class="govuk-button ncs-button__primary" asp-action="return">Return to your assessment</a>
                 }
             </div>
         </div>

@@ -37,7 +37,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataAnnotations
             {
                 if (string.IsNullOrWhiteSpace(email))
                 {
-                    return new ValidationResult(ErrorMessage);
+                    return ValidationResult.Success;
                 }
 
                 email = email.ToLower();
