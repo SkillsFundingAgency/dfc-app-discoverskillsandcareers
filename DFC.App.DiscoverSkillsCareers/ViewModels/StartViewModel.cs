@@ -15,7 +15,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         [Required]
         public string AssessmentStarted { get; set; }
 
-        [Required(ErrorMessage = "Choose how to get your reference code sent to you")]
+        [ValidateRequired(ErrorMessage = "Choose how to get your reference code sent to you")]
         public AssessmentReturnType? Contact { get; set; }
 
         [RequiredWhenSelectedAttribute(Values = new[] { nameof(AssessmentReturnType.Email) }, PropertyName = "Contact", ErrorMessage = "Enter an email address")]
