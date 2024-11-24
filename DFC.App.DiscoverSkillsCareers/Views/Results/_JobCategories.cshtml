@@ -1,9 +1,78 @@
 ﻿@model ResultIndexResponseViewModel
-<div class="">
-    <h2 class="govuk-heading-m">Job categories that might interest you</h2>
-    <p class="govuk-body">We’ve suggested 3 job categories for you to explore based on your responses. Start with these or look at the remaining categories suggested.</p>
-    <p class="govuk-body">Answer a few specific questions for each category to get suggested careers.</p>
+@inject IConfiguration configuration
+<div class="govuk-!-margin-top-8 dysac-job-category-panel">
+    <h2>Job categories that might interest you</h2>
+    <p class="govuk-body dysac-job-category-summary">We’ve suggested 3 job categories for you to explore based on your responses. Start with these or look at the remaining categories suggested.</p>
+    <p class="govuk-body dysac-job-category-summary">Answer a few specific questions for each category to get suggested careers.</p>
+    <div class="govuk-!-margin-top-5 dysac-job-category-tile-container">
+        @{
+            var loopCount = 0;
+        }
+        @foreach (var item in Model.Results.JobCategories)
+        {
+            var shouldDisplay = Model.Results.JobCategoriesNumberToShow > loopCount++;
+            var cssAddition = shouldDisplay ? string.Empty : "display: none";
+            <div class="dysac-job-category-tile-wrapper">
+                <div class="dysac-job-category-tile-header-image">
+                    <img src="@(configuration["AssetsCdn"]+item.ImagePathDesktop)" alt="">
+                </div>
+                <div class="dysac-job-category-tile">
+                    <h3 class="tile-header"><a href="/job-categories/@item.JobFamilyNameUrl">@item.JobFamilyName</a></h3>
+                    <p>@item.JobFamilyText</p>
+                    @if (item.NumberOfMatchedJobProfile > 0)
+                    {
+                        <p class="govuk-body">
+                            <a class="govuk-link" asp-controller="results" asp-action="roles" asp-route-id="@item.JobFamilyUrl" draggable="false">View results</a>
+                        </p>
+                    }
+                    else if (item.TotalQuestions > 0)
+                    {
+                        <p class="govuk-body">
+                            <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyNameUrl" asp-route-questionNumber="0">
+                            Answer @item.TotalQuestions more question@{
+                                if (item.TotalQuestions > 1)
+                                    @("s")
+                            }
+                        </a> </p>
+                    }
+                </div>
+            </div>
+            @* <li class="app-results__item" data-job-family-code="@item.JobFamilyName" style="@cssAddition">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h3 class="govuk-heading-m"><a href="/job-categories/@item.JobFamilyNameUrl">@item.JobFamilyName</a></h3>
+                        <p>@item.JobFamilyText</p>
 
+                        @if (item.NumberOfMatchedJobProfile > 0)
+                        {
+                            <p class="app-noprint">Answer more questions to find roles that might interest you in @item.JobFamilyName.</p>
+                            <a role="button" class="govuk-button ncs-button__primary app-button" asp-controller="results" asp-action="roles" asp-route-id="@item.JobFamilyUrl" draggable="false">View results</a>
+                        }
+                        else if (item.TotalQuestions > 0)
+                        {
+                            <p class="app-noprint">Answer more questions to find roles that might interest you in @item.JobFamilyName.</p>
+                            <a role="button" draggable="false" class="govuk-button ncs-button__primary app-button" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@item.JobFamilyNameUrl" asp-route-questionNumber="0">
+                                Answer @item.TotalQuestions more question@{
+                                    if (item.TotalQuestions > 1)@("s")
+                                }
+                                <span class="govuk-visually-hidden"> for @item.JobFamilyName</span>
+                            </a>
+                        }
+                        <hr>
+                    </div>
+                </div>
+            </li> *@
+        }
+
+        @if (Model.Results.JobCategories.Count() > Model.Results.JobCategoriesNumberToShow)
+        {
+            <div id="showMoreCategories">
+                <h2 class="govuk-!-font-size-27">See other career areas that might interest you</h2>
+
+                <a href="/discover-your-skills-and-careers/results/100">See matches</a>
+            </div>
+        }
+    </div>
 </div>
 
     @* <ol class="govuk-list govuk-!-margin-top-5" id="app-results-list">

@@ -18,6 +18,12 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string JobFamilyText { get; set; }
 
+        public string ImagePathDesktop { get; set; }
+
+        public string ImagePathMobile { get; set; }
+
+        public string ImagePathTitle { get; set; }
+
         public string JobFamilyUrl { get; set; }
 
         public int TraitsTotal { get; set; }
