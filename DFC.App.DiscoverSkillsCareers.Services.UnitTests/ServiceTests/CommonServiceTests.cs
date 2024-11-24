@@ -12,6 +12,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Xunit;
+using DFC.App.DiscoverSkillsCareers.Services.SessionHelpers;
+using DFC.App.DiscoverSkillsCareers.Models.Assessment;
+using DFC.Compui.Sessionstate;
+using Dfc.Session.Models;
+using FluentAssertions;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 {
@@ -52,6 +57,35 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.ServiceTests
 
             // Assert
             A.CallTo(() => notificationService.SendEmail(A<string>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void AssessmentHasSessionId()
+        {
+            var sessionId = "session1";
+
+            A.CallTo(() => sessionService.GetCurrentSession()).Returns(new SessionStateModel<DfcUserSession> { State = new DfcUserSession { SessionId = sessionId } });
+
+            // Act
+            var result = await commonService.HasSessionStateId();
+
+            // Assert
+            result.Should().Be(true);
+            A.CallTo(() => sessionService.GetCurrentSession()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void AssessmentHasSessionIdReturnFalse()
+        {
+
+            A.CallTo(() => sessionService.GetCurrentSession()).Returns(new SessionStateModel<DfcUserSession> { State = null });
+
+            // Act
+            var result = await commonService.HasSessionStateId();
+
+            // Assert
+            result.Should().Be(false);
+            A.CallTo(() => sessionService.GetCurrentSession()).MustHaveHappenedOnceExactly();
         }
     }
 }
