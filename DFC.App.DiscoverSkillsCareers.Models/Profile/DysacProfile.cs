@@ -68,6 +68,13 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
             CreateMap<JobProfileCategory, DysacJobProfileCategoryContentModel>()
                 .ForMember(d => d.JobProfiles, s => s.MapFrom(a => a.JobProfiles))
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.DisplayText))
+                .ForMember(d => d.JobFamilyText, s => s.MapFrom(a => a.Description))
+                .ForMember(d => d.ImagePathDesktop, s => s.MapFrom(a => a.ImagePathDesktop))
+                .ForMember(d => d.ImagePathMobile, s => s.MapFrom(a => a.ImagePathMobile))
+                .ForMember(d => d.ImagePathTitle, s => s.MapFrom(a => a.ImagePathTitle))
+
+
                 .AfterMap((source, destination) =>
                 {
                     foreach (var item in destination.JobProfiles)

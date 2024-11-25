@@ -162,7 +162,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 jobCategories = OrderResultsByJobCategory(jobCategories, jobCategoryName);
             }
 
-            return new GetResultsResponse { JobCategories = jobCategories };
+            return new GetResultsResponse { JobCategories = jobCategories, Traits = assessment.ShortQuestionResult?.LimitedTraits! };
         }
 
         private async Task UpdateJobCategoryCounts(DysacAssessment assessment)

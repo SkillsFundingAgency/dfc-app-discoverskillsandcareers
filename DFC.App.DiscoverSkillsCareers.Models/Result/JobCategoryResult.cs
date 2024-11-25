@@ -20,6 +20,14 @@ namespace DFC.App.DiscoverSkillsCareers.Models.Result
 
         public string? JobFamilyName { get; set; }
 
+        public string? JobFamilyText { get; set; }
+
+        public string? ImagePathDesktop { get; set; }
+
+        public string? ImagePathMobile { get; set; }
+
+        public string? ImagePathTitle { get; set; }
+
         [JsonIgnore]
         public string? JobFamilyUrl { get; set; }
 

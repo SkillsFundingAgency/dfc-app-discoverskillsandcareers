@@ -203,6 +203,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     results.Add(new JobCategoryResult
                     {
                         JobFamilyName = fullJobCategory.Title!,
+                        JobFamilyText = fullJobCategory.JobFamilyText,
+                        ImagePathDesktop = fullJobCategory.ImagePathDesktop,
+                        ImagePathTitle = fullJobCategory.ImagePathTitle,
+                        ImagePathMobile = fullJobCategory.ImagePathMobile,
                         JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(
                             limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) + 1,
                             limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) - 1),

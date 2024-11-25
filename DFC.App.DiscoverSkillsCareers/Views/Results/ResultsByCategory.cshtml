@@ -1,5 +1,29 @@
 ﻿@model ResultsByCategoryModel
+@using GraphQL.Client.Abstractions.Utilities
+@inject IConfiguration configuration
+<h2>
+    What you told us motivates you
+</h2>
+<p class="dysac-personality-trait-summary govuk-body">
+    It’s normal for what motivates you to change over time. These motivations are based on your responses today.
+</p>
+<div class="dysac-trait-tile-container">
+    @foreach (var trait in Model.Traits)
+    {
+        <div class="dysac-personality-tile">
+            <div class="dysac-personality-tile-image-header">
+                <img class="dysac-personality-tile-image" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
+                <h2>@trait.Title.ToPascalCase()</h2>
+            </div>
 
+            <div class="dysac-personality-tile-description">
+                <p>
+                    @trait.Text
+                </p>
+            </div>
+        </div>
+    }
+</div>
 <h2 class="govuk-heading-l">Careers that might interest you</h2>
 
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
