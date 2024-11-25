@@ -19,6 +19,14 @@ namespace DFC.App.DiscoverSkillsCareers.Models
 
         public string? Title { get; set; }
 
+        public string? JobFamilyText { get; set; }
+
+        public string? ImagePathDesktop { get; set; }
+
+        public string? ImagePathMobile { get; set; }
+
+        public string? ImagePathTitle { get; set; }
+
         [Required]
         public override string? PartitionKey { get; set; } = "JobProfileCategory";
 

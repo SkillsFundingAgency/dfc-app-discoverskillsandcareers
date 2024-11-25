@@ -14,7 +14,10 @@
             var cssAddition = shouldDisplay ? string.Empty : "display: none";
             <div class="dysac-job-category-tile-wrapper">
                 <div class="dysac-job-category-tile-header-image">
-                    <img src="@(configuration["AssetsCdn"]+item.ImagePathDesktop)" alt="">
+                    @* <img src="@(configuration["AssetsCdn"]+item.ImagePathDesktop)" alt=""> *@
+                    <img src="@configuration["AssetsCdn"]media/dysac/administration-mobile.png" class="dysac-job-category-tile-header-mobile" alt="" />
+
+                    <img src="@configuration["AssetsCdn"]media/dysac/administration-desktop.png" class="dysac-job-category-tile-header-desktop" alt="" />
                 </div>
                 <div class="dysac-job-category-tile">
                     <h3 class="tile-header"><a href="/job-categories/@item.JobFamilyNameUrl">@item.JobFamilyName</a></h3>
@@ -63,6 +66,7 @@
                 </div>
             </li> *@
         }
+        </div>
 
         @if (Model.Results.JobCategories.Count() > Model.Results.JobCategoriesNumberToShow)
         {
@@ -72,7 +76,7 @@
                 <a href="/discover-your-skills-and-careers/results/100">See matches</a>
             </div>
         }
-    </div>
+    
 </div>
 
     @* <ol class="govuk-list govuk-!-margin-top-5" id="app-results-list">
