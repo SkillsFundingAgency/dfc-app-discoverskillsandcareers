@@ -32,12 +32,13 @@ namespace DFC.App.DiscoverSkillsCareers.Services.DataAnnotations
             string? email = value?.ToString();
             email = email?.Trim();
 
-            var currentValue = model.GetType().GetProperty(PropertyName)?.GetValue(model, null)?.ToString();
+            var currentType = model.GetType();
+            var currentValue = currentType.GetProperty(PropertyName)?.GetValue(model, null)?.ToString();
             if (Values.Contains(currentValue))
             {
                 if (string.IsNullOrWhiteSpace(email))
                 {
-                    return new ValidationResult(ErrorMessage);
+                    return ValidationResult.Success;
                 }
 
                 email = email.ToLower();

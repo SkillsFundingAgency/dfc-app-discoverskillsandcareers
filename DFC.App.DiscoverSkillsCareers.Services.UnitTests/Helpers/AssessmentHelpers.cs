@@ -32,7 +32,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
                 new ShortQuestion{ Ordinal = 4, Trait = "ANALYST", QuestionText = "Am I an analyst?", IsNegative = false, Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = Core.Enums.Answer.Disagree } },
                 new ShortQuestion{ Ordinal = 5, Trait = "DOER", QuestionText = "Am I a doer?", IsNegative = false, Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = Core.Enums.Answer.Disagree } },
                 new ShortQuestion{ Ordinal = 6, Trait = "CREATER", QuestionText = "Am I a creater?", IsNegative = false, Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = Core.Enums.Answer.Disagree } },
-                new ShortQuestion{ Ordinal = 7, Trait = "HELPER", QuestionText = "Am I a helper?", IsNegative = false, Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = Core.Enums.Answer.Disagree } },
+                new ShortQuestion{ Ordinal = 7, Trait = "HELPER", QuestionText = "Am I a helper?", IsNegative = false, Answer = new QuestionAnswer { AnsweredAt = DateTime.UtcNow, Value = Core.Enums.Answer.Agree } },
             };
         }
 
@@ -95,7 +95,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.UnitTests.Helpers
                     }
                 },
                 new DysacTraitContentModel { Title = "CREATER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel> { new JobCategoryContentItemModel { Title = "Border Force Creater", WebsiteURI = "/job-profiles/border-force-creater" } } },
-                new DysacTraitContentModel { Title = "HELPER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel> { new JobCategoryContentItemModel { Title = "Border Force Helper", WebsiteURI = "/job-profiles/border-force-helper" } } }
+                new DysacTraitContentModel { Title = "HELPER", Id = Guid.NewGuid(), JobCategories = new List<JobCategoryContentItemModel> () }
             };
 
             return listOfTraits;
