@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
@@ -74,28 +73,24 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
         public async Task<bool> NewSession(string assessmentType)
         {
-            var session = await sessionService.GetCurrentSession().ConfigureAwait(false);
-            if (session?.State?.SessionId is null)
+            var questionSets = await GetQuestionSets().ConfigureAwait(false);
+
+            var assessmentCode = SessionIdHelper.GenerateSessionId("ncs");
+            var assessment = new DysacAssessment
             {
-                var questionSets = await GetQuestionSets().ConfigureAwait(false);
+                PartitionKey = DateTime.UtcNow.ToString("yyyy-MM-dd"),
+                StartedAt = DateTime.UtcNow,
+                Questions = questionSets?.Any() == true ?
+                    questionSets
+                        .First()
+                        .ShortQuestions!
+                        .OrderBy(shortQuestion => shortQuestion.Ordinal)
+                        .Select(shortQuestion => mapper.Map<ShortQuestion>(shortQuestion)) : new List<ShortQuestion>(),
+                Id = assessmentCode,
+            };
 
-                var assessmentCode = SessionIdHelper.GenerateSessionId("ncs");
-                var assessment = new DysacAssessment
-                {
-                    PartitionKey = DateTime.UtcNow.ToString("yyyy-MM-dd"),
-                    StartedAt = DateTime.UtcNow,
-                    Questions = questionSets?.Any() == true ?
-                        questionSets
-                            .First()
-                            .ShortQuestions!
-                            .OrderBy(shortQuestion => shortQuestion.Ordinal)
-                            .Select(shortQuestion => mapper.Map<ShortQuestion>(shortQuestion)) : new List<ShortQuestion>(),
-                    Id = assessmentCode,
-                };
-
-                await UpdateAssessment(assessment).ConfigureAwait(false);
-                await sessionService.CreateDysacSession(assessmentCode).ConfigureAwait(false);
-            }
+            await UpdateAssessment(assessment).ConfigureAwait(false);
+            await sessionService.CreateDysacSession(assessmentCode).ConfigureAwait(false);
 
             return true;
         }
@@ -283,7 +278,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             if (accessor.HttpContext != null && accessor.HttpContext.Items.ContainsKey(HttpContextAssessmentKey))
             {
-              return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
+                return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
             }
 
             var assessment = await documentStore.GetAssessmentAsync(sessionId)
