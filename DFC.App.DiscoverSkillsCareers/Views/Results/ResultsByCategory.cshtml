@@ -26,6 +26,9 @@
 </div>
 <h2 class="govuk-heading-l">Careers that might interest you</h2>
 
+<p>We’ve suggested some careers based on your responses and motivations.</p>
+<p>It can be useful to think about which careers you might like, and which do not interest you and why</p>
+
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
     <div class="app-results">
         @foreach (var jobCategory in Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder))
@@ -38,29 +41,58 @@
                         {
                             if (@jobCategory.JobProfiles.Count() > 0)
                             {
-                                <p class="text-light">@jobCategory.JobProfiles.Count() role@{if (@jobCategory.JobProfiles.Count() > 1)@("s")} you might be interested in</p>
+                                <p class="text-light dysac-text-light">
+                                    @jobCategory.JobProfiles.Count() role@{
+                                        if (@jobCategory.JobProfiles.Count() > 1)
+                                            @("s")
+                                    } you might be interested in
+                                </p>
                             }
                             else
                             {
-                                <p class="text-light"><span>No careers were found that might interest you based on your responses.</span></p>
+                                <p class="text-light dysac-text-light"><span>No careers were found that might interest you based on your responses.</span></p>
                             }
-                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change my answers</a></p>
+                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
 
                             @if (jobCategory.ShowThisCategory)
                             {
-                                <ul class="app-long-results govuk-list govuk-grid-row" id="app-results-list--long">
-                                    @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound))
+                                <ul class="app-long-results1 govuk-list govuk-grid-row" id="app-results-list--long">
+                                    @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Take(5))
                                     {
                                         <li class="">
                                             @Html.Raw(profile.OverViewHTML)
                                         </li>
+
                                     }
                                 </ul>
-                                <div class="govuk-grid-row">
-                                    <div class="govuk-grid-column-two-thirds">
-                                        <p class="show-more"> </p>
+                                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                                    <div class="govuk-accordion__section">
+                                        <div class="govuk-accordion__section-header">
+                                            <h2 class="govuk-accordion__section-heading">
+                                                <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+                                                    Remaining job roles suggested in @jobCategory.CategoryTitle
+                                                </span>
+                                            </h2>
+                                        </div>
+                                        <div id="accordion-default-content-1" class="govuk-accordion__section-content">
+                                            <ul class="app-long-results1 govuk-list govuk-grid-row" id="app-results-list--long">
+                                                @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Skip(5))
+                                                {
+                                                    <li class="">
+                                                        @Html.Raw(profile.OverViewHTML)
+                                                    </li>
+
+                                                }
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
+
+
+
+
+
+
                             }
                             else if (@jobCategory.JobProfiles.Count() > 0)
                             {
@@ -70,10 +102,8 @@
                         }
                         else
                         {
-                            <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
-                            <a asp-route="filterQuestions" role="button" class="govuk-button ncs-button__primary app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Answer @jobCategory.AnswerMoreQuestions more question@{
-                                    if (@jobCategory.AnswerMoreQuestions > 1)@("s")
-                                }</a>
+                            <p>No careers were found that might interest you based on your responses.</p>
+                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
                         }
                     </div>
                 </div>

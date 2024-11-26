@@ -1,0 +1,8 @@
+﻿@inject IConfiguration configuration
+
+<div class="govuk-grid-column-one-third">
+    <div class="dysac-job-tile-image">
+        <img src="@(configuration["AssetsCdn"]+@Model.desktopImage)" class="dysac-job-category-tile-header-desktop" alt="" />
+        <img src="@(configuration["AssetsCdn"]+@Model.mobileImage)" class="dysac-job-category-tile-header-mobile" alt="" />
+    </div>
+</div>
