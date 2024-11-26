@@ -29,11 +29,10 @@
 
         @if (Model.Results.JobCategories.Any())
         {
-            <div class="app-results">
+            <div class="app-results govuk-!-margin-bottom-9">
                 <partial name="_JobCategories" />
             </div>
             
-            <partial name="_SendMyResults" model="@Model.AssessmentReference" />
             <div class="govuk-!-margin-bottom-9">
                 <partial name="_NextSteps" />
             </div>
