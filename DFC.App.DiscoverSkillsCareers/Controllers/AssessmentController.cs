@@ -165,7 +165,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return NoContent();
             }
 
-            await assessmentService.NewSession(assessmentType).ConfigureAwait(false);
             logService.LogInformation($"{nameof(New)} generated the model and ready to pass to the view");
 
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
