@@ -57,7 +57,7 @@
                             @if (jobCategory.ShowThisCategory)
                             {
                                 <ul class="app-long-results1 govuk-list govuk-grid-row" id="app-results-list--long">
-                                    @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Take(5))
+                                    @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Take(6))
                                     {
                                         <li class="">
                                             @Html.Raw(profile.OverViewHTML)
@@ -76,7 +76,7 @@
                                         </div>
                                         <div id="accordion-default-content-1" class="govuk-accordion__section-content">
                                             <ul class="app-long-results1 govuk-list govuk-grid-row" id="app-results-list--long">
-                                                @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Skip(5))
+                                                @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Skip(6))
                                                 {
                                                     <li class="">
                                                         @Html.Raw(profile.OverViewHTML)

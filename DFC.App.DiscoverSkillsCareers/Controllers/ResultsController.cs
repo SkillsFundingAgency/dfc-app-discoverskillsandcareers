@@ -201,7 +201,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                         .Where(document => jobProfileTitles.Contains(document.DisplayText!.ToLower()))
                         .ToList();
 
-                    var jobProfileImagePaths = new { desktopImage = jobCategory.ImagePathDesktop, mobileImage = jobCategory.ImagePathMobile };
+                    var jobProfileImagePaths = new { desktopImage = jobCategory.ImagePathTitle, mobileImage = jobCategory.ImagePathMobile };
 
                     var image = await razorTemplateEngine.RenderAsync("~/Views/Results/_JobRoleImage.cshtml", jobProfileImagePaths).ConfigureAwait(false);
 
