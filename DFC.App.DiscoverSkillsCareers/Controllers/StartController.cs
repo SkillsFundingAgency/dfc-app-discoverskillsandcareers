@@ -63,12 +63,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
-            var isSessionExists = await commonService.HasSessionStateId().ConfigureAwait(false);
-
-            if (!isSessionExists)
-            {
-                await assessmentService.NewSession("short").ConfigureAwait(false);
-            }
+            await assessmentService.NewSession("short").ConfigureAwait(false);
 
             var startViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
             startViewModel.DysacAction = Core.Enums.DysacAction.Start;
