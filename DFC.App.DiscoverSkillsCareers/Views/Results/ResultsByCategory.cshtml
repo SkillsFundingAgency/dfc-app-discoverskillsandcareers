@@ -24,9 +24,9 @@
         </div>
     }
 </div>
-<h2 class="govuk-heading-l">Careers that might interest you</h2>
+<h2 class="govuk-heading-l dysac-header-margin">Careers that might interest you</h2>
 
-<p>We’ve suggested some careers based on your responses and motivations.</p>
+<p class="dysac-p-margin">We’ve suggested some careers based on your responses and motivations.</p>
 <p>It can be useful to think about which careers you might like, and which do not interest you and why</p>
 
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
@@ -39,10 +39,10 @@
                         <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
                         @if (jobCategory.AnswerMoreQuestions == 0)
                         {
-                            if (@jobCategory.JobProfiles.Count() > 0)
+                            if (@jobCategory.JobProfiles.Count()-1 > 0)
                             {
                                 <p class="text-light dysac-text-light">
-                                    @jobCategory.JobProfiles.Count() role@{
+                                    @jobCategory.JobProfiles.Count()-1 role@{
                                         if (@jobCategory.JobProfiles.Count() > 1)
                                             @("s")
                                     } you might be interested in
@@ -72,7 +72,7 @@
                                     <div class="govuk-accordion__section">
                                         <div class="govuk-accordion__section-header">
                                             <h2 class="govuk-accordion__section-heading">
-                                                <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+                                                    <span class="govuk-accordion__section-button .dysac-accordion-button" id="accordion-default-heading-1">
                                                     Remaining job roles suggested in @jobCategory.CategoryTitle
                                                 </span>
                                             </h2>
