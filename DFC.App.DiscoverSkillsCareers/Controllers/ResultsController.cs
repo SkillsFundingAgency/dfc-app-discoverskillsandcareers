@@ -201,6 +201,11 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                         .Where(document => jobProfileTitles.Contains(document.DisplayText!.ToLower()))
                         .ToList();
 
+                    var jobProfileImagePaths = new { desktopImage = jobCategory.ImagePathTitle, mobileImage = jobCategory.ImagePathMobile };
+
+                    var image = await razorTemplateEngine.RenderAsync("~/Views/Results/_JobRoleImage.cshtml", jobProfileImagePaths).ConfigureAwait(false);
+
+
                     foreach (JobProfileViewModel jobProfileOverview in jobProfileList)
                     {
                         try
@@ -228,6 +233,14 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                             OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
                             ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                         }));
+
+                    category.JobProfiles.Insert(0, new ResultJobProfileOverViewModel()
+                    {
+                        Cname = jobCategory.JobFamilyName,
+                        OverViewHTML = image,
+                        ReturnedStatusCode = System.Net.HttpStatusCode.OK,
+                    });
+
                 }
                 catch (Exception ex)
                 {
