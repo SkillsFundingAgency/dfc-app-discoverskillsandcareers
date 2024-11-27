@@ -205,7 +205,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                     var image = await razorTemplateEngine.RenderAsync("~/Views/Results/_JobRoleImage.cshtml", jobProfileImagePaths).ConfigureAwait(false);
 
-
                     foreach (JobProfileViewModel jobProfileOverview in jobProfileList)
                     {
                         try
@@ -234,13 +233,24 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                             ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                         }));
 
+                    if ((jobProfileList is null) || !jobProfileList.Any())
+                    {
+                        var changeAnswersDetails = new { CategoryUrl = jobCategory.JobFamilyUrl, AssesmentType = "filter" };
+                        var noJobTile = await razorTemplateEngine.RenderAsync("~/Views/Results/_NoJobRole.cshtml", changeAnswersDetails).ConfigureAwait(false);
+                        category.JobProfiles.Add(new ResultJobProfileOverViewModel()
+                        {
+                            Cname = jobCategory.JobFamilyName,
+                            OverViewHTML = noJobTile,
+                            ReturnedStatusCode = System.Net.HttpStatusCode.Unused,
+                        });
+                    }
+
                     category.JobProfiles.Insert(0, new ResultJobProfileOverViewModel()
                     {
                         Cname = jobCategory.JobFamilyName,
                         OverViewHTML = image,
                         ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                     });
-
                 }
                 catch (Exception ex)
                 {
@@ -253,7 +263,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
             resultsByCategoryModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
-
 
             logService.LogInformation($"{nameof(Roles)} generated the model and ready to pass to the view");
 
