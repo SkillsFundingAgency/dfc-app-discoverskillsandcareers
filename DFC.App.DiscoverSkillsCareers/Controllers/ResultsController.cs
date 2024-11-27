@@ -92,7 +92,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 AssessmentReference = assessmentResponse.ReferenceCode,
             };
 
-            resultIndexResponseViewModel.Results.JobCategoriesNumberToShow = requestViewModel?.CountToShow ?? 3;
+            resultIndexResponseViewModel.Results.JobCategoriesNumberToShow = 3;
             resultIndexResponseViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
             logService.LogInformation("About to display results view");
             return View(resultIndexResponseViewModel);
