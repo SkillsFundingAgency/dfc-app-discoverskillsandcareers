@@ -17,6 +17,14 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string CategoryCode { get; set; }
 
+        public string JobFamilyText { get; set; }
+
+        public string ImagePathDesktop { get; set; }
+
+        public string ImagePathMobile { get; set; }
+
+        public string ImagePathTitle { get; set; }
+
         public int NumberOfSuitableRoles { get; set; }
 
         public int DisplayOrder { get; set; }
