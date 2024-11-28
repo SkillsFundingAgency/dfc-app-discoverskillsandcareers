@@ -149,24 +149,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 }
             }
 
-            if (resultsByCategoryModel?.JobsInCategory != null)
-            {
-                var fullAssessment = await assessmentService.GetAssessment(assessmentResponse.SessionId!).ConfigureAwait(false);
-
-                if (fullAssessment.FilteredAssessment != null)
-                {
-                    foreach (var category in resultsByCategoryModel.JobsInCategory)
-                    {
-                        if (fullAssessment.FilteredAssessment!.JobCategoryAssessments.Any(filteredJobCategory =>
-                                filteredJobCategory.JobCategory == category.CategoryUrl
-                                && filteredJobCategory.LastAnswer != default))
-                        {
-                            category.ShowThisCategory = true;
-                        }
-                    }
-                }
-            }
-
             logService.LogInformation($"Looping through categories - {resultsResponse.JobCategories?.Count()} available");
 
             if (resultsResponse.JobCategories == null)
