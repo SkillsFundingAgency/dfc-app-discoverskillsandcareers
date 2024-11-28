@@ -37,21 +37,20 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
                         <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
-                        
-                            @if (@jobCategory.JobProfiles.Count()-1 > 0)
+                        @if (jobCategory.AnswerMoreQuestions == 0)
+                        {
+                            if ((@jobCategory.JobProfiles.Count() - 1) > 0 && (!@jobCategory.JobProfiles.Any(p => p.ReturnedStatusCode == System.Net.HttpStatusCode.Unused)))
                             {
                                 <p class="text-light dysac-text-light">
-                                    @jobCategory.JobProfiles.Count()-1 role@{
-                                        if (@jobCategory.JobProfiles.Count() > 1)
+                                    @(jobCategory.JobProfiles.Count()-1) role@{
+                                        if ((@jobCategory.JobProfiles.Count()-1) > 1)
                                             @("s")
                                     } you might be interested in
                                 </p>
+
+                                <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
                             }
-                            else
-                            {
-                                <p class="text-light dysac-text-light"><span>No careers were found that might interest you based on your responses.</span></p>
-                            }
-                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
+                            
 
                             @if (jobCategory.ShowThisCategory)
                             {
@@ -90,12 +89,20 @@
                                     </div>
                                 </div>
                                 }
+
                             }
                             else if (@jobCategory.JobProfiles.Count() > 0)
                             {
                                 <p class="app-noprint">View job roles you might be suited to in @jobCategory.CategoryTitle</p>
                                 <a role="button" class="govuk-button ncs-button__primary app-button" asp-controller="results" asp-action="roles" asp-route-id="@jobCategory.CategoryUrl" draggable="false">See results</a>
                             }
+                        }
+                    </div>
+                </div>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <p class="show-more"> </p>
+                        <hr>
                     </div>
                 </div>
             </div>
@@ -110,7 +117,7 @@
             }
             @for (int index = 0; index < jobCategories.Count(); index++)
             {
-                
+
                 <div class="dysac-job-category-tile-wrapper">
                     <div class="dysac-job-category-tile-header-image">
                         <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
@@ -140,6 +147,7 @@
                                 </a>
                             </p>
                         }
+
                     </div>
                 </div>
             }
