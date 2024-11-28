@@ -39,20 +39,18 @@
                         <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
                         @if (jobCategory.AnswerMoreQuestions == 0)
                         {
-                            if (@jobCategory.JobProfiles.Count()-1 > 0)
+                            if ((@jobCategory.JobProfiles.Count() - 1) > 0 && (!@jobCategory.JobProfiles.Any(p => p.ReturnedStatusCode == System.Net.HttpStatusCode.Unused)))
                             {
                                 <p class="text-light dysac-text-light">
-                                    @jobCategory.JobProfiles.Count()-1 role@{
-                                        if (@jobCategory.JobProfiles.Count() > 1)
+                                    @(jobCategory.JobProfiles.Count()-1) role@{
+                                        if ((@jobCategory.JobProfiles.Count()-1) > 1)
                                             @("s")
                                     } you might be interested in
                                 </p>
+
+                                <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
                             }
-                            else
-                            {
-                                <p class="text-light dysac-text-light"><span>No careers were found that might interest you based on your responses.</span></p>
-                            }
-                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
+                            
 
                             @if (jobCategory.ShowThisCategory)
                             {
@@ -92,11 +90,6 @@
                                 </div>
                                 }
 
-
-
-
-
-
                             }
                             else if (@jobCategory.JobProfiles.Count() > 0)
                             {
@@ -106,9 +99,15 @@
                         }
                         else
                         {
-                            <p>No careers were found that might interest you based on your responses.</p>
-                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
+                            <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
+                            <a asp-route="filterQuestions" role="button" class="govuk-button ncs-button__primary app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">
+                                Answer @jobCategory.AnswerMoreQuestions more question@{
+                                    if (@jobCategory.AnswerMoreQuestions > 1)
+                                        @("s")
+                                }
+                            </a>
                         }
+
                     </div>
                 </div>
                 <div class="govuk-grid-row">
