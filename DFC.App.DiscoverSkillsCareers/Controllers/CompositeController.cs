@@ -50,7 +50,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentSave);
         }
 
-        [Route("head/assessment/reference")]
         [Route("head/start/reference")]
         public IActionResult AssessmentReference()
         {
@@ -58,7 +57,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentReference);
         }
 
-        [Route("head/assessment/referencesent")]
         [Route("head/start/referencesent")]
         public IActionResult AssessmentReferenceSent()
         {
@@ -68,27 +66,12 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
         }
 
-        [Route("head/assessment/email")]
-        public IActionResult AssessmentEmail()
-        {
-            logService.LogInformation($"AssessmentEmail {PageTitle.AssessmentEmail} called");
-            return CreateViewModelAndReturnView(PageTitle.AssessmentEmail);
-        }
-
-        [Route("head/assessment/emailsent")]
         [Route("head/start/emailsent")]
         public IActionResult AssessmentEmailSent()
         {
            var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
            logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
            return CreateViewModelAndReturnView(pageTitle);
-        }
-
-        [Route("head/assessment/emailstart")]
-        public IActionResult AssessmentEmailStart()
-        {
-            logService.LogInformation($"AssessmentEmailStart {PageTitle.AssessmentEmailStart} called");
-            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailStart);
         }
 
         [Route("head/loadsession")]
