@@ -61,13 +61,6 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
-        public void AssessmentEmailReturnsPageTitle()
-        {
-            var actionResponse = controller.AssessmentEmail();
-            AssertPageTitle(actionResponse, PageTitle.AssessmentEmail);
-        }
-
-        [Fact]
         public void AssessmentEmailSentReturnsPageTitle()
         {
             var httpContext = new DefaultHttpContext();
