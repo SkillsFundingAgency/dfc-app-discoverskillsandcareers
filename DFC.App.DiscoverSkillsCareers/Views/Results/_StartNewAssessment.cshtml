@@ -1,0 +1,20 @@
+﻿@model ResultIndexResponseViewModel
+@inject IConfiguration configuration
+
+<div class="dysac-page-panel">
+    <div class="dysac-page-panel-content">
+        <div class="dysac-page-panel-desc">
+            <h3>Start a new skills assessment</h3>
+            <p class="govuk-body">If you do a skills assessment again, it could be useful to:</p>
+            <ul class="govuk-list govuk-list--bullet ul-dysac govuk-!-margin-bottom-5">
+                <li>think carefully about each statement </li>
+                <li>go with your first answer and try not to overthink it</li>
+                <li>be as confident as you can</li>
+            </ul>
+        </div>
+        <div class="dysac-landing-page-panel-image">
+            <img class="dysac-landing-page-panel-image-c" src="@configuration["AssetsCdn"]media/dysac/salandingcheckbox.svg" alt="" />
+        </div>
+    </div>
+    <a role="button" class="govuk-button ncs-button__primary app-button" asp-controller="start" draggable="false">Start a new skills assessment</a>
+</div>
