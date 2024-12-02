@@ -2,7 +2,15 @@
 @inject IConfiguration configuration
 <div class="govuk-!-margin-top-8 dysac-job-category-panel">
     <h2>Job categories that might interest you</h2>
-    <p class="govuk-body dysac-job-category-summary">We’ve suggested 3 job categories for you to explore based on your responses. Start with these or look at the remaining categories suggested.</p>
+    @if (Model.Results.JobCategories.Count() > 1)
+    {
+        <p class="govuk-body dysac-job-category-summary">We’ve suggested @(@Model.Results.JobCategories.Count() > 3 ? 3 : @Model.Results.JobCategories.Count())  job categories for you to explore based on your responses. Start with these or look at the remaining categories suggested.</p>
+
+    } else
+    {
+        <p class="govuk-body dysac-job-category-summary">We’ve suggested one job category for you to explore based on your responses.</p>
+
+    }
     <p class="govuk-body dysac-job-category-summary govuk-!-margin-bottom-6">Answer a few specific questions for each category to get suggested careers.</p>
     <div class="govuk-!-margin-top-5 dysac-job-category-tile-container">
         @{

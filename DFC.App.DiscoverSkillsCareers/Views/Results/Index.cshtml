@@ -2,7 +2,7 @@
 @model ResultIndexResponseViewModel
 @inject IConfiguration configuration
 <div class="govuk-main-wrapper govuk-width-container @(Model.AssessmentType == "short" ? string.Empty : "govuk-!-padding-top-4")">
-    <div class="govuk-body">
+  
         @if (Model.Results.Traits.Any())
         {
             <h2>
@@ -76,5 +76,4 @@
                 <partial name="_SpeakToAnAdviser" />
             </div>
         }
-    </div>
 </div>
