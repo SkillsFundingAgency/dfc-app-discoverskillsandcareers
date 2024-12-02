@@ -1,10 +1,10 @@
 ﻿@model ResultsByCategoryModel
 @using GraphQL.Client.Abstractions.Utilities
 @inject IConfiguration configuration
-<h2>
+<h2 class="govuk-!-margin-top-4">
     What you told us motivates you
 </h2>
-<p class="dysac-personality-trait-summary govuk-body">
+<p class="dysac-personality-trait-summary govuk-body govuk-!-margin-bottom-6">
     It’s normal for what motivates you to change over time. These motivations are based on your responses today.
 </p>
 <div class="dysac-trait-tile-container">
@@ -24,21 +24,22 @@
         </div>
     }
 </div>
-<h2 class="govuk-heading-l dysac-header-margin">Careers that might interest you</h2>
+<h2 class="govuk-heading-l govuk-!-margin-top-8">Careers that might interest you</h2>
 
 <p class="dysac-p-margin">We’ve suggested some careers based on your responses and motivations.</p>
-<p>It can be useful to think about which careers you might like, and which do not interest you and why</p>
+<p class="govuk-!-margin-bottom-6">It can be useful to think about which careers you might like, and which do not interest you and why</p>
 
 <div class="govuk-template__body  app-page--results-long js-enabled" id="top">
     <div class="app-results">
         @foreach (var jobCategory in Model.JobsInCategory.Where(x => x.AnswerMoreQuestions == 0).OrderByDescending(c => c.DisplayOrder))
         {
+            @if (jobCategory.AnswerMoreQuestions == 0 && jobCategory.ShowThisCategory)
+            {
             <div class="app-results__item" data-job-family-code="@jobCategory.CategoryCode">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        @if (jobCategory.AnswerMoreQuestions == 0)
-                        {
-                            if (jobCategory.ShowThisCategory && (@jobCategory.JobProfiles.Count() - 1) > 0 && (!@jobCategory.JobProfiles.Any(p => p.ReturnedStatusCode == System.Net.HttpStatusCode.Unused)))
+                      
+                            @if (jobCategory.ShowThisCategory && (@jobCategory.JobProfiles.Count() - 1) > 0 && (!@jobCategory.JobProfiles.Any(p => p.ReturnedStatusCode == System.Net.HttpStatusCode.Unused)))
                             {
                                 <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
 
@@ -49,7 +50,7 @@
                                     } you might be interested in
                                 </p>
 
-                                <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
+                                <p class="govuk-!-margin-bottom-6"><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
                             }
                             
 
@@ -92,13 +93,14 @@
                                 }
 
                             }
-                        }
+                        
                     </div>
                 </div>
             </div>
+            }
         }
     </div>
-    <div class="govuk-!-margin-top-8 dysac-job-category-panel">
+    <div class="govuk-!-margin-top-1 govuk-!-margin-bottom-8 dysac-explore-job-category-panel">
         <h2>Explore remaining job categories </h2>
         <div class="govuk-!-margin-top-5 dysac-job-category-tile-container">
             @{
@@ -165,6 +167,6 @@
 <div class="govuk-!-margin-bottom-9">
     <partial name="_NextSteps" />
 </div>
-<div class="govuk-!-margin-bottom-9">
+<div class="govuk-!-margin-bottom-6">
     <partial name="_SpeakToAnAdviser" />
 </div>
