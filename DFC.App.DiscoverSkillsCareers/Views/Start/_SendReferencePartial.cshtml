@@ -1,7 +1,12 @@
 ﻿@model StartViewModel
+
+<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
 <div class="govuk-form-group @(!ViewData.ModelState.IsValid && Model.Contact is null ? "govuk-form-group--error" : "") dysac-start-reference">
 
-<fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+    <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
     <form method="post" id="dysac-form">
 
 
@@ -39,7 +44,7 @@
                 </label>
             </div>
             <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact-2">
-                    <div class="govuk-form-group @(!ViewData.ModelState.IsValid && Model.Contact == AssessmentReturnType.Reference ? "govuk-form-group--error" : "")">
+                    <div class="govuk-form-group govuk-grid-column-two-thirds @(!ViewData.ModelState.IsValid && Model.Contact == AssessmentReturnType.Reference ? "govuk-form-group--error" : "")">
                     <label class="govuk-label" for="contact-by-phone">
                         UK mobile phone number
                     </label>
@@ -59,4 +64,8 @@
         </div>
     </form>
 </fieldset>
+</div>
+
+</div>
+</div>
 </div>
