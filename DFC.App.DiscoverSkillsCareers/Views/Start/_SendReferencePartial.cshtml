@@ -34,7 +34,7 @@
 
                                         <div id="contact-hint-email" class="govuk-hint">We’ll only use your email address to send you a reference code and a link to return to your assessment.</div>
                                         <span asp-validation-for="Email" class="govuk-error-message"></span>
-                                        <input class="govuk-input  @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" value="@(Model.Email)" id="code" asp-for="Email" type="text">
+                                        <input class="govuk-input  @(!ViewData.ModelState.IsValid && @Model.Contact == AssessmentReturnType.Email ? "govuk-input--error" : "")" value="@(Model.Email)" id="code" asp-for="Email" type="text">
                                     </div>
                                 </div>
                                 <div class="govuk-radios__item">
@@ -44,14 +44,14 @@
                                     </label>
                                 </div>
                                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact-2">
-                                    <div class="govuk-form-group @(!ViewData.ModelState.IsValid && Model.Contact == AssessmentReturnType.Reference ? "govuk-form-group--error" : "")">
+                                    <div class="govuk-form-group @(!ViewData.ModelState.IsValid && @Model.Contact == AssessmentReturnType.Reference ? "govuk-form-group--error" : "")">
                                         <label class="govuk-label" for="contact-by-phone">
                                             UK mobile phone number
                                         </label>
 
                                         <div id="contact-hint-phonenumber" class="govuk-hint">We’ll only use your mobile number to send you a reference code and a link to return to your assessment.</div>
                                         <span asp-validation-for="PhoneNumber" class="govuk-error-message"></span>
-                                        <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" value="@(Model.PhoneNumber)" type="text" asp-for="PhoneNumber" id="phoneNumber" />
+                                        <input class="govuk-input @(!ViewData.ModelState.IsValid && @Model.Contact == AssessmentReturnType.Reference ? "govuk-input--error" : "")" value="@(Model.PhoneNumber)" type="text" asp-for="PhoneNumber" id="phoneNumber" />
                                     </div>
                                 </div>
                             </div>
