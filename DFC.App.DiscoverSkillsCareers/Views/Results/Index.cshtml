@@ -14,13 +14,13 @@
             <div class="dysac-trait-tile-container govuk-!-padding-top-1">
                 @foreach (var trait in Model.Results.Traits)
                 {
-                    <div class="dysac-personality-tile">
-                        <div class="dysac-personality-tile-image-header">
-                            <img class="dysac-personality-tile-image" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
-                            <h2>@trait.Title.ToPascalCase()</h2>
+                    <div class="ncs-card-symbol dysac-personality-tile">
+                        <div class="symbol dysac-personality-tile-symbol-head">
+                            <img class="dysac-personality-trait-symbol" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
+                            <h3>@trait.Title.ToPascalCase()</h3>
                         </div>
 
-                        <div class="dysac-personality-tile-description">
+                        <div class="content dysac-personality-tile-desc">
                             <p>
                                 @trait.Text
                             </p>
