@@ -29,11 +29,11 @@
 
                     <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
                 </div>
-                <div class="card-content-section">
+                <div class="card-content-section dysac-job-category-card-content">
                     <div class="card-header">
                     <h3><a href="/job-categories/@jobCategories[index].JobFamilyNameUrl">@jobCategories[index].JobFamilyName</a></h3>
                     </div>
-                    <div class="card-content dysac-job-category-card-content">
+                    <div class="card-content">
                         <p>@jobCategories[index].JobFamilyText</p>
                         @if (jobCategories[index].NumberOfMatchedJobProfile > 0)
                         {
@@ -80,11 +80,11 @@
 
                                     <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
                                 </div>
-                                <div class="card-content-section">
+                                <div class="card-content-section dysac-job-category-card-content">
                                     <div class="card-header">
                                     <h3 ><a href="/job-categories/@jobCategories[index].JobFamilyNameUrl">@jobCategories[index].JobFamilyName</a></h3>
                                     </div>
-                                    <div class="card-content dysac-job-category-card-content">
+                                    <div class="card-content">
                                     <p>@jobCategories[index].JobFamilyText</p>
                                     @if (jobCategories[index].NumberOfMatchedJobProfile > 0)
                                     {
