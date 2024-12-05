@@ -10,13 +10,13 @@
 <div class="dysac-trait-tile-container">
     @foreach (var trait in Model.Traits)
     {
-        <div class="dysac-personality-tile">
-            <div class="dysac-personality-tile-image-header">
-                <img class="dysac-personality-tile-image" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
-                <h2>@trait.Title.ToPascalCase()</h2>
+        <div class="ncs-card-symbol dysac-personality-tile">
+            <div class="symbol dysac-personality-tile-symbol-head">
+                <img class="dysac-personality-trait-symbol" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
+                <h3>@trait.Title.ToPascalCase()</h3>
             </div>
 
-            <div class="dysac-personality-tile-description">
+            <div class="content dysac-personality-tile-desc">
                 <p>
                     @trait.Text
                 </p>
@@ -107,39 +107,45 @@
             {
                 if (!(jobCategories[index].AnswerMoreQuestions == 0))
                 {
-                    <div class="dysac-job-category-tile-wrapper">
-                        <div class="dysac-job-category-tile-header-image">
+                    <div class="ncs-card-with-image dysac-job-category-card">
+                        <div class="card-image">
                             <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
 
                             <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
                         </div>
-                        <div class="dysac-job-category-tile">
-                            <h3 class="tile-header"><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
-                            <p>@jobCategories[index].JobFamilyText</p>
+                        <div class="card-content-section  dysac-job-category-card-content">
+                            <div class="card-header">
+                               <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                            </div>
+                            <div class="card-content">
+                                <p>@jobCategories[index].JobFamilyText</p>
                            
-                                <p class="govuk-body">
-                                    <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategories[index].CategoryUrl" asp-route-questionNumber="0">
-                                        Answer @jobCategories[index].AnswerMoreQuestions more question@{
-                                            if (jobCategories[index].AnswerMoreQuestions > 1)
-                                                @("s")
-                                        }
-                                    </a>
-                                </p>
-
+                                    <p class="govuk-body">
+                                        <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategories[index].CategoryUrl" asp-route-questionNumber="0">
+                                            Answer @jobCategories[index].AnswerMoreQuestions more question@{
+                                                if (jobCategories[index].AnswerMoreQuestions > 1)
+                                                    @("s")
+                                            }
+                                        </a>
+                                    </p>
+                             </div>
                         </div>
                     </div>
                 } else
                 {
                     @if (jobCategories[index].JobProfiles.Count() > 0 && !jobCategories[index].ShowThisCategory)
                     {
-                        <div class="dysac-job-category-tile-wrapper">
-                            <div class="dysac-job-category-tile-header-image">
+                        <div class="ncs-card-with-image dysac-job-category-card">
+                            <div class="card-image">
                                 <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
 
                                 <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
                             </div>
-                            <div class="dysac-job-category-tile">
-                                <h3 class="tile-header"><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                            <div class="card-content-section  dysac-job-category-card-content">
+                                <div class="card-header">
+                                <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                                </div>
+                                <div class="card-content">
                                 <p>@jobCategories[index].JobFamilyText</p>
 
                                 <p class="govuk-body">
@@ -148,6 +154,7 @@
                                         change your answers
                                     </a>
                                 </p>
+                                </div>
 
                             </div>
                         </div>
