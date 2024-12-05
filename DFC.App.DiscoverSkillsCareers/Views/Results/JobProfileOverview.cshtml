@@ -1,9 +1,12 @@
 ﻿@model JobProfileViewModel
-    <div class="dysac-job-role-tile dysac-job-role-tile-group">
-        <div class="dysac-job-role-category">
-            <h4>
+    <div class="ncs-card-basic dysac-job-role-card">
+        <div class="card-header">
+            <h3>
                 <a href="/job-profiles/@Model.UrlName">@Model.DisplayText</a>
-            </h4>
+            </h3>
+         </div>
+
+        <div class="card-content">
             <p>
                 @Model.Overview
             </p>
@@ -19,4 +22,5 @@
                 }                
             </div>
         </div>
+        
     </div>
