@@ -1,6 +1,6 @@
 ﻿@inject IConfiguration configuration
-<div class="dysac-job-role-tile-group">
-    <img src="@(configuration["AssetsCdn"]+@Model.desktopImage)" class="dysac-job-role-tile-image dysac-job-role-tile-header-desktop" alt="" />
-    <img src="@(configuration["AssetsCdn"]+@Model.mobileImage)" class="dysac-job-role-tile-image dysac-job-role-tile-header-mobile" alt="" />
+<div class="dysac-job-role-card dysac-job-role-tile-image">
+    <img src="@(configuration["AssetsCdn"]+@Model.desktopImage)" class="dysac-job-role-tile-header-desktop" alt="" />
+    <img src="@(configuration["AssetsCdn"]+@Model.mobileImage)" class="dysac-job-role-tile-header-mobile" alt="" />
 
     </div>
