@@ -135,14 +135,17 @@
                 {
                     @if (jobCategories[index].JobProfiles.Count() > 0 && !jobCategories[index].ShowThisCategory)
                     {
-                        <div class="dysac-job-category-tile-wrapper">
-                            <div class="dysac-job-category-tile-header-image">
+                        <div class="ncs-card-with-image dysac-job-category-card">
+                            <div class="card-image">
                                 <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
 
                                 <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
                             </div>
-                            <div class="dysac-job-category-tile">
-                                <h3 class="tile-header"><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                            <div class="card-content-section  dysac-job-category-card-content">
+                                <div class="card-header">
+                                <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                                </div>
+                                <div class="card-content">
                                 <p>@jobCategories[index].JobFamilyText</p>
 
                                 <p class="govuk-body">
@@ -151,6 +154,7 @@
                                         change your answers
                                     </a>
                                 </p>
+                                </div>
 
                             </div>
                         </div>

@@ -74,14 +74,17 @@
                         @for (int index = 3; index < jobCategories.Count(); index++)
                         {
 
-                            <div class="dysac-job-category-tile-wrapper">
-                                <div class="dysac-job-category-tile-header-image">
+                            <div class="ncs-card-with-image dysac-job-category-card">
+                                <div class="card-image">
                                     <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
 
                                     <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
                                 </div>
-                                <div class="dysac-job-category-tile">
-                                    <h3 class="tile-header"><a href="/job-categories/@jobCategories[index].JobFamilyNameUrl">@jobCategories[index].JobFamilyName</a></h3>
+                                <div class="card-content-section">
+                                    <div class="card-header">
+                                    <h3 ><a href="/job-categories/@jobCategories[index].JobFamilyNameUrl">@jobCategories[index].JobFamilyName</a></h3>
+                                    </div>
+                                    <div class="card-content dysac-job-category-card-content">
                                     <p>@jobCategories[index].JobFamilyText</p>
                                     @if (jobCategories[index].NumberOfMatchedJobProfile > 0)
                                     {
@@ -100,6 +103,7 @@
                                             </a>
                                         </p>
                                     }
+                                    </div>
                                 </div>
                             </div>
                         }
