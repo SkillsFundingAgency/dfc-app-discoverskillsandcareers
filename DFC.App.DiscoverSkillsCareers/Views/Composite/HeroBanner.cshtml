@@ -1,6 +1,23 @@
 ﻿@inject IConfiguration configuration
 @model HeroBannerViewModel
-<div class="dfc-dysac-assement-panel-banner ncs-hero page-hero">
+@{
+    var bannerClass = string.Empty;
+    switch(Model.PageType)
+    {
+        case PageType.Landing:
+            bannerClass = "dfc-dysac-banner-landing";
+            break;
+        case PageType.Start:
+            bannerClass = "dfc-dysac-banner-start";
+            break;
+        case PageType.ReferenceCode:
+            bannerClass = "dfc-dysac-banner-reference";
+            break;
+
+    }
+
+}
+<div class="dfc-dysac-assement-panel-banner ncs-hero page-hero @bannerClass">
 
     <div class="content govuk-width-container">
         <div class="govuk-grid-row">
