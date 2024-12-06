@@ -186,12 +186,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 try
                 {
                     logService.LogInformation($"Attempting to build JobProfileOverview for each job profile in {jobCategory.JobFamilyName}");
-                    if (!jobCategory.JobProfiles.Any())
-                    {
-                        logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
-                        continue;
-                    }
-
                     var jobProfileTitles = jobCategory.JobProfiles
                         .GroupBy(jobProfile => jobProfile.Title)
                         .Select(jobProfileGroup => jobProfileGroup.First())
@@ -233,7 +227,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                             ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                         }));
 
-                    if ((jobProfileList is null) || !jobProfileList.Any())
+                    if (!category.JobProfiles.Any())
                     {
                         var changeAnswersDetails = new { CategoryUrl = jobCategory.JobFamilyUrl, AssesmentType = "filter" };
                         var noJobTile = await razorTemplateEngine.RenderAsync("~/Views/Results/_NoJobRole.cshtml", changeAnswersDetails).ConfigureAwait(false);
