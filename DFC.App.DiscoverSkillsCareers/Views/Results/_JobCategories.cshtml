@@ -23,37 +23,7 @@
             {
                 break;
             }
-            <div class="ncs-card-with-image dysac-job-category-card">
-                <div class="card-image">
-                    <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
-
-                    <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
-                </div>
-                <div class="card-content-section dysac-job-category-card-content">
-                    <div class="card-header">
-                    <h3><a href="/job-categories/@jobCategories[index].JobFamilyNameUrl">@jobCategories[index].JobFamilyName</a></h3>
-                    </div>
-                    <div class="card-content">
-                        <p>@jobCategories[index].JobFamilyText</p>
-                        @if (jobCategories[index].NumberOfMatchedJobProfile > 0)
-                        {
-                            <p class="govuk-body">
-                                <a class="govuk-link" asp-controller="results" asp-action="roles" asp-route-id="@jobCategories[index].JobFamilyUrl" draggable="false">View results</a>
-                            </p>
-                        }
-                        else if (jobCategories[index].TotalQuestions > 0)
-                        {
-                            <p class="govuk-body">
-                                <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@jobCategories[index].JobFamilyNameUrl" asp-route-questionNumber="0">
-                                    Answer @jobCategories[index].TotalQuestions more question@{
-                                        if (jobCategories[index].TotalQuestions > 1)
-                                        @("s")
-                                }
-                            </a> </p>
-                        }
-                    </div>
-                </div>
-            </div>
+            <partial name="_JobCategoryCard" model="new JobCategoryCardViewModel {JobCategory = jobCategories[index], AssessmentType = Model.Results.AssessmentType}" />
         }
         </div>
 
@@ -73,39 +43,7 @@
 
                         @for (int index = 3; index < jobCategories.Count(); index++)
                         {
-
-                            <div class="ncs-card-with-image dysac-job-category-card">
-                                <div class="card-image">
-                                    <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
-
-                                    <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
-                                </div>
-                                <div class="card-content-section dysac-job-category-card-content">
-                                    <div class="card-header">
-                                    <h3 ><a href="/job-categories/@jobCategories[index].JobFamilyNameUrl">@jobCategories[index].JobFamilyName</a></h3>
-                                    </div>
-                                    <div class="card-content">
-                                    <p>@jobCategories[index].JobFamilyText</p>
-                                    @if (jobCategories[index].NumberOfMatchedJobProfile > 0)
-                                    {
-                                        <p class="govuk-body">
-                                            <a class="govuk-link" asp-controller="results" asp-action="roles" asp-route-id="@jobCategories[index].JobFamilyUrl" draggable="false">View results</a>
-                                        </p>
-                                    }
-                                    else if (jobCategories[index].TotalQuestions > 0)
-                                    {
-                                        <p class="govuk-body">
-                                            <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.Results.AssessmentType" asp-route-jobCategoryName="@jobCategories[index].JobFamilyNameUrl" asp-route-questionNumber="0">
-                                                Answer @jobCategories[index].TotalQuestions more question@{
-                                                    if (jobCategories[index].TotalQuestions > 1)
-                                                        @("s")
-                                                }
-                                            </a>
-                                        </p>
-                                    }
-                                    </div>
-                                </div>
-                            </div>
+                            <partial name="_JobCategoryCard" model="new JobCategoryCardViewModel {JobCategory = jobCategories[index], AssessmentType = Model.Results.AssessmentType}" />
                         }
                     </div>
                 </div>

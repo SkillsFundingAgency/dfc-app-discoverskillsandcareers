@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
