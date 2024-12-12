@@ -1,4 +1,5 @@
-﻿using DFC.App.DiscoverSkillsCareers.Validation;
+﻿using DFC.App.DiscoverSkillsCareers.Services.DataAnnotations;
+using DFC.App.DiscoverSkillsCareers.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -8,7 +9,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public string SpeakToAnAdviser { get; set; }
 
         [Display(Name = "Reference Code")]
-        [Required(ErrorMessage = "Enter your reference code")]
+        [ValidateRequired(ErrorMessage = "Enter your reference")]
         [ReferenceCodeExists(ErrorMessage = "Enter a valid reference code")]
         public string ReferenceCode { get; set; }
     }
