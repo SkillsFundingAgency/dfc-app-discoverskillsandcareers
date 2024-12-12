@@ -54,20 +54,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(HomeIndexRequestViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                var responseViewModel = GetResponseViewModel(viewModel);
+                return View(responseViewModel);
+            }
+
             if (viewModel == null || viewModel.ReferenceCode == null)
             {
                 var responseViewModel = GetResponseViewModel(viewModel);
                 ViewData["Title"] = "Error";
-                return View(responseViewModel);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                var responseViewModel = new HomeIndexResponseViewModel
-                {
-                    ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
-                };
                 return View(responseViewModel);
             }
 
