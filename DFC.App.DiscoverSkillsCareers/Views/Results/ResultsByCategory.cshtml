@@ -31,7 +31,7 @@
 <p class="govuk-!-margin-bottom-6">It can be useful to think about which careers you might like, and which do not interest you and why</p>
 </div>
 
-<div class="govuk-template__body  app-page--results-long js-enabled" id="top">
+<div class="govuk-template__body  app-page--results-long" id="top">
     <div class="app-results">
         @foreach (var jobCategory in Model.JobsInCategory.Where(x => x.AnswerMoreQuestions == 0).OrderByDescending(c => c.DisplayOrder))
         {
