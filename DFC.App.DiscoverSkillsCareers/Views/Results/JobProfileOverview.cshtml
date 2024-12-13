@@ -13,12 +13,12 @@
             <div id="salary">
                 @if (Model.SalaryStarterPerYear > 0 && Model.SalaryExperiencedPerYear > 0)
                 {
-                <p>Salary : @Model.SalaryStarterPerYear.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB")) to              
+                <p>Salary: @Model.SalaryStarterPerYear.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB")) to              
                @Model.SalaryExperiencedPerYear.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))</p>
                 }
                 else
                 {
-                <p class="dfc-code-jpsalaryblank">Variable</p>
+                <p class="dfc-code-jpsalaryblank">Salary: Variable</p>
                 }                
             </div>
         </div>
