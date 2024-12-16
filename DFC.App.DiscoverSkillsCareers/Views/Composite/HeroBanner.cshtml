@@ -2,7 +2,7 @@
 @model HeroBannerViewModel
 @{
     var bannerClass = string.Empty;
-    switch(Model.PageType)
+    switch (Model.PageType)
     {
         case PageType.Landing:
             bannerClass = "dfc-dysac-banner-landing";
@@ -22,42 +22,44 @@
     <div class="content govuk-width-container">
         <div class="govuk-grid-row">
 
-           
-                @if (Model.PageType == PageType.Landing)
-                {
-                    <div class="dysac-panel-header-container">
-                        <div class="dysac-panel-header-container-text">
-                            <h1 class="govuk-heading-xl">
-                                Skills assessment
-                            </h1>
-                            <p>Find out about careers that might be right for you by taking a skills assessment</p>
-                        </div>
-                        <div class="dysac-panel-header-container-image">
-                        <img src="@configuration["AssetsCdn"]media/checkbox.svg" alt="" />
-                         </div>
-                     </div>
-                }
-                @if(Model.PageType == PageType.Start)
-                {
-                <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">
-                       <div class="block ncs dysac">
-                    <span>Discover your skills and</span>
-                    <span>careers assessment</span>
-                    </div> 
-                    </h1>
-                    </div>
-                }
-                @if (Model.PageType == PageType.ReferenceCode)
-                {
-                    <div class="govuk-grid-column-two-thirds">
+
+            @if (Model.PageType == PageType.Landing)
+            {
+                <div class="dysac-panel-header-container">
+                    <div class="dysac-panel-header-container-text">
                         <h1 class="govuk-heading-xl">
-                            <div class="block ncs dysac">
-                            <span>Your reference code</span>
-                            </div>
+                            Skills assessment
+                        </h1>
+                        <p>Find out about careers that might be right for you by taking a skills assessment</p>
+                    </div>
+                    <div class="dysac-panel-header-container-image">
+                        <img src="@configuration["AssetsCdn"]media/checkbox.svg" alt="" />
+                    </div>
+                </div>
+            }
+            @if (Model.PageType == PageType.Start)
+            {
+                <div class="govuk-grid-column-two-thirds">
+
+                    <div class="block ncs dysac">
+                        <h1 class="govuk-heading-xl">
+                            <span>Discover your skills and</span>
+                            <span>careers assessment</span>
+
                         </h1>
                     </div>
-                }
+                </div>
+            }
+            @if (Model.PageType == PageType.ReferenceCode)
+            {
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">
+                        <div class="block ncs dysac">
+                            <span>Your reference code</span>
+                        </div>
+                    </h1>
+                </div>
+            }
         </div>
     </div>
 </div>
