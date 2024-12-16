@@ -2,78 +2,87 @@
 @model ResultIndexResponseViewModel
 @inject IConfiguration configuration
 <div class="govuk-main-wrapper govuk-width-container @(Model.AssessmentType == "short" ? string.Empty : "govuk-!-padding-top-4")">
-  
-        @if (Model.Results.Traits.Any())
-        {
-            <h2>
-                What you told us motivates you
-            </h2>
-            <p class="dysac-personality-trait-summary govuk-body govuk-!-margin-bottom-6">
-                It’s normal for what motivates you to change over time. These motivations are based on your responses today.
-            </p>
-            <div class="dysac-trait-tile-container govuk-!-padding-top-1">
-                @foreach (var trait in Model.Results.Traits)
-                {
-                    <div class="ncs-card-symbol dysac-personality-tile">
-                        <div class="symbol dysac-personality-tile-symbol-head">
-                            <img class="dysac-personality-trait-symbol" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
-                            <h3>@trait.Title.ToPascalCase()</h3>
-                        </div>
 
-                        <div class="content dysac-personality-tile-desc">
-                            <p>
-                                @trait.Text
-                            </p>
-                        </div>
+    @if (Model.Results.Traits.Any())
+    {
+        <h2>
+            What you told us motivates you
+        </h2>
+        <p class="dysac-personality-trait-summary govuk-body govuk-!-margin-bottom-6">
+            It’s normal for what motivates you to change over time. These motivations are based on your responses today.
+        </p>
+        <div class="dysac-trait-tile-container govuk-!-padding-top-1">
+            @foreach (var trait in Model.Results.Traits)
+            {
+                <div class="ncs-card-symbol dysac-personality-tile">
+                    <div class="symbol dysac-personality-tile-symbol-head">
+                        <img class="dysac-personality-trait-symbol" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
+                        <h3>@trait.Title.ToPascalCase()</h3>
                     </div>
-                }
-            </div>
 
-            @if (Model.Results.JobCategories.Any())
-            {
-                <div class="app-results govuk-!-margin-bottom-8">
-                    <partial name="_JobCategories" />
-                </div>
-
-                <div class="govuk-!-margin-bottom-9">
-                    <partial name="_NextSteps" />
-                </div>
-
-                <div class="govuk-!-margin-bottom-9">
-                    <partial name="_SpeakToAnAdviser" />
+                    <div class="content dysac-personality-tile-desc">
+                        <p>
+                            @trait.Text
+                        </p>
+                    </div>
                 </div>
             }
-            else
-            {
-                <h2 class="govuk-!-padding-top-7">We’re not sure which careers might interest you</h2>
-                <p class="govuk-body dysac-job-category-summary">This is because of the different ways you answered some of the questions. Do not worry - this does not mean there are no careers for you. </p>
-                <h2>What you can do next</h2>
-                <div class="govuk-!-margin-bottom-5">
-                    <partial name="_ExploreCareers" />
-                </div>
-                <div class="govuk-!-margin-bottom-9">
-                    <partial name="_StartNewAssessment" />
-                </div>
-                <div class="govuk-!-margin-bottom-9">
-                    <partial name="_SpeakToAnAdviser" />
-                </div>
-            }
+        </div>
 
-        }
-        else 
+        @if (Model.Results.JobCategories.Any())
         {
-            <h2>No clear results</h2>
-            <p class="govuk-body dysac-job-category-summary">Sorry, we cannot work out what careers might interest you. This is because of the different ways you answered some of the questions. </p>
-            <p class="govuk-body dysac-job-category-summary">Do not worry - this does not mean there are no careers for you. </p>
-            <h2>What you can do next</h2>
-            <div class="govuk-!-margin-bottom-5">
-                <partial name="_StartNewAssessment" />
+            <div class="app-results govuk-!-margin-bottom-8">
+                <partial name="_JobCategories" />
             </div>
+
             <div class="govuk-!-margin-bottom-9">
-                <partial name="_ExploreCareers" />
+                <partial name="_NextSteps" />
             </div>
+
             <div class="govuk-!-margin-bottom-9">
                 <partial name="_SpeakToAnAdviser" />
             </div>
         }
+        else
+        {
+            <div class="govuk-grid-column-full  dysac-job-role-header-content">
+                <div class="govuk-grid-column-two-thirds dysac-job-role-header-content">
+                <h2 class="govuk-!-padding-top-7">We’re not sure which careers might interest you</h2>
+                <p class="govuk-body dysac-job-category-summary">This is because of the different ways you answered some of the questions. Do not worry - this does not mean there are no careers for you. </p>
+            </div>
+            </div>
+            <h2>What you can do next</h2>
+            <div class="govuk-!-margin-bottom-5">
+                <partial name="_ExploreCareers" />
+            </div>
+          
+            <div class="govuk-!-margin-bottom-9">
+                <partial name="_StartNewAssessment" />
+            </div>
+
+            <div class="govuk-!-margin-bottom-9">
+                <partial name="_SpeakToAnAdviser" />
+            </div>
+            
+        }
+
+    }
+    else
+    {
+        <div class=" govuk-grid-column-two-thirds dysac-job-role-header-content">
+            <h2>No clear results</h2>
+            <p class="govuk-body dysac-job-category-summary">Sorry, we cannot work out what careers might interest you. This is because of the different ways you answered some of the questions. </p>
+            <p class="govuk-body dysac-job-category-summary">Do not worry - this does not mean there are no careers for you. </p>
+        </div>
+        <h2>What you can do next</h2>
+        <div class="govuk-!-margin-bottom-5">
+            <partial name="_StartNewAssessment" />
+        </div>
+        <div class="govuk-!-margin-bottom-9">
+            <partial name="_ExploreCareers" />
+        </div>
+        <div class="govuk-!-margin-bottom-9">
+            <partial name="_SpeakToAnAdviser" />
+        </div>
+    }
 </div>
