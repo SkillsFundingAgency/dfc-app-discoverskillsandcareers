@@ -22,7 +22,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         private readonly EmailAddressPage _emailAddressPage;
         private readonly CheckYourEmailPage _checkYourEmailPage; 
         private readonly YourResultsPage _yourResultsPage; 
-        private readonly AssessmentCompletePage _assessmentCompletePage; 
+        private readonly AssessmentCompletePage _assessmentCompletePage;
+        private readonly StartPage _startPage;
         private string _theAnswerOption;
         private string dateOnPage;
         private string _phoneNumber;
@@ -41,6 +42,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _checkYourEmailPage = new CheckYourEmailPage(_scenarioContext);
             _yourResultsPage = new YourResultsPage(_scenarioContext);
             _assessmentCompletePage = new AssessmentCompletePage(_scenarioContext);
+            _startPage = new StartPage(_scenarioContext);
         }
 
         [Given]
@@ -53,7 +55,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [When]
         public void WhenIClickOnAssessment()
         {
-            _dysacPage.ClickStartAssessment();
+            _startPage.ClickStartAssessment();
         }
 
         [Then(@"The first question is displayed; (.*)")]
@@ -113,7 +115,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [When(@"I save my progress")]
         public void WhenISaveMyProgress()
         {
-            _dysacPage.ClickSaveProgress();
+            _dysacPage.ClickGetYourReferenceCode();
         }
 
         [When(@"I select reference code to return to the assessment")]
@@ -182,11 +184,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _dysacPage.AnswerQuestions(_theAnswerOption, percentComplete);
         }
 
-        [When(@"I save progress")]
-        [Given(@"I save progress")]
+        [When(@"I get reference code")]
+        [Given(@"I get reference code")]
         public void GivenISaveProgress()
         {
-            _dysacPage.ClickSaveProgress();
+            _dysacPage.ClickGetYourReferenceCode();
         }
 
         [When(@"I choose the ""(.*)"" option of returning to assessment")]

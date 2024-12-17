@@ -31,7 +31,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement assessmentComplete => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-panel__title"));
         IWebElement chooseAnAnswerError => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-error-summary__body']/ul[@class='govuk-list govuk-error-summary__list']/li/li/a[@class='govuk-link govuk-link--no-visited-state']"));
         IWebElement lnkPreviousStatement => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-back-link"));
-        IWebElement linkSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
+        IWebElement linkGetYourReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
         IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
@@ -96,11 +96,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             lnkPreviousStatement.Click();
         }
 
-        public void ClickSaveProgress()
+        public void ClickGetYourReferenceCode()
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
             InitialPercentComplete = GetPercentageComplete();
-            linkSaveProgress.Click();
+            linkGetYourReferenceCode.Click();
         }
 
         public void SelectReferenceCode()

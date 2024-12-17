@@ -21,7 +21,7 @@ Scenario: TC01 - Starting Assessment loads the questions and show the percentage
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to take control of situations
-	And Percentage completion is 5%
+	And Percentage completion is 4%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I prefer to follow what other people are doing	
@@ -29,7 +29,7 @@ Scenario: TC01 - Starting Assessment loads the questions and show the percentage
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like taking responsibility for other people	
-	And Percentage completion is 10%
+	And Percentage completion is 9%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I set myself targets when I have things to do, and usually meet them	
@@ -37,7 +37,7 @@ Scenario: TC01 - Starting Assessment loads the questions and show the percentage
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to see things through to the end	
-	And Percentage completion is 15%
+	And Percentage completion is 14%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I think I am a competitive person	
@@ -45,130 +45,134 @@ Scenario: TC01 - Starting Assessment loads the questions and show the percentage
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; Doing well in a career motivates me	
-	And Percentage completion is 20%
+	And Percentage completion is 19%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I set myself goals in life	
-	And Percentage completion is 22%
+	And Percentage completion is 21%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I am comfortable talking people around to my way of thinking	
-	And Percentage completion is 25%
+	And Percentage completion is 24%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I am good at coming to an agreement with other people	
-	And Percentage completion is 27%
+	And Percentage completion is 26%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I am comfortable talking in front of a group of people	
-	And Percentage completion is 30%
+	And Percentage completion is 29%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like meeting new people	
-	And Percentage completion is 32%
+	And Percentage completion is 31%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I find it hard to understand other people's point of view	
-	And Percentage completion is 35%
+	And Percentage completion is 34%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to help other people	
-	And Percentage completion is 37%
+	And Percentage completion is 36%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I enjoy working with other people around me	
-	And Percentage completion is 40%
+	And Percentage completion is 39%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I want to make things better for people	
-	And Percentage completion is 42%
+	And Percentage completion is 41%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I will get involved if I think I can help	
-	And Percentage completion is 45%
+	And Percentage completion is 43%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I am comfortable hearing other people's problems	
-	And Percentage completion is 47%
+	And Percentage completion is 46%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to work out complicated things	
-	And Percentage completion is 50%
+	And Percentage completion is 48%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to get to the centre of the issue	
-	And Percentage completion is 52%
+	And Percentage completion is 51%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like working with facts	
-	And Percentage completion is 55%
+	And Percentage completion is 53%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like working with numbers	
-	And Percentage completion is 57%
+	And Percentage completion is 56%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I enjoy learning new things	
-	And Percentage completion is 60%
+	And Percentage completion is 58%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I enjoy coming up with new ways of doing things	
-	And Percentage completion is 62%
+	And Percentage completion is 60%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I try to think differently to others	
-	And Percentage completion is 65%
+	And Percentage completion is 63%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to use my imagination to create new things	
-	And Percentage completion is 67%
+	And Percentage completion is 65%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to try new things	
-	And Percentage completion is 70%
+	And Percentage completion is 68%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I enjoy creative activities	
-	And Percentage completion is 72%
+	And Percentage completion is 70%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to focus on details	
-	And Percentage completion is 75%
+	And Percentage completion is 73%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I plan my day so I can use my time best	
-	And Percentage completion is 77%
+	And Percentage completion is 75%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like doing things in a careful order	
-	And Percentage completion is 80%
+	And Percentage completion is 78%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to follow rules and processes	
-	And Percentage completion is 82%
+	And Percentage completion is 80%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I feel restricted when I have to follow a routine	
-	And Percentage completion is 85%
+	And Percentage completion is 82%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to see the results of the work I do	
-	And Percentage completion is 87%
+	And Percentage completion is 85%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like to get involved in making things	
-	And Percentage completion is 90%
+	And Percentage completion is 87%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I enjoy getting involved in practical tasks	
-	And Percentage completion is 92%
+	And Percentage completion is 90%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I like working with my hands or tools	
-	And Percentage completion is 95%
+	And Percentage completion is 92%
 	When I select Strongly agree option
 	And I click Next
 	Then The next question is displayed; I enjoy planning a task more than actually doing it	
+	And Percentage completion is 95%
+	When I select Strongly agree option
+	And I click Next
+	Then The next question is displayed; test question	
 	And Percentage completion is 97%
 	When I select Strongly agree option
 	And I click Next
@@ -272,7 +276,7 @@ Scenario Outline: TC06 - Return to assessment using reference code
 	And I click on Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to <Percentage completed> percent
-	When I save progress
+	When I get reference code
 	Then the "Send me an email with a link" radio button is present on the resultant page
 	And the "Get a reference code" radio button is present on the resultant page
 	When I choose the "Get a reference code" option of returning to assessment
@@ -290,7 +294,7 @@ Scenario: TC07 - Current date is displayed on reference code page
 	And I click on Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "10" percent
-	And I save progress
+	And  I get reference code
 	And I choose the "Get a reference code" option of returning to assessment
 	When I view the date on the resultant page
 	Then the date is todays date
@@ -303,7 +307,7 @@ Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 	And I click on Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "62" percent
-	And I save progress
+	And  I get reference code
 	And I choose the "Get a reference code" option of returning to assessment
 	When I supply phone number "07585082797"
 	Then the phone number appears on the Check your phone page
@@ -318,7 +322,7 @@ Scenario Outline: TC09 - Phone number field validation
 	And I click on Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "2" percent
-	And I save progress
+	And  I get reference code
 	And I choose the "Get a reference code" option of returning to assessment
 	When I supply phone number ""
 	Then validation messages are displayed for the "phone number" field
@@ -337,7 +341,7 @@ Scenario: TC11 - Email field validation and population
 	And I click on Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "72" percent
-	And I save progress
+	And  I get reference code
 	And I choose the "Send me an email with a link" option of returning to assessment
 	When I click the Back link from the "Email address" page
 	Then I am navigated to the "How would you like to return to your assessment?" page
