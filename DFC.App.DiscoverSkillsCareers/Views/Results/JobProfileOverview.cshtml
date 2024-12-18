@@ -10,7 +10,7 @@
             <p>
                 @Model.Overview
             </p>
-            <div id="salary">
+            <div id="@($"salary{Model.DisplayText}")">
                 @if (Model.SalaryStarterPerYear > 0 && Model.SalaryExperiencedPerYear > 0)
                 {
                 <p>Salary: @Model.SalaryStarterPerYear.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-GB")) to              
