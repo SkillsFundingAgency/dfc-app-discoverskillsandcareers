@@ -51,6 +51,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _scenarioContext.GetWebDriver().Navigate().GoToUrl(_scenarioContext.GetEnv().DYSACApiBaseUrl);
         }
 
+        [Given(@"I click on start skills Assessment")]
+        [When]
+        public void WhenIClickOnStartSkillsAssessment()
+        {
+            _dysacPage.ClickStartAssessment();
+        }
+       
+
         [Given(@"I click on Assessment")]
         [When]
         public void WhenIClickOnAssessment()

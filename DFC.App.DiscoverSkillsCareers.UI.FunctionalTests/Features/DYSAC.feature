@@ -12,6 +12,8 @@ Scenario: Starting Assessment loads the first questions
 @smoke
 @DYSAC
 Scenario: TC01 - Starting Assessment loads the questions and show the percentage completion. Also displays the results
+    When I click on start skills Assessment
+	Then The reference code is displayed
 	When I click on Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 	When I select Strongly agree option
@@ -219,8 +221,6 @@ Scenario: TC04 - Saving progress and selecting reference code to return to the a
 	Then The next question is displayed; I make decisions quickly
 	And Percentage completion is 2%
 	When I save my progress
-	And I select reference code to return to the assessment
-	And I click continue
 	Then The reference code is displayed
 
 @DYSAC

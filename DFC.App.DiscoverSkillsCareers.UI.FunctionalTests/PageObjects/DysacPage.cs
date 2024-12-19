@@ -22,7 +22,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string InitialPercentComplete { get; set; }
 
-        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-button ncs-button__primary"));
+        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-button.ncs-button__primary.govuk-!-margin-bottom-9"));
         IWebElement question => _scenarioContext.GetWebDriver().FindElement(By.Id("question-heading"));
         IWebElement answerOption => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-radios__label"));
         IWebElement btnNextQuestion => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
@@ -43,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public void ClickStartAssessment()
         {
             WebDriverExtension.CloseBanner(_scenarioContext.GetWebDriver());
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-button ncs-button__primary"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-button.ncs-button__primary.govuk-!-margin-bottom-9"));
             btnStartAssessment.Click();
 
         }
