@@ -63,7 +63,7 @@
 
                             @if (jobCategory.ShowThisCategory)
                             {
-                                <div class="app-long-results1 dysac-job-role-tile-container" id="app-results-list--long">
+                                <div class="app-long-results1 dysac-job-role-tile-container">
                                     @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Take(6))
                                     {
                                             @Html.Raw(profile.OverViewHTML)
@@ -83,7 +83,7 @@
                                             </h2>
                                         </div>
                                         <div id="accordion-default-content-1" class="govuk-accordion__section-content">
-                                                <div class="app-long-results1 dysac-job-role-tile-container" id="app-results-list--long">
+                                                <div class="app-long-results1 dysac-job-role-tile-container">
                                                 @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Skip(6))
                                                 {
                                                         @Html.Raw(profile.OverViewHTML)
