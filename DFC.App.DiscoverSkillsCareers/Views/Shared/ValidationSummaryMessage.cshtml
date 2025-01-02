@@ -1,0 +1,12 @@
+﻿@model ModelStateDictionary
+
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
+                {
+                    <li>
+                        <a href="#dysac-form" class="govuk-link govuk-link--no-visited-state">@modelError.ErrorMessage</a>
+                    </li>
+                }
+            </ul>
+        </div>
