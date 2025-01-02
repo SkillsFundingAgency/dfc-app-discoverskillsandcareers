@@ -63,6 +63,8 @@ namespace DFC.App.DiscoverSkillsCareers.MappingProfiles
               .ForMember(d => d.Skills, s => s.MapFrom(a => ConstructSkills(a.SOCSkillsMatrix.ContentItems)));
 
             CreateMap<PersonalityTrait, DysacTraitContentModel>()
+                .ForMember(d => d.ImagePath, s => s.MapFrom(z => z.ImagePath))
+                .ForMember(d => d.Description, s => s.MapFrom(z => z.Description))
                 .ForMember(d => d.Id, s => s.MapFrom(a => new Guid(a.GraphSync.NodeId.Replace(prefixTrait, string.Empty))))
                 .ForMember(d => d.JobCategories, s => s.MapFrom(z => ConstructJobCategories(z.JobProfileCategories)))
                 .ForMember(d => d.Title, s => s.MapFrom(z => z.DisplayText.ToUpperInvariant()));

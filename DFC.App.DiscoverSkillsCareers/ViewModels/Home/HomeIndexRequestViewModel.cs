@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DFC.App.DiscoverSkillsCareers.Services.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -7,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
     public class HomeIndexRequestViewModel
     {
         [Display(Name = "Reference Code")]
-        [Required(ErrorMessage = "Enter your reference")]
+        [ValidateRequired(ErrorMessage = "Enter your reference")]
         public string ReferenceCode { get; set; }
     }
 }

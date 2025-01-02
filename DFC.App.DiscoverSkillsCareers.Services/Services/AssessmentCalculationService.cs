@@ -203,6 +203,10 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                     results.Add(new JobCategoryResult
                     {
                         JobFamilyName = fullJobCategory.Title!,
+                        JobFamilyText = fullJobCategory.JobFamilyText,
+                        ImagePathDesktop = fullJobCategory.ImagePathDesktop,
+                        ImagePathTitle = fullJobCategory.ImagePathTitle,
+                        ImagePathMobile = fullJobCategory.ImagePathMobile,
                         JobFamilyUrl = limitedJobCategory.WebsiteURI?.Substring(
                             limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) + 1,
                             limitedJobCategory.WebsiteURI.Length - limitedJobCategory.WebsiteURI.LastIndexOf("/", StringComparison.Ordinal) - 1),
@@ -244,6 +248,8 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                         TraitCode = trait.Key!,
                         TotalScore = trait.Sum(traitAndScore => traitAndScore.Score),
                         Text = allTraits.First(traitA => traitA.Title == trait.Key!).Description!,
+                        Title = allTraits.First(traitA => traitA.Title == trait.Key!).Title!,
+                        ImagePath = allTraits.First(traitA => traitA.Title == trait.Key!).ImagePath!,
                     };
                 })
                 .Where(traitResult => traitResult.TotalScore > 0)
@@ -273,7 +279,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             {
                 Traits = userTraits,
                 JobCategories = jobCategories.ToList(),
-                TraitText = limitedTraits.Select(traitResult => traitResult.Text!),
+                LimitedTraits = limitedTraits.Select(traitResult => traitResult),
             };
 
             return assessment;

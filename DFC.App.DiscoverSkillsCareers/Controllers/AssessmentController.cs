@@ -165,7 +165,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 return NoContent();
             }
 
-            await assessmentService.NewSession(assessmentType).ConfigureAwait(false);
             logService.LogInformation($"{nameof(New)} generated the model and ready to pass to the view");
 
             return RedirectTo($"assessment/{GetAssessmentTypeName(assessmentType)}/1");
@@ -229,113 +228,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Email()
-        {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
-            if (!hasSessionId)
-            {
-                return RedirectToRoot();
-            }
-
-            var viewResponse = new AssessmentEmailPostRequest();
-
-            logService.LogInformation($"{nameof(this.Email)} generated the model and ready to pass to the view");
-
-            return View(viewResponse);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Email(AssessmentEmailPostRequest request)
-        {
-            if (request == null)
-            {
-                return BadRequest();
-            }
-
-            SanitiseEmail(request);
-
-            if (!ModelState.IsValid)
-            {
-                return View(new AssessmentEmailPostRequest { Email = request.Email });
-            }
-
-            try
-            {
-                var emailResponse = await assessmentService.SendEmail(notifyOptions.ReturnUrl!, request.Email).ConfigureAwait(false);
-
-                if (emailResponse.IsSuccess)
-                {
-                    if (TempData != null)
-                    {
-                        TempData["SentEmail"] = request.Email;
-                    }
-
-                    return RedirectTo("assessment/emailsent");
-                }
-            }
-            catch (Exception exception)
-            {
-                logService.LogError(exception.Message);
-            }
-
-            ModelState.AddModelError("Email", "There was a problem sending email");
-            return View(new AssessmentEmailPostRequest { Email = request.Email });
-        }
-
-        public IActionResult EmailSent()
-        {
-            logService.LogInformation($"{nameof(this.EmailSent)} generated the model and ready to pass to the view");
-
-            return View();
-        }
-
-        public async Task<IActionResult> Reference()
-        {
-            var hasSessionId = await HasSessionId().ConfigureAwait(false);
-            if (!hasSessionId)
-            {
-                return RedirectToRoot();
-            }
-
-            var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
-
-            logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
-            return View(responseViewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Reference(AssessmentReferencePostRequest request)
-        {
-            if (request == null)
-            {
-                return BadRequest();
-            }
-
-            if (ModelState.IsValid)
-            {
-                if (TempData != null)
-                {
-                    const string key = "Telephone";
-                    TempData.Remove(key);
-                    TempData.Add(key, request.Telephone);
-                }
-
-                await assessmentService.SendSms(notifyOptions.ReturnUrl!, request.Telephone).ConfigureAwait(false);
-
-                return RedirectTo("assessment/referencesent");
-            }
-
-            var responseViewModel = await GetAssessmentViewModel().ConfigureAwait(false);
-            logService.LogInformation($"{nameof(this.Reference)} generated the model and ready to pass to the view");
-
-            return View(responseViewModel);
-        }
-
-        public IActionResult ReferenceSent()
-        {
-            return View();
-        }
-
         [Route("head/reload")]
         public async Task<IActionResult> Reload(string sessionId)
         {
@@ -358,27 +250,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             {
                 result = assessmentItemType.ToString().ToLower();
             }
-
-            return result;
-        }
-
-        private void SanitiseEmail(AssessmentEmailPostRequest request)
-        {
-            request.Email = request.Email?.ToLower();
-            ModelState.Clear();
-
-            TryValidateModel(request);
-        }
-
-        private async Task<AssessmentReferenceGetResponse> GetAssessmentViewModel()
-        {
-            var getAssessmentResponse = await GetAssessment().ConfigureAwait(false);
-
-            var result = new AssessmentReferenceGetResponse
-            {
-                ReferenceCode = SessionHelper.FormatSessionId(getAssessmentResponse.ReferenceCode!),
-                AssessmentStarted = getAssessmentResponse.StartedDt.ToString(DateTimeFormat.Standard),
-            };
 
             return result;
         }

@@ -50,32 +50,28 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             return CreateViewModelAndReturnView(PageTitle.AssessmentSave);
         }
 
-        [Route("head/assessment/reference")]
+        [Route("head/start/reference")]
         public IActionResult AssessmentReference()
         {
             logService.LogInformation($"AssessmentReference {PageTitle.AssessmentReference} called");
             return CreateViewModelAndReturnView(PageTitle.AssessmentReference);
         }
 
-        [Route("head/assessment/referencesent")]
+        [Route("head/start/referencesent")]
         public IActionResult AssessmentReferenceSent()
         {
-            logService.LogInformation($"AssessmentReferenceSent {PageTitle.AssessmentReferenceSent} called");
+            var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentReferenceSent : PageTitle.StartReferenceSent;
+            logService.LogInformation($"ReferceSent {pageTitle} called");
+
             return CreateViewModelAndReturnView(PageTitle.AssessmentReferenceSent);
         }
 
-        [Route("head/assessment/email")]
-        public IActionResult AssessmentEmail()
-        {
-            logService.LogInformation($"AssessmentEmail {PageTitle.AssessmentEmail} called");
-            return CreateViewModelAndReturnView(PageTitle.AssessmentEmail);
-        }
-
-        [Route("head/assessment/emailsent")]
+        [Route("head/start/emailsent")]
         public IActionResult AssessmentEmailSent()
         {
-            logService.LogInformation($"AssessmentEmailSent {PageTitle.AssessmentEmailSent} called");
-            return CreateViewModelAndReturnView(PageTitle.AssessmentEmailSent);
+           var pageTitle = (RouteData is not null && RouteData.Values["action"].ToString().Contains("Assessment")) ? PageTitle.AssessmentEmailSent : PageTitle.StartEmailSent;
+           logService.LogInformation($"AssessmentEmailSent {pageTitle} called");
+           return CreateViewModelAndReturnView(pageTitle);
         }
 
         [Route("head/loadsession")]
@@ -116,11 +112,17 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         }
 
         [Route("bodytop/assessment/{assessmentType}/1")]
-        [Route("bodytop/assessment/complete")]
         public IActionResult BodyTopBackToStart()
         {
             logService.LogInformation($"BodyTopBackToStart called");
             return View();
+        }
+
+        [Route("bodytop/assessment/complete")]
+        public IActionResult BodyTopBackToStartComplete()
+        {
+            logService.LogInformation($"BodyTopBackToStartComplete called");
+            return NoContent();
         }
 
         [Route("bodytop/assessment/{assessmentType}/{questionNumber}")]
@@ -145,7 +147,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         public IActionResult HeroBanner()
         {
             logService.LogInformation($"HeroBanner called");
-            return View();
+            return View(new HeroBannerViewModel { PageType = Core.Enums.PageType.Landing});
         }
 
         [Route("bodyfooter/{**data}")]
@@ -158,6 +160,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [Route("herobanner/{**data}")]
         public IActionResult HeroBannerEmpty()
         {
+            if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start")
+            {
+                return View("HeroBanner", new HeroBannerViewModel { PageType = Core.Enums.PageType.Start });
+            }
+
+            if (RouteData is not null && RouteData.Values["data"]?.ToString() == "start/reference")
+            {
+                return View("HeroBanner", new HeroBannerViewModel { PageType = Core.Enums.PageType.ReferenceCode });
+            }
+
             logService.LogInformation($"HeroBannerEmpty called");
             return Content(string.Empty);
         }
@@ -176,6 +188,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var vm = CreateViewModel(title);
             return View(ViewName, vm);
+        }
+
+        [Route("head/start")]
+        public IActionResult Start()
+        {
+            logService.LogInformation($"AssessmentReferenceSent {PageTitle.Start} called");
+            return CreateViewModelAndReturnView(PageTitle.Start);
         }
     }
 }

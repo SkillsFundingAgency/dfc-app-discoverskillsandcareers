@@ -156,6 +156,7 @@ namespace DFC.App.DiscoverSkillsCareers
 
             services.AddScoped<ISerialiser, NewtonsoftSerialiser>();
             services.AddScoped<IAssessmentService, AssessmentService>();
+            services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<IResultsService, ResultsService>();
             services.AddScoped<IDataProcessor<GetQuestionResponse>, GetQuestionResponseDataProcessor>();
             services.AddScoped<IDataProcessor<GetAssessmentResponse>, GetAssessmentResponseDataProcessor>();

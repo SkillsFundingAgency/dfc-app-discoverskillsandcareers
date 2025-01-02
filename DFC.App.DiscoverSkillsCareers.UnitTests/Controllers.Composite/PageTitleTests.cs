@@ -4,7 +4,10 @@ using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.ViewModels;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
@@ -58,15 +61,14 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         }
 
         [Fact]
-        public void AssessmentEmailReturnsPageTitle()
-        {
-            var actionResponse = controller.AssessmentEmail();
-            AssertPageTitle(actionResponse, PageTitle.AssessmentEmail);
-        }
-
-        [Fact]
         public void AssessmentEmailSentReturnsPageTitle()
         {
+            var httpContext = new DefaultHttpContext();
+            var routeData = new RouteData();
+            routeData.Values["action"] = "AssessmentEmailSent";
+            var actionContext = new ActionContext(httpContext, routeData, new ControllerActionDescriptor());
+
+            controller.ControllerContext = new ControllerContext(actionContext);
             var actionResponse = controller.AssessmentEmailSent();
             AssertPageTitle(actionResponse, PageTitle.AssessmentEmailSent);
         }

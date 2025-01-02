@@ -1,67 +1,182 @@
 ﻿@model ResultsByCategoryModel
+@using GraphQL.Client.Abstractions.Utilities
+@inject IConfiguration configuration
+<h2 class="govuk-!-margin-top-4">
+    What you told us motivates you
+</h2>
+<p class="dysac-personality-trait-summary govuk-body govuk-!-margin-bottom-6">
+    It’s normal for what motivates you to change over time. These motivations are based on your responses today.
+</p>
+<div class="dysac-trait-tile-container">
+    @foreach (var trait in Model.Traits)
+    {
+        <div class="ncs-card-symbol dysac-personality-tile">
+            <div class="symbol dysac-personality-tile-symbol-head">
+                <img class="dysac-personality-trait-symbol" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
+                <h3>@trait.Title.ToPascalCase()</h3>
+            </div>
 
-<h2 class="govuk-heading-l">Careers that might interest you</h2>
+            <div class="content dysac-personality-tile-desc">
+                <p>
+                    @trait.Text
+                </p>
+            </div>
+        </div>
+    }
+</div>
+<h2 class="govuk-heading-l govuk-!-margin-top-8">Careers that might interest you</h2>
 
-<div class="govuk-template__body  app-page--results-long js-enabled" id="top">
+<div class="govuk-grid-column-two-thirds dysac-job-role-header-content">
+<p class="dysac-p-margin">We’ve suggested some careers based on your responses and motivations.</p>
+<p class="govuk-!-margin-bottom-6">It can be useful to think about which careers you might like, and which do not interest you and why</p>
+</div>
+
+<div class="govuk-template__body  app-page--results-long" id="topCategories">
     <div class="app-results">
-        @foreach (var jobCategory in Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder))
+        @foreach (var jobCategory in Model.JobsInCategory.Where(x => x.AnswerMoreQuestions == 0).OrderByDescending(c => c.DisplayOrder))
         {
+            @if (jobCategory.AnswerMoreQuestions == 0 && jobCategory.ShowThisCategory)
+            {
             <div class="app-results__item" data-job-family-code="@jobCategory.CategoryCode">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
-                        @if (jobCategory.AnswerMoreQuestions == 0)
-                        {
-                            if (@jobCategory.JobProfiles.Count() > 0)
+                            <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
+                      
+                            @if (jobCategory.ShowThisCategory && (@jobCategory.JobProfiles.Count() - 1) > 0 && (!@jobCategory.JobProfiles.Any(p => p.ReturnedStatusCode == System.Net.HttpStatusCode.Unused)))
                             {
-                                <p class="text-light">@jobCategory.JobProfiles.Count() role@{if (@jobCategory.JobProfiles.Count() > 1)@("s")} you might be interested in</p>
+                                
+
+                                <p class="text-light dysac-text-light">
+                                    @(jobCategory.JobProfiles.Count()-1) role@{
+                                        if ((@jobCategory.JobProfiles.Count()-1) > 1)
+                                            @("s")
+                                    } you might be interested in
+                                </p>
+
+                                <p class="govuk-!-margin-bottom-6"><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
                             }
                             else
                             {
-                                <p class="text-light"><span>No careers were found that might interest you based on your responses.</span></p>
+                                <p class="govuk-!-margin-bottom-6"></p>
                             }
-                            <p><a asp-route="filterQuestions" role="button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Change my answers</a></p>
+
 
                             @if (jobCategory.ShowThisCategory)
                             {
-                                <ul class="app-long-results govuk-list govuk-grid-row" id="app-results-list--long">
-                                    @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound))
+                                <div class="app-long-results1 dysac-job-role-tile-container">
+                                    @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Take(6))
                                     {
-                                        <li class="">
                                             @Html.Raw(profile.OverViewHTML)
-                                        </li>
+
                                     }
-                                </ul>
-                                <div class="govuk-grid-row">
-                                    <div class="govuk-grid-column-two-thirds">
-                                        <p class="show-more"> </p>
+                                </div>
+
+                                @if (jobCategory.JobProfiles.Count(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound) >6)
+                                {
+                                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                                    <div class="govuk-accordion__section">
+                                        <div class="govuk-accordion__section-header">
+                                            <h2 class="govuk-accordion__section-heading">
+                                                    <span class="govuk-accordion__section-button .dysac-accordion-button" id="accordion-default-heading-1">
+                                                    Remaining job roles suggested in @jobCategory.CategoryTitle.ToLower()
+                                                </span>
+                                            </h2>
+                                        </div>
+                                        <div id="accordion-default-content-1" class="govuk-accordion__section-content">
+                                                <div class="app-long-results1 dysac-job-role-tile-container">
+                                                @foreach (var profile in jobCategory.JobProfiles.Where(p => p.ReturnedStatusCode != System.Net.HttpStatusCode.NotFound).Skip(6))
+                                                {
+                                                        @Html.Raw(profile.OverViewHTML)
+
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                }
+
                             }
-                            else if (@jobCategory.JobProfiles.Count() > 0)
-                            {
-                                <p class="app-noprint">View job roles you might be suited to in @jobCategory.CategoryTitle</p>
-                                <a role="button" class="govuk-button ncs-button__primary app-button" asp-controller="results" asp-action="roles" asp-route-id="@jobCategory.CategoryUrl" draggable="false">See results</a>
-                            }
-                        }
-                        else
-                        {
-                            <p>To find out job roles you might be suited to in @(jobCategory.CategoryTitle), answer more questions.</p>
-                            <a asp-route="filterQuestions" role="button" class="govuk-button ncs-button__primary app-button" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategory.CategoryUrl" asp-route-questionNumber="0">Answer @jobCategory.AnswerMoreQuestions more question@{
-                                    if (@jobCategory.AnswerMoreQuestions > 1)@("s")
-                                }</a>
-                        }
-                    </div>
-                </div>
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-two-thirds">
-                        <p class="show-more"> </p>
-                        <hr>
+                        
                     </div>
                 </div>
             </div>
+            }
         }
+    </div>
+    <div class="govuk-!-margin-top-1 govuk-!-margin-bottom-8 dysac-explore-job-category-panel">
+        <h2>Explore remaining job categories </h2>
+        <div class="govuk-!-margin-top-5 dysac-job-category-tile-container">
+            @{
+                var jobCategories = Model.JobsInCategory.OrderByDescending(c => c.DisplayOrder).ToArray();
+
+            }
+            @for (int index = 0; index < jobCategories.Count(); index++)
+            {
+                if (!(jobCategories[index].AnswerMoreQuestions == 0))
+                {
+                    <div class="ncs-card-with-image dysac-job-category-card">
+                        <div class="card-image">
+                            <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
+
+                            <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
+                        </div>
+                        <div class="card-content-section  dysac-job-category-card-content">
+                            <div class="card-header">
+                               <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                            </div>
+                            <div class="card-content">
+                                <p>@jobCategories[index].JobFamilyText</p>
+                           
+                                    <p class="govuk-body">
+                                        <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategories[index].CategoryUrl" asp-route-questionNumber="0">
+                                            Answer @jobCategories[index].AnswerMoreQuestions more question@{
+                                                if (jobCategories[index].AnswerMoreQuestions > 1)
+                                                    @("s")
+                                            }
+                                        </a>
+                                    </p>
+                             </div>
+                        </div>
+                    </div>
+                } else
+                {
+                    @if (jobCategories[index].JobProfiles.Count() > 0 && !jobCategories[index].ShowThisCategory)
+                    {
+                        <div class="ncs-card-with-image dysac-job-category-card">
+                            <div class="card-image">
+                                <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
+
+                                <img src="@(configuration["AssetsCdn"]+jobCategories[index].ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
+                            </div>
+                            <div class="card-content-section  dysac-job-category-card-content">
+                                <div class="card-header">
+                                <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                                </div>
+                                <div class="card-content">
+                                <p>@jobCategories[index].JobFamilyText</p>
+
+                                <p class="govuk-body">
+                                    <a class="govuk-link" asp-controller="results" asp-action="roles" asp-route-id="@jobCategories[index].CategoryUrl" draggable="false">See suggested careers</a> or
+                                    <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@jobCategories[index].CategoryUrl" asp-route-questionNumber="0">
+                                        change your answers
+                                    </a>
+                                </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                    }
+                }
+                
+            }
+        </div>
     </div>
 </div>
 
-<partial name="_SendMyResults" model="@Model.AssessmentReference" />
+<div class="govuk-!-margin-bottom-9">
+    <partial name="_NextSteps" />
+</div>
+<div class="govuk-!-margin-bottom-6">
+    <partial name="_SpeakToAnAdviser" />
+</div>

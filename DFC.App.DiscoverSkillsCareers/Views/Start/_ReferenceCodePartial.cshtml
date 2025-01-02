@@ -1,0 +1,32 @@
+﻿@model StartViewModel
+<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            
+                <div class="app-your-reference govuk-body">
+                    <p>
+                        <strong class="app-your-reference__code govuk-heading-xl">@Model.ReferenceCode</strong>
+                    </p>
+                    <div class="app-your-reference__meta govuk-grid-row">
+                        <p class="govuk-grid-column-one-third govuk-body-s">@Model.AssessmentStarted</p>
+                        <p class="govuk-grid-column-two-thirds govuk-body-s"></p>
+                    </div>
+                </div>
+            <p class="govuk-body govuk-!-margin-top-6">This is your personal reference code. Use your reference code to:</p>
+            <ul class="govuk-list govuk-list--bullet ul-dysac">
+                <li>return to your assessment if you want to finish later </li>
+                <li>come back to see your results </li>
+            </ul>
+            <p class="govuk-body govuk-!-margin-bottom-6">Make a note of your reference code, or choose to get it sent to you.</p>
+            
+            <form method="get" asp-action="return" asp-controller="assessment">
+                <button role="button" draggable="false" class="govuk-button ncs-button__primary" data-module="govuk-button">
+                    Return to your assessment
+                    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
+                        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+                    </svg>
+                </button>
+            </form>            
+        </div>
+    </div>
+</div>
