@@ -1,0 +1,19 @@
+﻿@model StartViewModel
+@using DFC.App.DiscoverSkillsCareers.Core.Enums;
+<div>
+    <div class="govuk-grid-row app-error">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="ValidationSummary" model="ViewData.ModelState" />
+        </div>
+
+        <partial name="_ReferencePartial" model="Model" />
+
+        <partial name="_SendReferencePartial" model="Model" />       
+    </div>
+    @if (TempData != null)
+    {
+        <div class="app-related-items">
+            @Html.Raw(TempData["sharedcontent"].ToString())
+        </div>
+    }
+</div>

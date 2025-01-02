@@ -1,0 +1,6 @@
+﻿@model ModelStateDictionary
+
+    <div class="@(ViewData.ModelState.IsValid ? "validation-summary-valid" : string.Empty) govuk-error-summary" id="dysac-validation-summary-m" data-valmsg-summary="true" aria-labelledby="error-summary-title-m" role="alert" tabindex="-1" data-module="govuk-error-summary">
+    <h2 class="govuk-error-summary__title" id="error-summary-title-m">There is a problem</h2>
+    <partial name="ValidationSummaryMessage" model="ViewData.ModelState" />
+    </div>

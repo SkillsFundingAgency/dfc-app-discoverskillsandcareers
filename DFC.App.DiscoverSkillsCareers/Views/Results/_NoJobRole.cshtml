@@ -1,0 +1,12 @@
+﻿@inject IConfiguration configuration
+
+<div class="govuk-grid-column-one-third">
+    <div class="dysac-job-role-tile-nojob">
+        <div class="dysac-job-role-category">
+        <p ><span>No careers were found that might interest you based on your responses.</span></p>
+        
+        <p><a asp-route="filterQuestions" role="button" asp-route-jobCategoryName="@Model.CategoryUrl" asp-route-questionNumber="0">Change your answers</a></p>
+
+    </div>
+</div>
+</div>

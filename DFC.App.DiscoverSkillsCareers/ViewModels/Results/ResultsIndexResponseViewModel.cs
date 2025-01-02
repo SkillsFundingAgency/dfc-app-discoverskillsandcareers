@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -9,7 +10,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public ResultsIndexResponseViewModel()
         {
             JobCategories = new List<JobCategoryResultViewModel>();
-            Traits = new List<string>();
+            Traits = new List<TraitResult>();
             JobProfiles = new List<JobProfileResultViewModel>();
             WhatYouToldUs = new List<string>();
         }
@@ -18,7 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public int JobCategoriesNumberToShow { get; set; }
 
-        public IEnumerable<string> Traits { get; set; }
+        public IEnumerable<TraitResult> Traits { get; set; }
 
         public int JobFamilyCount { get; set; }
 

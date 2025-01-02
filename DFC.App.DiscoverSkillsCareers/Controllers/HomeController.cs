@@ -46,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         {
             var responseVm = new HomeIndexResponseViewModel
             {
-                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status, expiryInHours).Result.Html,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
             };
             return Task.FromResult<IActionResult>(View(responseVm));
         }
@@ -54,18 +54,16 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(HomeIndexRequestViewModel viewModel)
         {
-            if (viewModel == null || viewModel.ReferenceCode == null)
-            {
-                return BadRequest();
-            }
-
             if (!ModelState.IsValid)
             {
-                var responseViewModel = new HomeIndexResponseViewModel
-                {
-                    ReferenceCode = viewModel.ReferenceCode,
-                    SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status, expiryInHours).Result.Html,
-                };
+                var responseViewModel = GetResponseViewModel(viewModel);
+                return View(responseViewModel);
+            }
+
+            if (viewModel == null || viewModel.ReferenceCode == null)
+            {
+                var responseViewModel = GetResponseViewModel(viewModel);
+                ViewData["Title"] = "Error";
                 return View(responseViewModel);
             }
 
@@ -76,11 +74,21 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
             }
             else
             {
-                ModelState.AddModelError("ReferenceCode", "The reference could not be found");
-                var responseViewModel = new HomeIndexResponseViewModel { ReferenceCode = viewModel.ReferenceCode };
+                var responseViewModel = GetResponseViewModel(viewModel);
+                ModelState.AddModelError("ReferenceCode", "Enter a valid reference code");
                 ViewData["Title"] = "Error";
                 return View(responseViewModel);
             }
+        }
+
+        private HomeIndexResponseViewModel GetResponseViewModel(HomeIndexRequestViewModel viewModel)
+        {
+            var responseViewModel = new HomeIndexResponseViewModel
+            {
+                ReferenceCode = viewModel?.ReferenceCode,
+                SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html,
+            };
+            return responseViewModel;
         }
     }
 }

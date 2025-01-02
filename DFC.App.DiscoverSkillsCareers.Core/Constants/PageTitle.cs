@@ -15,5 +15,11 @@
         public const string LoadSession = "Load Session";
         public const string Results = "Results";
         public const string AssessmentComplete = "Assessment complete";
+        public const string AssessmentEmailStart = "Email start";
+        public const string Start = "Start";
+        public const string StartEmailSent = "Email sent";
+        public const string StartReferenceSent = "Check your phone";
+
+
     }
 }

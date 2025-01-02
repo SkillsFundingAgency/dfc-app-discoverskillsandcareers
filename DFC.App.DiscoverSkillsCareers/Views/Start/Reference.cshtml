@@ -1,0 +1,14 @@
+﻿@model StartViewModel
+@using DFC.App.DiscoverSkillsCareers.Core.Enums;
+
+ <div class="govuk-grid-row app-error">
+    <div class="govuk-grid-column-two-thirds">
+                        <partial name="ValidationSummary" model="ViewData.ModelState" />
+                    </div>
+                </div>
+<partial name="_ReferenceCodePartial" model="Model" />
+
+
+<div class="govuk-form-group">
+    <partial name="_SendReferencePartial" model="Model" />
+</div>
