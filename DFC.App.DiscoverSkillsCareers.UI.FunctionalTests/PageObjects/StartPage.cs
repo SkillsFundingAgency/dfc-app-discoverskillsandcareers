@@ -13,19 +13,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         public StartPage(ScenarioContext context)
         {
             _scenarioContext = context;
-
         }
 
-        public StartPage NavigateTo(string sPath)
-        {
-            string url = _scenarioContext.GetEnv().DYSACApiBaseUrl + (sPath.StartsWith("/") ? string.Empty : "/") + sPath;
-            _scenarioContext.GetWebDriver().Url = url;
-            return this;
-        }
-
-        public void ClickStartAssessment()
-        {
-            WebDriverExtension.CloseBanner(_scenarioContext.GetWebDriver());
+        public void ClickStartYourAssessment()
+        {            
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[@class='govuk-button ncs-button__primary']"));
             btnStartAssessment.Click();
 

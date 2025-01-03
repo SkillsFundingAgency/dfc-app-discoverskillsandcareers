@@ -35,6 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             _scenarioContext = scenarioContext;
             _dysacPage = new DysacPage(_scenarioContext);
+            _startPage = new StartPage(_scenarioContext);
             _returnToAssessmentPage = new ReturnToAssessmentPage(_scenarioContext);
             _yourReferenceCodePage = new YourReferenceCodePage(_scenarioContext);
             _checkYourPhonePage = new CheckYourPhonePage(_scenarioContext);
@@ -42,7 +43,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _checkYourEmailPage = new CheckYourEmailPage(_scenarioContext);
             _yourResultsPage = new YourResultsPage(_scenarioContext);
             _assessmentCompletePage = new AssessmentCompletePage(_scenarioContext);
-            _startPage = new StartPage(_scenarioContext);
+            
         }
 
         [Given]
@@ -59,11 +60,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         }
        
 
-        [Given(@"I click on Assessment")]
+        [Given(@"I click on start your Assessment")]
         [When]
-        public void WhenIClickOnAssessment()
+        public void WhenIClickOnStartYourAssessment()
         {
-            _startPage.ClickStartAssessment();
+            _startPage.ClickStartYourAssessment();
         }
 
         [Then(@"The first question is displayed; (.*)")]
@@ -141,7 +142,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"The reference code is displayed")]
         public void ThenTheReferenceCodeIsDisplayed()
         {
-            Assert.NotEmpty(_dysacPage.GetReferenceCode());
+            _yourReferenceCodePage.GetReferenceCode();
+            Assert.NotEmpty(_yourReferenceCodePage.ReferenceCode);
         }
 
         [Given(@"I click See results button")]
@@ -205,13 +207,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             switch (assessmentReturnOption)
             {
-                case "Get a reference code":
-                    _returnToAssessmentPage.SelectReferenceCode();
-                    _dysacPage.ClickContinueToSaveProgress();
+                case "Send reference code in a text message":
+                    _yourReferenceCodePage.SelectReferenceCode();                    
                     break;
-                case "Send me an email with a link":
-                    _returnToAssessmentPage.SelectSendMeEmailLink();
-                    _dysacPage.ClickContinueToSaveProgress();
+                case "Send reference code in an email":
+                    _returnToAssessmentPage.SelectSendMeEmailLink();                    
                     break;
             }
         }
@@ -248,10 +248,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.AreEqual(dateOnPage, DateTime.Now.ToString("d MMMM yyy"), "The date is incorrect.");
         }
 
-        [When(@"I click the Return to assessment link")]
-        public void WhenIClickTheReturnToAssessmentLink()
+        [When(@"I click the Return to assessment")]
+        public void WhenIClickTheReturnToAssessment()
         {
-            _returnToAssessmentPage.ClickReturnToAssessment();
+            _yourReferenceCodePage.ClickReturnToAssessment();
         }
 
         [When(@"I supply phone number ""(.*)""")]
@@ -259,7 +259,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         {
             _phoneNumber = phoneNumber;
             _yourReferenceCodePage.EnterPhoneNumber(phoneNumber);
-            _dysacPage.ClickContinueToSaveProgress();
+            _yourReferenceCodePage.ClickToSendReferenceCode();
         }
 
         [Then(@"the phone number appears on the Check your phone page")]
@@ -271,7 +271,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [When(@"I click the Return to assessment button")]
         public void WhenIClickTheReturnToAssessmentButton()
         {
-            _checkYourPhonePage.ReturnToAssessment();
+            _yourReferenceCodePage.ReturnToAssessment();
         }
 
         [When(@"I go Back and I click the Back to start link")]
@@ -300,11 +300,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             {
                 case "phone number":
                     NUnit.Framework.Assert.IsTrue(_yourReferenceCodePage.ValidationBoxPresent(), "The validation box is not present.");
-                    NUnit.Framework.Assert.AreEqual("Enter a phone number", _yourReferenceCodePage.PhoneValidationMsg(), "The validation message was not displayed.");
+                    NUnit.Framework.Assert.AreEqual("Enter a UK mobile phone number", _yourReferenceCodePage.PhoneValidationMsg(), "The validation message was not displayed.");
                     break;
                 case "reference code":
-                    NUnit.Framework.Assert.IsTrue(_yourReferenceCodePage.ValidationBoxPresent(), "The validation box is not present.");
-                    NUnit.Framework.Assert.AreEqual("Enter your reference", _yourReferenceCodePage.PhoneValidationMsg(), "The validation message was not displayed.");
+                    NUnit.Framework.Assert.IsTrue(_dysacPage.ValidationBoxPresent(), "The validation box is not present.");
+                    NUnit.Framework.Assert.AreEqual("Enter your reference", _dysacPage.PhoneValidationMsg(), "The validation message was not displayed.");
                     break;
             }
         }
@@ -332,7 +332,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Given(@"I click continue without providing a reference")]
         public void GivenIClickContinueWithoutProvidingAReference()
         {
-            _dysacPage.ClickContinueToSaveProgress();
+            _dysacPage.ClickContinueWithReferenceCode();
         }
 
         [When(@"I click Send on the resultant page without providing an email address")]

@@ -13,8 +13,7 @@ Scenario: Starting Assessment loads the first questions
 @DYSAC
 Scenario: TC01 - Starting Assessment loads the questions and show the percentage completion. Also displays the results
     When I click on start skills Assessment
-	Then The reference code is displayed
-	When I click on Assessment
+	And I click on start your Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 	When I select Strongly agree option
 	And I click Next
@@ -186,7 +185,8 @@ Scenario: TC01 - Starting Assessment loads the questions and show the percentage
 @smoke
 @DYSAC
 Scenario: TC02 - Display error message when moving to next question without selecting an option 
-	When I click on Assessment
+    When I click on start skills Assessment	
+	And I click on start your Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 	When I select Strongly agree option
 	And I click Next
@@ -199,7 +199,8 @@ Scenario: TC02 - Display error message when moving to next question without sele
 @smoke
 @DYSAC
 Scenario: TC03 - Clicking back link takes to the previous question and updates the percentage completion 
-	When I click on Assessment
+    When I click on start skills Assessment	
+	And I click on start your Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 	And Percentage completion is 0%
 	When I select Strongly agree option
@@ -213,7 +214,8 @@ Scenario: TC03 - Clicking back link takes to the previous question and updates t
 @smoke
 @DYSAC
 Scenario: TC04 - Saving progress and selecting reference code to return to the assessment displays reference code 
-	When I click on Assessment
+	When I click on start skills Assessment	
+	And I click on start your Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 	And Percentage completion is 0%
 	When I select Strongly agree option
@@ -225,42 +227,44 @@ Scenario: TC04 - Saving progress and selecting reference code to return to the a
 
 @DYSAC
 Scenario: TC05 - Progress bar displays correctly on each question
-	And I click on Assessment
+	When I click on start skills Assessment	
+	And I click on start your Assessment
 	When I select "Strongly agree" option and answer questions to the end
 	Then the questions in turn have the following class attributes
 	| Class attribute  |
 	| ncs-progress__0  |
 	| ncs-progress__2  |
-	| ncs-progress__5  |
+	| ncs-progress__4  |
 	| ncs-progress__7  |
-	| ncs-progress__10 |
+	| ncs-progress__9 |
 	| ncs-progress__12 |
-	| ncs-progress__15 |
+	| ncs-progress__14 |
 	| ncs-progress__17 |
-	| ncs-progress__20 |
-	| ncs-progress__22 |
-	| ncs-progress__25 |
-	| ncs-progress__27 |
-	| ncs-progress__30 |
-	| ncs-progress__32 |
-	| ncs-progress__35 |
-	| ncs-progress__37 |
-	| ncs-progress__40 |
-	| ncs-progress__42 |
-	| ncs-progress__45 |
-	| ncs-progress__47 |
-	| ncs-progress__50 |
-	| ncs-progress__52 |
-	| ncs-progress__55 |
-	| ncs-progress__57 |
+	| ncs-progress__19 |
+	| ncs-progress__21 |
+	| ncs-progress__24 |
+	| ncs-progress__26 |
+	| ncs-progress__29 |
+	| ncs-progress__31 |
+	| ncs-progress__34 |
+	| ncs-progress__36 |
+	| ncs-progress__39 |
+	| ncs-progress__41 |
+	| ncs-progress__43 |
+	| ncs-progress__46 |
+	| ncs-progress__48 |
+	| ncs-progress__51 |
+	| ncs-progress__53 |
+	| ncs-progress__56 |
+	| ncs-progress__58 |
 	| ncs-progress__60 |
-	| ncs-progress__62 |
+	| ncs-progress__63 |
 	| ncs-progress__65 |
-	| ncs-progress__67 |
+	| ncs-progress__68 |
 	| ncs-progress__70 |
-	| ncs-progress__72 |
+	| ncs-progress__73 |
 	| ncs-progress__75 |
-	| ncs-progress__77 |
+	| ncs-progress__78 |
 	| ncs-progress__80 |
 	| ncs-progress__82 |
 	| ncs-progress__85 |
@@ -273,11 +277,12 @@ Scenario: TC05 - Progress bar displays correctly on each question
 @smoke
 @DYSAC
 Scenario Outline: TC06 - Return to assessment using reference code
-	And I click on Assessment
+	When I click on start skills Assessment	
+	And I click on start your Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to <Percentage completed> percent
-	When I get reference code
-	Then the "Send me an email with a link" radio button is present on the resultant page
+	When I save my progress
+	Then the "Send reference code in an email" radio button is present on the resultant page
 	And the "Get a reference code" radio button is present on the resultant page
 	When I choose the "Get a reference code" option of returning to assessment
 	And I make a note of the reference code
@@ -291,26 +296,26 @@ Examples:
 
 @DYSAC
 Scenario: TC07 - Current date is displayed on reference code page
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I select the "Strongly agree" option
-	And I proceed with answering questions up to "10" percent
-	And  I get reference code
-	And I choose the "Get a reference code" option of returning to assessment
-	When I view the date on the resultant page
+	And I proceed with answering questions up to "9" percent
+	When I save my progress
+	And I view the date on the resultant page
 	Then the date is todays date
-	When I click the Return to assessment link
+	When I click the Return to assessment
 	Then I am at the question where I left off
 
 @smoke
 @DYSAC
 Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I select the "Strongly agree" option
-	And I proceed with answering questions up to "62" percent
-	And  I get reference code
-	And I choose the "Get a reference code" option of returning to assessment
+	And I proceed with answering questions up to "9" percent
+	When I save my progress
+	And I choose the "Send reference code in a text message" option of returning to assessment
 	When I supply phone number "07585082797"
-	Then the phone number appears on the Check your phone page
 	When I click the Return to assessment button
 	Then I am at the question where I left off
 	When I go Back and I click the Back to start link
@@ -319,15 +324,14 @@ Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 @smoke
 @DYSAC
 Scenario Outline: TC09 - Phone number field validation
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "2" percent
 	And  I get reference code
-	And I choose the "Get a reference code" option of returning to assessment
+	And I choose the "Send reference code in a text message" option of returning to assessment
 	When I supply phone number ""
 	Then validation messages are displayed for the "phone number" field
-	When I click Back 
-	Then I am navigated to the "How would you like to return to your assessment?" page
 
 @smoke
 @DYSAC
@@ -338,9 +342,10 @@ Scenario: TC10 - Home page reference code field validation
 @smoke
 @DYSAC
 Scenario: TC11 - Email field validation and population
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I select the "Strongly agree" option
-	And I proceed with answering questions up to "72" percent
+	And I proceed with answering questions up to "9" percent
 	And  I get reference code
 	And I choose the "Send me an email with a link" option of returning to assessment
 	When I click the Back link from the "Email address" page
@@ -361,7 +366,8 @@ Scenario: TC11 - Email field validation and population
 
 @DYSAC
 Scenario: TC12 - All question radio button options are usable
-	When I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	Then I am able to select the "Strongly agree" option for the "first" question
 	And I am able to select the "Agree" option for the "second" question
 	And I am able to select the "It depends" option for the "third" question
@@ -370,7 +376,8 @@ Scenario: TC12 - All question radio button options are usable
 
 @DYSAC
 Scenario Outline: TC13 - Initial and all suggested job categories
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I answer all questions selecting the <Answer option> option
 	When I click See results button
 	Then the job categories suggestions are <Initial job categories> in number
@@ -867,7 +874,8 @@ Scenario: TC23 - Real user interaction 1
 
 @DYSAC
 Scenario: TC24 - Real user interaction 2
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | It depends        |

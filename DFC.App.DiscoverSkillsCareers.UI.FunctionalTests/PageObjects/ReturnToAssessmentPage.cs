@@ -15,10 +15,10 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             _scenarioContext = context;
         }
 
-        IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
-        IWebElement lnkReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Return to assessment"));
+        IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='contact-2']"));
+        IWebElement lnkReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[@class='govuk-button ncs-button__primary']"));
         IWebElement txtHeader => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-fieldset__heading"));
-        IWebElement optionSendMeEmailLink => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-1']"));
+        IWebElement optionSendMeEmailLink => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='contact']"));
 
         public void SelectReferenceCode()
         {
@@ -33,7 +33,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickReturnToAssessment()
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[@class='govuk-button ncs-button__primary']"));
             lnkReturnToAssessment.Click();
         }
 

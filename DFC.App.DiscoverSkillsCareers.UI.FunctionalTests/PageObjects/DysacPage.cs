@@ -14,15 +14,17 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
     {
         private ScenarioContext _scenarioContext;
         private YourReferenceCodePage _yourReferenceCodePage;
+        private StartPage _startPage;
         public DysacPage(ScenarioContext context)
         {
             _scenarioContext = context;
             _yourReferenceCodePage = new YourReferenceCodePage(context);
+            _startPage = new StartPage(context);
         }
 
         public string InitialPercentComplete { get; set; }
 
-        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-button.ncs-button__primary.govuk-!-margin-bottom-9"));
+        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[@class='govuk-button ncs-button__primary govuk-!-margin-bottom-9']"));
         IWebElement question => _scenarioContext.GetWebDriver().FindElement(By.Id("question-heading"));
         IWebElement answerOption => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-radios__label"));
         IWebElement btnNextQuestion => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
@@ -33,19 +35,23 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement lnkPreviousStatement => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-back-link"));
         IWebElement linkGetYourReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
-        IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
+        IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-start-submit-button"));
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
         IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button ncs-button__primary app-button']"));
         IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
         IWebElement answer => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
         IWebElement enterYourReference => _scenarioContext.GetWebDriver().FindElement(By.Id("code"));
 
+        IWebElement btnContinueWithReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
+
+        IWebElement divPhoneNumberTopValidation => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-validation-summary"));
+        IWebElement txtPhoneNumberBottomValidation => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".field-validation-error"));
+
         public void ClickStartAssessment()
         {
             WebDriverExtension.CloseBanner(_scenarioContext.GetWebDriver());
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-button.ncs-button__primary.govuk-!-margin-bottom-9"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[@class='govuk-button ncs-button__primary']"));
             btnStartAssessment.Click();
-
         }
 
         public string GetQuestionText()
@@ -115,6 +121,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             btnContinueSaveProgress.Click();
         }
 
+        public void ClickContinueWithReferenceCode()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
+            btnContinueWithReferenceCode.Click();
+        }
+
         public string GetReferenceCode()
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
@@ -129,7 +141,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string GetResultText()
         {
-                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.CssSelector(".app-results h2.govuk-heading-l"));
+                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class=.app-results]"));
                 return results.GetElementText();
         }
 
@@ -243,6 +255,18 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
                 AnswerOptionClick(answerOption);
                 btnNextQuestion.Click();
             }
+        }
+
+        public bool ValidationBoxPresent()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-validation-summary"));
+            return divPhoneNumberTopValidation.Displayed;
+        }
+
+        public string PhoneValidationMsg()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-validation-summary"));
+            return txtPhoneNumberBottomValidation.Text;
         }
     }
 }
