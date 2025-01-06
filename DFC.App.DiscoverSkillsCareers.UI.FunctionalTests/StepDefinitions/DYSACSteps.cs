@@ -156,7 +156,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         [Then(@"the job categories suggestions are (.*) in number")]
         public void ThenTheJobCategoriesSuggestionsAreInNumber(int numberOfJobCategories)
         {
-            NUnit.Framework.Assert.AreEqual(numberOfJobCategories, _yourResultsPage.GetJobCategories().Count, "Number of job category suggestions not correct.");
+            NUnit.Framework.Assert.AreEqual(numberOfJobCategories, (_yourResultsPage.GetJobCategories().Count - _yourResultsPage.GetRemainingJobCategories().Count), "Number of job category suggestions not correct.");
         }
 
         [Then(@"The results are displayed")]

@@ -20,7 +20,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             _scenarioContext = context;
         }
 
-        IWebElement lnkSeeMatches => _scenarioContext.GetWebDriver().FindElement(By.LinkText("See matches"));
+        IWebElement lnkSeeMatches => _scenarioContext.GetWebDriver().FindElement(By.Id("accordion-default-heading-1"));
         IWebElement btnNext => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
 
         public bool VerifyJobCategories(IEnumerable<JobCategories> jobCategories)
@@ -67,12 +67,19 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public IList<IWebElement> GetJobCategories()
         {
-            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector("li[class='app-results__item'][style=''] h3"));
+            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".ncs-card-with-image.dysac-job-category-card"));
         }
+
+        public IList<IWebElement> GetRemainingJobCategories()
+        {
+            return _scenarioContext.GetWebDriver().FindElements(By.XPath("//div[@class='govuk-accordion__section-content']/div[@class='.ncs-card-with-image.dysac-job-category-card']"));
+        }
+
+
 
         public void ClickSeeMatches()
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("accordion-default-heading-1"));
 
             try
             {
@@ -86,7 +93,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public bool VerifyJobsAndNumberOfAnswers(IEnumerable<JobCategories> jobCategoriesAndNumberOfAnswers)
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+           // WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
 
             int[] numberExpected = jobCategoriesAndNumberOfAnswers.Select(p => p.NumberOfAnswerMoreQuestions).ToArray();
             string[] jobCategoryExpected = jobCategoriesAndNumberOfAnswers.Select(p => p.JobCategory).ToArray();
@@ -98,7 +105,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             {
                 try
                 {
-                    uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]//..//following-sibling::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Replace("for " + jobCategoryExpected[i], string.Empty).Trim();
+                    uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]/following::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Trim();
                 }
                 catch (NoSuchElementException)
                 {
@@ -142,26 +149,26 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             return Support.GetAllText(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-list.govuk-list--bullet > li")).Contains(jobCategory);
         }
 
-        public IList<IWebElement> GetTraitsUI()
+        public List<string> GetTraitsUI()
         {
             //return _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".govuk-list.govuk-list--bullet > li"));
-            var parentElement = _scenarioContext.GetWebDriver().FindElement(By.CssSelector("#main-content > div.secondary-hero > div > div > div.govuk-grid-column-two-thirds.app-intro > div > ul:nth-child(1)"));
-            return parentElement.FindElements(By.TagName("li"));
+            var parentElement = _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".content.dysac-personality-tile-desc"));
+            return parentElement.Select(t => t.FindElement(By.TagName("p")).Text.ToLower()).ToList();
         }
         
         public bool VerifyTraits(IEnumerable<Traits> traits)
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+           // WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
 
             bool a_and_b_checks = false;
 
             string[] expectedTraits = traits.Select(p => p.TraitText).ToArray();
 
             //translate IWebElements into a collection of strings so they can be compared
-            IEnumerable<string> actual = GetTraitsUI().Select(i => i.Text);
+            IEnumerable<string> actual = GetTraitsUI();
 
             //determines, as bool, if items in 1 and 2 are present in the other
-            var traitsVerified = expectedTraits.All(d => actual.Contains(d));
+            var traitsVerified = expectedTraits.All(d => actual.Contains(d.ToLower()));
 
             //B - Check.
             int noOfActualElements = GetTraitsUI().Count;

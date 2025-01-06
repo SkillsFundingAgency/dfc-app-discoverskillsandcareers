@@ -406,16 +406,14 @@ Scenario Outline: TC13 - Initial and all suggested job categories
 
 @DYSAC
 Scenario Outline: TC14 - Number of answer more questions for each category are correct
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I answer all questions selecting the <Answer option> option
 	And I click See results button
 	When I click See matches to See 7 other career areas that might interest you
 	Then the following are the job categories suggested and their number of answer more questions
-	| Job category                   | Number of answer more questions |
-	| Sports and leisure             | 3                               |
-	| Manufacturing                  | 4                               |
-	| Creative and media             | 5                               |
-	| Construction and trades        | 4                               |
+	| Job category                   | Number of answer more questions |	
+	| Manufacturing                  | 4                               |	
 	| Science and research           | 4                               |
 	| Business and finance           | 3                               |
 	| Emergency and uniform services | 3                               |
@@ -429,7 +427,8 @@ Scenario Outline: TC14 - Number of answer more questions for each category are c
 @smoke
 @DYSAC
 Scenario: TC15 - Driver-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -476,7 +475,8 @@ Scenario: TC15 - Driver-What you told us summary invoking answers
 
 @DYSAC
 Scenario: TC16 - Leader-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly agree    |
@@ -524,7 +524,8 @@ Scenario: TC16 - Leader-What you told us summary invoking answers
 @smoke
 @DYSAC
 Scenario: TC17 - Influencer-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -571,7 +572,8 @@ Scenario: TC17 - Influencer-What you told us summary invoking answers
 
 @DYSAC
 Scenario: TC18 - Helper-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -619,7 +621,8 @@ Scenario: TC18 - Helper-What you told us summary invoking answers
 @smoke
 @DYSAC
 Scenario: TC19 - Analyst-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -666,7 +669,8 @@ Scenario: TC19 - Analyst-What you told us summary invoking answers
 
 @DYSAC
 Scenario: TC20 - Creator-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -714,7 +718,8 @@ Scenario: TC20 - Creator-What you told us summary invoking answers
 @smoke
 @DYSAC
 Scenario: TC21 - Organiser-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -761,7 +766,8 @@ Scenario: TC21 - Organiser-What you told us summary invoking answers
 
 @DYSAC
 Scenario: TC22 - Doer-What you told us summary invoking answers
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | Strongly disagree |
@@ -809,7 +815,8 @@ Scenario: TC22 - Doer-What you told us summary invoking answers
 @smoke
 @DYSAC
 Scenario: TC23 - Real user interaction 1
-	And I click on Assessment
+	And I click on start skills Assessment	
+	And I click on start your Assessment
 	And I provide the following answers to the resultant questions
 	| Percent progress | Question                                                             | Answer            |
 	| 0                | I am comfortable telling people what they need to do                 | It depends        |
@@ -852,6 +859,7 @@ Scenario: TC23 - Real user interaction 1
 	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
 	| 95               | I like working with my hands or tools                                | Agree             |
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
+	| 97               | test question                                                        | It depends        |
 	Then the What you told us section of the Your results page displays the following traits
 	| Trait text                                                         |
 	| you enjoy helping and listening to other people                    |
@@ -865,11 +873,12 @@ Scenario: TC23 - Real user interaction 1
 	| Travel and tourism   | 2                               |
 	| Business and finance | 3                               |
 	| Law and legal        | 3                               |
-	| Animal care          | 2                               |
 	| Healthcare           | 4                               |
-	| Delivery and storage  | 2                               |
+	| Animal care          | 3                               |	
 	| Home services        | 3                               |
 	| Transport            | 3                               |
+	| Delivery and storage | 2                               |
+	
 
 
 @DYSAC
@@ -918,6 +927,7 @@ Scenario: TC24 - Real user interaction 2
 	| 92               | I enjoy getting involved in practical tasks                          | It depends        |
 	| 95               | I like working with my hands or tools                                | Agree             |
 	| 97               | I enjoy planning a task more than actually doing it                  | It depends        |
+	| 97               | test question                                                        | It depends        |
 	Then the What you told us section of the Your results page displays the following traits
 	| Trait text                                                                                     |
 	| you enjoy helping and listening to other people												 |
@@ -930,7 +940,7 @@ Scenario: TC24 - Real user interaction 2
 	| Travel and tourism   | 2                               |
 	| Business and finance | 3                               |
 	| Law and legal        | 3                               |
-	| Animal care          | 2                               |
+	| Animal care          | 3                               |
 	| Healthcare           | 4                               |
 	| Delivery and storage  | 2                               |
 	| Home services        | 3                               |

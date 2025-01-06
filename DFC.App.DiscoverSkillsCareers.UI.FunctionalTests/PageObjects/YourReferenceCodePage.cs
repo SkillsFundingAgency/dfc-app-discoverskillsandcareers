@@ -23,7 +23,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement divPhoneNumberTopValidation => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-validation-summary"));
         IWebElement txtPhoneNumberBottomValidation => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".field-validation-error"));
         IWebElement lnkBack => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Back"));
-        IWebElement btnReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-button.ncs-button__primary"));
+        IWebElement btnReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("*[@role='button' and @class='ncs-button__primary']"));
         IWebElement btnSendRefereneceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[@id='dysac-start-submit-button']"));
 
 
@@ -62,7 +62,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickReturnToAssessment()
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.CssSelector(".govuk-button.ncs-button__primary"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(@class, 'primary')]"));
             btnReturnToAssessment.Click();
         }
 
@@ -80,7 +80,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ReturnToAssessment()
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(@class, 'primary')]"));           
             btnReturnToAssessment.Click();
         }
 

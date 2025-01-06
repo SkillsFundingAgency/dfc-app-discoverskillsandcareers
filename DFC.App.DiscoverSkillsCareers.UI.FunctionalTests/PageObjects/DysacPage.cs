@@ -141,8 +141,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string GetResultText()
         {
-                WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.XPath(".//div[@class=.app-results]"));
-                return results.GetElementText();
+            var parentElement = _scenarioContext.GetWebDriver().FindElement(By.CssSelector("..dysac-job-category-panel"));
+            return parentElement.FindElement(By.TagName("h2")).Text.ToLower();
         }
 
         public bool AnswerOptionClick(string answerOption)
