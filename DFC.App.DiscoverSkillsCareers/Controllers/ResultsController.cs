@@ -229,12 +229,13 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
                     if (!category.JobProfiles.Any())
                     {
-                        var changeAnswersDetails = new { CategoryUrl = jobCategory.JobFamilyUrl, AssesmentType = "filter" };
-                        var noJobTile = await razorTemplateEngine.RenderAsync("~/Views/Results/_NoJobRole.cshtml", changeAnswersDetails).ConfigureAwait(false);
+                        var changeAnswersDetails = category.CategoryUrl;
+                        var redirectTo = Url.RouteUrl("filterQuestions", new { assessmentType = "filter", jobCategoryName = category.CategoryUrl, questionNumber = 0 });
+                        var noJobTile = await razorTemplateEngine.RenderPartialAsync("~/Views/Results/_NoJobRole.cshtml", changeAnswersDetails).ConfigureAwait(false);
                         category.JobProfiles.Add(new ResultJobProfileOverViewModel()
                         {
                             Cname = jobCategory.JobFamilyName,
-                            OverViewHTML = noJobTile,
+                            OverViewHTML = noJobTile.Replace(@$"href=""", $"href='{redirectTo}'"),
                             ReturnedStatusCode = System.Net.HttpStatusCode.Unused,
                         });
                     }
