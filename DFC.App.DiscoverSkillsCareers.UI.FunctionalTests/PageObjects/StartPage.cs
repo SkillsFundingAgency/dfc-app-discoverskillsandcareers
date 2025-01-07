@@ -8,7 +8,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
     {
         private ScenarioContext _scenarioContext;
 
-        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[@class='govuk-button ncs-button__primary']"));
+        IWebElement btnStartAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[contains(text(),'Start your assessment')]"));
 
         public StartPage(ScenarioContext context)
         {
@@ -17,7 +17,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickStartYourAssessment()
         {            
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[@class='govuk-button ncs-button__primary']"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(text(),'Start your assessment')]"));
             btnStartAssessment.Click();
 
         }

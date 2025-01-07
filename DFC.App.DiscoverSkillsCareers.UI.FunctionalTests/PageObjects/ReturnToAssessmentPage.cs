@@ -41,7 +41,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
 
-            var attributeValue = _scenarioContext.GetWebDriver().FindElement(By.XPath("//label[contains(text(), '" + elementLabel + "')]//preceding::input")).GetAttribute("type");
+            var attributeValue = _scenarioContext.GetWebDriver().FindElement(By.XPath("//label[contains(text(), '" + elementLabel + "')]//preceding-sibling::input")).GetAttribute("type");
             return attributeValue;
         }
 

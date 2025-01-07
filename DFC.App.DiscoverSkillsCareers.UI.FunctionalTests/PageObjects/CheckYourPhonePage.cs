@@ -19,7 +19,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         IWebElement btnReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-main-wrapper .govuk-button.ncs-button__primary"));
         IWebElement txtPhoneNumber => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".govuk-main-wrapper p:nth-of-type(1)"));
-        IWebElement lnkBackToStart => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Back to start"));
+        IWebElement lnkBackToStart => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Back"));
 
         public string GetPhoneNumber()
         {

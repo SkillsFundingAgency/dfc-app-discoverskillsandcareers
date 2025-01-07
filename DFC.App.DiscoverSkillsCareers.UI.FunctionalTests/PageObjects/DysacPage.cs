@@ -35,7 +35,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement lnkPreviousStatement => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-back-link"));
         IWebElement linkGetYourReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-sidebar app-save-panel app-save-panel--alt']/p/a[@class='govuk-link govuk-link--no-visited-state']"));
         IWebElement optionReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='SelectedOption-2']"));
-        IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-start-submit-button"));
+        IWebElement btnContinueSaveProgress => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
         IWebElement referenceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='app-your-reference govuk-body']/p[1]/span[1]"));
         IWebElement btnSeeResults => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-grid-column-two-thirds'][1]/a[@class='govuk-button ncs-button__primary app-button']"));
         IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
@@ -141,7 +141,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string GetResultText()
         {
-            var parentElement = _scenarioContext.GetWebDriver().FindElement(By.CssSelector("..dysac-job-category-panel"));
+            var parentElement = _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".dysac-job-category-panel"));
             return parentElement.FindElement(By.TagName("h2")).Text.ToLower();
         }
 
@@ -250,7 +250,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void AnswerAllQuestions(string answerOption)
         {
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i <= 40; i++)
             {
                 AnswerOptionClick(answerOption);
                 btnNextQuestion.Click();

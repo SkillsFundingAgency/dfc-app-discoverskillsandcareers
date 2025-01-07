@@ -155,8 +155,18 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
 
         [Then(@"the job categories suggestions are (.*) in number")]
         public void ThenTheJobCategoriesSuggestionsAreInNumber(int numberOfJobCategories)
+        {            
+            var actual = _yourResultsPage.GetJobCategories().Count;
+
+            NUnit.Framework.Assert.AreEqual(numberOfJobCategories, actual, "Number of job category suggestions not correct.");
+        }
+
+        [Then(@"the all job categories suggestions are (.*) in number")]
+        public void ThenAllTheJobCategoriesSuggestionsAreInNumber(int numberOfJobCategories)
         {
-            NUnit.Framework.Assert.AreEqual(numberOfJobCategories, (_yourResultsPage.GetJobCategories().Count - _yourResultsPage.GetRemainingJobCategories().Count), "Number of job category suggestions not correct.");
+            var actual = _yourResultsPage.GetAllJobCategories().Count;
+
+            NUnit.Framework.Assert.AreEqual(numberOfJobCategories, actual, "Number of job category suggestions not correct.");
         }
 
         [Then(@"The results are displayed")]
@@ -211,7 +221,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
                     _yourReferenceCodePage.SelectReferenceCode();                    
                     break;
                 case "Send reference code in an email":
-                    _returnToAssessmentPage.SelectSendMeEmailLink();                    
+                    _yourReferenceCodePage.SelectEmailReferenceCode();                    
                     break;
             }
         }
@@ -221,6 +231,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void GivenIMakeANoteOfTheReferenceCode()
         {
             _yourReferenceCodePage.GetReferenceCode();
+        }
+
+        [When(@"I navigated to home page")]
+        public void WhenINavigatedToHomePage()
+        {
+            _yourReferenceCodePage.NavigateToHome();
         }
 
         [When(@"I use the reference code to return to my assessment from the Dysac home page")]
@@ -274,7 +290,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourReferenceCodePage.ReturnToAssessment();
         }
 
-        [When(@"I go Back and I click the Back to start link")]
+        [When(@"I go Back and I click the Back link")]
         public void WhenIGoBackAndIClickTheBackToStartLink()
         {
             _dysacPage.GoBack();
@@ -335,18 +351,18 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _dysacPage.ClickContinueWithReferenceCode();
         }
 
-        [When(@"I click Send on the resultant page without providing an email address")]
+        [When(@"I click Send reference code without providing an email address")]
         public void GivenIClickSendOnTheResultantPageWithoutProvidingAnEmailAddress()
         {
-            _dysacPage.ClickContinueToSaveProgress();
+            _yourReferenceCodePage.ClickToSendReferenceCode();
         }
 
         [When(@"I provide email address ""(.*)""")]
         public void WhenIProvideEmailAddress(string emailAddress)
         {
             _theEmailAddress = emailAddress;
-            _emailAddressPage.EnterEmailAddress(emailAddress);
-            _dysacPage.ClickContinueToSaveProgress();
+            _yourReferenceCodePage.EnterEmailAddress(emailAddress);
+            _yourReferenceCodePage.ClickToSendReferenceCode();
         }
 
         [Then(@"the email address used is present in the text on the page")]
@@ -410,7 +426,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
         public void ThenAllTheJobCategoriesDispalyedAre(Table table)
         {
             IEnumerable<JobCategories> initialJobCategories = table.CreateSet<JobCategories>().ToList();
-            NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobCategories(initialJobCategories), "'10 job categories that might suit you' list is incorrect");
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyAllJobCategories(initialJobCategories), "'10 job categories that might suit you' list is incorrect");
         }
 
         [Then(@"the following are the job categories suggested and their number of answer more questions")]

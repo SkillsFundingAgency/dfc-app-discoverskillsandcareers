@@ -27,13 +27,13 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public string GetEmailAddressNotification()
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to start"));
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back"));
             return txtEmailNotification.Text.Replace("An email has been sent to ", string.Empty).Trim();
         }
 
         public void ClickBack()
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to start"));
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back"));
             lnkBack.Click();
         }
     }

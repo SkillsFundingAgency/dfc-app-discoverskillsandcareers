@@ -6,7 +6,8 @@ Background:
 
 @DYSAC
 Scenario: Starting Assessment loads the first questions
-	When I click on Assessment
+	When I click on start skills Assessment
+	And I click on start your Assessment
 	Then The first question is displayed; I am comfortable telling people what they need to do
 
 @smoke
@@ -277,22 +278,20 @@ Scenario: TC05 - Progress bar displays correctly on each question
 @smoke
 @DYSAC
 Scenario Outline: TC06 - Return to assessment using reference code
-	When I click on start skills Assessment	
+	And I click on start skills Assessment	
 	And I click on start your Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to <Percentage completed> percent
 	When I save my progress
-	Then the "Send reference code in an email" radio button is present on the resultant page
-	And the "Get a reference code" radio button is present on the resultant page
-	When I choose the "Get a reference code" option of returning to assessment
 	And I make a note of the reference code
+	And I navigated to home page
 	And I use the reference code to return to my assessment from the Dysac home page
 	Then I am at the question where I left off
 Examples: 
 	| Percentage completed |
 	| 2                  |
-	| 70                    |
-	| 30                   |
+	| 70                   |
+	| 31                   |
 
 @DYSAC
 Scenario: TC07 - Current date is displayed on reference code page
@@ -312,14 +311,12 @@ Scenario Outline: TC08 - Phone number supplied appears on Check your phone page
 	And I click on start skills Assessment	
 	And I click on start your Assessment
 	And I select the "Strongly agree" option
-	And I proceed with answering questions up to "9" percent
+	And I proceed with answering questions up to "2" percent
 	When I save my progress
 	And I choose the "Send reference code in a text message" option of returning to assessment
 	When I supply phone number "07585082797"
 	When I click the Return to assessment button
 	Then I am at the question where I left off
-	When I go Back and I click the Back to start link
-	Then I am navigate to the Dysac home page
 
 @smoke
 @DYSAC
@@ -346,23 +343,18 @@ Scenario: TC11 - Email field validation and population
 	And I click on start your Assessment
 	And I select the "Strongly agree" option
 	And I proceed with answering questions up to "9" percent
-	And  I get reference code
-	And I choose the "Send me an email with a link" option of returning to assessment
-	When I click the Back link from the "Email address" page
-	Then I am navigated to the "How would you like to return to your assessment?" page
-	And I go forward
-	When I click Send on the resultant page without providing an email address
+	When I save my progress
+	And I choose the "Send reference code in an email" option of returning to assessment	
+	When I click Send reference code without providing an email address
 	Then validation messages are displayed for the "email address" field
-	When I provide email address "gordon.wilson@education.gov.uk"
+	When I provide email address "chris.mcdaid@education.gov.uk"
 	Then I am navigated to the "Check your email" page
 	And the email address used is present in the text on the page
 	When I click the Back link from the "Check your email" page
 	Then I am navigated to the "Email address" page
-	And I go forward
 	When I click the Return to assessment button
 	Then I am at the question where I left off
-	When I go Back and I click the Back to start link
-	Then I am navigate to the Dysac home page 
+	
 
 @DYSAC
 Scenario: TC12 - All question radio button options are usable
@@ -384,22 +376,22 @@ Scenario Outline: TC13 - Initial and all suggested job categories
 	And the initial job categories dispalyed are
 	| Job category       |
 	| Sports and leisure |
-	| Manufacturing      |
-	| Science and research |
+	| Creative and media      |
+	| Construction and trades |
 	When I click See matches to See 7 other career areas that might interest you
-	Then the job categories suggestions are <All job categories> in number
+	Then the all job categories suggestions are <All job categories> in number
 	And all the job categories dispalyed are
-	| Job category                   |
-	| Sports and leisure             |
-	| Manufacturing                  |
-	| Science and research           |
-	| Construction and trades        |
-	| Science and research           |
+	| Job category               |
+	| Sports and leisure           |
+	| Creative and media           |
+	| Construction and trades      |
+	| Manufacturing               |	
+	| Science and research          |
 	| Business and finance           |
 	| Emergency and uniform services |
-	| Law and legal                  |
-	| Teaching and education         |
-	| Travel and tourism             |
+	| Law and legal           |
+	| Teaching and education      |
+	| Travel and tourism         |
 	Examples: 
 	| Answer option  | Initial job categories | All job categories |
 	| Strongly agree | 3                      | 10                 |
@@ -945,3 +937,4 @@ Scenario: TC24 - Real user interaction 2
 	| Delivery and storage  | 2                               |
 	| Home services        | 3                               |
 	| Transport            | 3                               |
+	

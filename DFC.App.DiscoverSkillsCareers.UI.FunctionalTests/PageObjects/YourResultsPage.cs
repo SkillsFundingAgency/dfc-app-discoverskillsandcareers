@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using TechTalk.SpecFlow;
 
@@ -25,7 +26,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public bool VerifyJobCategories(IEnumerable<JobCategories> jobCategories)
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+           // WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
 
             bool a_and_b_checks = false;
 
@@ -65,14 +66,71 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             return a_and_b_checks;
         }
 
+        public bool VerifyAllJobCategories(IEnumerable<JobCategories> jobCategories)
+        {
+            // WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+
+            bool a_and_b_checks = false;
+
+            string[] allJobCategories = jobCategories.Select(p => p.JobCategory).ToArray();
+
+            IList<IWebElement> jobCategoriesUI;
+
+            try
+            {
+                jobCategoriesUI = GetAllJobCategories();
+            }
+            catch (NoSuchElementException)
+            {
+                jobCategoriesUI = null;
+            }
+
+            //translate IWebElements above into a collection of strings so they can be compared
+            IEnumerable<string> actual = jobCategoriesUI.Select(i => i.Text);
+
+            //determines, as bool, if items in 1 and 2 are present in the other
+            var optionsVerified = allJobCategories.All(d => actual.Contains(d));
+
+            //B - Check.
+            int noOfActualElements = jobCategoriesUI.Count;
+            bool optionsEqual = false;
+
+            if (allJobCategories.Length == noOfActualElements)
+            {
+                optionsEqual = true;
+            }
+
+            if (optionsVerified == true && optionsEqual == true)
+            {
+                a_and_b_checks = true;
+            }
+
+            return a_and_b_checks;
+        }
+
         public IList<IWebElement> GetJobCategories()
         {
-            return _scenarioContext.GetWebDriver().FindElements(By.CssSelector(".ncs-card-with-image.dysac-job-category-card"));
+            
+            IWebElement parentElement = _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[contains(@class,'dysac-job-role-header-content')]/following-sibling::div[contains(@class,'dysac-job-category-tile-container')]"));
+
+            IList<IWebElement> childElements = parentElement.FindElements(By.XPath(".//div[contains(@class,'dysac-job-category-card')]//h3[a[@href]]"));
+           
+
+            return childElements;
+        }
+
+        public IList<IWebElement> GetAllJobCategories()
+        {
+
+            return _scenarioContext.GetWebDriver().FindElements(By.XPath(".//div[contains(@class,'dysac-job-category-card')]//h3[a[@href]]"));
         }
 
         public IList<IWebElement> GetRemainingJobCategories()
         {
-            return _scenarioContext.GetWebDriver().FindElements(By.XPath("//div[@class='govuk-accordion__section-content']/div[@class='.ncs-card-with-image.dysac-job-category-card']"));
+            IWebElement parent_Element = _scenarioContext.GetWebDriver().FindElement(By.XPath("//div[@class='govuk-accordion__section-content']"));
+            IList<IWebElement> child_Elements = parent_Element.FindElements(By.CssSelector(".ncs-card-with-image.dysac-job-category-card"));
+
+            return child_Elements;
         }
 
 

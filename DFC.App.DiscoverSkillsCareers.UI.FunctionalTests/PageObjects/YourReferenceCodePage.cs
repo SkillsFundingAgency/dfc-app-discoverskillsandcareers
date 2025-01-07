@@ -23,13 +23,20 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement divPhoneNumberTopValidation => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-validation-summary"));
         IWebElement txtPhoneNumberBottomValidation => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".field-validation-error"));
         IWebElement lnkBack => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Back"));
-        IWebElement btnReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("*[@role='button' and @class='ncs-button__primary']"));
+        IWebElement btnReturnToAssessment => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[contains(text(),'Return to your assessment')]"));
         IWebElement btnSendRefereneceCode => _scenarioContext.GetWebDriver().FindElement(By.XPath("//button[@id='dysac-start-submit-button']"));
 
+        IWebElement lnkHome => _scenarioContext.GetWebDriver().FindElement(By.LinkText("Skills assessment"));
+
+        IWebElement divReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-your-reference__code"));
+
+        IWebElement fldEmailAddress => _scenarioContext.GetWebDriver().FindElement(By.XPath("//input[@name='Email']"));
+
+        IWebElement optionEmailCode => _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[@class='govuk-radios__item']/label[@for='contact']"));
 
         public void GetReferenceCode()
         {
-            ReferenceCode = optionReferenceCode.Text;
+            ReferenceCode = divReferenceCode.Text;
         }
 
         public string GetDate()
@@ -62,7 +69,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         public void ClickReturnToAssessment()
         {
-            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(@class, 'primary')]"));
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(text(),'Return to your assessment')]"));
             btnReturnToAssessment.Click();
         }
 
@@ -77,11 +84,27 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
             optionReferenceCode.Click();
         }
+        public void SelectEmailReferenceCode()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+            optionEmailCode.Click();
+        }
 
         public void ReturnToAssessment()
         {
-            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(@class, 'primary')]"));           
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.XPath("//button[contains(text(),'Return to your assessment')]"));
             btnReturnToAssessment.Click();
+        }
+
+        public void NavigateToHome()
+        {
+            WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.ClassName("govuk-footer"));
+            lnkHome.Click();
+        }
+
+        public void EnterEmailAddress(string emailAddress)
+        {
+            fldEmailAddress.SendKeys(emailAddress);
         }
 
         public void ClickBackLink()
