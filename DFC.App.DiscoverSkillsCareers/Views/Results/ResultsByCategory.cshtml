@@ -40,7 +40,7 @@
             <div class="app-results__item" data-job-family-code="@jobCategory.CategoryCode">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                            <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="/job-categories/@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
+                            <h2 class="govuk-heading-m govuk-!-margin-bottom-1"><a href="@configuration["JobCategoryUrl"]@jobCategory.CategoryUrl">@jobCategory.CategoryTitle</a></h2>
                       
                             @if (jobCategory.ShowThisCategory && (@jobCategory.JobProfiles.Count() - 1) > 0 && (!@jobCategory.JobProfiles.Any(p => p.ReturnedStatusCode == System.Net.HttpStatusCode.Unused)))
                             {
@@ -128,7 +128,7 @@
                             </div>
                             <div class="card-content-section  dysac-job-category-card-content">
                                 <div class="card-header">
-                                    <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                                    <h3><a href="@configuration["JobCategoryUrl"]@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
                                 </div>
                                 <div class="card-content">
                                     <p>@jobCategories[index].JobFamilyText</p>
@@ -157,7 +157,7 @@
                                 </div>
                                 <div class="card-content-section  dysac-job-category-card-content">
                                     <div class="card-header">
-                                        <h3><a href="/job-categories/@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
+                                        <h3><a href="@configuration["JobCategoryUrl"]@jobCategories[index].CategoryUrl">@jobCategories[index].CategoryTitle</a></h3>
                                     </div>
                                     <div class="card-content">
                                         <p>@jobCategories[index].JobFamilyText</p>

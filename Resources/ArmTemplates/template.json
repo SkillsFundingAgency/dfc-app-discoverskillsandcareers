@@ -459,6 +459,10 @@
                 "value": true
               },
               {
+                "name": "JobCategoryUrl",
+                "value": "/explore-careers/all-careers?jobCategories="
+              },
+              {
                 "name": "ExternalLinkOptions__MatchSkillsResultsEndpoint",
                 "value": "/matchskills/dysacResults"
               },
