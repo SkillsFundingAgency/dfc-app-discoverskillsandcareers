@@ -934,12 +934,12 @@ Scenario: TC24 - Real user interaction 2
 	| Law and legal        | 3                               |
 	| Animal care          | 3                               |
 	| Healthcare           | 4                               |
-	| Delivery and storage  | 2                               |
+	| Delivery and storage | 2                               |
 	| Home services        | 3                               |
 	| Transport            | 3                               |
 	
 
-	@DYSAC
+@DYSAC
 Scenario Outline: TC25 - Filtering questions links and functionality works as expected
 	And I click on start skills Assessment	
 	And I click on start your Assessment
@@ -981,8 +981,7 @@ Examples:
 	| Answer option  |
 	| Strongly agree |
 
-
-		@DYSAC
+@DYSAC
 Scenario Outline: TC26 - Filtering questions links and job roles
 	And I click on start skills Assessment	
 	And I click on start your Assessment
@@ -993,28 +992,26 @@ Scenario Outline: TC26 - Filtering questions links and job roles
 	And Answer "Yes" to the filtering question
 	And I click See results button
 	Then the following are the job roles suggested
-	| Job role                   |
-	| Leisure centre assistant             |
-	| Outdoor activities instructor                  |
-	| PE teacher             |
-	| Sport and exercise psychologist        |
-	| Lifeguard           |
-	| Football referee           |
-	| Cinema or theatre attendant |
-	| Tourist information centre assistant                |
-	| Sports development officer         |
-	| Performance sports scientist             |
-	| Racehorse trainer name change test 123             |
-	| Events manager             |
+	| Job role                              |
+	| Leisure centre assistant              |
+	| Outdoor activities instructor         |
+	| PE teacher                            |
+	| Sport and exercise psychologist       |
+	| Lifeguard                             |
+	| Football referee                      |
+	| Cinema or theatre attendant           |
+	| Tourist information centre assistant  |
+	| Sports development officer            |
+	| Performance sports scientist          |
+	| Racehorse trainer name change test 123|
+	| Events manager                        |
 	
 	
 Examples:
 	| Answer option  |
 	| Strongly agree |
-
-
 	
-		@DYSAC
+@DYSAC
 Scenario Outline: TC27 - Filtering questions links and no job roles
 	And I click on start skills Assessment	
 	And I click on start your Assessment
