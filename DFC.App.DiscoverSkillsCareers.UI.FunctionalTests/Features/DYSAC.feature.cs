@@ -3698,6 +3698,298 @@ this.FeatureBackground();
             this.ScenarioCleanup();
         }
         
+        [Xunit.SkippableTheoryAttribute(DisplayName="TC25 - Filtering questions links and functionality works as expected")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC25 - Filtering questions links and functionality works as expected")]
+        [Xunit.TraitAttribute("Category", "DYSAC")]
+        [Xunit.InlineDataAttribute("Strongly agree", new string[0])]
+        public void TC25_FilteringQuestionsLinksAndFunctionalityWorksAsExpected(string answerOption, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "DYSAC"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("Answer option", answerOption);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC25 - Filtering questions links and functionality works as expected", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 943
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 944
+ testRunner.And("I click on start skills Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 945
+ testRunner.And("I click on start your Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 946
+ testRunner.And(string.Format("I answer all questions selecting the {0} option", answerOption), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 947
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 948
+ testRunner.When("I click See matches to See 7 other career areas that might interest you", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table19.AddRow(new string[] {
+                            "Sports and leisure",
+                            "3"});
+                table19.AddRow(new string[] {
+                            "Manufacturing",
+                            "4"});
+                table19.AddRow(new string[] {
+                            "Creative and media",
+                            "5"});
+                table19.AddRow(new string[] {
+                            "Construction and trades",
+                            "4"});
+                table19.AddRow(new string[] {
+                            "Science and research",
+                            "4"});
+                table19.AddRow(new string[] {
+                            "Business and finance",
+                            "3"});
+                table19.AddRow(new string[] {
+                            "Emergency and uniform services",
+                            "3"});
+                table19.AddRow(new string[] {
+                            "Law and legal",
+                            "3"});
+                table19.AddRow(new string[] {
+                            "Teaching and education",
+                            "3"});
+                table19.AddRow(new string[] {
+                            "Travel and tourism",
+                            "2"});
+#line 949
+ testRunner.Then("the following are the job categories suggested and their number of answer more qu" +
+                        "estions", ((string)(null)), table19, "Then ");
+#line hidden
+#line 961
+ testRunner.When("I click \"Answer 5 more questions\" link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 962
+ testRunner.And("Answer \"Yes\" to the filtering question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 963
+ testRunner.And("I click \"Back to previous question\" link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 964
+ testRunner.Then("My last answer is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 965
+ testRunner.When("I click \"Back to results\" link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job category",
+                            "Number of answer more questions"});
+                table20.AddRow(new string[] {
+                            "Sports and leisure",
+                            "2"});
+                table20.AddRow(new string[] {
+                            "Creative and media",
+                            "4"});
+                table20.AddRow(new string[] {
+                            "Construction and trades",
+                            "4"});
+                table20.AddRow(new string[] {
+                            "Manufacturing",
+                            "4"});
+                table20.AddRow(new string[] {
+                            "Science and research",
+                            "3"});
+                table20.AddRow(new string[] {
+                            "Business and finance",
+                            "2"});
+                table20.AddRow(new string[] {
+                            "Emergency and uniform services",
+                            "2"});
+                table20.AddRow(new string[] {
+                            "Law and legal",
+                            "2"});
+                table20.AddRow(new string[] {
+                            "Teaching and education",
+                            "2"});
+                table20.AddRow(new string[] {
+                            "Travel and tourism",
+                            "1"});
+#line 966
+ testRunner.Then("the following are the job categories suggested and their number of answer more qu" +
+                        "estions", ((string)(null)), table20, "Then ");
+#line hidden
+#line 978
+ testRunner.When("I click \"Answer 3 more questions\" link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 979
+ testRunner.Then("I should not see my previously answered question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableTheoryAttribute(DisplayName="TC26 - Filtering questions links and job roles")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC26 - Filtering questions links and job roles")]
+        [Xunit.TraitAttribute("Category", "DYSAC")]
+        [Xunit.InlineDataAttribute("Strongly agree", new string[0])]
+        public void TC26_FilteringQuestionsLinksAndJobRoles(string answerOption, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "DYSAC"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("Answer option", answerOption);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC26 - Filtering questions links and job roles", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 986
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 987
+ testRunner.And("I click on start skills Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 988
+ testRunner.And("I click on start your Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 989
+ testRunner.And(string.Format("I answer all questions selecting the {0} option", answerOption), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 990
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 991
+ testRunner.When("I click See matches to See 7 other career areas that might interest you", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 992
+ testRunner.When("I click \"Answer 3 more questions\" link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 993
+ testRunner.And("Answer \"Yes\" to the filtering question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 994
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Job role"});
+                table21.AddRow(new string[] {
+                            "Leisure centre assistant"});
+                table21.AddRow(new string[] {
+                            "Outdoor activities instructor"});
+                table21.AddRow(new string[] {
+                            "PE teacher"});
+                table21.AddRow(new string[] {
+                            "Sport and exercise psychologist"});
+                table21.AddRow(new string[] {
+                            "Lifeguard"});
+                table21.AddRow(new string[] {
+                            "Football referee"});
+                table21.AddRow(new string[] {
+                            "Cinema or theatre attendant"});
+                table21.AddRow(new string[] {
+                            "Tourist information centre assistant"});
+                table21.AddRow(new string[] {
+                            "Sports development officer"});
+                table21.AddRow(new string[] {
+                            "Performance sports scientist"});
+                table21.AddRow(new string[] {
+                            "Racehorse trainer name change test 123"});
+                table21.AddRow(new string[] {
+                            "Events manager"});
+#line 995
+ testRunner.Then("the following are the job roles suggested", ((string)(null)), table21, "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableTheoryAttribute(DisplayName="TC27 - Filtering questions links and no job roles")]
+        [Xunit.TraitAttribute("FeatureTitle", "DYSACUserActions")]
+        [Xunit.TraitAttribute("Description", "TC27 - Filtering questions links and no job roles")]
+        [Xunit.TraitAttribute("Category", "DYSAC")]
+        [Xunit.InlineDataAttribute("Strongly agree", new string[0])]
+        public void TC27_FilteringQuestionsLinksAndNoJobRoles(string answerOption, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "DYSAC"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("Answer option", answerOption);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("TC27 - Filtering questions links and no job roles", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 1018
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 1019
+ testRunner.And("I click on start skills Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1020
+ testRunner.And("I click on start your Assessment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1021
+ testRunner.And(string.Format("I answer all questions selecting the {0} option", answerOption), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1022
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1023
+ testRunner.When("I click See matches to See 7 other career areas that might interest you", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1024
+ testRunner.When("I click \"Answer 3 more questions\" link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 1025
+ testRunner.And("Answer \"No\" to the filtering question", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1026
+ testRunner.And("I click See results button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 1027
+ testRunner.Then("No job roles should be suggested", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
         [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         public class FixtureData : System.IDisposable

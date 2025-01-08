@@ -331,6 +331,14 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             _yourReferenceCodePage.ClickBackLink();
         }
 
+        [When(@"I click BackI click on the ""(.*)"" job category ")]
+        public void WhenIClickOnJobCategory(string jobCategory)
+        {
+            _yourResultsPage.ClickJobCategory(jobCategory);
+        }
+
+
+
         [Then(@"I am navigated to the ""(.*)"" page")]
         public void ThenIAmNavigatedToThePage(string pageText)
         {
@@ -429,11 +437,20 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyAllJobCategories(initialJobCategories), "'10 job categories that might suit you' list is incorrect");
         }
 
+
         [Then(@"the following are the job categories suggested and their number of answer more questions")]
         public void ThenTheFollowingAreTheJobCategoriesSuggestedAndTheirNumberOfAnswerMoreQuestions(Table table)
         {
             IEnumerable<JobCategories> jobCategoriesAndNumbers = table.CreateSet<JobCategories>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategoriesAndNumbers), "The number of answer * more questions for the job categories are not correct.");
+        }
+
+
+        [Then(@"the following are the job roles suggested")]
+        public void ThenTheFollowingAreTheJobRolesSuggested(Table table)
+        {
+            IEnumerable<JobRoles> jobRoles = table.CreateSet<JobRoles>().ToList();
+            NUnit.Framework.Assert.True(_yourResultsPage.VerifyAllJobRoles(jobRoles), "The number of answer * more questions for the job categories are not correct.");
         }
 
         [Given(@"I provide the following answers to the resultant questions")]
@@ -475,5 +492,56 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions
             IEnumerable<JobCategories> jobCategories = table.CreateSet<JobCategories>().ToList();
             NUnit.Framework.Assert.True(_yourResultsPage.VerifyJobsAndNumberOfAnswers(jobCategories), "Job categories and or number for answer * more questions incorrect.");
         }
+
+        [When(@"I click ""(.*)"" link")]
+        public void WhenIClickLink(string linkText)
+        {
+            switch (linkText)
+            {
+                case "Answer 5 more questions":
+                case "Answer 3 more questions":
+                    _yourResultsPage.ClickAnswerLink(linkText);
+                    break;
+                case "Back to previous question":
+                    _yourResultsPage.ClickBackToPreviousQuestion();
+                    break;
+                case "Back to results":
+                    _yourResultsPage.ClickBackToPreviousQuestion();
+                    break;
+            }
+        }
+
+        [When(@"Answer ""(.*)"" to the filtering question")]
+        public void WhenIAnswerYesToFilteringQuestion(string answer)
+        {
+            _yourResultsPage.AnswerAllQuestions(answer);            
+        }
+
+        
+        [Then(@"I should not see my previously answered question")]
+        public void ThenIShouldNotSeeMyPreviouslyAnsweredQuestion()
+        {
+            _dysacPage.shouldNotseeMypreviousanswers();
+
+        }
+
+        [Then(@"My last answer is shown")]
+        public void ThenMyLastAnswerIsShown()
+        {
+            _yourResultsPage.MyLastAnwserIsShown();
+        }
+
+        [Then(@"No job roles should be suggested")]
+        public void ThenNoJobRolesSuggested()
+        {
+            _yourResultsPage.NoJobRoles();
+        }
+
+        [When(@"I select (.*) option for filtered questions")]
+        public void WhenISelectOptionForFilteredQuestions(string selectedOption)
+        {
+            _dysacPage.SelectAnswer();
+        }
+
     }
 }

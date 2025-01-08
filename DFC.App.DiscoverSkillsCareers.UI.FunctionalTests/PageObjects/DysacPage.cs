@@ -1,6 +1,7 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.TestSuite.StepDefinitions;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -41,11 +42,13 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         IWebElement results => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
         IWebElement answer => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".app-results h2.govuk-heading-l"));
         IWebElement enterYourReference => _scenarioContext.GetWebDriver().FindElement(By.Id("code"));
-
         IWebElement btnContinueWithReferenceCode => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
 
         IWebElement divPhoneNumberTopValidation => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-validation-summary"));
         IWebElement txtPhoneNumberBottomValidation => _scenarioContext.GetWebDriver().FindElement(By.CssSelector(".field-validation-error"));
+        By yesRadioButton => By.Id("selected_answer-1");
+
+        By noRadioButton => By.Id("selected_answer-2");
 
         public void ClickStartAssessment()
         {
@@ -267,6 +270,23 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
             WebDriverExtension.WaitElementToBeClickable(_scenarioContext.GetWebDriver(), By.Id("dysac-validation-summary"));
             return txtPhoneNumberBottomValidation.Text;
+        }
+        public void AnswerYesToQuestion()
+        {
+            _scenarioContext.GetWebDriver().FindElement(yesRadioButton).Click();
+            btnNextQuestion.Click();
+        }
+
+       
+
+        public bool RadioButtonsYesAndNoBothAreNotSelected()
+        {
+            return !RadioButtonSelected(yesRadioButton) && !RadioButtonSelected(noRadioButton);
+        }
+
+        public void shouldNotseeMypreviousanswers()
+        {
+          Assert.That(RadioButtonsYesAndNoBothAreNotSelected(), Is.True, "At least one radio button is selected");
         }
     }
 }

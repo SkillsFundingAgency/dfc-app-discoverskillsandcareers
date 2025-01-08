@@ -1,13 +1,17 @@
 ﻿using DFC.App.DiscoverSkillsCareers.TestSuite.Extensions;
 using DFC.App.DiscoverSkillsCareers.TestSuite.Helpers;
 using DFC.App.DiscoverSkillsCareers.UI.FunctionalTests.Helpers;
+using Microsoft.Azure.Cosmos.Linq;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using TechTalk.SpecFlow;
 
 namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
@@ -23,6 +27,12 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
         IWebElement lnkSeeMatches => _scenarioContext.GetWebDriver().FindElement(By.Id("accordion-default-heading-1"));
         IWebElement btnNext => _scenarioContext.GetWebDriver().FindElement(By.ClassName("btn-next-question"));
+        IWebElement lnkBack => _scenarioContext.GetWebDriver().FindElement(By.ClassName("govuk-back-link"));
+        By yesRadioButton => By.Id("selected_answer-1");
+        By noRadioButton => By.Id("selected_answer-2");
+
+        IWebElement btnNextQuestion => _scenarioContext.GetWebDriver().FindElement(By.Id("dysac-submit-button"));
+
 
         public bool VerifyJobCategories(IEnumerable<JobCategories> jobCategories)
         {
@@ -108,6 +118,48 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             return a_and_b_checks;
         }
 
+        public bool VerifyAllJobRoles(IEnumerable<JobRoles> jobRoles)
+        {
+            // WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
+
+            bool a_and_b_checks = false;
+
+            string[] allJobRoles = jobRoles.Select(p => p.JobRole).ToArray();
+
+            IList<IWebElement> jobRolesUI;
+
+            try
+            {
+                jobRolesUI = GetAllJobRolesFortheCategory();
+            }
+            catch (NoSuchElementException)
+            {
+                jobRolesUI = null;
+            }
+
+            //translate IWebElements above into a collection of strings so they can be compared
+            IEnumerable<string> actual = jobRolesUI.Select(i => i.Text);
+
+            //determines, as bool, if items in 1 and 2 are present in the other
+            var optionsVerified = allJobRoles.All(d => actual.Contains(d));
+
+            //B - Check.
+            int noOfActualElements = jobRolesUI.Count;
+            bool optionsEqual = false;
+
+            if (allJobRoles.Length == noOfActualElements)
+            {
+                optionsEqual = true;
+            }
+
+            if (optionsVerified == true && optionsEqual == true)
+            {
+                a_and_b_checks = true;
+            }
+
+            return a_and_b_checks;
+        }
+
         public IList<IWebElement> GetJobCategories()
         {
             
@@ -123,6 +175,11 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
         {
 
             return _scenarioContext.GetWebDriver().FindElements(By.XPath(".//div[contains(@class,'dysac-job-category-card')]//h3[a[@href]]"));
+        }
+
+        public IList<IWebElement> GetAllJobRolesFortheCategory()
+        {
+            return _scenarioContext.GetWebDriver().FindElements(By.XPath(".//div[contains(@class,'ncs-card-basic dysac-job-role-card')]//h3[a[@href]]"));
         }
 
         public IList<IWebElement> GetRemainingJobCategories()
@@ -149,6 +206,50 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             }
         }
 
+        public void ClickJobCategory(string jobCategory)
+        {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("accordion-default-heading-1"));
+            IWebElement category = _scenarioContext.GetWebDriver().FindElement(By.LinkText("jobCategory"));
+            category.Click();
+
+        }
+
+        public void AnswerAllQuestions(string answerOption)
+        {
+            do
+            {
+                
+                    AnswerOptionClick(answerOption);
+                    btnNextQuestion.Click();
+            }
+            while (_scenarioContext.GetWebDriver().FindElements(By.Id("dysac-submit-button")).Count!=0);
+        }
+
+        public bool AnswerOptionClick(string answerOption)
+        {
+            WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.Id("dysac-submit-button"));
+            bool radioButtonSelected = false;
+
+            switch (answerOption)
+            {
+                case "Yes":
+                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-1")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-1"));
+                    break;
+                case "No":
+                    _scenarioContext.GetWebDriver().FindElement(By.Id("selected_answer-2")).Click();
+                    radioButtonSelected = RadioButtonSelected(By.Id("selected_answer-2"));
+                    break;                
+            }
+
+            return radioButtonSelected;
+        }
+
+        public bool RadioButtonSelected(By element)
+        {
+            return _scenarioContext.GetWebDriver().FindElement(element).Selected;
+        }
+
         public bool VerifyJobsAndNumberOfAnswers(IEnumerable<JobCategories> jobCategoriesAndNumberOfAnswers)
         {
            // WebDriverExtension.WaitUntilElementFound(_scenarioContext.GetWebDriver(), By.LinkText("Back to top"));
@@ -163,7 +264,7 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             {
                 try
                 {
-                    uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]/following::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Trim();
+                    uiElementData = _scenarioContext.GetWebDriver().FindElement(By.XPath("//a[contains(text(), '" + jobCategoryExpected[i] + "')]/following::a")).Text.Replace("Answer", string.Empty).Replace("more questions", string.Empty).Replace("more question", string.Empty).Trim();
                 }
                 catch (NoSuchElementException)
                 {
@@ -177,7 +278,8 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
             }
 
             return jobCategoryAndNumberOfAnswersMatch;
-        }
+        }       
+
 
         public void AnswerQuestions(IEnumerable<AnswersShowThat> questionsAndAnswers)
         {
@@ -244,5 +346,97 @@ namespace DFC.App.DiscoverSkillsCareers.TestSuite.PageObjects
 
             return a_and_b_checks;
         }
+
+        public void ClickAnswerButton(string text)
+        {
+            var buttonElements = _scenarioContext.GetWebDriver().FindElements(By.ClassName("govuk-button"));
+
+            foreach (var buttonElement in buttonElements)
+            {
+                var buttonText = CleanAndReBuildWebElement(buttonElement).Text;
+                if (buttonText.Contains(text))
+                {
+                    buttonElement.Click();
+                    break;
+                }
+            }
+        }
+
+        public void ClickAnswerLink(string text)
+        {
+            var linkElements = _scenarioContext.GetWebDriver().FindElements(By.ClassName("govuk-link"));
+
+            foreach (var linkElement in linkElements)
+            {
+                var linkText = CleanAndReBuildWebElement(linkElement).Text;
+                if (linkText.Contains(text))
+                {
+                    linkElement.Click();
+                    break;
+                }
+            }
+        }
+
+
+        public void ClickBackToPreviousQuestion()
+        {
+            lnkBack.Click();
+        }
+
+        public IWebElement CleanAndReBuildWebElement(IWebElement webElement)
+        {
+            IWebElement webElement2 = null;
+            int num = 0;
+            try
+            {
+                do
+                {
+                    webElement2 = webElement;
+                    try
+                    {
+                        _ = webElement2.Displayed;
+                    }
+                    catch (StaleElementReferenceException)
+                    {
+                        webElement2 = null;                        
+                        num++;
+                        continue;
+                    }
+
+                    break;
+                }
+                while (num < 20);
+            }
+            catch (NoSuchElementException message)
+            {
+               
+            }
+
+            return webElement2;
+        }
+
+        public bool RadioButtonYesIsSelected()
+        {
+            return RadioButtonSelected(yesRadioButton);
+        }
+
+        public void MyLastAnwserIsShown()
+        {
+            Assert.That(RadioButtonYesIsSelected(), Is.True, "Radio button Yes is not selected");
+        }
+
+        public void NextQuestion()
+        {
+            btnNextQuestion.Click();
+        }
+
+        public void NoJobRoles()
+        {
+          IWebElement noJobRoleDiv = _scenarioContext.GetWebDriver().FindElement(By.XPath(".//div[contains(@class,'dysac-job-role-tile-nojob')]//p/span"));
+
+            Assert.AreEqual("No careers were found that might interest you based on your responses.", noJobRoleDiv.Text);
+
+        }
+       
     }
 }

@@ -938,3 +938,98 @@ Scenario: TC24 - Real user interaction 2
 	| Home services        | 3                               |
 	| Transport            | 3                               |
 	
+
+	@DYSAC
+Scenario Outline: TC25 - Filtering questions links and functionality works as expected
+	And I click on start skills Assessment	
+	And I click on start your Assessment
+	And I answer all questions selecting the <Answer option> option
+	And I click See results button
+	When I click See matches to See 7 other career areas that might interest you
+	Then the following are the job categories suggested and their number of answer more questions
+		| Job category                   | Number of answer more questions |
+		| Sports and leisure             | 3                               |
+		| Manufacturing                  | 4                               |
+		| Creative and media             | 5                               |
+		| Construction and trades        | 4                               |
+		| Science and research           | 4                               |
+		| Business and finance           | 3                               |
+		| Emergency and uniform services | 3                               |
+		| Law and legal                  | 3                               |
+		| Teaching and education         | 3                               |
+		| Travel and tourism             | 2                               |
+	When I click "Answer 5 more questions" link
+	And Answer "Yes" to the filtering question
+	And I click "Back to previous question" link
+	Then My last answer is shown
+	When I click "Back to results" link
+	Then the following are the job categories suggested and their number of answer more questions
+		| Job category                   | Number of answer more questions |
+		| Sports and leisure             | 2                               |
+		| Creative and media             | 4                              |
+		| Construction and trades        | 4                               |		
+		| Manufacturing                  | 4                               |
+		| Science and research           | 3                               |
+		| Business and finance           | 2                               |
+		| Emergency and uniform services | 2                               |
+		| Law and legal                  | 2                               |
+		| Teaching and education         | 2                               |
+		| Travel and tourism             | 1                               |
+	When I click "Answer 3 more questions" link
+	Then I should not see my previously answered question
+Examples:
+	| Answer option  |
+	| Strongly agree |
+
+
+		@DYSAC
+Scenario Outline: TC26 - Filtering questions links and job roles
+	And I click on start skills Assessment	
+	And I click on start your Assessment
+	And I answer all questions selecting the <Answer option> option
+	And I click See results button
+	When I click See matches to See 7 other career areas that might interest you
+	When I click "Answer 3 more questions" link
+	And Answer "Yes" to the filtering question
+	And I click See results button
+	Then the following are the job roles suggested
+	| Job role                   |
+	| Leisure centre assistant             |
+	| Outdoor activities instructor                  |
+	| PE teacher             |
+	| Sport and exercise psychologist        |
+	| Lifeguard           |
+	| Football referee           |
+	| Cinema or theatre attendant |
+	| Tourist information centre assistant                |
+	| Sports development officer         |
+	| Performance sports scientist             |
+	| Racehorse trainer name change test 123             |
+	| Events manager             |
+	
+	
+Examples:
+	| Answer option  |
+	| Strongly agree |
+
+
+	
+		@DYSAC
+Scenario Outline: TC27 - Filtering questions links and no job roles
+	And I click on start skills Assessment	
+	And I click on start your Assessment
+	And I answer all questions selecting the <Answer option> option
+	And I click See results button
+	When I click See matches to See 7 other career areas that might interest you
+	When I click "Answer 3 more questions" link
+	And Answer "No" to the filtering question
+	And I click See results button
+	Then No job roles should be suggested
+	
+	
+Examples:
+	| Answer option  |
+	| Strongly agree |
+
+
+	
