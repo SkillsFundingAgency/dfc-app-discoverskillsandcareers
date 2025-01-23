@@ -75,7 +75,7 @@
                         <p class="dysac-ref-label govuk-label">Example: 732E E325 GE3R E6</p>
                         <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code" aria-label="Reference-Code" value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
-                    <button type="submit" class="govuk-button ncs-button__secondary ncs-button__secondary__white app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
+                    <button type="submit" class="govuk-button ncs-button__secondary app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
                         Continue
                     </button>
                 </form>
