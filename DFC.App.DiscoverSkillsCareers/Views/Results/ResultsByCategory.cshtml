@@ -10,8 +10,8 @@
 <div class="dysac-trait-tile-container">
     @foreach (var trait in Model.Traits)
     {
-        <div class="ncs-card-symbol dysac-personality-tile">
-            <div class="symbol dysac-personality-tile-symbol-head">
+        <div class="ncs-card-icon dysac-personality-tile">
+            <div class="icon dysac-personality-tile-symbol-head">
                 <img class="dysac-personality-trait-symbol" src="@(configuration["AssetsCdn"]+trait.ImagePath)" alt="">
                 <h3>@trait.Title.ToPascalCase()</h3>
             </div>
