@@ -294,7 +294,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             return new GetResultsResponse
             {
-                LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments.Where(t => t.LastAnswer != DateTime.MinValue)
+                LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments?.Where(t => t.LastAnswer != DateTime.MinValue)
                     .OrderByDescending(jobCategoryAssessment => jobCategoryAssessment.LastAnswer)
                     .FirstOrDefault()?
                     .JobCategory!,
