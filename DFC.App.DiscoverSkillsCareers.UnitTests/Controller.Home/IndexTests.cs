@@ -34,7 +34,8 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
         {
             HomeIndexRequestViewModel viewModel = null;
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
-            Assert.IsType<BadRequestResult>(actionResponse);
+
+            Assert.IsType<ViewResult>(actionResponse);
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Home
 
             var actionResponse = await controller.Index(viewModel).ConfigureAwait(false);
 
-            Assert.IsType<BadRequestResult>(actionResponse);
+            Assert.IsType<ViewResult>(actionResponse);
         }
 
         [Fact]

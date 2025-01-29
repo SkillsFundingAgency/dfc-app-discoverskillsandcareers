@@ -1,0 +1,22 @@
+﻿<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Check your phone</h1>
+
+            <p>A text message has been sent to @TempData.Peek("Telephone")</p>
+            <p>This includes your reference code and a link to return to your assessment.</p>            
+             @if (@Model == PageTitle.Start)
+                {
+                <form method="post" asp-action="new" asp-controller="assessment">
+                    <input type="hidden" id="assessmentType" name="assessmentType" value="short" />
+                    <button role="button" draggable="false" class="govuk-button ncs-button__primary" data-module="govuk-button">
+                        Start your assessment                       
+                    </button>
+                </form>
+                }
+                else {
+                <a asp-controller="assessment" class="govuk-button ncs-button__primary" asp-action="return">Return to your assessment</a>
+                }
+        </div>
+    </div>
+</div>

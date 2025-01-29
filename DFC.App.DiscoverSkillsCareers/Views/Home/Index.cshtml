@@ -1,78 +1,96 @@
 ﻿@model HomeIndexResponseViewModel
 @{
-     ViewData["Title"] = "Discover your skills and careers";
+    ViewData["Title"] = "Discover your skills and careers";
 }
 <div class="govuk-width-container">
+    @inject IConfiguration configuration
     <div class="govuk-grid-row govuk-!-margin-bottom-9">
         <div class="govuk-grid-column-two-thirds">
-            
-            <p class="govuk-body"> Discover your skills and careers (DYSAC) is a tool to help you identify your:</p>
-            
-            <ul class="govuk-list govuk-list--bullet">
-                <li>interests</li>
-                <li>motivations</li>
-                <li>preferences</li>
-            </ul>
+            <div class="dysac-return-assessment-d">
+                <partial name="ValidationSummaryMobile" model="ViewData.ModelState" />
+            </div>
+            <img class="dysac-landing-page-img-d" src="@configuration["AssetsCdn"]media/dysac/skills-assessment-desktop.png" alt="" />
+            <img class="dysac-landing-page-img-m" src="@configuration["AssetsCdn"]media/dysac/skills-assessment-mobile.png" alt="" />
+            <p class="govuk-body govuk-!-margin-top-6">
+                There are no right or wrong answers when doing a skills assessment. It’s a way to understand yourself better and help you think about your next step. 
+            </p>
+            <div class="dysac-page-panel govuk-!-margin-top-6">
+                <div class="dysac-page-panel-content">
+                    <div class="dysac-page-panel-desc">
+                        <p class="govuk-body">You could take a skills assessment to help you:</p>
+                        <ul class="govuk-list govuk-list--bullet ul-dysac govuk-!-margin-bottom-5">
+                            <li>find out what motivates you </li>
+                            <li>work out careers that do not interest you </li>
+                            <li>see what you can do with the skills you have </li>
+                        </ul>
+                    </div>
+                    <div class="dysac-page-panel-image">
+                        <img class="dysac-page-panel-image-c" src="@configuration["AssetsCdn"]media/dysac/salandingcheckbox.svg" alt="" />
+                    </div>
+                </div>
 
-            <p class="govuk-body">Understanding yourself can help you work out what careers you may enjoy working in. You can use this
-                information to explore careers that interest you in more detail.</p>
-            
-            <p class="govuk-body">After you answer the questions, you’ll see a list of categories that may interest you based on your
-                answers. You can answer more questions to see more specific roles that may suit you.</p>
+            </div>
+            <h2 class="govuk-heading-l govuk-!-margin-top-9">Discover your skills and careers assessment</h2>
+            <p class="govuk-body govuk-!-margin-top-6">Answer questions about things you like to do or are good at. You’ll see what motivates you based on your answers and get career suggestions to compare.</p>
 
-            <p class="govuk-body">These suggestions are based on your preferences, and may not reflect opportunities in the job market. You
-                may want to <a href="/contact-us" class="govuk-link">speak to a careers adviser</a> about
-                your results. They know about local opportunities in your area and can help you work out your next steps.</p>
+            <div class="dysac-page-panel govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+                <div class="dysac-page-panel-content">
+                    <div class="dysac-page-panel-desc">
+                        <p class="govuk-body">This assessment:</p>
+                        <ul class="govuk-list govuk-list--bullet ul-dysac govuk-!-margin-bottom-5">
+                            <li>contains 40 multiple-choice questions</li>
+                            <li>takes 5 to 10 minutes to complete – it may take longer with a screen reader</li>
+                            <li>gives you a reference code so you can come back later  </li>
+                        </ul>
+                    </div>
+                    <div class="dysac-page-panel-image">
+                        <img class="dysac-page-panel-image-i" src="@configuration["AssetsCdn"]media/dysac/salandinginformation.svg" alt="" />
+                    </div>
+                </div>
+            </div>
+            <p class="govuk-body govuk-!-margin-bottom-6">You might want to <a href="/contact-us">speak about your results with a careers adviser</a> as they will know about local opportunities. </p>
 
-            <p class="govuk-body">It takes 5 to 10 minutes. It may take longer with a screen reader. You can save your progress at any time
-                and come back to it later.</p>
-
-            <form method="post" asp-action="new" asp-controller="assessment">
-                <input type="hidden" id="assessmentType" name="assessmentType" value="short"/>
-                <button role="button" draggable="false" class="govuk-button ncs-button__primary" data-module="govuk-button">
-                    Start assessment
+            <form method="get" asp-controller="start">
+                <button role="button" draggable="false" class="govuk-button ncs-button__primary govuk-!-margin-bottom-9" data-module="govuk-button">
+                    Start a skills assessment
                     <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
-                        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
+                        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
                     </svg>
                 </button>
             </form>
 
-            <h2 class="govuk-heading-l">We're deleting old assessments</h2>
-            
-            <p class="govuk-body">To improve the efficiency of our systems, we're starting to delete any skills assessments that have not been updated for over 12 months.</p>
-            
-            <p class="govuk-body">You can return to your skills assessment for up to 12 months after the last time you updated it.</p>
-            
-            <p class="govuk-body">An update could be progressing your assessment or changing a previous answer.</p>
-            
-            <p class="govuk-body">After 12 months of no updates being made, your assessment will be automatically deleted.</p>
         </div>
 
         <div class="govuk-grid-column-one-third">
             <div class="app-sidebar app-resume-panel">
-                <h2 class="govuk-heading-m">Return to an assessment</h2>
                 <form method="post" asp-controller="home" id="dysac-form">
-                    <partial name="ValidationSummary" model="ViewData.ModelState" />
+                    <div class="dysac-return-assessment-m">
+                        <partial name="ValidationSummary" model="ViewData.ModelState" />
+                    </div>
                     <div class="app-resume-panel__input govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : "")">
-                        <label class="govuk-label" for="ReferenceCode">Enter your reference</label>
+                        <h2 class="govuk-heading-m">Return to your assessment</h2>
                         <span asp-validation-for="ReferenceCode" class="govuk-error-message"></span>
+
+                        <label for="code" class="dysac-ref-label govuk-label">Enter your reference code if you've already started an assessment</label>
+                        <p class="dysac-ref-label govuk-label">Example: 732E E325 GE3R E6</p>
                         <input class="govuk-input @(!ViewData.ModelState.IsValid ? "govuk-input--error" : "")" asp-for="ReferenceCode" id="code" aria-label="Reference-Code" value="@(!ViewData.ModelState.IsValid ? "": "")" />
                     </div>
-                    <button type="submit" class="govuk-button ncs-button__primary app-button" id="dysac-submit-button">
+                    <button type="submit" class="govuk-button ncs-button__secondary ncs-button__secondary__white app-button govuk-!-margin-bottom-9" id="dysac-submit-button">
                         Continue
                     </button>
                 </form>
+                <h3 class="govuk-heading-s">We’re removing old assessments</h3>
+                <p class="govuk-body govuk-!-margin-bottom-5">We’re starting to delete assessments that have had no updates for 12 months.</p>
+                <p class="govuk-body govuk-!-margin-bottom-9">Unless you make any changes, you will not be able to access your results after this time.</p>
             </div>
-
-            <div class="app-sidebar app-advisor-panel">
-                @if (Model.SpeakToAnAdviser != null)
-                {
-                    <div class="app-related-items">
-                        @Html.Raw(Model.SpeakToAnAdviser)
-                    </div>
-                }
-            </div>
-
+        </div>
+        <div class="govuk-grid-column-full ">
+            @if (Model.SpeakToAnAdviser != null)
+            {
+                <div class="app-related-items">
+                    @Html.Raw(Model.SpeakToAnAdviser)
+                </div>
+            }
         </div>
     </div>
 </div>

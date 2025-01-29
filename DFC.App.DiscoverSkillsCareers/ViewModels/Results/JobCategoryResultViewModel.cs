@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -17,6 +18,12 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public string JobFamilyName { get; set; }
 
         public string JobFamilyText { get; set; }
+
+        public string ImagePathDesktop { get; set; }
+
+        public string ImagePathMobile { get; set; }
+
+        public string ImagePathTitle { get; set; }
 
         public string JobFamilyUrl { get; set; }
 

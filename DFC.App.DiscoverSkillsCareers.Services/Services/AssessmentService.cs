@@ -278,7 +278,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         {
             if (accessor.HttpContext != null && accessor.HttpContext.Items.ContainsKey(HttpContextAssessmentKey))
             {
-              return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
+                return (DysacAssessment?)accessor.HttpContext.Items[HttpContextAssessmentKey];
             }
 
             var assessment = await documentStore.GetAssessmentAsync(sessionId)

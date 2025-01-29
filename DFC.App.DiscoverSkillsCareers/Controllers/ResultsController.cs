@@ -92,8 +92,8 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 AssessmentReference = assessmentResponse.ReferenceCode,
             };
 
-            resultIndexResponseViewModel.Results.JobCategoriesNumberToShow = requestViewModel?.CountToShow ?? 3;
-
+            resultIndexResponseViewModel.Results.JobCategoriesNumberToShow = 3;
+            resultIndexResponseViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserDysacResultsSharedContent, status, expiryInHours).Result.Html;
             logService.LogInformation("About to display results view");
             return View(resultIndexResponseViewModel);
         }
@@ -186,12 +186,6 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                 try
                 {
                     logService.LogInformation($"Attempting to build JobProfileOverview for each job profile in {jobCategory.JobFamilyName}");
-                    if (!jobCategory.JobProfiles.Any())
-                    {
-                        logService.LogInformation($"No job profiles found for {jobCategory.JobFamilyName} - skipping");
-                        continue;
-                    }
-
                     var jobProfileTitles = jobCategory.JobProfiles
                         .GroupBy(jobProfile => jobProfile.Title)
                         .Select(jobProfileGroup => jobProfileGroup.First())
@@ -200,6 +194,10 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                     var jobProfileList = jobProfileListFull?
                         .Where(document => jobProfileTitles.Contains(document.DisplayText!.ToLower()))
                         .ToList();
+
+                    var jobProfileImagePaths = new { desktopImage = jobCategory.ImagePathTitle, mobileImage = jobCategory.ImagePathMobile };
+
+                    var image = await razorTemplateEngine.RenderAsync("~/Views/Results/_JobRoleImage.cshtml", jobProfileImagePaths).ConfigureAwait(false);
 
                     foreach (JobProfileViewModel jobProfileOverview in jobProfileList)
                     {
@@ -228,6 +226,26 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
                             OverViewHTML = jobProfileOverview.Html ?? $"<a href='/job-profiles{jobProfileOverview.UrlName}'>{jobProfileOverview.DisplayText}</a>",
                             ReturnedStatusCode = System.Net.HttpStatusCode.OK,
                         }));
+
+                    if (!category.JobProfiles.Any())
+                    {
+                        var changeAnswersDetails = category.CategoryUrl;
+                        var redirectTo = Url.RouteUrl("filterQuestions", new { assessmentType = "filter", jobCategoryName = category.CategoryUrl, questionNumber = 0 });
+                        var noJobTile = await razorTemplateEngine.RenderPartialAsync("~/Views/Results/_NoJobRole.cshtml", changeAnswersDetails).ConfigureAwait(false);
+                        category.JobProfiles.Add(new ResultJobProfileOverViewModel()
+                        {
+                            Cname = jobCategory.JobFamilyName,
+                            OverViewHTML = noJobTile.Replace(@$"href=""", $"href='{redirectTo}'"),
+                            ReturnedStatusCode = System.Net.HttpStatusCode.Unused,
+                        });
+                    }
+
+                    category.JobProfiles.Insert(0, new ResultJobProfileOverViewModel()
+                    {
+                        Cname = jobCategory.JobFamilyName,
+                        OverViewHTML = image,
+                        ReturnedStatusCode = System.Net.HttpStatusCode.OK,
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -239,6 +257,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             resultsByCategoryModel.AssessmentReference = assessmentResponse.ReferenceCode;
             resultsByCategoryModel.AssessmentType = "filter";
+            resultsByCategoryModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserDysacResultsSharedContent, status, expiryInHours).Result.Html;
 
             logService.LogInformation($"{nameof(Roles)} generated the model and ready to pass to the view");
 
@@ -261,7 +280,7 @@ namespace DFC.App.DiscoverSkillsCareers.Controllers
 
             var resultsResponse = await resultsService.GetResults(false).ConfigureAwait(false);
             var resultsHeroBannerViewModel = mapper.Map<ResultsHeroBannerViewModel>(resultsResponse);
-            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserSharedContent, status, expiryInHours).Result.Html;
+            resultsHeroBannerViewModel.SpeakToAnAdviser = sharedContentRedisInterface.GetDataAsyncWithExpiry<SharedHtml>(Constants.SpeakToAnAdviserFooterSharedContent, status, expiryInHours).Result.Html;
 
             logService.LogInformation($"{nameof(HeroBanner)} generated the model and ready to pass to the view");
             return View("HeroResultsBanner", resultsHeroBannerViewModel);

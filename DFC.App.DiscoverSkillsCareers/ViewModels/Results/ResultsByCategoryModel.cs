@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
@@ -10,8 +11,10 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
 
         public string AssessmentType { get; set; }
 
-        public IEnumerable<string> Traits { get; set; }
+        public IEnumerable<TraitResult> Traits { get; set; }
 
         public IEnumerable<ResultsJobsInCategoryModel> JobsInCategory { get; set; }
+
+        public string SpeakToAnAdviser { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using DFC.App.DiscoverSkillsCareers.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Dysac.PersonalityTrait;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.DiscoverSkillsCareers.ViewModels
 {
@@ -15,5 +18,7 @@ namespace DFC.App.DiscoverSkillsCareers.ViewModels
         public ResultsIndexResponseViewModel Results { get; set; }
 
         public string AssessmentType { get; set; }
+
+        public string SpeakToAnAdviser { get; set; }
     }
 }

@@ -1,0 +1,38 @@
+﻿@model JobCategoryCardViewModel
+@inject IConfiguration configuration
+<div class="ncs-card-with-image dysac-job-category-card">
+    <div class="card-image">
+        <img src="@(configuration["AssetsCdn"]+@Model.JobCategory.ImagePathMobile)" class="dysac-job-category-tile-header-mobile" alt="" />
+
+        <img src="@(configuration["AssetsCdn"]+@Model.JobCategory.ImagePathDesktop)" class="dysac-job-category-tile-header-desktop" alt="" />
+    </div>
+    <div class="card-content-section dysac-job-category-card-content">
+        <div class="card-header">
+            <h3><a href="/job-categories/@Model.JobCategory.JobFamilyNameUrl">@Model.JobCategory.JobFamilyName</a></h3>
+        </div>
+        <div class="card-content">
+            <p>@Model.JobCategory.JobFamilyText</p>
+            @if (@Model.JobCategory.NumberOfMatchedJobProfile > 0)
+            {
+                <p class="govuk-body">
+                    <a class="govuk-link" asp-controller="results" asp-action="roles" asp-route-id="@Model.JobCategory.JobFamilyUrl" draggable="false">See suggested careers</a> or
+                    <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@Model.JobCategory.JobFamilyNameUrl" asp-route-questionNumber="0">
+                        change your answers
+                    </a>
+                </p>
+            }
+            else if (@Model.JobCategory.TotalQuestions > 0)
+            {
+                <p class="govuk-body">
+                    <a class="govuk-link" draggable="false" asp-route="filterQuestions" asp-route-assessmenttype="@Model.AssessmentType" asp-route-jobCategoryName="@Model.JobCategory.JobFamilyNameUrl" asp-route-questionNumber="0">
+                        Answer @Model.JobCategory.TotalQuestions more question@{
+                            if (Model.JobCategory.TotalQuestions > 1)
+                                @("s")
+                        }
+                    </a>
+                </p>
+            }
+        </div>
+    </div>
+</div>
+  

@@ -2,8 +2,10 @@
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.Logger.AppInsights.Contracts;
 using FakeItEasy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
 using Xunit;
 
 namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
@@ -31,6 +33,30 @@ namespace DFC.App.DiscoverSkillsCareers.UnitTests.Controllers.Composite
         {
             var actionResponse = controller.HeroBannerEmpty();
             Assert.IsType<ContentResult>(actionResponse);
+        }
+
+        [Fact]
+        public void HeroBannerReturnsViewForStart()
+        {
+            var httpContext = new DefaultHttpContext();
+            var routeData = new RouteData();
+            routeData.Values["data"] = "start";
+            var actionContext = new ActionContext(httpContext, routeData, new ControllerActionDescriptor());
+            controller.ControllerContext = new ControllerContext(actionContext);
+            var actionResponse = controller.HeroBannerEmpty();
+            Assert.IsType<ViewResult>(actionResponse);
+        }
+
+        [Fact]
+        public void HeroBannerReturnsViewForReference()
+        {
+            var httpContext = new DefaultHttpContext();
+            var routeData = new RouteData();
+            routeData.Values["data"] = "start/reference";
+            var actionContext = new ActionContext(httpContext, routeData, new ControllerActionDescriptor());
+            controller.ControllerContext = new ControllerContext(actionContext);
+            var actionResponse = controller.HeroBannerEmpty();
+            Assert.IsType<ViewResult>(actionResponse);
         }
     }
 }
