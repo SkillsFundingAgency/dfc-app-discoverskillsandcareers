@@ -1,22 +1,26 @@
 ﻿using AutoMapper;
 using DFC.App.DiscoverSkillsCareers.Core.Enums;
+using DFC.App.DiscoverSkillsCareers.Models;
 using DFC.App.DiscoverSkillsCareers.Models.Assessment;
 using DFC.App.DiscoverSkillsCareers.Models.Contracts;
 using DFC.App.DiscoverSkillsCareers.Models.Result;
 using DFC.App.DiscoverSkillsCareers.Services.Contracts;
 using DFC.App.DiscoverSkillsCareers.Services.Helpers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.DiscoverSkillsCareers.Services.Services
 {
     public class ResultsService : IResultsService
     {
+        private const string ExpiryAppSettings = "Cms:Expiry";
         private readonly ISessionService sessionService;
         private readonly IAssessmentService assessmentService;
         private readonly IAssessmentCalculationService assessmentCalculationService;
@@ -26,6 +30,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
         private string status;
+        private double expiryInHours = 4;
 
         public ResultsService(
             ISessionService sessionService,
@@ -47,6 +52,22 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.mapper = mapper;
             this.configuration = configuration;
+            status = configuration?.GetSection("contentMode:contentMode").Get<string>();
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
+
+            if (this.configuration != null)
+            {
+                string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
+            }
+
         }
 
         public async Task<GetResultsResponse> GetResults(bool updateCollection)
@@ -86,6 +107,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
                 .ToList();
 
             var allJobCategories = await JobCategoryHelper.GetJobCategories(sharedContentRedisInterface, mapper, configuration).ConfigureAwait(false);
+            var allTrait = await GetTraits().ConfigureAwait(false);
 
             var allJobProfiles = allJobCategories!
                 .SelectMany(jobCategory => jobCategory.JobProfiles)
@@ -157,12 +179,79 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
             var jobCategories = assessment.ShortQuestionResult.JobCategories!.ToList();
 
             var jobCategory = jobCategories?.Find(j => Equals(j.JobFamilyNameUrl, jobCategoryName));
-            if (jobCategory != null && jobCategory.TotalQuestions == 0 )
+            if (jobCategory != null && jobCategory.TotalQuestions == 0)
             {
                 jobCategories = OrderResultsByJobCategory(jobCategories, jobCategoryName);
             }
 
+            UpdateJobCategory(jobCategories, allJobCategories);
+            UpdateTrait(allTrait, assessment.ShortQuestionResult?.LimitedTraits);
             return new GetResultsResponse { JobCategories = jobCategories, Traits = assessment.ShortQuestionResult?.LimitedTraits! };
+        }
+
+        private void UpdateTrait(List<DysacTraitContentModel>? allTrait, IEnumerable<TraitResult> limitedTraits)
+        {
+            if (limitedTraits != null)
+            {
+                foreach (var traits in limitedTraits)
+                {
+                    var selectedTrait = allTrait?.SingleOrDefault(x => x.Title == traits.TraitCode);
+
+                    if (selectedTrait != null)
+                    {
+                        traits.Title = selectedTrait.Title;
+                        traits.Text = selectedTrait.Description;
+                        traits.ImagePath = selectedTrait.ImagePath;
+                    }
+                }
+            }
+        }
+
+        private void UpdateJobCategory(List<JobCategoryResult> jobCategories, List<DysacJobProfileCategoryContentModel> allJobCategories)
+        {
+            if (jobCategories != null)
+            {
+                foreach (var jobCategory in jobCategories)
+                {
+                    var jc = allJobCategories?.SingleOrDefault(x => x.Title == jobCategory.JobFamilyName);
+
+                    if (jc != null)
+                    {
+                        jobCategory.JobFamilyText = jc.JobFamilyText;
+                        jobCategory.ImagePathDesktop = jc.ImagePathDesktop;
+                        jobCategory.ImagePathMobile = jc.ImagePathMobile;
+                        jobCategory.ImagePathTitle = jc.ImagePathTitle;
+                    }
+                }
+            }
+        }
+
+        private void UpdateCategoryImagePath(List<JobCategoryResult> jobCategories, List<DysacJobProfileCategoryContentModel> allJobCategories)
+        {
+            foreach (var jobCategory in jobCategories)
+            {
+                var jc = allJobCategories.SingleOrDefault(x => x.Title == jobCategory.JobFamilyName);
+
+                if (jc != null)
+                {
+                    jobCategory.JobFamilyText = jc.JobFamilyText;
+                    jobCategory.ImagePathDesktop = jc.ImagePathDesktop;
+                    jobCategory.ImagePathMobile = jc.ImagePathMobile;
+                    jobCategory.ImagePathTitle = jc.ImagePathTitle;
+                }
+            }
+        }
+
+        private async Task<List<DysacTraitContentModel>?> GetTraits()
+        {
+            var traintsResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PersonalityTraitResponse>(Constants.DYSACPersonalityTrait, status, expiryInHours);
+            var traits = new List<DysacTraitContentModel>();
+            if (traintsResponse != null)
+            {
+                traits = mapper.Map<List<DysacTraitContentModel>>(source: traintsResponse.PersonalityTraits);
+            }
+
+            return traits;
         }
 
         private async Task UpdateJobCategoryCounts(DysacAssessment assessment)
@@ -205,7 +294,7 @@ namespace DFC.App.DiscoverSkillsCareers.Services.Services
 
             return new GetResultsResponse
             {
-                LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments
+                LastAssessmentCategory = assessment.FilteredAssessment?.JobCategoryAssessments?.Where(t => t.LastAnswer != DateTime.MinValue)
                     .OrderByDescending(jobCategoryAssessment => jobCategoryAssessment.LastAnswer)
                     .FirstOrDefault()?
                     .JobCategory!,
