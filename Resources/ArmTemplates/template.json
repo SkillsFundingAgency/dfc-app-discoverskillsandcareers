@@ -105,9 +105,6 @@
     "SubscriptionApiEndpointUrl": {
       "type": "string"
     },
-    "dysacAssessmentCollectionName": {
-      "type": "string"
-    },
     "dysacContentCollectionName": {
       "type": "string"
     },
@@ -278,39 +275,6 @@
           },
           "collectionName": {
             "value": "[parameters('sessionStateCollectionName')]"
-          },
-          "provisionRequestUnits": {
-            "value": false
-          },
-          "partitionKey": {
-            "value": "[variables('cosmosDbCollectionPartitionKey')]"
-          }
-        }
-      },
-      "dependsOn": [
-        "[variables('CosmosDbDatabaseName')]"
-      ]
-    },
-    {
-      "apiVersion": "2017-05-10",
-      "name": "[parameters('dysacAssessmentCollectionName')]",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'CosmosDb/cosmos-collection.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "accountName": {
-            "value": "[parameters('cosmosDbName')]"
-          },
-          "databaseName": {
-            "value": "[variables('cosmosDbDatabaseName')]"
-          },
-          "collectionName": {
-            "value": "[parameters('dysacAssessmentCollectionName')]"
           },
           "provisionRequestUnits": {
             "value": false
@@ -544,26 +508,6 @@
               },
               {
                 "name": "Configuration__CosmosDbConnections__SessionState__PartitionKey",
-                "value": "[variables('cosmosDbCollectionPartitionKey')]"
-              },
-              {
-                "name": "Configuration__CosmosDbConnections__DysacAssessment__AccessKey",
-                "value": "[parameters('cosmosDbKey')]"
-              },
-              {
-                "name": "Configuration__CosmosDbConnections__DysacAssessment__EndpointUrl",
-                "value": "[variables('cosmosDbEndpoint')]"
-              },
-              {
-                "name": "Configuration__CosmosDbConnections__DysacAssessment__DatabaseId",
-                "value": "[variables('cosmosDbDatabaseName')]"
-              },
-              {
-                "name": "Configuration__CosmosDbConnections__DysacAssessment__CollectionId",
-                "value": "[parameters('dysacAssessmentCollectionName')]"
-              },
-              {
-                "name": "Configuration__CosmosDbConnections__DysacAssessment__PartitionKey",
                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
               },
               {
